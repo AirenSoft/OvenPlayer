@@ -4,7 +4,7 @@
 
 #### `player` = OvenPlayer.create(`container`, `options`)
 
-Create player instance.
+Create a player instance.
 
 ||Type|Memo
 |-|-|-|
@@ -159,7 +159,7 @@ Set playback rate.
 
 #### `position` = player.getPosition()
 
-Returns viewer's current position in a media file. This value depends on the type of media.
+Returns viewer's current position in a media file. This value depends on the media type.
 
 ||Type|Memo|
 |-|-|-|
@@ -167,7 +167,7 @@ Returns viewer's current position in a media file. This value depends on the typ
 
 #### `duration` = player.getDuration()
 
-Returns total length of the media file.  This value depends on the type of media.
+Returns total length of the media file.  This value depends on the media type.
  
 ||Type|Memo|
 |-|-|-|
@@ -197,7 +197,7 @@ Jump to the specified position within the currently playing item.
 
 #### player.setMute(`mute`)
 
-Set the mute state of the player.
+Mutes the player.
 
 ||Type|Memo|
 |-|-|-|
@@ -311,7 +311,7 @@ track = {
 
 #### player.removeCaption(`index`)
 
-Remove caption at specified index.
+Removes caption at the specified index.
 
 ||Type|
 |-|-|
@@ -349,7 +349,7 @@ Attribute|Type|Memo
 
 #### player.on('error')
 
-Occurs when something going wrong.
+Occurs when something is going wrong.
 
 Value|Type|Memo
 -|-|-
@@ -372,7 +372,7 @@ Attribute|Type|Memo
 
 #### player.on('stateChanged')
 
-Occurs when the state of an player changes.
+Occurs when the state of a player changes.
 
 Attribute|Type|Memo
 ------|------|-------
