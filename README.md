@@ -1,11 +1,11 @@
 # OvenPlayer - Media player for web
 
-The OvenPlayer is an HTML5 player designed to make it easier to play ultra-low latency streams from the [OvenMediaEngine](https://github.com/AirenSoft/OvenMediaEngine).
+The OvenPlayer is a HTML5 player designed to make it easier to play Ultra-low latency streams from the [OvenMediaEngine](https://github.com/AirenSoft/OvenMediaEngine).
 
 ![Alt text](dist/player.jpg)
 
 ## What is OvenMediaEngine?
-OvenMediaEngine(OME) is a streaming engine for real-time live broadcasting with ultra low latency. It receives the RTMP stream from general broadcasting studio such as OBS, XSplit and transmits it on WebRTC. The streams can be played in the browser with ultra low latency without plug-ins. To make it easier to play WebRTC streams in browsers, we are working on HTML5 player project OvenPlayer
+OvenMediaEngine(OME) is a streaming engine for real-time live broadcasting with Ultra-low latency. It receives the RTMP stream from general broadcasting studios such as OBS, XSplit and transmit it on WebRTC. Video streams with Ultra-low latency can be played in a browser without plug-ins. To make it easier to play WebRTC streams in browsers, we are working on HTML5 player project OvenPlayer
 
 ## Features
 
@@ -13,7 +13,7 @@ OvenMediaEngine(OME) is a streaming engine for real-time live broadcasting with 
 - Full custom support with separate UI and SDK
 - Support for playback regardless of browser and media type
 - Supports all common player functions
-- Support Protocols : WebRTC (Signalling protocol conforms to the OME specification.), HLS, MPEG-Dash
+- Supported Protocols : WebRTC (Signalling protocol conforms to the OME specification.), HLS, MPEG-Dash
 
 ## Quick Start
 
