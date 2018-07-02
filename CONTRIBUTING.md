@@ -1,6 +1,6 @@
 # Contributing
 
-OvenPlayer project is open to everyone. We are very grateful for your considering contribution to the OvenPlayer.
+OvenPlayer project is open to everyone. We are very grateful for your contribution to the OvenPlayer.
 
 ## What you can contribute
 
@@ -9,11 +9,11 @@ OvenPlayer project is open to everyone. We are very grateful for your considerin
 - Improving documentation
 - Writing code
 
-And any kind of contributions that can make our project better!
+And any other contributions that will make our project better!
 
 ## First step
 
-All contributions start with an issue. If It is an unresolved issue, please join the issue or if it does not already exist, create an issue. Then we will contact you to find the best solution without getting lost. We hope all conversations are done through the issue.
+All contributions start with an issue. Please join the issue if it is an unresolved issue or create an issue if it does not already exist. We will contact you to find the best solution without getting lost. We hope all conversations are done through the issue.
 
 ### Bug reports
 
