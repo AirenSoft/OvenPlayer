@@ -1,7 +1,7 @@
 /**
  * Created by hoho on 2018. 6. 27..
  */
-import Events from "utils/events";
+import EventEmitter from "api/EventEmitter";
 import EventsListener from "api/provider/Listener";
 import {
     STATE_IDLE, STATE_PLAYING, STATE_PAUSED, STATE_COMPLETE,
@@ -34,12 +34,8 @@ let extractVideoElement = function(providerName, extendedElement){
 const Core = function (providerName, extendedElement, playerConfig, onLoad){
     OvenPlayerConsole.log("CORE loaded. ");
 
-    let that = Object.assign({
-        on: Events.on,
-        once: Events.once,
-        off: Events.off,
-        trigger: Events.trigger
-    });
+    let that = {};
+    EventEmitter(that);
 
 
     let elVideo = extractVideoElement(providerName, extendedElement);

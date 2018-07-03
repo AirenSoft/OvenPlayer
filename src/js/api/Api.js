@@ -1,6 +1,6 @@
 //import CaptionManager from "api/caption/Manager";
 import Configurator from "api/Configurator";
-import Events from "utils/events";
+import EventEmitter from "api/EventEmitter";
 import LazyCommandExecutor from "api/LazyCommandExecutor";
 import LogManager from "utils/logger";
 import MediaManager from "api/media/Manager";
@@ -9,6 +9,7 @@ import ProviderController from "api/provider/Controller";
 import Promise, {resolved} from "api/shims/promise";
 import {READY, ERROR, INIT_ERROR, DESTROY} from "api/constants";
 import {version} from 'version';
+
 /**
  * @brief   This object connects UI to the provider.
  * @param   {object}    container  dom element
@@ -17,12 +18,8 @@ import {version} from 'version';
 
 const Api = function(container){
     let logManager = LogManager();
-    const that = {
-        on : Events.on,
-        once: Events.once,
-        off: Events.off,
-        trigger: Events.trigger
-    };
+    const that = {};
+    EventEmitter(that);
 
     OvenPlayerConsole.log("[[OvenPlayer]] v."+ version);
     OvenPlayerConsole.log("API loaded.");

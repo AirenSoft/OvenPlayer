@@ -58,11 +58,22 @@ var player = OvenPlayer.create("player", {
 
     <script>
         const totalTestSources = [
-            {type : "mp4", file :  "https://upload.ovencloud.pro:8443/v1/c/fb84f2d9922dfd68b6333abac25b9bd57568553c0462bc45f0188360cc6037562fdd8cce03dabb6f9e1391f83ffed5c15a0d8cee302715d6e71d802fc09c3e84", label: "MP4 VOD"},
-            {type : "webrtc", file : "ws://dev2.airensoft.com:3333/app/stream_o" , label: "WEBRTC LIVE"},
-            {type : "mpd", file : "http://dash.edgesuite.net/dash264/TestCases/1a/sony/SNE_DASH_SD_CASE1A_REVISED.mpd" , label: "DASH 480P"},
-            {type : "application/x-mpegURL", file : "http://211.233.58.89:1935/ocvod/_definst_/f8d5a78abd39705e49a0c3556e42f2e1b19ac0358c0b66457e775d628e334e07c0ab6ae6bd29502be39976ea7eb5059123e8f31da071498568c0faa1241097ac/playlist.m3u8" , label: "HLS VOD"},
-            {type : "mpd", file : "http://vm2.dashif.org/livesim/testpic_2s/Manifest.mpd" , label: "DASH LIVE"},
+            {
+                type: 'mp4',
+                file:  '../OCP_480.mp4',
+                label: '360P'
+            },
+            {
+                type: 'mp4',
+                file: '../OCP_720.mp4',
+                label: '480P'
+            },
+            {
+                type: 'mp4',
+                file: '../OCP_1080.mp4',
+                label: '1080',
+                default: 'true'
+            }
         ];
         var player = OvenPlayer.create("player", {
             debug : true,
