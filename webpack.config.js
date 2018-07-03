@@ -4,6 +4,7 @@ const env = process.env;
 const packageInfo = require('./package.json');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const GitRevisionPlugin = require('git-revision-webpack-plugin');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const banner = packageInfo.name + 'v' + packageInfo.version + ' | ' +
     '(c)' + new Date().getFullYear() + ' ' + packageInfo.author + ' | MIT license (' +
     packageInfo.license + ') | Github : ' +
@@ -84,6 +85,18 @@ const extendConfig = function (){
     }else{
         Object.assign(defaultConfig, {
             mode: 'production',
+            optimization: {
+                minimizer: [
+                    new UglifyJsPlugin({
+                        uglifyOptions: {
+                            output: {
+                                comments: true,
+                            }
+                        },
+                        extractComments: true, // /(?:^!|@(?:license|preserve))/i
+                    })
+                ]
+            },
             devtool: 'source-map',
             output: {
                 filename: '[name].js',
