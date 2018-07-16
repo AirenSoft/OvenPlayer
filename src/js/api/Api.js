@@ -7,7 +7,7 @@ import MediaManager from "api/media/Manager";
 import PlaylistManager from "api/playlist/Manager";
 import ProviderController from "api/provider/Controller";
 import Promise, {resolved} from "api/shims/promise";
-import {READY, ERROR, INIT_ERROR, DESTROY} from "api/constants";
+import {READY, ERROR, INIT_ERROR, DESTROY, NETWORK_UNSTABLE, PLAYER_FILE_ERROR} from "api/constants";
 import {version} from 'version';
 
 /**
@@ -61,6 +61,12 @@ const Api = function(container){
 
             //This passes the event created by the Provider to API.
             currentProvider.on("all", function(name, data){
+
+                //Auto next source when player load was fail by amiss source.
+                if( (name === ERROR && (data.code === PLAYER_FILE_ERROR || parseInt(data.code/100) === 5))|| name === NETWORK_UNSTABLE ){
+                    let lastPlayPosition = that.getCurrentQuality();
+                    that.setCurrentQuality(lastPlayPosition+1);
+                }
                 that.trigger(name, data);
             });
 
@@ -76,12 +82,10 @@ const Api = function(container){
             const errorObject = {code : INIT_ERROR, reason : "init error.", message : "Player init error.", error : error};
             that.trigger(ERROR, errorObject);
 
-            /*
-                init()시 src가 없이 초기화 하는 경우. (src 없이 초기화 하는게 모순이라 생각이 들지만)
-                playerInstance.create("elId", {});
-                playerInstance.load(src);
-                를 대응하기 위해 src없어 프로바이드 로드 못해 initError 발생하는 경우 load는 한번 실행할 수 있게 해주즈아
-            */
+            //xxx : If you init empty sources. (I think this is strange case.)
+            //This works for this case.
+            //player = OvenPlayer.create("elId", {});
+            //player.load(soruces);
             lazyQueue.removeAndExcuteOnce("load");
         });
     };
@@ -178,7 +182,6 @@ const Api = function(container){
     that.setCurrentQuality = (qualityIndex) =>{
         OvenPlayerConsole.log("API : setCurrentQuality() ", qualityIndex);
 
-        //현재 재생중인 소스의 프로바이더와 새로운 qualityIndex 소스의 프로바이더가 같다면 기존 프로바이더를 재활용한다. 그렇지 않으면 initProvider()를 통해 재로딩
         let sources = playlistManager.getCurrentSources();
         let currentSource = sources[that.getCurrentQuality()];
         let newSource = sources[qualityIndex];
@@ -187,11 +190,14 @@ const Api = function(container){
         // provider.serCurrentQuality -> playerConfig setting -> load
         let resQualityIndex = currentProvider.setCurrentQuality(qualityIndex, isSameProvider);
 
+        if(!newSource){
+            return null;
+        }
+
         OvenPlayerConsole.log("API : setCurrentQuality() isSameProvider", isSameProvider);
 
         if(!isSameProvider){
             lazyQueue = LazyCommandExecutor(that, ['play']);
-            //프로바이더가 변경될때 기존 상태를 유지 할 수 없기 때문에 프로바이더 변경 전 마지막 재생 포지션을 가져온다.
             initProvider(lastPlayPosition);
         }
 

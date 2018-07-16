@@ -46,9 +46,16 @@ function MessageBox(container, player, ui) {
 
     ui.showMessage = showMessage;
 
-    function hideMessage() {
+    function hideMessage(untilTime) {
 
-        reset();
+        if(untilTime){
+            setTimeout(function(){
+                reset();
+            }, untilTime);
+        }else{
+            reset();
+        }
+
     }
 
     ui.hideMessage = hideMessage;
@@ -86,6 +93,10 @@ function MessageBox(container, player, ui) {
         }
         
         showMessage(message);
+
+        player.once("metaChanged", function(){
+            hideMessage(5000);
+        })
     });
 
 }

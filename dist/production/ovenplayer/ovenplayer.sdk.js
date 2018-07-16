@@ -1,5 +1,5 @@
 /*! For license information please see ovenplayer.sdk.js.LICENSE */
-/*! OvenPlayerv0.6.2 | (c)2018 AirenSoft Co., Ltd. | MIT license (https://github.com/AirenSoft/OvenPlayerPrivate/blob/master/LICENSE) | Github : https://github.com/AirenSoft/OvenPlayer */
+/*! OvenPlayerv0.6.3 | (c)2018 AirenSoft Co., Ltd. | MIT license (https://github.com/AirenSoft/OvenPlayerPrivate/blob/master/LICENSE) | Github : https://github.com/AirenSoft/OvenPlayer */
 /******/!function(e){// webpackBootstrap
 /******/ // install a JSONP callback for chunk loading
 /******/function t(t){
@@ -233,12 +233,12 @@ h.each=h.forEach=function(e,t,n){var r,o;if(t=P(t,n),w(e))for(r=0,o=e.length;r<o
 // Return the results of applying the iteratee to each element.
 h.map=h.collect=function(e,t,n){t=b(t,n);for(var r=!w(e)&&h.keys(e),o=(r||e).length,u=Array(o),i=0;i<o;i++){var a=r?r[i]:i;u[i]=t(e[a],a,e)}return u};
 // Create a reducing function iterating left or right.
-var S=function(e){return function(t,n,r,o){var u=arguments.length>=3;return function(t,n,r,o){var u=!w(t)&&h.keys(t),i=(u||t).length,a=e>0?0:i-1;for(o||(r=t[u?u[a]:a],a+=e);a>=0&&a<i;a+=e){var l=u?u[a]:a;r=n(r,t[l],l,t)}return r}(t,P(n,o,4),r,u)}};
+var T=function(e){return function(t,n,r,o){var u=arguments.length>=3;return function(t,n,r,o){var u=!w(t)&&h.keys(t),i=(u||t).length,a=e>0?0:i-1;for(o||(r=t[u?u[a]:a],a+=e);a>=0&&a<i;a+=e){var l=u?u[a]:a;r=n(r,t[l],l,t)}return r}(t,P(n,o,4),r,u)}};
 // **Reduce** builds up a single result from a list of values, aka `inject`,
 // or `foldl`.
-h.reduce=h.foldl=h.inject=S(1),
+h.reduce=h.foldl=h.inject=T(1),
 // The right-associative version of reduce, also known as `foldr`.
-h.reduceRight=h.foldr=S(-1),
+h.reduceRight=h.foldr=T(-1),
 // Return the first value which passes a truth test. Aliased as `detect`.
 h.find=h.detect=function(e,t,n){var r=(w(e)?h.findIndex:h.findKey)(e,t,n);if(void 0!==r&&-1!==r)return e[r]},
 // Return all the elements that pass a truth test.
@@ -279,24 +279,24 @@ h.sample=function(e,t,n){if(null==t||n)return w(e)||(e=h.values(e)),e[h.random(e
 // Sort the object's values by a criterion produced by an iteratee.
 h.sortBy=function(e,t,n){var r=0;return t=b(t,n),h.pluck(h.map(e,function(e,n,o){return{value:e,index:r++,criteria:t(e,n,o)}}).sort(function(e,t){var n=e.criteria,r=t.criteria;if(n!==r){if(n>r||void 0===n)return 1;if(n<r||void 0===r)return-1}return e.index-t.index}),"value")};
 // An internal function used for aggregate "group by" operations.
-var T=function(e,t){return function(n,r,o){var u=t?[[],[]]:{};return r=b(r,o),h.each(n,function(t,o){var i=r(t,o,n);e(u,t,i)}),u}};
+var S=function(e,t){return function(n,r,o){var u=t?[[],[]]:{};return r=b(r,o),h.each(n,function(t,o){var i=r(t,o,n);e(u,t,i)}),u}};
 // Groups the object's values by a criterion. Pass either a string attribute
 // to group by, or a function that returns the criterion.
-h.groupBy=T(function(e,t,n){h.has(e,n)?e[n].push(t):e[n]=[t]}),
+h.groupBy=S(function(e,t,n){h.has(e,n)?e[n].push(t):e[n]=[t]}),
 // Indexes the object's values by a criterion, similar to `groupBy`, but for
 // when you know that your index values will be unique.
-h.indexBy=T(function(e,t,n){e[n]=t}),
+h.indexBy=S(function(e,t,n){e[n]=t}),
 // Counts instances of an object that group by a certain criterion. Pass
 // either a string attribute to count by, or a function that returns the
 // criterion.
-h.countBy=T(function(e,t,n){h.has(e,n)?e[n]++:e[n]=1});var k=/[^\ud800-\udfff]|[\ud800-\udbff][\udc00-\udfff]|[\ud800-\udfff]/g;
+h.countBy=S(function(e,t,n){h.has(e,n)?e[n]++:e[n]=1});var k=/[^\ud800-\udfff]|[\ud800-\udbff][\udc00-\udfff]|[\ud800-\udfff]/g;
 // Safely create a real, live array from anything iterable.
 h.toArray=function(e){return e?h.isArray(e)?f.call(e):h.isString(e)?e.match(k):w(e)?h.map(e,h.identity):h.values(e):[]},
 // Return the number of elements in an object.
 h.size=function(e){return null==e?0:w(e)?e.length:h.keys(e).length},
 // Split a collection into two arrays: one whose elements all satisfy the given
 // predicate, and one whose elements all do not satisfy the predicate.
-h.partition=T(function(e,t,n){e[n?0:1].push(t)},!0),
+h.partition=S(function(e,t,n){e[n?0:1].push(t)},!0),
 // Array Functions
 // ---------------
 // Get the first element of an array. Passing **n** will return the first N
@@ -427,14 +427,14 @@ h.before=function(e,t){var n;return function(){return--e>0&&(n=t.apply(this,argu
 // Object Functions
 // ----------------
 // Keys in IE < 9 that won't be iterated by `for key in ...` and thus missed.
-var I=!{toString:null}.propertyIsEnumerable("toString"),L=["valueOf","isPrototypeOf","toString","propertyIsEnumerable","hasOwnProperty","toLocaleString"],B=function(e,t){var n=L.length,r=e.constructor,o=h.isFunction(r)&&r.prototype||a,u="constructor";for(h.has(e,u)&&!h.contains(t,u)&&t.push(u);n--;)(u=L[n])in e&&e[u]!==o[u]&&!h.contains(t,u)&&t.push(u)};
+var L=!{toString:null}.propertyIsEnumerable("toString"),I=["valueOf","isPrototypeOf","toString","propertyIsEnumerable","hasOwnProperty","toLocaleString"],B=function(e,t){var n=I.length,r=e.constructor,o=h.isFunction(r)&&r.prototype||a,u="constructor";for(h.has(e,u)&&!h.contains(t,u)&&t.push(u);n--;)(u=I[n])in e&&e[u]!==o[u]&&!h.contains(t,u)&&t.push(u)};
 // Retrieve the names of an object's own properties.
 // Delegates to **ECMAScript 5**'s native `Object.keys`.
 h.keys=function(e){if(!h.isObject(e))return[];if(v)return v(e);var t=[];for(var n in e)h.has(e,n)&&t.push(n);// Ahem, IE < 9.
-return I&&B(e,t),t},
+return L&&B(e,t),t},
 // Retrieve all the property names of an object.
 h.allKeys=function(e){if(!h.isObject(e))return[];var t=[];for(var n in e)t.push(n);// Ahem, IE < 9.
-return I&&B(e,t),t},
+return L&&B(e,t),t},
 // Retrieve the values of an object's properties.
 h.values=function(e){for(var t=h.keys(e),n=t.length,r=Array(n),o=0;o<n;o++)r[o]=e[t[o]];return r},
 // Returns the results of applying the iteratee to each element of the object.
@@ -706,7 +706,7 @@ e.children||(e.children=[]),Object.defineProperty(e,"loaded",{enumerable:!0,get:
 /* 8 */
 /***/function(e,t,n){"use strict";Object.defineProperty(t,"__esModule",{value:!0});
 // STATE
-t.STATE_BUFFERING="buffering",t.STATE_IDLE="idle";var r=t.STATE_COMPLETE="complete";t.STATE_PAUSED="paused",t.STATE_PLAYING="playing",t.STATE_ERROR="error",t.STATE_LOADING="loading",t.STATE_STALLED="stalled",t.PROVIDER_HTML5="html5",t.PROVIDER_WEBRTC="webrtc",t.PROVIDER_DASH="dash",t.PROVIDER_HLS="hls",t.CONTENT_COMPLETE=r,t.READY="ready",t.DESTROY="destroy",t.CONTENT_SEEK="seek",t.CONTENT_BUFFER_FULL="bufferFull",t.DISPLAY_CLICK="displayClick",t.CONTENT_LOADED="loaded",t.CONTENT_SEEKED="seeked",t.ERROR="error",t.PLAYER_STATE="stateChanged",t.PLAYER_COMPLETE=r,t.PLAYER_PAUSE="pause",t.PLAYER_PLAY="play",t.CONTENT_BUFFER="bufferChanged",t.CONTENT_TIME="time",t.CONTENT_RATE_CHANGE="ratechange",t.CONTENT_VOLUME="volumeChanged",t.CONTENT_MUTE="mute",t.CONTENT_META="metaChanged",t.CONTENT_LEVELS="qualityLevelChanged",t.CONTENT_LEVEL_CHANGED="currentQualityLevelChanged",t.PLAYBACK_RATE_CHANGED="playbackRateChanged",t.CONTENT_CAPTION_CUE_CHANGED="cueChanged",t.CONTENT_CAPTION_CHANGED="captionChanged",t.INIT_ERROR=100,t.PLAYER_UNKNWON_ERROR=300,t.PLAYER_UNKNWON_OPERATION_ERROR=301,t.PLAYER_UNKNWON_NEWWORK_ERROR=302,t.PLAYER_UNKNWON_DECODE_ERROR=303,t.PLAYER_FILE_ERROR=304,t.PLAYER_CAPTION_ERROR=305,t.PLAYER_WEBRTC_WS_ERROR=501,t.PLAYER_WEBRTC_WS_CLOSED=502,t.PLAYER_WEBRTC_ADD_ICECANDIDATE_ERROR=503,t.PLAYER_WEBRTC_SET_REMOTE_DESC_ERROR=504,t.PLAYER_WEBRTC_CREATE_ANSWER_ERROR=505,t.PLAYER_WEBRTC_SET_LOCAL_DESC_ERROR=506},
+t.STATE_BUFFERING="buffering",t.STATE_IDLE="idle";var r=t.STATE_COMPLETE="complete";t.STATE_PAUSED="paused",t.STATE_PLAYING="playing",t.STATE_ERROR="error",t.STATE_LOADING="loading",t.STATE_STALLED="stalled",t.PROVIDER_HTML5="html5",t.PROVIDER_WEBRTC="webrtc",t.PROVIDER_DASH="dash",t.PROVIDER_HLS="hls",t.CONTENT_COMPLETE=r,t.READY="ready",t.DESTROY="destroy",t.CONTENT_SEEK="seek",t.CONTENT_BUFFER_FULL="bufferFull",t.DISPLAY_CLICK="displayClick",t.CONTENT_LOADED="loaded",t.CONTENT_SEEKED="seeked",t.NETWORK_UNSTABLE="unstable",t.ERROR="error",t.PLAYER_STATE="stateChanged",t.PLAYER_COMPLETE=r,t.PLAYER_PAUSE="pause",t.PLAYER_PLAY="play",t.CONTENT_BUFFER="bufferChanged",t.CONTENT_TIME="time",t.CONTENT_RATE_CHANGE="ratechange",t.CONTENT_VOLUME="volumeChanged",t.CONTENT_MUTE="mute",t.CONTENT_META="metaChanged",t.CONTENT_LEVELS="qualityLevelChanged",t.CONTENT_LEVEL_CHANGED="currentQualityLevelChanged",t.PLAYBACK_RATE_CHANGED="playbackRateChanged",t.CONTENT_CAPTION_CUE_CHANGED="cueChanged",t.CONTENT_CAPTION_CHANGED="captionChanged",t.INIT_ERROR=100,t.PLAYER_UNKNWON_ERROR=300,t.PLAYER_UNKNWON_OPERATION_ERROR=301,t.PLAYER_UNKNWON_NEWWORK_ERROR=302,t.PLAYER_UNKNWON_DECODE_ERROR=303,t.PLAYER_FILE_ERROR=304,t.PLAYER_CAPTION_ERROR=305,t.PLAYER_WEBRTC_WS_ERROR=501,t.PLAYER_WEBRTC_WS_CLOSED=502,t.PLAYER_WEBRTC_ADD_ICECANDIDATE_ERROR=503,t.PLAYER_WEBRTC_SET_REMOTE_DESC_ERROR=504,t.PLAYER_WEBRTC_CREATE_ANSWER_ERROR=505,t.PLAYER_WEBRTC_SET_LOCAL_DESC_ERROR=506},
 /* 9 */
 /***/function(e,t,n){"use strict";Object.defineProperty(t,"__esModule",{value:!0});t.default=function(e){var t=e,n=[],r=function(e,t,n){var r=0,o=e.length;for(r=0;r<o;r++){var u=e[r];u.listener.apply(u.context||n,t)}};return t.on=function(e,r,o){return(n[e]||(n[e]=[])).push({listener:r,context:o}),t},t.trigger=function(e){if(!n)return!1;var o=[].slice.call(arguments,1),u=n[e],i=n.all;u&&r(u,o,t),i&&r(i,arguments,t)},t.off=function(e,r,o){if(!n)return!1;if(!e&&!r&&!o)return n=[],t;for(var u=e?[e]:Object.keys(n),i=0,a=u.length;i<a;i++){e=u[i];var l=n[e];if(l){var c=n[e]=[];if(r||o)for(var f=0,s=l.length;f<s;f++){var d=l[f];(r&&r!==d.listener&&r!==d.listener.listener&&r!==d.listener._callback||o&&o!==d.context)&&c.push(d)}c.length||delete n[e]}}return t},t.once=function(e,n,r){var o=0,u=function r(){o++||(t.off(e,r),n.apply(t,arguments))};return u._listener=n,t.on(e,u,r)},t}},
 /* 10 */
@@ -732,7 +732,7 @@ e.exports=n},
 /**
  * Created by hoho on 2018. 6. 29..
  */
-t.version="0.6.2-rev.9bcdd8d";
+t.version="0.6.3-rev.8b5d025";
 /***/},
 /* 16 */
 /***/function(e,t,n){"use strict";Object.defineProperty(t,"__esModule",{value:!0});var r=u(n(5)),o=u(n(4));function u(e){return e&&e.__esModule?e:{default:e}}
@@ -799,15 +799,15 @@ t.default=function(e){var t=(0,i.default)(),n={};(0,o.default)(n),OvenPlayerCons
 //let captionManager = CaptionManager(that);
 var d=(0,a.default)(e),p=(0,l.default)(),v=(0,c.default)(),y="",g="",h="",m=function(e){return v.loadProviders(p.getPlaylist()).then(function(e){y&&(y.destroy(),y=null);var t=d.createElement(),r=function(e){var t=0;if(e)for(var n=0;n<e.length;n++)if(e[n].default&&(t=n),g.getQualityLabel()&&e[n].label===g.getQualityLabel())return n;return t}(p.getCurrentSources());OvenPlayerConsole.log("current source index : "+r),
 //This passes the event created by the Provider to API.
-(y=e[r](t,g)).on("all",function(e,t){n.trigger(e,t)})}).then(function(){y.preload(p.getCurrentSources(),e),h.flush(),
+(y=e[r](t,g)).on("all",function(e,t){
+//Auto next source when player load was fail by amiss source.
+if(e===f.ERROR&&(t.code===f.PLAYER_FILE_ERROR||5===parseInt(t.code/100))||e===f.NETWORK_UNSTABLE){var r=n.getCurrentQuality();n.setCurrentQuality(r+1)}n.trigger(e,t)})}).then(function(){y.preload(p.getCurrentSources(),e),h.flush(),
 //This is no reason to exist anymore.
 h.destroy(),n.trigger(f.READY)}).catch(function(e){var t={code:f.INIT_ERROR,reason:"init error.",message:"Player init error.",error:e};n.trigger(f.ERROR,t),
-/*
-                init()시 src가 없이 초기화 하는 경우. (src 없이 초기화 하는게 모순이라 생각이 들지만)
-                playerInstance.create("elId", {});
-                playerInstance.load(src);
-                를 대응하기 위해 src없어 프로바이드 로드 못해 initError 발생하는 경우 load는 한번 실행할 수 있게 해주즈아
-            */
+//xxx : If you init empty sources. (I think this is strange case.)
+//This works for this case.
+//player = OvenPlayer.create("elId", {});
+//player.load(soruces);
 h.removeAndExcuteOnce("load")})};
 /**
      * API 초기화 함수
@@ -817,11 +817,7 @@ h.removeAndExcuteOnce("load")})};
      **/
 return n.init=function(e){
 //It collects the commands and executes them at the time when they are executable.
-h=(0,u.default)(n,["load","play","pause","seek","stop","getDuration","getPosition","getVolume","getMute","getBuffer","getState"]),(g=(0,r.default)(e)).isDebug()||t.disable(),OvenPlayerConsole.log("API : init()"),OvenPlayerConsole.log("API : init() config : ",g),p.setPlaylist(g.getPlaylist()),OvenPlayerConsole.log("API : init() sources : ",p.getCurrentSources()),m()},n.getConfig=function(){return OvenPlayerConsole.log("API : getConfig()",g.getConfig()),g.getConfig()},n.getDuration=function(){return OvenPlayerConsole.log("API : getDuration()",y.getDuration()),y.getDuration()},n.getPosition=function(){return OvenPlayerConsole.log("API : getPosition()",y.getPosition()),y.getPosition()},n.getVolume=function(){return OvenPlayerConsole.log("API : getVolume()",y.getVolume()),y.getVolume()},n.setVolume=function(e){OvenPlayerConsole.log("API : setVolume() "+e),y.setVolume(e)},n.setMute=function(e){return OvenPlayerConsole.log("API : setMute() "+e),y.setMute(e)},n.getMute=function(){return OvenPlayerConsole.log("API : getMute() "+y.getMute()),y.getMute()},n.load=function(e){return OvenPlayerConsole.log("API : load() ",e),h=(0,u.default)(n,["play","seek","stop"]),e&&(y.setCurrentQuality(0),p.setPlaylist(e)),m()},n.play=function(){OvenPlayerConsole.log("API : play() "),y.play()},n.pause=function(){OvenPlayerConsole.log("API : pause() "),y.pause()},n.seek=function(e){OvenPlayerConsole.log("API : seek() "+e),y.seek(e)},n.setPlaybackRate=function(e){return OvenPlayerConsole.log("API : setPlaybackRate() ",e),y.setPlaybackRate(g.setDefaultPlaybackRate(e))},n.getPlaybackRate=function(){return OvenPlayerConsole.log("API : getPlaybackRate() ",y.getPlaybackRate()),y.getPlaybackRate()},n.getQualityLevels=function(){return OvenPlayerConsole.log("API : getQualityLevels() ",y.getQualityLevels()),y.getQualityLevels()},n.getCurrentQuality=function(){return OvenPlayerConsole.log("API : getCurrentQuality() ",y.getCurrentQuality()),y.getCurrentQuality()},n.setCurrentQuality=function(e){OvenPlayerConsole.log("API : setCurrentQuality() ",e);
-//현재 재생중인 소스의 프로바이더와 새로운 qualityIndex 소스의 프로바이더가 같다면 기존 프로바이더를 재활용한다. 그렇지 않으면 initProvider()를 통해 재로딩
-var t=p.getCurrentSources(),r=t[n.getCurrentQuality()],o=t[e],i=n.getPosition(),a=v.isSameProvider(r,o),l=y.setCurrentQuality(e,a);return OvenPlayerConsole.log("API : setCurrentQuality() isSameProvider",a),a||(h=(0,u.default)(n,["play"]),
-//프로바이더가 변경될때 기존 상태를 유지 할 수 없기 때문에 프로바이더 변경 전 마지막 재생 포지션을 가져온다.
-m(i)),l},
+h=(0,u.default)(n,["load","play","pause","seek","stop","getDuration","getPosition","getVolume","getMute","getBuffer","getState"]),(g=(0,r.default)(e)).isDebug()||t.disable(),OvenPlayerConsole.log("API : init()"),OvenPlayerConsole.log("API : init() config : ",g),p.setPlaylist(g.getPlaylist()),OvenPlayerConsole.log("API : init() sources : ",p.getCurrentSources()),m()},n.getConfig=function(){return OvenPlayerConsole.log("API : getConfig()",g.getConfig()),g.getConfig()},n.getDuration=function(){return OvenPlayerConsole.log("API : getDuration()",y.getDuration()),y.getDuration()},n.getPosition=function(){return OvenPlayerConsole.log("API : getPosition()",y.getPosition()),y.getPosition()},n.getVolume=function(){return OvenPlayerConsole.log("API : getVolume()",y.getVolume()),y.getVolume()},n.setVolume=function(e){OvenPlayerConsole.log("API : setVolume() "+e),y.setVolume(e)},n.setMute=function(e){return OvenPlayerConsole.log("API : setMute() "+e),y.setMute(e)},n.getMute=function(){return OvenPlayerConsole.log("API : getMute() "+y.getMute()),y.getMute()},n.load=function(e){return OvenPlayerConsole.log("API : load() ",e),h=(0,u.default)(n,["play","seek","stop"]),e&&(y.setCurrentQuality(0),p.setPlaylist(e)),m()},n.play=function(){OvenPlayerConsole.log("API : play() "),y.play()},n.pause=function(){OvenPlayerConsole.log("API : pause() "),y.pause()},n.seek=function(e){OvenPlayerConsole.log("API : seek() "+e),y.seek(e)},n.setPlaybackRate=function(e){return OvenPlayerConsole.log("API : setPlaybackRate() ",e),y.setPlaybackRate(g.setDefaultPlaybackRate(e))},n.getPlaybackRate=function(){return OvenPlayerConsole.log("API : getPlaybackRate() ",y.getPlaybackRate()),y.getPlaybackRate()},n.getQualityLevels=function(){return OvenPlayerConsole.log("API : getQualityLevels() ",y.getQualityLevels()),y.getQualityLevels()},n.getCurrentQuality=function(){return OvenPlayerConsole.log("API : getCurrentQuality() ",y.getCurrentQuality()),y.getCurrentQuality()},n.setCurrentQuality=function(e){OvenPlayerConsole.log("API : setCurrentQuality() ",e);var t=p.getCurrentSources(),r=t[n.getCurrentQuality()],o=t[e],i=n.getPosition(),a=v.isSameProvider(r,o),l=y.setCurrentQuality(e,a);return o?(OvenPlayerConsole.log("API : setCurrentQuality() isSameProvider",a),a||(h=(0,u.default)(n,["play"]),m(i)),l):null},
 /* Captions : This is not supported in the current version.*/
 /*that.setCurrentCaption = (index) =>{
         return captionManager.setCurrentCaption(index);

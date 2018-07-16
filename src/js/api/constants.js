@@ -23,7 +23,7 @@ export const CONTENT_BUFFER_FULL = 'bufferFull';
 export const DISPLAY_CLICK = 'displayClick';
 export const CONTENT_LOADED = 'loaded';
 export const CONTENT_SEEKED = 'seeked';
-
+export const NETWORK_UNSTABLE = 'unstable';
 export const ERROR = 'error';
 
 // STATE OF PLAYER
