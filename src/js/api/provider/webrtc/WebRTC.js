@@ -20,16 +20,17 @@ const WebRTC = function(element, playerConfig){
     let errorHandler = function(error){
         that.setState(STATE_ERROR);
         that.pause();
+        console.log(error);
         that.trigger(ERROR, error );
     };
-    const sourceLoaded = (source) => {
+    const onLoad = (source) => {
         if(isWebRTC(source.file, source.type)){
             OvenPlayerConsole.log("WEBRTC : source loaded : ", source);
             if(webrtcLoader){
                 webrtcLoader.destroy();
                 webrtcLoader = null;
             }
-            webrtcLoader = WebRTCLoader(source.file, errorHandler);
+            webrtcLoader = WebRTCLoader(that, source.file, errorHandler);
             webrtcLoader.connect().then(function(stream){
                 element.srcObject = stream;
                 element.play();
@@ -37,7 +38,7 @@ const WebRTC = function(element, playerConfig){
         }
     };
 
-    that = CoreProvider(PROVIDER_WEBRTC, element, playerConfig, sourceLoaded);
+    that = CoreProvider(PROVIDER_WEBRTC, element, playerConfig, onLoad);
     OvenPlayerConsole.log("WEBRTC PROVIDER LOADED.");
     super_destroy = that.super('destroy');
 

@@ -7,7 +7,7 @@ import MediaManager from "api/media/Manager";
 import PlaylistManager from "api/playlist/Manager";
 import ProviderController from "api/provider/Controller";
 import Promise, {resolved} from "api/shims/promise";
-import {READY, ERROR, INIT_ERROR, DESTROY, NETWORK_UNSTABLE, PLAYER_FILE_ERROR} from "api/constants";
+import {READY, ERROR, INIT_ERROR, DESTROY, NETWORK_UNSTABLED, PLAYER_FILE_ERROR} from "api/constants";
 import {version} from 'version';
 
 /**
@@ -61,13 +61,20 @@ const Api = function(container){
 
             //This passes the event created by the Provider to API.
             currentProvider.on("all", function(name, data){
+                that.trigger(name, data);
 
                 //Auto next source when player load was fail by amiss source.
-                if( (name === ERROR && (data.code === PLAYER_FILE_ERROR || parseInt(data.code/100) === 5))|| name === NETWORK_UNSTABLE ){
-                    let lastPlayPosition = that.getCurrentQuality();
-                    that.setCurrentQuality(lastPlayPosition+1);
+                if( (name === ERROR && (data.code === PLAYER_FILE_ERROR || parseInt(data.code/100) === 5))
+                    || name === NETWORK_UNSTABLED ){
+                    let currentQuality = that.getCurrentQuality();
+                    if(currentQuality+1 < that.getQualityLevels().length){
+                        //this sequential has available source.
+                        that.pause();
+                        that.setCurrentQuality(currentQuality+1);
+                    }
+
                 }
-                that.trigger(name, data);
+
             });
 
         }).then(()=>{

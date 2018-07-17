@@ -99,6 +99,18 @@ function MessageBox(container, player, ui) {
         })
     });
 
+    //2018.07.17 hslee
+    player.on('unstableNetwork', function(e){
+
+        let message = 'Because the network connection is unstable, the following media source will be played.';
+
+        if(player.getCurrentQuality()+1 ===  player.getQualityLevels().length){
+            message = 'Network connection is unstable. Check the network connection.';
+        }
+
+        showMessage(message, 5000);
+    });
+
 }
 
 export default MessageBox;

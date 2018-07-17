@@ -1,5 +1,5 @@
 /*! For license information please see ovenplayer.sdk.js.LICENSE */
-/*! OvenPlayerv0.6.3 | (c)2018 AirenSoft Co., Ltd. | MIT license (https://github.com/AirenSoft/OvenPlayerPrivate/blob/master/LICENSE) | Github : https://github.com/AirenSoft/OvenPlayer */
+/*! OvenPlayerv0.6.4 | (c)2018 AirenSoft Co., Ltd. | MIT license (https://github.com/AirenSoft/OvenPlayerPrivate/blob/master/LICENSE) | Github : https://github.com/AirenSoft/OvenPlayer */
 /******/!function(e){// webpackBootstrap
 /******/ // install a JSONP callback for chunk loading
 /******/function t(t){
@@ -706,7 +706,7 @@ e.children||(e.children=[]),Object.defineProperty(e,"loaded",{enumerable:!0,get:
 /* 8 */
 /***/function(e,t,n){"use strict";Object.defineProperty(t,"__esModule",{value:!0});
 // STATE
-t.STATE_BUFFERING="buffering",t.STATE_IDLE="idle";var r=t.STATE_COMPLETE="complete";t.STATE_PAUSED="paused",t.STATE_PLAYING="playing",t.STATE_ERROR="error",t.STATE_LOADING="loading",t.STATE_STALLED="stalled",t.PROVIDER_HTML5="html5",t.PROVIDER_WEBRTC="webrtc",t.PROVIDER_DASH="dash",t.PROVIDER_HLS="hls",t.CONTENT_COMPLETE=r,t.READY="ready",t.DESTROY="destroy",t.CONTENT_SEEK="seek",t.CONTENT_BUFFER_FULL="bufferFull",t.DISPLAY_CLICK="displayClick",t.CONTENT_LOADED="loaded",t.CONTENT_SEEKED="seeked",t.NETWORK_UNSTABLE="unstable",t.ERROR="error",t.PLAYER_STATE="stateChanged",t.PLAYER_COMPLETE=r,t.PLAYER_PAUSE="pause",t.PLAYER_PLAY="play",t.CONTENT_BUFFER="bufferChanged",t.CONTENT_TIME="time",t.CONTENT_RATE_CHANGE="ratechange",t.CONTENT_VOLUME="volumeChanged",t.CONTENT_MUTE="mute",t.CONTENT_META="metaChanged",t.CONTENT_LEVELS="qualityLevelChanged",t.CONTENT_LEVEL_CHANGED="currentQualityLevelChanged",t.PLAYBACK_RATE_CHANGED="playbackRateChanged",t.CONTENT_CAPTION_CUE_CHANGED="cueChanged",t.CONTENT_CAPTION_CHANGED="captionChanged",t.INIT_ERROR=100,t.PLAYER_UNKNWON_ERROR=300,t.PLAYER_UNKNWON_OPERATION_ERROR=301,t.PLAYER_UNKNWON_NEWWORK_ERROR=302,t.PLAYER_UNKNWON_DECODE_ERROR=303,t.PLAYER_FILE_ERROR=304,t.PLAYER_CAPTION_ERROR=305,t.PLAYER_WEBRTC_WS_ERROR=501,t.PLAYER_WEBRTC_WS_CLOSED=502,t.PLAYER_WEBRTC_ADD_ICECANDIDATE_ERROR=503,t.PLAYER_WEBRTC_SET_REMOTE_DESC_ERROR=504,t.PLAYER_WEBRTC_CREATE_ANSWER_ERROR=505,t.PLAYER_WEBRTC_SET_LOCAL_DESC_ERROR=506},
+t.STATE_BUFFERING="buffering",t.STATE_IDLE="idle";var r=t.STATE_COMPLETE="complete";t.STATE_PAUSED="paused",t.STATE_PLAYING="playing",t.STATE_ERROR="error",t.STATE_LOADING="loading",t.STATE_STALLED="stalled",t.PROVIDER_HTML5="html5",t.PROVIDER_WEBRTC="webrtc",t.PROVIDER_DASH="dash",t.PROVIDER_HLS="hls",t.CONTENT_COMPLETE=r,t.READY="ready",t.DESTROY="destroy",t.CONTENT_SEEK="seek",t.CONTENT_BUFFER_FULL="bufferFull",t.DISPLAY_CLICK="displayClick",t.CONTENT_LOADED="loaded",t.CONTENT_SEEKED="seeked",t.NETWORK_UNSTABLED="unstableNetwork",t.ERROR="error",t.PLAYER_STATE="stateChanged",t.PLAYER_COMPLETE=r,t.PLAYER_PAUSE="pause",t.PLAYER_PLAY="play",t.CONTENT_BUFFER="bufferChanged",t.CONTENT_TIME="time",t.CONTENT_RATE_CHANGE="ratechange",t.CONTENT_VOLUME="volumeChanged",t.CONTENT_MUTE="mute",t.CONTENT_META="metaChanged",t.CONTENT_LEVELS="qualityLevelChanged",t.CONTENT_LEVEL_CHANGED="currentQualityLevelChanged",t.PLAYBACK_RATE_CHANGED="playbackRateChanged",t.CONTENT_CAPTION_CUE_CHANGED="cueChanged",t.CONTENT_CAPTION_CHANGED="captionChanged",t.INIT_ERROR=100,t.PLAYER_UNKNWON_ERROR=300,t.PLAYER_UNKNWON_OPERATION_ERROR=301,t.PLAYER_UNKNWON_NEWWORK_ERROR=302,t.PLAYER_UNKNWON_DECODE_ERROR=303,t.PLAYER_FILE_ERROR=304,t.PLAYER_CAPTION_ERROR=305,t.PLAYER_WEBRTC_WS_ERROR=501,t.PLAYER_WEBRTC_WS_CLOSED=502,t.PLAYER_WEBRTC_ADD_ICECANDIDATE_ERROR=503,t.PLAYER_WEBRTC_SET_REMOTE_DESC_ERROR=504,t.PLAYER_WEBRTC_CREATE_ANSWER_ERROR=505,t.PLAYER_WEBRTC_SET_LOCAL_DESC_ERROR=506},
 /* 9 */
 /***/function(e,t,n){"use strict";Object.defineProperty(t,"__esModule",{value:!0});t.default=function(e){var t=e,n=[],r=function(e,t,n){var r=0,o=e.length;for(r=0;r<o;r++){var u=e[r];u.listener.apply(u.context||n,t)}};return t.on=function(e,r,o){return(n[e]||(n[e]=[])).push({listener:r,context:o}),t},t.trigger=function(e){if(!n)return!1;var o=[].slice.call(arguments,1),u=n[e],i=n.all;u&&r(u,o,t),i&&r(i,arguments,t)},t.off=function(e,r,o){if(!n)return!1;if(!e&&!r&&!o)return n=[],t;for(var u=e?[e]:Object.keys(n),i=0,a=u.length;i<a;i++){e=u[i];var l=n[e];if(l){var c=n[e]=[];if(r||o)for(var f=0,s=l.length;f<s;f++){var d=l[f];(r&&r!==d.listener&&r!==d.listener.listener&&r!==d.listener._callback||o&&o!==d.context)&&c.push(d)}c.length||delete n[e]}}return t},t.once=function(e,n,r){var o=0,u=function r(){o++||(t.off(e,r),n.apply(t,arguments))};return u._listener=n,t.on(e,u,r)},t}},
 /* 10 */
@@ -732,7 +732,7 @@ e.exports=n},
 /**
  * Created by hoho on 2018. 6. 29..
  */
-t.version="0.6.3-rev.8b5d025";
+t.version="0.6.4-rev.4a8794f";
 /***/},
 /* 16 */
 /***/function(e,t,n){"use strict";Object.defineProperty(t,"__esModule",{value:!0});var r=u(n(5)),o=u(n(4));function u(e){return e&&e.__esModule?e:{default:e}}
@@ -801,7 +801,9 @@ var d=(0,a.default)(e),p=(0,l.default)(),v=(0,c.default)(),y="",g="",h="",m=func
 //This passes the event created by the Provider to API.
 (y=e[r](t,g)).on("all",function(e,t){
 //Auto next source when player load was fail by amiss source.
-if(e===f.ERROR&&(t.code===f.PLAYER_FILE_ERROR||5===parseInt(t.code/100))||e===f.NETWORK_UNSTABLE){var r=n.getCurrentQuality();n.setCurrentQuality(r+1)}n.trigger(e,t)})}).then(function(){y.preload(p.getCurrentSources(),e),h.flush(),
+if(n.trigger(e,t),e===f.ERROR&&(t.code===f.PLAYER_FILE_ERROR||5===parseInt(t.code/100))||e===f.NETWORK_UNSTABLED){var r=n.getCurrentQuality();r+1<n.getQualityLevels().length&&(
+//this sequential has available source.
+n.pause(),n.setCurrentQuality(r+1))}})}).then(function(){y.preload(p.getCurrentSources(),e),h.flush(),
 //This is no reason to exist anymore.
 h.destroy(),n.trigger(f.READY)}).catch(function(e){var t={code:f.INIT_ERROR,reason:"init error.",message:"Player init error.",error:e};n.trigger(f.ERROR,t),
 //xxx : If you init empty sources. (I think this is strange case.)

@@ -58,22 +58,9 @@ var player = OvenPlayer.create("player", {
 
     <script>
         const totalTestSources = [
-            {
-                type: 'mp4',
-                file:  '../OCP_480.mp4',
-                label: '360P'
-            },
-            {
-                type: 'mp4',
-                file: '../OCP_720.mp4',
-                label: '480P'
-            },
-            {
-                type: 'mp4',
-                file: '../OCP_1080.mp4',
-                label: '1080',
-                default: 'true'
-            }
+            {type : "webrtc", file : "ws://dev2.airensoft.com:3333/app/stream_o" , label: "WEBRTC 1080"},
+            {type : "webrtc", file : "ws://dev2.airensoft.com:3333/app/stream_o" , label: "WEBRTC 720"},
+            {type : "webrtc", file : "ws://dev2.airensoft.com:3333/app/stream_o" , label: "WEBRTC 480"}
         ];
         var player = OvenPlayer.create("player", {
             debug : true,
