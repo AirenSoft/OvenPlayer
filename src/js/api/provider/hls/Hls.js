@@ -28,12 +28,14 @@ const HlsProvider = function(element, playerConfig){
                 element.seek(lastPlayPosition);
                 super_play();
             }
+
         };
 
-        that = CoreProvider(PROVIDER_HLS, element, playerConfig, sourceLoaded);
+        that = CoreProvider(PROVIDER_HLS, hls, playerConfig, onLoad);
         OvenPlayerConsole.log("HLS PROVIDER LOADED.");
         super_play = that.super('play');
         super_destroy = that.super('destroy');
+
 
         that.destroy = () =>{
             hls.destroy();

@@ -1,293 +1,205 @@
-import $ from 'utils/jquery';
-import playerTemplate from 'view/playerTemplate';
-import Spinner from 'view/components/spinner';
-import BigButton from 'view/components/bigButton';
-import SettingPanel from 'view/components/settingPanel';
-import CaptionViewer from 'view/components/captionViewer';
-import MessageBox from 'view/components/messageBox';
-import BottomPanel from 'view/components/bottomPanel';
-import LowLatencyInfoPanel from 'view/components/lowLatencyInfoPanel';
-import ContextPanel from 'view/components/contextPanel';
-import KeyboardEvents from 'view/features/keyboardEvents';
+/**
+ * Created by hoho on 2018. 7. 20..
+ */
+import OvenTemplate from 'view/engine/OvenTemplate';
+import Helper from 'view/helper/main';
+import Controls from 'view/controls/main';
+import SettingPanelList from 'view/global/SettingPanelList';
+import ContextPanel from 'view/helper/contextPanel';
+import LA$ from 'utils/likeA$';
+import _ from 'utils/underscore';
+import {
+    READY,
+    STATE_IDLE,
+    STATE_PLAYING,
+    STATE_STALLED,
+    STATE_LOADING,
+    STATE_COMPLETE,
+    STATE_PAUSED,
+    STATE_ERROR,
+    CONTENT_META,
+    PLAYER_STATE,
+    ERROR
+} from "api/constants";
 
-function View() {
 
-    /**
-     * View object
-     */
-    const self = this;
+const View = function($container){
+    let controls = "", helper = "", $playerRoot, contextPanel = "", api = "", autoHideTimer = "";
 
-    /**
-     * ui model.
-     * 
-     * @type       {jQueryElem}
-     */
-    const ui = self.ui =$({});
+    let setHide = function (hide, autoHide) {
 
-    /**
-     * Top DomElement of player.
-     */
-    let ovpElem = null;
+        if (autoHideTimer) {
+            clearTimeout(autoHideTimer);
+            autoHideTimer = null;
+        }
 
-    const PLAYING_MODE = ui.PLAYING_MODE ={
-        READY : 'READY',
-        PLAYING : 'PLAYING',
-        PAUSED : 'PAUSED',
-        ENDED : 'ENDED'
+        if (hide) {
+            if(SettingPanelList.length > 0){
+                return false;
+            }
+            $playerRoot.addClass("ovp-autohide");
+        } else {
+            $playerRoot.removeClass("ovp-autohide");
+
+            if (autoHide) {
+                autoHideTimer = setTimeout(function() {
+                    if(SettingPanelList.length > 0){
+                        return false;
+                    }
+                    $playerRoot.addClass("ovp-autohide");
+                }, 1800);
+            }
+        }
+    };
+    let togglePlayPause = function () {
+        const currentState = api.getState();
+
+        if (currentState === STATE_IDLE || currentState === STATE_PAUSED || currentState === STATE_COMPLETE) {
+            api.play();
+        }else if(currentState === STATE_PLAYING){
+            api.pause();
+        }
+    };
+    let seek = function (seconds, isRewind) {
+
+        const duration = api.getDuration();
+        const currentPosition = api.getPosition();
+        let position = 0;
+
+        if(isRewind){
+            position = Math.max(currentPosition - seconds, 0);
+        }else{
+            position = Math.min(currentPosition + seconds, duration);
+        }
+
+        api.seek(position);
+    };
+    let volume = function(isUp){
+        const currentVolumn = api.getVolume();
+        let newVolume = 0;
+        if(isUp){
+            newVolume =  Math.min(currentVolumn + 5, 100);
+        }else{
+            newVolume = Math.max(currentVolumn - 5, 0);
+        }
+        api.setVolume(newVolume);
+    };
+    let createContextPanel = function(pageX, pageY){
+        if(contextPanel){
+            contextPanel.destroy();
+            contextPanel = null;
+        }
+        contextPanel = ContextPanel($playerRoot, api, {pageX : pageX, pageY : pageY});
     };
 
-
-    const UI_STATUS = ui.UI_STATUS = {
-        PLAYER_MOUSE_IN : 'PLAYER_MOUSE_IN',
-        PLAYER_MOUSE_OUT : 'PLAYER_MOUSE_OUT',
-        BOTTOM_PANEL_MOUSE_IN : 'BOTTOM_PANEL_MOUSE_IN',
-        BOTTOM_PANEL_MOUSE_OUT : 'BOTTOM_PANEL_MOUSE_OUT',
-        SETTING_PANEL_ACITVE : 'SETTING_PANEL_ACITVE',
-        SETTING_PANEL_DEACTIVE : 'SETTING_PANEL_DEACTIVE'
+    const onRendered = function($current, template){
+        $playerRoot = $current;
     };
+    const onDestroyed = function(){
+        //Do nothing.
+    };
+    const events = {
+        "click .ovenplayer" : function(event, $current, template){
+            event.preventDefault();
 
-    self.appendPlayerMarkup = function(containerElem) {
-
-        const $containerElem = $(containerElem);
-
-        ui.data('containerElem', $containerElem);
-        ui.containerElem = containerElem;
-
-        ovpElem = $(playerTemplate());
-
-        $containerElem.append(ovpElem);
-        ui.data('ovpElement', ovpElem);
-        ui.ovpElement = ovpElem[0];
-
-        const mediaElementContainer = ovpElem.find('.ovp-media-element-container');
-
-        ui.data('mediaElementContainer', mediaElementContainer[0]);
-        ui.mediaElementContainer = mediaElementContainer[0];
-    }
-
-    self.getMediaElementContainer = function() {
-
-        return ui.mediaElementContainer;
-    }
-
-    self.addComponentsAndFunctions = function(player, options) {
-
-        /**
-         * Bind options to ui model.
-         */
-        ui.options = options
-
-        /**
-         * The parent element of the player's UI elements
-         */
-        const opUiElem = ovpElem.find('.ovp-ui');
-
-        // Low latency display part
-        const lowLatencyInfoPanel = new LowLatencyInfoPanel(opUiElem, player, ui);
-        self.lowLatencyInfoPanel = lowLatencyInfoPanel;
-
-        // Subtitle display part
-        const captionViewer = new CaptionViewer(opUiElem, player, ui);
-        self.captionViewer = captionViewer;
-
-        // Message box
-        const messageBox = new MessageBox(opUiElem, player, ui);
-        self.messageBox = messageBox;
-
-        // Add spinner
-        const spinner = new Spinner(opUiElem, player, ui);
-        self.spinner = spinner;
-
-        // Add Big Button
-        const bigButton = new BigButton(opUiElem, player, ui);
-        self.bigButton = bigButton;
-
-        // Add setting panel
-        const settingPanel = new SettingPanel(opUiElem, player, ui);
-        self.settingPanel = settingPanel;
-        
-        // Add bottom panel
-        const bottomPanel = new BottomPanel(opUiElem, player, ui);
-        self.bottomPanel = bottomPanel;
-
-        // Add Context Panel
-        const contextPanel = new ContextPanel(opUiElem, player, ui);
-        self.contextPanel = contextPanel;
-
-        let playingMode = 'ready';
-
-        ui.playingMode = playingMode;
-        
-        function setPlayingModeUI(mode) {
-
-            ovpElem.removeClass('ovp-playing-mode');
-            ovpElem.removeClass('ovp-paused-mode');
-            ovpElem.removeClass('ovp-ended-mode');
-
-            if (mode === 'play') {
-
-                ui.playingMode = ui.PLAYING_MODE.PLAYING;
-                ovpElem.addClass('ovp-playing-mode');
-                setAutoHide(false, true);
-            } else if (mode === 'pause') {
-
-                ui.playingMode = ui.PLAYING_MODE.PAUSED;
-                ovpElem.addClass('ovp-paused-mode');
-                setAutoHide(false);
-            } else if (mode === 'complete') {
-                
-                ui.playingMode = ui.PLAYING_MODE.ENDED;
-                ovpElem.addClass('ovp-ended-mode');
-                setAutoHide(false);
+            if(contextPanel){
+                contextPanel.destroy();
+                contextPanel = null;
+                return false;
             }
-        };
-
-        ui.setPlayingModeUI = setPlayingModeUI;
-
-        let autoHideTimer = null;
-
-        function setAutoHide(hide, withTimer) {
-
-            if (autoHideTimer != null) {
-
-                clearTimeout(autoHideTimer);
-                autoHideTimer = null;
+            if(!LA$(event.target).closest(".ovp-controls") &&
+                !LA$(event.target).closest(".ovp-setting-panel")){
+                togglePlayPause();
             }
+            if(!LA$(event.target).closest(".ovp-setting-panel") && !LA$(event.target).closest(".ovp-setting-button") && SettingPanelList.length > 0){
+                //clear all SettingPanelTemplate
+                _.each(SettingPanelList, function(settingPanel){
+                    settingPanel.destroy();
+                });
+                SettingPanelList.splice(0, SettingPanelList.length);
+            }
+        },
+        "mouseenter .ovenplayer" : function(event, $current, template){
+            event.preventDefault();
 
-            if (hide) {
-
-                addAutoHideClass();
+            if (api.getState() === STATE_PLAYING) {
+                setHide(false, true);
             } else {
+                setHide(false);
+            }
+        },
+        "mousemove .ovenplayer" : function(event, $current, template){
+            event.preventDefault();
 
-                removeAutoHideClass();
+            if (api.getState() === STATE_PLAYING) {
+                setHide(false, true);
+            } else {
+                setHide(false);
+            }
+        },
+        "mouseleave .ovenplayer" : function(event, $current, template){
+            event.preventDefault();
 
-                if (withTimer) {
+            if(api.getState() === STATE_PLAYING){
+                setHide(true);
+            }
+        },
 
-                    autoHideTimer = setTimeout(function() {
+        "keydown .ovenplayer" : function(event, $current, template){
+            switch(event.keyCode){
+                case 32 :   //sapce
+                    event.preventDefault();
+                    togglePlayPause();
+                    break;
+                case 37 : //arrow left
+                    event.preventDefault();
+                    seek(5, true);
+                    break;
+                case 39 : //arrow right
+                    event.preventDefault();
+                    seek(5, false);
+                    break;
+                case 38 : //arrow up
+                    event.preventDefault();
+                    volume(true);
+                    break;
+                case 40 : //arrow up
+                    event.preventDefault();
+                    volume(false);
+                    break;
+            }
+        },
+        "contextmenu .ovenplayer" : function(event, $current, template){
+            event.preventDefault();
+            createContextPanel(event.pageX, event.pageY);
+            return false;
+        }
+    };
 
-                        addAutoHideClass();
-                    }, 1800);
+
+    return Object.assign(OvenTemplate($container, "View", $container.id, events, onRendered, onDestroyed, true), {
+        getMediaElementContainer: function () {
+            return $playerRoot.find(".ovp-media-element-container").get();
+        },
+        setApi: function (playerInstance) {
+            api = playerInstance;
+            helper = Helper($playerRoot, playerInstance);
+            controls = Controls($playerRoot, playerInstance);
+
+
+            api.on(PLAYER_STATE, function(data){
+                if(data && data.newstate){
+                    if(data.newstate === STATE_PLAYING){
+                        setHide(false, true);
+                    }else{
+                        setHide(false);
+                    }
                 }
-            }
+            });
         }
+    });
+};
 
-        function addAutoHideClass() {
 
-            if (ui.settingsShown) {
-                return;
-            }
-            
-            ovpElem.addClass('ovp-autohide');
-        }
-
-        function removeAutoHideClass() {
-
-            ovpElem.removeClass('ovp-autohide');
-        }
-
-        ui.setAutoHide = setAutoHide;
-
-        /**
-         * Events
-         */
-
-        player.on('error', function(e) {
-
-            ovpElem.addClass('ovp-on-error');
-        });
-
-        player.on('metaChanged', function(e) {
-
-            ovpElem.removeClass('ovp-on-error');
-        });
-
-        player.on('play', function(e) {
-
-            setPlayingModeUI('play');
-            ovpElem.removeClass('ovp-on-error');
-        });
-
-        player.on('pause', function(e) {
-
-            setPlayingModeUI('pause');
-        });
-
-        player.on('complete', function(e) {
-
-            setPlayingModeUI('complete');
-        });
-
-        player.on('seek', function(e) {
-
-            setAutoHide(false, true);
-        });
-
-        player.on('volume', function(e) {
-
-            setAutoHide(false, true);
-        });
-
-        player.on('mute', function(e) {
-
-            setAutoHide(false, true);
-        });
-
-        player.on('stateChaged', function(e) {
-
-        });
-
-        player.on('captionChanged', function(e, track) {
-
-            setAutoHide(false, true);
-
-            if (player.getCurrentCaptions() > -1) {
-
-                ovpElem.addClass('ovp-caption-active');
-
-                ui.showMessage(track.label + ' 자막이 활성화됐습니다.', true, 1800);
-            } else {
-
-                ovpElem.removeClass('ovp-caption-active');
-                ui.hideMessage();
-            }
-        });
-
-        ovpElem.on('mouseenter', function(e) {
-
-            if (ui.playingMode == ui.PLAYING_MODE.PLAYING) {
-                setAutoHide(false, true);
-            } else {
-                setAutoHide(false);
-            }
-        });
-
-        ovpElem.on('mousemove', function(e) {
-
-            if (ui.playingMode == ui.PLAYING_MODE.PLAYING) {
-                setAutoHide(false, true);
-            } else {
-                setAutoHide(false);
-            }
-        });
-
-        ovpElem.on('mouseleave', function(e) {
-            
-            if (ui.playingMode == ui.PLAYING_MODE.PLAYING) {
-                setAutoHide(true);
-            }
-        });
-
-        // Add keyboard events
-        new KeyboardEvents(ovpElem, player, ui);
-
-        // when player removed.
-        player.on('destroy', function(e) {
-
-            ui.data('containerElem').empty();
-
-        });
-    };
-
-}
 
 export default View;

@@ -11,7 +11,7 @@ const Configurator = function(options){
         const Defaults = {
             defaultPlaybackRate: 1,
             playbackRateControls: false,
-            playbackRates: [0.5, 1, 1.25, 1.5, 2],
+            playbackRates: [0.25, 0.5, 1, 1.5, 2],
             mute: false,
             volume: 90,
             width: 640,

@@ -262,11 +262,12 @@ const Core = function (providerName, extendedElement, playerConfig, onLoad){
         OvenPlayerConsole.log("CORE : getCurrentQuality() ", currentQuality);
         return currentQuality;
     };
-    that.setCurrentQuality = (qualityIndex, needLoad) => {
-        OvenPlayerConsole.log("CORE : setCurrentQuality() ", qualityIndex, needLoad);
+    that.setCurrentQuality = (qualityIndex, needProviderChange) => {
+        OvenPlayerConsole.log("CORE : setCurrentQuality() ", qualityIndex, needProviderChange);
         if(currentQuality == qualityIndex){
             return false;
         }
+
         if(qualityIndex > -1){
             if(sources && sources.length > qualityIndex){
                 //that.pause();
@@ -279,7 +280,7 @@ const Core = function (providerName, extendedElement, playerConfig, onLoad){
                 });
 
                 playerConfig.setQualityLabel(sources[qualityIndex].label);
-                if(needLoad){
+                if(needProviderChange){
 
                     _load(elVideo.currentTime || 0);
                 }

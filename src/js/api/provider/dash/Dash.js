@@ -43,7 +43,7 @@ const DashProvider = function(element, playerConfig){
                     super_play();
                 }
             }
-        });
+        }, that);
 
         that.destroy = () =>{
             dashObject.reset();

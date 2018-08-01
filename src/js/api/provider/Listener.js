@@ -46,6 +46,8 @@ const Listener = function(providerName, extendedElement, elVideo, provider){
     const onError = function(error){
         provider.setState(STATE_ERROR);
         provider.pause();
+
+        //PRIVATE_STATE_ERROR
         provider.trigger(ERROR, error );
     };
 

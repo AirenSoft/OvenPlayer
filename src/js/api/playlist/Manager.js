@@ -11,7 +11,7 @@ import SupportChecker from "../SupportChecker";
 const Manager = function(){
     const that = {};
     let currentPlaylist = [];
-    let sc = SupportChecker();
+    let supportChecker = SupportChecker();
 
     OvenPlayerConsole.log("PlaylistManager loaded.");
 
@@ -117,11 +117,11 @@ const Manager = function(){
 
                 // If the source doesn't have a label, number it
                 if (!playlistItem.sources[i].label) {
-                    playlistItem.sources[i].label = i.toString();
+                    playlistItem.sources[i].label = playlistItem.sources[i].type+"-"+i.toString();
                 }
 
                 prettySource = makePrettySource(playlistItem.sources[i]);
-                if(sc.findProviderNameBySource(prettySource)){
+                if(supportChecker.findProviderNameBySource(prettySource)){
                     playlistItem.sources[i] = prettySource;
                 }else{
                     playlistItem.sources[i] = null;

@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>OvenPlayer</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Noto+Sans" rel="stylesheet">
+
+    <link rel="stylesheet" href="../dist/development/ovenplayer/css/player.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dashjs/2.7.0/dash.all.min.js"></script>
+    <script src="../dist/development/ovenplayer/ovenplayer.js"></script>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="container">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="navbar-brand" href="/">OvenPlayer</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://github.com/AirenSoft/OvenPlayer" target="_blank">GitHub</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://github.com/AirenSoft/OvenPlayer/blob/master/docs/api.md" target="_blank">Docs</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <div id="demo-navi" class="row">
+            <div class="col-12 mb-4">
+                <div id="player"></div>
+            </div>
+
+            <div class="col-12 mb-4">
+                <div class="card">
+                    <div class="card-body">
+
+                        <div class="row mb-4">
+                            <div class="col-12">
+
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ choicedProtocol }}</button>
+                                        <div class="dropdown-menu">
+                                            <a v-for="protocol in protocols" class="dropdown-item" v-bind:data-value="protocol" v-on:click="setProtocol(protocol)">
+                                                {{ protocol }}
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                    <input type="text" class="form-control" placeholder="Please Enter URL." v-model="url">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-outline-secondary" type="button" v-on:click="addSource">Add Source</button>
+                                    </div>
+                                </div>
+                                <small v-if="errorMessage" class="form-text text-danger text-center">
+                                    {{ errorMessage }}
+                                </small>
+
+                            </div>
+                        </div>
+
+                        <div class="card mb-2" v-for="(source, index) in sources">
+                            <div class="card-body">
+                                <strong>{{ source.type }}</strong> {{ source.file }}
+                                <button type="button" class="close" aria-label="Close" v-on:click="sources.splice(index, 1)">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="text-right mt-2"  v-if="sources.length">
+                            <button type="button" class="btn btn-primary" v-on:click="loadSources">Load Player</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+
+
+    <script>
+        var player = "", preSources = "";
+        var getParameterByName = function (name, url) {
+            if (!url) url = window.location.href;
+            name = name.replace(/[\[\]]/g, '\\$&');
+            var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+                results = regex.exec(url);
+            if (!results) return null;
+            if (!results[2]) return '';
+            return decodeURIComponent(results[2].replace(/\+/g, ' '));
+        }
+        var urlSources = getParameterByName("sources");
+        if(urlSources){
+            preSources = JSON.parse(urlSources);
+        }
+        $( document ).ready(function() {
+
+            player = OvenPlayer.create("player", {
+                sources: preSources ||[
+                    {
+                        type: 'mp4',
+                        file:  '../dist/OCP_480.mp4',
+                        label: '480p'
+                    },
+                    {
+                        type: 'mp4',
+                        file: '../dist/OCP_720.mp4',
+                        label: '720p'
+                    },
+                    {
+                        type: 'mp4',
+                        file: '../dist/OCP_1080.mp4',
+                        label: '1080p'
+                    }
+                ]
+            });
+        });
+
+        var navigation = new Vue({
+            el: '#demo-navi',
+            data: {
+                choicedProtocol : "Protocol",
+                protocols : ["webrtc", "dash", "hls"],
+                url : "",
+                sources : preSources||[],
+                sourceId : 0,
+                errorMessage : ""
+            },
+            methods : {
+                setProtocol : function(protocol){
+                    this.choicedProtocol = protocol;
+                },
+                addSource : function(){
+                    var type = "", data = {};
+                    if(this.choicedProtocol == "Protocol"){
+                        this.errorMessage = "You have to choice a protocol.";
+                        return;
+                    }
+                    if(!this.url){
+                        this.errorMessage = "You have to enter the url.";
+                        return;
+                    }
+
+
+                    if(this.choicedProtocol === "webrtc" && ( this.url.indexOf('ws:') !== 0 && this.url.indexOf('wss:') !== 0)){
+                        this.errorMessage = "You have to enter OME url. ex)ws://dev2.airensoft.com:3333/app/stream_o";
+                        return;
+                    }
+
+                    this.sources.push({
+                        id : this.sourceId ++,
+                        file : this.url,
+                        type : this.choicedProtocol
+                    });
+                    this.errorMessage = "";
+                    this.choicedProtocol = "Protocol";
+                    this.url = "";
+
+                },
+                loadSources : function(){
+                    if(this.sources && this.sources.length > 0){
+                        player.load(JSON.parse(JSON.stringify(this.sources)));
+                        this.errorMessage = "";
+                    }else{
+                        this.errorMessage = "Please add your source.";
+                    }
+
+                }
+            }
+        });
+
+
+
+
+    </script>
+</body>
+</html>

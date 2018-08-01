@@ -18,13 +18,33 @@ OvenPlayer.create = function (container, options) {
 
     let containerElement = checkAndGetContainerElement(container);
 
-    const view = new View();
+    /*const view = new View();
 
     view.appendPlayerMarkup(containerElement);
 
     const playerInstance = OvenPlayerSDK.create(view.getMediaElementContainer(), options);
 
-    view.addComponentsAndFunctions(playerInstance, options);
+
+    view.addComponentsAndFunctions(playerInstance, options);*/
+
+
+    var player = View(containerElement);
+
+
+    const playerInstance = OvenPlayerSDK.create(player.getMediaElementContainer(), options);
+
+    Object.assign(playerInstance, {
+       getId : function(){
+           return containerElement.id;
+       }
+    });
+
+    player.setApi(playerInstance);
+
+
+
+    //console.log(containerElement);
+
 
     return playerInstance;
 }

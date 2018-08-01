@@ -6,13 +6,13 @@ import Promise, {resolved} from "api/shims/promise";
  * @param
  * */
 const Controller = function(){
-    let sc = SupportChecker();
+    let supportChacker = SupportChecker();
     const Providers = {};
 
     const that = {};
     OvenPlayerConsole.log("ProviderController loaded.");
 
-    const registerProvider = (name, provider) =>{
+    const registeProvider = (name, provider) =>{
         if(Providers[name]){
             return ;
         }
@@ -24,7 +24,7 @@ const Controller = function(){
         html5: function() {
             return require.ensure(['api/provider/html5/Html5'], function(require) {
                     const provider = require('api/provider/html5/Html5').default;
-                    registerProvider("html5", provider);
+                    registeProvider("html5", provider);
                     return provider;
                 }, function(err){
                     throw new Error('Network error');
@@ -34,7 +34,7 @@ const Controller = function(){
         webrtc : function(){
             return require.ensure(['api/provider/webrtc/WebRTC'], function(require) {
                     const provider = require('api/provider/webrtc/WebRTC').default;
-                    registerProvider("webrtc", provider);
+                    registeProvider("webrtc", provider);
                     return provider;
                 }, function(err){
                     throw new Error('Network error');
@@ -45,7 +45,7 @@ const Controller = function(){
             return require.ensure(['api/provider/dash/Dash'], function(require) {
                     const provider = require('api/provider/dash/Dash').default;
                     Providers["dash"] = provider;
-                    registerProvider("dash", provider);
+                    registeProvider("dash", provider);
                     return provider;
                 }, function(err){
                     throw new Error('Network error');
@@ -55,7 +55,7 @@ const Controller = function(){
         hls : function(){
             return require.ensure(['api/provider/hls/Hls'], function(require) {
                     const provider = require('api/provider/hls/Hls').default;
-                    registerProvider("hls", provider);
+                    registeProvider("hls", provider);
                     return provider;
                 }, function(err){
                     throw new Error('Network error');
@@ -64,7 +64,7 @@ const Controller = function(){
         }
     };
     that.loadProviders = (playlist) =>{
-        const supportedProviderNames = sc.findProviderNamesByPlaylist(playlist);
+        const supportedProviderNames = supportChacker.findProviderNamesByPlaylist(playlist);
         OvenPlayerConsole.log("ProviderController loadProviders() ", supportedProviderNames);
         return Promise.all(
             supportedProviderNames.filter(function(providerName){
@@ -82,14 +82,14 @@ const Controller = function(){
     };
 
     that.getProviderBySource = (source) => {
-        const supportedProviderName = sc.findProviderNameBySource(source);
+        const supportedProviderName = supportChacker.findProviderNameBySource(source);
         OvenPlayerConsole.log("ProviderController getProviderBySource() ", supportedProviderName);
         return that.findByName(supportedProviderName);
     };
 
     that.isSameProvider = (currentSource, newSource) => {
-        OvenPlayerConsole.log("ProviderController isSameProvider() ", sc.findProviderNameBySource(currentSource) , sc.findProviderNameBySource(newSource) );
-        return sc.findProviderNameBySource(currentSource) == sc.findProviderNameBySource(newSource);
+        OvenPlayerConsole.log("ProviderController isSameProvider() ", supportChacker.findProviderNameBySource(currentSource) , supportChacker.findProviderNameBySource(newSource) );
+        return supportChacker.findProviderNameBySource(currentSource) == supportChacker.findProviderNameBySource(newSource);
 
     };
 
