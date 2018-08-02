@@ -23,9 +23,13 @@ const FullScreenButton = function($container, api){
         if (checkFullScreen()) {
             $root.addClass("ovp-fullscreen");
             isFullScreen = true;
+            $iconExpand.hide();
+            $iconCompress.show();
         } else {
             $root.removeClass("ovp-fullscreen");
             isFullScreen = false;
+            $iconExpand.show();
+            $iconCompress.hide();
         }
     };
 

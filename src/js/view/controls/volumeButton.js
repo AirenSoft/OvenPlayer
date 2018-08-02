@@ -104,7 +104,7 @@ const VolumeButton = function($container, api){
         },
         "mouseenter .ovp-volume-button" : function(event, $current, template){
             event.preventDefault();
-            $sliderContainer.addClass("ovp-volume-slider-container-active");
+            $sliderContainer.addClass("active");
         },
         "mouseleave .ovp-volume-silder" : function(event, $current, template){
             event.preventDefault();

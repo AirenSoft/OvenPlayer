@@ -1,5 +1,5 @@
 /*! For license information please see ovenplayer.provider.html5.js.LICENSE */
-/*! OvenPlayerv0.6.5 | (c)2018 AirenSoft Co., Ltd. | MIT license (https://github.com/AirenSoft/OvenPlayerPrivate/blob/master/LICENSE) | Github : https://github.com/AirenSoft/OvenPlayer */
+/*! OvenPlayerv0.6.6 | (c)2018 AirenSoft Co., Ltd. | MIT license (https://github.com/AirenSoft/OvenPlayerPrivate/blob/master/LICENSE) | Github : https://github.com/AirenSoft/OvenPlayer */
 (window.webpackJsonp=window.webpackJsonp||[]).push([[2],{
 /***/15:
 /***/function(e,t,n){"use strict";Object.defineProperty(t,"__esModule",{value:!0});var o=function(e){return e&&e.__esModule?e:{default:e}}
@@ -7,9 +7,9 @@
  * @brief   html5 provider extended core.
  * @param   element video element.
  * @param   playerConfig    config.
- * */(n(57)),r=n(2);t.default=function(e,t){var n=(0,o.default)(r.PROVIDER_HTML5,e,t),a=n.super("destroy");return OvenPlayerConsole.log("HTML5 PROVIDER LOADED."),n.destroy=function(){a(),OvenPlayerConsole.log("HTML5 : PROVIDER DESTROYED.")},n}},
-/***/57:
-/***/function(e,t,n){"use strict";Object.defineProperty(t,"__esModule",{value:!0});var o=i(n(11)),r=i(n(58)),a=n(2),l=i(n(0));i(n(6));function i(e){return e&&e.__esModule?e:{default:e}}t.default=function(e,t,n,i){OvenPlayerConsole.log("CORE loaded. ");var u={};(0,o.default)(u);var s=function(e,t){return l.default.isElement(t)?t:e===a.PROVIDER_DASH?t.getVideoElement():e===a.PROVIDER_HLS?t.media:null}(e,t),E=(0,r.default)(e,t,s,u),g=!1,c=!1,O=a.STATE_IDLE,d=0,v=-1,C=[],f=n.getConfig().image||"";s.playbackRate=s.defaultPlaybackRate=n.getDefaultPlaybackRate();var y=function(e){v=function(e){var t=Math.max(0,v);if(e)for(var o=0;o<e.length;o++)if(e[o].default&&(t=o),n.getQualityLabel()&&e[o].label===n.getQualityLabel())return o;return t}(e)},P=function(e){var t=C[v];if(i)i(t,e);else{OvenPlayerConsole.log("source loaded : ",t,"lastPlayPosition : "+e);var n=s.src,o=document.createElement("source");o.src=t.file,o.src!==n?(s.src=C[v].file,
+ * */(n(74)),r=n(2);t.default=function(e,t){var n=(0,o.default)(r.PROVIDER_HTML5,e,t),a=n.super("destroy");return OvenPlayerConsole.log("HTML5 PROVIDER LOADED."),n.destroy=function(){a(),OvenPlayerConsole.log("HTML5 : PROVIDER DESTROYED.")},n}},
+/***/74:
+/***/function(e,t,n){"use strict";Object.defineProperty(t,"__esModule",{value:!0});var o=i(n(11)),r=i(n(75)),a=n(2),l=i(n(0));i(n(6));function i(e){return e&&e.__esModule?e:{default:e}}t.default=function(e,t,n,i){OvenPlayerConsole.log("CORE loaded. ");var u={};(0,o.default)(u);var s=function(e,t){return l.default.isElement(t)?t:e===a.PROVIDER_DASH?t.getVideoElement():e===a.PROVIDER_HLS?t.media:null}(e,t),E=(0,r.default)(e,t,s,u),g=!1,c=!1,O=a.STATE_IDLE,d=0,v=-1,C=[],f=n.getConfig().image||"";s.playbackRate=s.defaultPlaybackRate=n.getDefaultPlaybackRate();var y=function(e){v=function(e){var t=Math.max(0,v);if(e)for(var o=0;o<e.length;o++)if(e[o].default&&(t=o),n.getQualityLabel()&&e[o].label===n.getQualityLabel())return o;return t}(e)},P=function(e){var t=C[v];if(i)i(t,e);else{OvenPlayerConsole.log("source loaded : ",t,"lastPlayPosition : "+e);var n=s.src,o=document.createElement("source");o.src=t.file,o.src!==n?(s.src=C[v].file,
 // Do not call load if src was not set. load() will cancel any active play promise.
 n&&s.load()):0==e&&s.currentTime>0&&u.seek(e),e>0&&(u.seek(e),u.play()),u.trigger(a.CONTENT_LEVELS,{currentQuality:v}),f&&(s.poster=f)}};return u.getCurrentSource=function(){return OvenPlayerConsole.log("CORE : getCurrentSource() ",C[v]),C[v]},u.canSeek=function(){return OvenPlayerConsole.log("CORE : canSeek() ",g),g},u.setCanSeek=function(e){OvenPlayerConsole.log("CORE : setCanSeek() ",e),g=e},u.isSeeking=function(){return OvenPlayerConsole.log("CORE : isSeeking() ",c),c},u.setSeeking=function(e){OvenPlayerConsole.log("CORE : setSeeking() ",e),c=e},
 //that.isLive = ()=>{return isLive;};
@@ -23,7 +23,7 @@ u.setState(a.STATE_IDLE),OvenPlayerConsole.log("source changed : "+e),v=e,u.trig
 u.off(),OvenPlayerConsole.log("CORE : destroy() player stop, listener, event destroied")},
 //XXX : This is es6. So we can't "prototype export". Finally I consider this method.
 u.super=function(e){var t=u[e];return function(){return t.apply(u,arguments)}},u}},
-/***/58:
+/***/75:
 /***/function(e,t,n){"use strict";Object.defineProperty(t,"__esModule",{value:!0});var o=n(2);
 /**
  * @brief   Trigger on various video events.

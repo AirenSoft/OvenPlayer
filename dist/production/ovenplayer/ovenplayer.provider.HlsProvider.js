@@ -1,5 +1,5 @@
 /*! For license information please see ovenplayer.provider.HlsProvider.js.LICENSE */
-/*! OvenPlayerv0.6.5 | (c)2018 AirenSoft Co., Ltd. | MIT license (https://github.com/AirenSoft/OvenPlayerPrivate/blob/master/LICENSE) | Github : https://github.com/AirenSoft/OvenPlayer */
+/*! OvenPlayerv0.6.6 | (c)2018 AirenSoft Co., Ltd. | MIT license (https://github.com/AirenSoft/OvenPlayerPrivate/blob/master/LICENSE) | Github : https://github.com/AirenSoft/OvenPlayer */
 (window.webpackJsonp=window.webpackJsonp||[]).push([[1],{
 /***/12:
 /***/function(e,t,r){"use strict";Object.defineProperty(t,"__esModule",{value:!0});var n=function(e){return e&&e.__esModule?e:{default:e}}
@@ -10,9 +10,9 @@
  * */
 /**
  * Created by hoho on 2018. 6. 7..
- */(r(57)),i=r(2);t.default=function(e,t){var r="",o={},a="";try{(r=new Hls({debug:!1})).attachMedia(e),o=(0,n.default)(i.PROVIDER_HLS,r,t,onLoad),OvenPlayerConsole.log("HLS PROVIDER LOADED."),o.super("play"),a=o.super("destroy"),o.destroy=function(){r.destroy(),r=null,OvenPlayerConsole.log("HLS : PROVIDER DESTROUYED."),a()}}catch(e){throw new Error(e)}return o}},
+ */(r(74)),i=r(2);t.default=function(e,t){var r="",o={},a="";try{(r=new Hls({debug:!1})).attachMedia(e),o=(0,n.default)(i.PROVIDER_HLS,r,t,onLoad),OvenPlayerConsole.log("HLS PROVIDER LOADED."),o.super("play"),a=o.super("destroy"),o.destroy=function(){r.destroy(),r=null,OvenPlayerConsole.log("HLS : PROVIDER DESTROUYED."),a()}}catch(e){throw new Error(e)}return o}},
 /***/14:
-/***/function(e,t,r){"use strict";Object.defineProperty(t,"__esModule",{value:!0});var n=s(r(57)),i=r(3),o=s(r(60)),a=r(2);s(r(6));function s(e){return e&&e.__esModule?e:{default:e}}
+/***/function(e,t,r){"use strict";Object.defineProperty(t,"__esModule",{value:!0});var n=s(r(74)),i=r(3),o=s(r(77)),a=r(2);s(r(6));function s(e){return e&&e.__esModule?e:{default:e}}
 /**
  * @brief   webrtc provider extended core.
  * @param   element video element.
@@ -22,8 +22,8 @@
     * Created by hoho on 2018. 6. 11..
     */
 t.default=function(e,t){var r=null,s={},c="",d=function(e){s.setState(a.STATE_ERROR),s.pause(),s.trigger(a.ERROR,e)};return s=(0,n.default)(a.PROVIDER_WEBRTC,e,t,function(t){(0,i.isWebRTC)(t.file,t.type)&&(OvenPlayerConsole.log("WEBRTC : source loaded : ",t),r&&(r.destroy(),r=null),(r=(0,o.default)(s,t.file,d)).connect().then(function(t){e.srcObject=t,e.play()}))}),OvenPlayerConsole.log("WEBRTC PROVIDER LOADED."),c=s.super("destroy"),s.destroy=function(){r&&(r.destroy(),r=null),c(),OvenPlayerConsole.log("WEBRTC :  PROVIDER DESTROYED.")},s}},
-/***/57:
-/***/function(e,t,r){"use strict";Object.defineProperty(t,"__esModule",{value:!0});var n=s(r(11)),i=s(r(58)),o=r(2),a=s(r(0));s(r(6));function s(e){return e&&e.__esModule?e:{default:e}}t.default=function(e,t,r,s){OvenPlayerConsole.log("CORE loaded. ");var c={};(0,n.default)(c);var d=function(e,t){return a.default.isElement(t)?t:e===o.PROVIDER_DASH?t.getVideoElement():e===o.PROVIDER_HLS?t.media:null}(e,t),p=(0,i.default)(e,t,d,c),u=!1,l=!1,f=o.STATE_IDLE,m=0,v=-1,h=[],g=r.getConfig().image||"";d.playbackRate=d.defaultPlaybackRate=r.getDefaultPlaybackRate();var C=function(e){v=function(e){var t=Math.max(0,v);if(e)for(var n=0;n<e.length;n++)if(e[n].default&&(t=n),r.getQualityLabel()&&e[n].label===r.getQualityLabel())return n;return t}(e)},y=function(e){var t=h[v];if(s)s(t,e);else{OvenPlayerConsole.log("source loaded : ",t,"lastPlayPosition : "+e);var r=d.src,n=document.createElement("source");n.src=t.file,n.src!==r?(d.src=h[v].file,
+/***/74:
+/***/function(e,t,r){"use strict";Object.defineProperty(t,"__esModule",{value:!0});var n=s(r(11)),i=s(r(75)),o=r(2),a=s(r(0));s(r(6));function s(e){return e&&e.__esModule?e:{default:e}}t.default=function(e,t,r,s){OvenPlayerConsole.log("CORE loaded. ");var c={};(0,n.default)(c);var d=function(e,t){return a.default.isElement(t)?t:e===o.PROVIDER_DASH?t.getVideoElement():e===o.PROVIDER_HLS?t.media:null}(e,t),p=(0,i.default)(e,t,d,c),u=!1,l=!1,f=o.STATE_IDLE,m=0,v=-1,h=[],g=r.getConfig().image||"";d.playbackRate=d.defaultPlaybackRate=r.getDefaultPlaybackRate();var C=function(e){v=function(e){var t=Math.max(0,v);if(e)for(var n=0;n<e.length;n++)if(e[n].default&&(t=n),r.getQualityLabel()&&e[n].label===r.getQualityLabel())return n;return t}(e)},y=function(e){var t=h[v];if(s)s(t,e);else{OvenPlayerConsole.log("source loaded : ",t,"lastPlayPosition : "+e);var r=d.src,n=document.createElement("source");n.src=t.file,n.src!==r?(d.src=h[v].file,
 // Do not call load if src was not set. load() will cancel any active play promise.
 r&&d.load()):0==e&&d.currentTime>0&&c.seek(e),e>0&&(c.seek(e),c.play()),c.trigger(o.CONTENT_LEVELS,{currentQuality:v}),g&&(d.poster=g)}};return c.getCurrentSource=function(){return OvenPlayerConsole.log("CORE : getCurrentSource() ",h[v]),h[v]},c.canSeek=function(){return OvenPlayerConsole.log("CORE : canSeek() ",u),u},c.setCanSeek=function(e){OvenPlayerConsole.log("CORE : setCanSeek() ",e),u=e},c.isSeeking=function(){return OvenPlayerConsole.log("CORE : isSeeking() ",l),l},c.setSeeking=function(e){OvenPlayerConsole.log("CORE : setSeeking() ",e),l=e},
 //that.isLive = ()=>{return isLive;};
@@ -37,7 +37,7 @@ c.setState(o.STATE_IDLE),OvenPlayerConsole.log("source changed : "+e),v=e,c.trig
 c.off(),OvenPlayerConsole.log("CORE : destroy() player stop, listener, event destroied")},
 //XXX : This is es6. So we can't "prototype export". Finally I consider this method.
 c.super=function(e){var t=c[e];return function(){return t.apply(c,arguments)}},c}},
-/***/58:
+/***/75:
 /***/function(e,t,r){"use strict";Object.defineProperty(t,"__esModule",{value:!0});var n=r(2);
 /**
  * @brief   Trigger on various video events.
@@ -85,7 +85,7 @@ o.timeupdate=function(){var e=r.currentTime,t=r.duration;isNaN(t)||(i.isSeeking(
 o.waiting=function(){OvenPlayerConsole.log("EventListener : on waiting",i.getState()),i.isSeeking()?i.setState(n.STATE_LOADING):i.getState()==n.STATE_PLAYING&&i.setState(n.STATE_STALLED)},o.volumechange=function(){OvenPlayerConsole.log("EventListener : on volumechange",Math.round(100*r.volume)),i.trigger(n.CONTENT_VOLUME,{volume:Math.round(100*r.volume),mute:r.muted})},o.error=function(){var e=r.error&&r.error.code||0,t={0:{code:n.PLAYER_UNKNWON_ERROR,reason:"Unknown html5 video error",message:"Unknown html5 video error"},1:{code:n.PLAYER_UNKNWON_OPERATION_ERROR,reason:"Unknown operation aborted",message:"Unknown operation aborted"},2:{code:n.PLAYER_UNKNWON_NEWWORK_ERROR,reason:"Unknown network error",message:"Unknown network error"},3:{code:n.PLAYER_UNKNWON_DECODE_ERROR,reason:"Unknown decode error",message:"Unknown decode error"},4:{code:n.PLAYER_FILE_ERROR,reason:"File could not be played",message:"File could not be played"}}[e]||0;t.error=r.error,OvenPlayerConsole.log("EventListener : on error",t),function(e){i.setState(n.STATE_ERROR),i.pause(),
 //PRIVATE_STATE_ERROR
 i.trigger(n.ERROR,e)}(t)},Object.keys(o).forEach(function(e){r.removeEventListener(e,o[e]),r.addEventListener(e,o[e])}),a.destroy=function(){OvenPlayerConsole.log("EventListener : destroy()"),Object.keys(o).forEach(function(e){r.removeEventListener(e,o[e])})},a}},
-/***/59:
+/***/76:
 /***/function(e,t,r){"use strict";
 /* WEBPACK VAR INJECTION */
 /* WEBPACK VAR INJECTION */(function(r){var n,i,o,a,s=Object.assign||function(e){for(var t=1;t<arguments.length;t++){var r=arguments[t];for(var n in r)Object.prototype.hasOwnProperty.call(r,n)&&(e[n]=r[n])}return e},c="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(e){return typeof e}:function(e){return e&&"function"==typeof Symbol&&e.constructor===Symbol&&e!==Symbol.prototype?"symbol":typeof e};!function(r){"object"===c(t)&&void 0!==e?e.exports=r():(i=[],void 0===(o="function"==typeof(n=r)?n.apply(t,i):n)||(e.exports=o))}(function(){return function e(t,r,n){function i(s,c){if(!r[s]){if(!t[s]){if(!c&&("function"==typeof a&&a))return a(s,!0);if(o)return o(s,!0);var d=new Error("Cannot find module '"+s+"'");throw d.code="MODULE_NOT_FOUND",d}var p=r[s]={exports:{}};t[s][0].call(p.exports,function(e){var r=t[s][1][e];return i(r||e)},p,p.exports,e,t,r,n)}return r[s].exports}for(var o="function"==typeof a&&a,s=0;s<n.length;s++)i(n[s]);return i}({1:[function(e,t,r){var n=e("sdp");function i(e,t,r,i,o){var a=n.writeRtpDescription(e.kind,t);
@@ -688,8 +688,8 @@ return r.browser="Not a supported browser.",r;
 // Safari.
 r.browser="safari",r.version=o(t.userAgent,/AppleWebKit\/(\d+)\./,1)}return r}}},{}]},{},[3])(3)})}).call(this,r(16))
 /***/},
-/***/60:
-/***/function(e,t,r){"use strict";Object.defineProperty(t,"__esModule",{value:!0});a(r(59));var n=a(r(6)),i=r(2),o=a(r(0));function a(e){return e&&e.__esModule?e:{default:e}}t.default=function(e,t,r){t=t;var a="",s="",c="",d={iceServers:[{urls:"stun:stun.l.google.com:19302"}]},p={};function u(e){OvenPlayerConsole.log("WebRTC Loader closePeear()"),a&&(OvenPlayerConsole.log("Closing websocket connection..."),OvenPlayerConsole.log("Send Signaling : Stop."),a.send(JSON.stringify({command:"stop"})),a.close(),a=null),s&&(OvenPlayerConsole.log("Closing peer connection..."),c&&clearTimeout(c),s.close(),s=null),e&&r(e)}return function(){var e=window.onbeforeunload;window.onbeforeunload=function(t){e&&e(t),OvenPlayerConsole.log("This calls auto when browser closed."),u()}}(),p.connect=function(){return function(){OvenPlayerConsole.log("WebRTCLoader connecting...");var r=function(e,t,r){t.setLocalDescription(r).then(function(){
+/***/77:
+/***/function(e,t,r){"use strict";Object.defineProperty(t,"__esModule",{value:!0});a(r(76));var n=a(r(6)),i=r(2),o=a(r(0));function a(e){return e&&e.__esModule?e:{default:e}}t.default=function(e,t,r){t=t;var a="",s="",c="",d={iceServers:[{urls:"stun:stun.l.google.com:19302"}]},p={};function u(e){OvenPlayerConsole.log("WebRTC Loader closePeear()"),a&&(OvenPlayerConsole.log("Closing websocket connection..."),OvenPlayerConsole.log("Send Signaling : Stop."),a.send(JSON.stringify({command:"stop"})),a.close(),a=null),s&&(OvenPlayerConsole.log("Closing peer connection..."),c&&clearTimeout(c),s.close(),s=null),e&&r(e)}return function(){var e=window.onbeforeunload;window.onbeforeunload=function(t){e&&e(t),OvenPlayerConsole.log("This calls auto when browser closed."),u()}}(),p.connect=function(){return function(){OvenPlayerConsole.log("WebRTCLoader connecting...");var r=function(e,t,r){t.setLocalDescription(r).then(function(){
 // my SDP created.
 var r=t.localDescription;OvenPlayerConsole.log("Local SDP",r),//test code
 // my sdp send to server.

@@ -85,11 +85,11 @@ const Controls = function($container, api){
         //Do nothing.
     };
     const events = {
-        "mouseleave .ovp-controls-container" : function(event, $current, template){
+        "mouseleave .ovp-controls" : function(event, $current, template){
             event.preventDefault();
 
             volumeButton.setMouseDown(false);
-            $current.find(".ovp-volume-slider-container").removeClass("ovp-volume-slider-container-active");
+            $current.find(".ovp-volume-slider-container").removeClass("active");
         },
         "click .ovp-setting-button" : function(event, $current, template){
             event.preventDefault();

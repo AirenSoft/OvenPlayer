@@ -1,5 +1,5 @@
 /*! For license information please see ovenplayer.sdk.js.LICENSE */
-/*! OvenPlayerv0.6.5 | (c)2018 AirenSoft Co., Ltd. | MIT license (https://github.com/AirenSoft/OvenPlayerPrivate/blob/master/LICENSE) | Github : https://github.com/AirenSoft/OvenPlayer */
+/*! OvenPlayerv0.6.6 | (c)2018 AirenSoft Co., Ltd. | MIT license (https://github.com/AirenSoft/OvenPlayerPrivate/blob/master/LICENSE) | Github : https://github.com/AirenSoft/OvenPlayer */
 /******/!function(e){// webpackBootstrap
 /******/ // install a JSONP callback for chunk loading
 /******/function t(t){
@@ -256,7 +256,7 @@ t.getScriptPath=function(e){for(var t=document.getElementsByTagName("script"),n=
 /**
  * Created by hoho on 2018. 6. 29..
  */
-t.version="0.6.5-rev.18bda08";
+t.version="0.6.6-rev.1e799bb";
 /***/},
 /* 11 */
 /***/function(e,t,n){"use strict";Object.defineProperty(t,"__esModule",{value:!0});t.default=function(e){var t=e,n=[],r=function(e,t,n){var r=0,o=e.length;for(r=0;r<o;r++){var u=e[r];u.listener.apply(u.context||n,t)}};return t.on=function(e,r,o){return(n[e]||(n[e]=[])).push({listener:r,context:o}),t},t.trigger=function(e){if(!n)return!1;var o=[].slice.call(arguments,1),u=n[e],i=n.all;u&&r(u,o,t),i&&r(i,arguments,t)},t.off=function(e,r,o){if(!n)return!1;if(!e&&!r&&!o)return n=[],t;for(var u=e?[e]:Object.keys(n),i=0,a=u.length;i<a;i++){e=u[i];var l=n[e];if(l){var c=n[e]=[];if(r||o)for(var f=0,s=l.length;f<s;f++){var d=l[f];(r&&r!==d.listener&&r!==d.listener.listener&&r!==d.listener._callback||o&&o!==d.context)&&c.push(d)}c.length||delete n[e]}}return t},t.once=function(e,n,r){var o=0,u=function r(){o++||(t.off(e,r),n.apply(t,arguments))};return u._listener=n,t.on(e,u,r)},t}},

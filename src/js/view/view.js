@@ -22,6 +22,7 @@ import {
     ERROR
 } from "api/constants";
 
+require('../../css/ovenplayer.less');
 
 const View = function($container){
     let controls = "", helper = "", $playerRoot, contextPanel = "", api = "", autoHideTimer = "";
@@ -183,8 +184,8 @@ const View = function($container){
         },
         setApi: function (playerInstance) {
             api = playerInstance;
-            helper = Helper($playerRoot, playerInstance);
-            controls = Controls($playerRoot, playerInstance);
+            helper = Helper($playerRoot.find(".ovp-ui"), playerInstance);
+            controls = Controls($playerRoot.find(".ovp-ui"), playerInstance);
 
 
             api.on(PLAYER_STATE, function(data){

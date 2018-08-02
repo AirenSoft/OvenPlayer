@@ -46,7 +46,31 @@ const defaultConfig = {
                         'transform-object-assign'
                     ]
                 }
-            }
+            },
+            {
+                test: /\.less$/,
+                use: [
+                    'style-loader',
+                    'css-loader',
+                    {
+                        loader: 'less-loader',
+                        options: {
+                            compress: true,
+                            strictMath: true,
+                            noIeCompat: true
+                        }
+                    }
+                ]
+            },
+            {
+                test: /\.(ttf|eot|svg|gif)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+                use: [{
+                    loader: 'file-loader',
+                    options : {
+                        publicPath : 'ovenplayer/css',
+                        outputPath : 'css'
+                    }
+                }] }
         ]
     }
 };
@@ -67,18 +91,6 @@ const extendConfig = function (){
                 new webpack.DefinePlugin({
                     __VERSION__: `'${getBuildVersion(packageInfo)}'`
                 }),
-                new CopyWebpackPlugin(
-                    [
-                        {
-                            from: 'src/css/',
-                            to: path.resolve(__dirname, 'dist/development/ovenplayer/css')
-                        },
-                        {
-                            from: 'src/assets/',
-                            to: path.resolve(__dirname, 'dist/development/ovenplayer/assets')
-                        }
-                    ]
-                ),
                 new webpack.BannerPlugin(banner)
             ]
         });
@@ -97,6 +109,7 @@ const extendConfig = function (){
                     })
                 ]
             },
+
             devtool: 'source-map',
             output: {
                 filename: '[name].js',
@@ -107,18 +120,6 @@ const extendConfig = function (){
                 new webpack.DefinePlugin({
                     __VERSION__: `'${getBuildVersion(packageInfo)}'`
                 }),
-                new CopyWebpackPlugin(
-                    [
-                        {
-                            from: 'src/css/',
-                            to: path.resolve(__dirname, 'dist/production/ovenplayer/css')
-                        },
-                        {
-                            from: 'src/assets/',
-                            to: path.resolve(__dirname, 'dist/production/ovenplayer/assets')
-                        }
-                    ]
-                ),
                 new webpack.BannerPlugin(banner)
             ]
         });

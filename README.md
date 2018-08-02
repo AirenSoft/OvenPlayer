@@ -18,8 +18,6 @@ OvenMediaEngine(OME) is a streaming engine for real-time live broadcasting with 
 ## Quick Start
 
 ```html
-<!-- import OvenPlayer css -->
-<link rel="stylesheet" href="your_path_to/ovenplayer/css/player.css">
 
 <!-- import OvenPlayer javascript -->
 <script src="your_path_to/ovenplayer/ovenplayer.js"></script>
