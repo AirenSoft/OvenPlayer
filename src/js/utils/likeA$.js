@@ -2,13 +2,13 @@
  * Created by hoho on 2018. 7. 23..
  */
 import _ from "utils/underscore";
-import closest from 'utils/polyfills/ui';
 
 /**
  * @brief   It was replace jquery's selector. It Often used by OvenTemplate. (/view/engine/OvenTemplate.js)
  * @param   selectorOrElement  string or element
  *
  * */
+
 
 const La$ = function(selectorOrElement){
     const that = {};

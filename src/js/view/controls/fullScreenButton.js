@@ -5,7 +5,7 @@ import OvenTemplate from 'view/engine/OvenTemplate';
 import LA$ from 'utils/likeA$';
 
 const FullScreenButton = function($container, api){
-    const $root = LA$("#"+api.getId());
+    const $root = LA$("#"+api.getContainerId());
     let $iconExpand = "", $iconCompress = "", isFullScreen = false;
 
     let fullScreenEventTypes = {

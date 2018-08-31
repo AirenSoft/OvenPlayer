@@ -13,6 +13,7 @@ import _ from 'utils/underscore';
 import {
     READY,
     CONTENT_META,
+    PROVIDER_RTMP,
     ERROR
 } from "api/constants";
 
@@ -21,7 +22,8 @@ const Controls = function($container, api){
 
     let generateMainPanelData = function(){
         let panel = {title : "Settings", isMain : true, body : []};
-        if(api.getDuration() !== Infinity){
+        let currentSource = api.getCurrentQuality();
+        if(api.getDuration() !== Infinity && currentSource.type !== PROVIDER_RTMP){
             let body = {
                 title : "Speed",
                 value :  api.getPlaybackRate() === 1 ? "Normal" : api.getPlaybackRate(),
@@ -31,12 +33,11 @@ const Controls = function($container, api){
         }
 
         if (api.getQualityLevels().length > 0) {
-            let qualityLevels = api.getQualityLevels();
             let currentQuality = api.getCurrentQuality();
 
             let body = {
                 title : "Source",
-                value : qualityLevels[currentQuality] ? qualityLevels[currentQuality].label : "Default",
+                value : currentQuality ? currentQuality.label : "Default",
                 type : "qualitylevel"
             };
 

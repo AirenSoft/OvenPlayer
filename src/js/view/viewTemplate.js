@@ -6,7 +6,7 @@ const ViewTemplate = function(id){
     return '<div class="ovenplayer ovp-wrapper" tabindex="-1" aria-label="" id="'+id+'">' +
                 '<div class="ovp-ratio"></div>' +
                 '<div class="ovp-player">' +
-                    '<div class="ovp-media-element-container">' +
+                    '<div class="ovp-media-element-container" data-parent-id="'+id+'">' +
                     '</div>' +
                     '<div class="ovp-ui">' +
                     '</div>' +

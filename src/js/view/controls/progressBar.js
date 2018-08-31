@@ -13,7 +13,7 @@ import {
 } from "api/constants";
 
 const ProgressBar = function($container, api){
-    const $root = LA$("#"+api.getId());
+    const $root = LA$("#"+api.getContainerId());
     let currentPlayingPosition = 0;
     let currentPlayingPercentage = 0;
     let currentLoadedPercentage = 0;
@@ -95,6 +95,7 @@ const ProgressBar = function($container, api){
         const position = progressBarWidth * percentage;
         const positionOfPixel = event.pageX - $progressBar.offset().left;
 
+
         const calculateMagnetic = function(){
             if(positionOfPixel < timeElemWidth / 2){
                 return 0;
@@ -104,8 +105,8 @@ const ProgressBar = function($container, api){
                 return position - timeElemWidth / 2;
             }
         };
-
-        $time.css('left', calculateMagnetic()+ "px");
+        let magneticPosition = calculateMagnetic();
+        $time.css('left', magneticPosition+ "px");
     };
 
     let seek = function (percentage) {
@@ -148,8 +149,9 @@ const ProgressBar = function($container, api){
             event.preventDefault();
 
             mouseInside = true;
-            $root.addClass("ovp-progressbar-hover");
             $time.show();
+            $root.addClass("ovp-progressbar-hover");
+
         },
         "mouseleave .ovp-progressbar" : function(event, $current, template){
             event.preventDefault();

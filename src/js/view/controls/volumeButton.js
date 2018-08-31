@@ -22,9 +22,9 @@ const VolumeButton = function($container, api){
         $volumeIconSmall.hide();
         $volumeIconMute.hide();
 
-        if (percentage >= 50) {
+        if (percentage >= 70) {
             $volumeIconBig.show();
-        } else if (percentage < 50 && percentage > 0) {
+        } else if (percentage < 70 && percentage > 0) {
             $volumeIconSmall.show();
         } else if (percentage == 0) {
             $volumeIconMute.show();

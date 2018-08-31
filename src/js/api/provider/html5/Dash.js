@@ -1,7 +1,8 @@
 /**
  * Created by hoho on 2018. 6. 14..
  */
-import CoreProvider from "api/provider/Core";
+import MediaManager from "api/media/Manager";
+import Provider from "api/provider/html5/Provider";
 import {PROVIDER_DASH, CONTENT_META} from "api/constants";
 
 /**
@@ -11,25 +12,31 @@ import {PROVIDER_DASH, CONTENT_META} from "api/constants";
  * */
 
 
-const DashProvider = function(element, playerConfig){
+const Dash = function(container, playerConfig){
+
+    let mediaManager = MediaManager(container, PROVIDER_DASH);
+    let element = mediaManager.create();
+
     let dashObject = "";
     let that = {};
     let super_destroy = "", super_play = "";
-
     let seekPosition_sec = 0;
+
+
+
     try {
 
         dashObject = dashjs.MediaPlayer().create();
         dashObject.getDebug().setLogToBrowserConsole(false);
         dashObject.initialize(element, null, false);
 
-        const sourceLoaded = (source, lastPlayPosition) => {
-            OvenPlayerConsole.log("DASH : source loaded : ", source, "lastPlayPosition : "+ lastPlayPosition);
+        const onBeforeLoad = (source, lastPlayPosition) => {
+            OvenPlayerConsole.log("DASH : onBeforeLoad : ", source, "lastPlayPosition : "+ lastPlayPosition);
             dashObject.attachSource(source.file);
             seekPosition_sec = lastPlayPosition;
         };
 
-        that = CoreProvider(PROVIDER_DASH, dashObject, playerConfig, sourceLoaded);
+        that = Provider(PROVIDER_DASH, dashObject, playerConfig, onBeforeLoad);
         OvenPlayerConsole.log("DASH PROVIDER LOADED.");
         super_play = that.super('play');
         super_destroy = that.super('destroy');
@@ -47,7 +54,7 @@ const DashProvider = function(element, playerConfig){
 
         that.destroy = () =>{
             dashObject.reset();
-
+            mediaManager.destroy();
             OvenPlayerConsole.log("DASH : PROVIDER DESTROYED.");
 
             super_destroy();
@@ -60,4 +67,4 @@ const DashProvider = function(element, playerConfig){
 };
 
 
-export default DashProvider;
+export default Dash;

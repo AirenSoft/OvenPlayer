@@ -1,6 +1,7 @@
 import API from 'api/Api';
 import {isWebRTC} from 'utils/validator';
 import _ from 'utils/underscore';
+import La$ from 'utils/likeA$';
 import {getScriptPath} from 'utils/webpack';
 
 
@@ -75,9 +76,10 @@ OvenPlayerSDK.getPlayerList = function() {
  */
 OvenPlayerSDK.getPlayerByContainerId = function(containerId) {
 
-    for (let i = 0; i < playerList.length -1; i ++) {
+    La$
+    for (let i = 0; i < playerList.length; i ++) {
 
-        if (playerList[i].containerId === containerId) {
+        if (playerList[i].getContainerId() === containerId) {
 
             return playerList[i];
         }

@@ -1,7 +1,8 @@
 /**
  * Created by hoho on 2018. 6. 7..
  */
-import CoreProvider from "api/provider/Core";
+import MediaManager from "api/media/Manager";
+import Provider from "api/provider/html5/Provider";
 import {PROVIDER_HLS} from "api/constants";
 
 /**
@@ -11,18 +12,21 @@ import {PROVIDER_HLS} from "api/constants";
  * */
 
 
-const HlsProvider = function(element, playerConfig){
+const Hls = function(container, playerConfig){
+
+    let mediaManager = MediaManager(container, PROVIDER_HLS);
+    let element = mediaManager.create();
+
     let hls = "";
     let that = {};
-    let super_play = "";
-    let super_destroy = "";
+    let super_play = "", super_destroy = "";
 
     try {
         hls = new Hls({debug: false});
         hls.attachMedia(element);
 
-        const sourceLoaded = (source, lastPlayPosition) => {
-            OvenPlayerConsole.log("HLS : source loaded : ", source, "lastPlayPosition : "+ lastPlayPosition);
+        const onBeforeLoad = (source, lastPlayPosition) => {
+            OvenPlayerConsole.log("HLS : onBeforeLoad : ", source, "lastPlayPosition : "+ lastPlayPosition);
             hls.loadSource(source.file);
             if(lastPlayPosition > 0){
                 element.seek(lastPlayPosition);
@@ -31,7 +35,7 @@ const HlsProvider = function(element, playerConfig){
 
         };
 
-        that = CoreProvider(PROVIDER_HLS, hls, playerConfig, onLoad);
+        that = Provider(PROVIDER_HLS, hls, playerConfig, onBeforeLoad);
         OvenPlayerConsole.log("HLS PROVIDER LOADED.");
         super_play = that.super('play');
         super_destroy = that.super('destroy');
@@ -40,7 +44,7 @@ const HlsProvider = function(element, playerConfig){
         that.destroy = () =>{
             hls.destroy();
             hls = null;
-
+            mediaManager.destroy();
             OvenPlayerConsole.log("HLS : PROVIDER DESTROUYED.");
 
             super_destroy();
@@ -53,4 +57,4 @@ const HlsProvider = function(element, playerConfig){
 };
 
 
-export default HlsProvider;
+export default Hls;

@@ -222,19 +222,29 @@ Returns an array of objects based on each quality level of a media item
 [
     {
         label : '720p',
-        bitrate : '',
-        width : '',
-        height : ''
+        file : '',
+        type : 'rtmp',
+        index : 0
     },
     ... // And more objects
 ]
 ```
 
-#### `qualityLevelIndex` =  player.getCurrentQuality()
+#### `qualityLevel` =  player.getCurrentQuality()
 
 ||Type|Memo|
 |-|-|-|
-|`qualityLevelIndex`|Number|Index of the current quality
+|`qualityLevel`|Object|Object of the current quality
+
+##### Example qualityLevels
+```javascript
+    {
+        label : '720p',
+        file : '',
+        type : 'rtmp',
+        index : 0
+    }
+```
 
 ####  player.setCurrentQuality(`qualityLevelIndex`)
 

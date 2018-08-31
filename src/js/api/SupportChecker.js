@@ -118,6 +118,18 @@ const SupportChecker = function(){
                 //Remove this '!!video.canPlayType('application/vnd.apple.mpegurl')' if you want to use hlsjs.
                 return isHlsSupport() && !!video.canPlayType('application/vnd.apple.mpegurl');
             }
+        },
+        {
+            name: 'rtmp',
+            checkSupport: function (source) {
+                const file = source.file;
+                const type = source.type;
+                if (isRtmp(file, type)) {
+                    return true;
+                }else{
+                    return false;
+                }
+            }
         }
     ];
 

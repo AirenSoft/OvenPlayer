@@ -66,10 +66,16 @@ const OvenTemplate = function (container, templateName, data, events, onRendered
             viewEvents[id] = {name: eventName, target: target, callback: wrappedFunc};
 
             //sometimes target is NodeList
-            if($target.get().forEach){
-                $target.get().forEach(function($item){
+            let nodeLength = $target.get().length;
+            if(nodeLength > 1){
+                let nodeList = $target.get();
+                for(let i = 0; i < nodeLength; i ++){
+                    nodeList[i].addEventListener(eventName, wrappedFunc);
+                }
+                //IE NodeList doesn't have forEach. It's wack.
+                /*$target.get().forEach(function($item){
                     $item.addEventListener(eventName, wrappedFunc);
-                });
+                });*/
             }else{
                 $target.get().addEventListener(eventName, wrappedFunc);
             }
@@ -92,10 +98,15 @@ const OvenTemplate = function (container, templateName, data, events, onRendered
             }
 
             //sometimes target is NodeList
-            if($target.get().forEach){
-                $target.get().forEach(function($item){
+            let nodeLength = $target.get().length;
+            if(nodeLength > 1){
+                let nodeList = $target.get();
+                for(let i = 0; i < nodeLength; i ++){
+                    nodeList[i].removeEventListener(event.name, event.callback);
+                }
+                /*$target.get().forEach(function($item){
                     $item.removeEventListener(event.name, event.callback);
-                });
+                });*/
             }else{
                 $target.get().removeEventListener(event.name, event.callback);
             }

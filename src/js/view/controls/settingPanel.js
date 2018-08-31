@@ -7,7 +7,7 @@ import LA$ from 'utils/likeA$';
 import _ from 'utils/underscore';
 const PLAYER_MIN_HEIGHT = 220;
 const SettingPanel = function($container, api, data){
-    const $root = LA$("#"+api.getId());
+    const $root = LA$("#"+api.getContainerId());
 
     let extractPanelData = function(panelType){
         let panel = {title : "", body : [], type : panelType};
@@ -34,7 +34,7 @@ const SettingPanel = function($container, api, data){
             for (let i = 0; i < qualityLevels.length; i ++) {
                 let body = {
                     title : qualityLevels[i].label,
-                    isCheck : currentQuality === i,
+                    isCheck : currentQuality.index === i,
                     value : i
                 };
                 panel.body.push(body);
@@ -56,7 +56,6 @@ const SettingPanel = function($container, api, data){
         "click .ovp-setting-main-item": function (event, $current, template) {
             event.preventDefault();
             let panelType = LA$(event.currentTarget).attr("ovp-panel-type");
-
             //parent must be not $current!
             SettingPanelList.push(SettingPanel($container, api, extractPanelData(panelType)));
         },

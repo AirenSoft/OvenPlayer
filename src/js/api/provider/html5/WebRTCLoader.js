@@ -1,5 +1,6 @@
 import adapter from 'utils/adapter';
 import Promise, {resolved} from "api/shims/promise";
+import _ from "utils/underscore";
 import {
     PLAYER_WEBRTC_WS_ERROR,
     PLAYER_WEBRTC_WS_CLOSED,
@@ -10,7 +11,7 @@ import {
     PLAYER_WEBRTC_NETWORK_SLOW,
     NETWORK_UNSTABLED
 } from "api/constants";
-import _ from "utils/underscore";
+
 
 const WebRTCLoader = function(provider, url, errorCallback){
     var url = url;

@@ -70,7 +70,8 @@ const defaultConfig = {
                         publicPath : 'ovenplayer/css',
                         outputPath : 'css'
                     }
-                }] }
+                }]
+            }
         ]
     }
 };
@@ -91,7 +92,16 @@ const extendConfig = function (){
                 new webpack.DefinePlugin({
                     __VERSION__: `'${getBuildVersion(packageInfo)}'`
                 }),
-                new webpack.BannerPlugin(banner)
+                new webpack.BannerPlugin(banner),
+                new CopyWebpackPlugin(
+                    [
+                        {
+                            from: 'src/assets/OvenPlayerFlash.swf',
+                            to: path.resolve(__dirname, 'dist/development/ovenplayer/')
+                        }
+                    ]
+                )
+
             ]
         });
     }else{
@@ -105,7 +115,7 @@ const extendConfig = function (){
                                 comments: true,
                             }
                         },
-                        extractComments: true, // /(?:^!|@(?:license|preserve))/i
+                        extractComments: true // /(?:^!|@(?:license|preserve))/i
                     })
                 ]
             },
@@ -120,7 +130,15 @@ const extendConfig = function (){
                 new webpack.DefinePlugin({
                     __VERSION__: `'${getBuildVersion(packageInfo)}'`
                 }),
-                new webpack.BannerPlugin(banner)
+                new webpack.BannerPlugin(banner),
+                new CopyWebpackPlugin(
+                    [
+                        {
+                            from: 'src/assets/OvenPlayerFlash.swf',
+                            to: path.resolve(__dirname, 'dist/production/ovenplayer/')
+                        }
+                    ]
+                )
             ]
         });
     }

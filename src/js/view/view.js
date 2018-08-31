@@ -108,7 +108,7 @@ const View = function($container){
                 contextPanel = null;
                 return false;
             }
-            if(!LA$(event.target).closest(".ovp-controls") &&
+            if(!LA$(event.target).closest(".ovp-bottom-panel") &&
                 !LA$(event.target).closest(".ovp-setting-panel")){
                 togglePlayPause();
             }

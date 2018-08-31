@@ -1,6 +1,8 @@
 import OvenPlayerSDK, {checkAndGetContainerElement} from './ovenplayer.sdk'
 import View from './view/view';
+import dom from './utils/polyfills/dom.js';
 import {getScriptPath} from 'utils/webpack';
+import {getBrowser} from 'utils/browser';
 
 
 __webpack_public_path__ = getScriptPath('ovenplayer.js');
@@ -15,9 +17,11 @@ window.OvenPlayer = OvenPlayer;
 Object.assign(OvenPlayer, OvenPlayerSDK);
 
 OvenPlayer.create = function (container, options) {
+    let browserName = getBrowser();
+    if(browserName === "ie"){
 
+    }
     let containerElement = checkAndGetContainerElement(container);
-
     /*const view = new View();
 
     view.appendPlayerMarkup(containerElement);
@@ -34,7 +38,7 @@ OvenPlayer.create = function (container, options) {
     const playerInstance = OvenPlayerSDK.create(player.getMediaElementContainer(), options);
 
     Object.assign(playerInstance, {
-       getId : function(){
+        getContainerId : function(){
            return containerElement.id;
        }
     });

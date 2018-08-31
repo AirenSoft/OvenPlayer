@@ -8,11 +8,13 @@ export const STATE_ERROR = 'error';
 export const STATE_LOADING = 'loading';
 export const STATE_STALLED = 'stalled';
 
+
 // PROVIDER
 export const PROVIDER_HTML5 = 'html5';
 export const PROVIDER_WEBRTC = 'webrtc';
 export const PROVIDER_DASH = 'dash';
 export const PROVIDER_HLS = 'hls';
+export const PROVIDER_RTMP = 'rtmp';
 
 // EVENTS
 export const CONTENT_COMPLETE = STATE_COMPLETE;
@@ -24,6 +26,7 @@ export const DISPLAY_CLICK = 'displayClick';
 export const CONTENT_LOADED = 'loaded';
 export const CONTENT_SEEKED = 'seeked';
 export const NETWORK_UNSTABLED = 'unstableNetwork';
+
 export const ERROR = 'error';
 
 // STATE OF PLAYER
