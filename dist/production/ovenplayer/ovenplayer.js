@@ -308,7 +308,7 @@ t.getScriptPath=function(e){for(var t=document.getElementsByTagName("script"),n=
 /**
  * Created by hoho on 2018. 6. 29..
  */
-t.version="0.7.2-rev.25b0f51";
+t.version="0.7.2-rev.81ebb15";
 /***/},
 /* 12 */
 /***/function(e,t,n){"use strict";Object.defineProperty(t,"__esModule",{value:!0});t.default=function(e){var t=e,n=[],o=function(e,t,n){var o=0,r=e.length;for(o=0;o<r;o++){var i=e[o];i.listener.apply(i.context||n,t)}};return t.on=function(e,o,r){return(n[e]||(n[e]=[])).push({listener:o,context:r}),t},t.trigger=function(e){if(!n)return!1;var r=[].slice.call(arguments,1),i=n[e],a=n.all;i&&o(i,r,t),a&&o(a,arguments,t)},t.off=function(e,o,r){if(!n)return!1;if(!e&&!o&&!r)return n=[],t;for(var i=e?[e]:Object.keys(n),a=0,u=i.length;a<u;a++){e=i[a];var l=n[e];if(l){var s=n[e]=[];if(o||r)for(var c=0,f=l.length;c<f;c++){var p=l[c];(o&&o!==p.listener&&o!==p.listener.listener&&o!==p.listener._callback||r&&r!==p.context)&&s.push(p)}s.length||delete n[e]}}return t},t.once=function(e,n,o){var r=0,i=function o(){r++||(t.off(e,o),n.apply(t,arguments))};return i._listener=n,t.on(e,i,o)},t}},
