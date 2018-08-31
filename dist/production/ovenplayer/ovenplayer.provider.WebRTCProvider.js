@@ -1,5 +1,5 @@
 /*! For license information please see ovenplayer.provider.WebRTCProvider.js.LICENSE */
-/*! OvenPlayerv0.7.1 | (c)2018 AirenSoft Co., Ltd. | MIT license (https://github.com/AirenSoft/OvenPlayerPrivate/blob/master/LICENSE) | Github : https://github.com/AirenSoft/OvenPlayer */
+/*! OvenPlayerv0.7.2 | (c)2018 AirenSoft Co., Ltd. | MIT license (https://github.com/AirenSoft/OvenPlayerPrivate/blob/master/LICENSE) | Github : https://github.com/AirenSoft/OvenPlayer */
 (window.webpackJsonp=window.webpackJsonp||[]).push([[3],{
 /***/16:
 /***/function(e,t,r){"use strict";Object.defineProperty(t,"__esModule",{value:!0});var n=c(r(76)),i=c(r(78)),a=c(r(82)),o=(c(r(6)),r(4)),s=r(2);function c(e){return e&&e.__esModule?e:{default:e}}
