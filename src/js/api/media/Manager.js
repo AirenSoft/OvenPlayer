@@ -5,6 +5,7 @@
  * */
 import {getBrowser} from "utils/browser";
 import {PROVIDER_RTMP} from "api/constants";
+import SWFpath from '../../../assets/OvenPlayerFlash.swf';
 
 const Manager = function(container, providerType){
     const that = {};
@@ -25,7 +26,7 @@ const Manager = function(container, providerType){
             let movie, flashvars, allowscriptaccess, allowfullscreen, quality;
             movie = document.createElement('param');
             movie.setAttribute('name', 'movie');
-            movie.setAttribute('value', './ovenplayer/OvenPlayerFlash.swf');
+            movie.setAttribute('value', SWFpath);
 
             flashvars = document.createElement('param');
             flashvars.setAttribute('name', 'flashvars');
@@ -49,12 +50,14 @@ const Manager = function(container, providerType){
             }
             mediaElement = document.createElement('object');
             mediaElement.setAttribute('type', 'application/x-shockwave-flash');
-            mediaElement.setAttribute('data', './ovenplayer/OvenPlayerFlash.swf');
+            mediaElement.setAttribute('data', SWFpath);
+
             mediaElement.setAttribute('id', rootId+"-flash");
             mediaElement.setAttribute('name', rootId+"-flash");
             mediaElement.setAttribute('width', '100%');
             mediaElement.setAttribute('height', '100%');
 
+            mediaElement.appendChild(movie);
             mediaElement.appendChild(flashvars);
             mediaElement.appendChild(allowscriptaccess);
             mediaElement.appendChild(allowfullscreen);
