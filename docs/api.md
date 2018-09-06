@@ -151,7 +151,7 @@ Returns current state of player.
 
 #### player.setPlaybackRate(`playbackRate`)
 
-Set playback rate.
+Sets playback rate.
 
 ||Type|Memo|
 |-|-|-|
@@ -176,7 +176,7 @@ Returns total length of the media file.  This value depends on the media type.
 
 #### player.seek(`position`)
 
-Jump to the specified position within the currently playing item.
+Jumps to the specified position within the currently playing item.
 
 ||Type|Memo|
 |-|-|-|
@@ -207,7 +207,7 @@ Mutes the player.
 
 ||Type|Memo|
 |-|-|-|
-|`volume`|Number|Set the volume of the player between 1-100
+|`volume`|Number|Sets the volume of the player between 1-100
 
 ####  `qualityLevels` = player.getQualityLevels()
 
@@ -248,7 +248,7 @@ Returns an array of objects based on each quality level of a media item
 
 ####  player.setCurrentQuality(`qualityLevelIndex`)
 
-Change the quality level to the provided index.
+Changes the quality level to the provided index.
 
 ||Type|Memo|
 |-|-|-|
@@ -278,7 +278,7 @@ Player initialization complete. API methods can be used.
 
 #### player.on('metaChanged')
 
-Occurs when new metadata is received .
+Occurs when new metadata is received.
 
 Attribute|Type|Memo
 -|-|-
@@ -291,7 +291,7 @@ Occurs when something is going wrong.
 
 Value|Type|Memo
 -|-|-
-`message`|String|The error message that has been detected.
+`message`|String|An error message has been detected.
 `reason`|String|Reason of error.
 `code`|String|OvenPlayer Error code.
 `error`|Object|Javascript error object.
@@ -342,7 +342,7 @@ Fired when the playback rate has been changed.
 
 Attribute|Type|Memo
 ------|------|-------
-`playbackRate`|Number|The new playback rate
+`playbackRate`|Number|The new playback rate.
 
 #### player.on('seek')
 
@@ -384,7 +384,7 @@ Attribute|Type|Memo
 
 #### player.on('qualityLevelChanged')
 
-Fired when the list of available quality levels is updated. Happens e.g. shortly after a playlist item starts playing.
+Fired when the list of available quality levels is updated. e.g. shortly after a playlist item starts playing.
 
 Attribute|Type|Memo
 ------|------|-------
@@ -392,7 +392,7 @@ Attribute|Type|Memo
 
 #### player.on('currentQualityLevelChanged')
 
-Fired when the active quality level is changed. Happens in response to e.g. a user clicking an option in the quality menu or a script calling `setCurrentQuality`.
+Fired when the active quality level is changed. e.g. a user clicking an option in the quality menu or a script calling `setCurrentQuality`.
 
 Attribute|Type|Memo
 ------|------|-------
