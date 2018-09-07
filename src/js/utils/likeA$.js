@@ -74,6 +74,10 @@ const La$ = function(selectorOrElement){
         }
     };
 
+    that.removeAttribute = (attrName) => {
+        $element.removeAttribute(attrName);
+    };
+
     that.show = () =>{
         $element.style.display = 'block';
     };
@@ -127,10 +131,6 @@ const La$ = function(selectorOrElement){
         return $element.getAttribute(attr);
     };
 
-    that.remove = () => {   //IE8+
-        $element.parentNode.removeChild($element);
-    };
-
     that.replace = (html) => {
         $element.replaceWith(html);
     };
@@ -141,6 +141,12 @@ const La$ = function(selectorOrElement){
 
     that.remove = () => {
         $element.remove();
+    };
+
+    that.removeChild = () => {
+        while ($element.hasChildNodes()) {
+            $element.removeChild($element.firstChild);
+        }
     };
 
     that.get = () => {

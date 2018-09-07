@@ -10,6 +10,7 @@ import LA$ from 'utils/likeA$';
 import _ from 'utils/underscore';
 import {
     READY,
+    DESTROY,
     STATE_IDLE,
     STATE_PLAYING,
     STATE_STALLED,
@@ -25,7 +26,7 @@ import {
 require('../../css/ovenplayer.less');
 
 const View = function($container){
-    let controls = "", helper = "", $playerRoot, contextPanel = "", api = "", autoHideTimer = "";
+    let viewTemplate = "", controls = "", helper = "", $playerRoot, contextPanel = "", api = "", autoHideTimer = "";
 
     let setHide = function (hide, autoHide) {
 
@@ -93,8 +94,12 @@ const View = function($container){
         contextPanel = ContextPanel($playerRoot, api, {pageX : pageX, pageY : pageY});
     };
 
+
+
+
     const onRendered = function($current, template){
         $playerRoot = $current;
+        viewTemplate = template;
     };
     const onDestroyed = function(){
         //Do nothing.
@@ -187,6 +192,9 @@ const View = function($container){
             helper = Helper($playerRoot.find(".ovp-ui"), playerInstance);
             controls = Controls($playerRoot.find(".ovp-ui"), playerInstance);
 
+            api.on(DESTROY, function(data) {
+                viewTemplate.destroy();
+            });
 
             api.on(PLAYER_STATE, function(data){
                 if(data && data.newstate){
