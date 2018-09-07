@@ -12,8 +12,6 @@ __webpack_public_path__ = getScriptPath('ovenplayer.sdk.js');
  */
 const OvenPlayerSDK = window.OvenPlayerSDK = {};
 
-const version = '0.0.1';
-
 const playerList = OvenPlayerSDK.playerList = [];
 
 export const checkAndGetContainerElement = function(container) {
@@ -76,7 +74,6 @@ OvenPlayerSDK.getPlayerList = function() {
  */
 OvenPlayerSDK.getPlayerByContainerId = function(containerId) {
 
-    La$
     for (let i = 0; i < playerList.length; i ++) {
 
         if (playerList[i].getContainerId() === containerId) {
@@ -105,6 +102,24 @@ OvenPlayerSDK.getPlayerByIndex = function(index) {
 
         return null;
     }
+};
+
+/**
+ * Remove the player instance by playerId.
+ *
+ * @param      {playerId}  id
+ * @return     {null}
+ */
+OvenPlayerSDK.removePlayer = function(playerId) {
+    console.log(playerId);
+    for (let i = 0; i < playerList.length; i ++) {
+
+        if (playerList[i].getContainerId() === playerId) {
+
+            playerList.splice(i, 1);
+        }
+    }
+
 };
 
 /**
