@@ -25,6 +25,7 @@ const promiseFinally = function(callback) {
 const setTimeoutFunc = window.setTimeout;
 const setImmediateFunc = window.setImmediate;
 
+
 function noop() {}
 
 // Polyfill for Function.prototype.bind
@@ -237,7 +238,7 @@ PromiseShim._immediateFn =
         setImmediateFunc(fn);
     }) ||
     function(fn) {
-        setImmediateFunc(fn, 0);
+        setTimeoutFunc(fn, 0);
     };
 
 PromiseShim._unhandledRejectionFn = function _unhandledRejectionFn(err) {

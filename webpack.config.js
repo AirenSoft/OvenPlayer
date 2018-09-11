@@ -39,11 +39,19 @@ const defaultConfig = {
                 exclude: /node_modules/,
                 options: {
                     babelrc: false,
-                    presets: [
-                        ['env']
-                    ],
+
                     plugins: [
-                        'transform-object-assign'
+                        'transform-object-assign',
+                        "transform-es3-property-literals",
+                        "transform-es3-member-expression-literals"
+                    ],
+                    presets: [
+                        ['env', {
+                            targets: {
+                                browsers: ['ie >= 8']
+                            },
+                            loose: true,
+                        }]
                     ]
                 }
             },
@@ -113,7 +121,7 @@ const extendConfig = function (){
                     new UglifyJsPlugin({
                         uglifyOptions: {
                             output: {
-                                comments: true,
+                                comments: false
                             }
                         },
                         extractComments: true // /(?:^!|@(?:license|preserve))/i

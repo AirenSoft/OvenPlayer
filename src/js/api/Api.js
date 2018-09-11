@@ -69,7 +69,8 @@ const Api = function(container){
                 that.trigger(name, data);
 
                 //Auto next source when player load was fail by amiss source.
-                if( (name === ERROR && (data.code === PLAYER_FILE_ERROR || parseInt(data.code/100) === 5))|| name === NETWORK_UNSTABLED ){
+                //data.code === PLAYER_FILE_ERROR
+                if( (name === ERROR && (parseInt(data.code/100) === 3 || parseInt(data.code/100) === 5))|| name === NETWORK_UNSTABLED ){
                     let currentQuality = that.getCurrentQuality();
                     if(currentQuality.index+1 < that.getQualityLevels().length){
                         //this sequential has available source.
@@ -262,8 +263,10 @@ const Api = function(container){
     that.remove = () => {
         OvenPlayerConsole.log("API : remove() ");
         lazyQueue.destroy();
-        currentProvider.destroy();
-        currentProvider = null;
+        if(currentProvider){
+            currentProvider.destroy();
+            currentProvider = null;
+        }
         providerController = null;
         playlistManager = null;
         playerConfig = null;

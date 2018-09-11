@@ -115,7 +115,12 @@ const OvenTemplate = function (container, templateName, data, events, onRendered
         });
 
         if($template){
-            $template.remove();
+            if(isRoot){
+                $template.removeChild();
+                $template.removeAttribute("class");
+            }else{
+                $template.remove();
+            }
         }
 
         if (onDestroyed) {

@@ -114,7 +114,8 @@ const View = function($container){
                 return false;
             }
             if(!LA$(event.target).closest(".ovp-bottom-panel") &&
-                !LA$(event.target).closest(".ovp-setting-panel")){
+                !LA$(event.target).closest(".ovp-setting-panel")&&
+                !LA$(event.target).closest(".ovp-message-container")){
                 togglePlayPause();
             }
             if(!LA$(event.target).closest(".ovp-setting-panel") && !LA$(event.target).closest(".ovp-setting-button") && SettingPanelList.length > 0){
@@ -191,6 +192,15 @@ const View = function($container){
             api = playerInstance;
             helper = Helper($playerRoot.find(".ovp-ui"), playerInstance);
             controls = Controls($playerRoot.find(".ovp-ui"), playerInstance);
+            api.on(CONTENT_META, function(error) {
+                if(!controls){
+                    controls = Controls($playerRoot.find(".ovp-ui"), playerInstance);
+                }
+            });
+            api.on(ERROR, function(error) {
+                controls.destroy();
+                controls = null;
+            });
 
             api.on(DESTROY, function(data) {
                 viewTemplate.destroy();

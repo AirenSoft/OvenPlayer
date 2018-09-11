@@ -78,9 +78,7 @@ const Controls = function($container, api){
                 initProgressBar();
             }
         });
-        api.on(ERROR, function(error) {
-            template.destroy();
-        });
+
     };
     const onDestroyed = function(){
         //Do nothing.

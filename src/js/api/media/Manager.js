@@ -23,7 +23,7 @@ const Manager = function(container, providerType){
             container.appendChild(mediaElement);
 
         }else{
-            let movie, flashvars, allowscriptaccess, allowfullscreen, quality;
+            let movie, flashvars, allowscriptaccess, allowfullscreen, quality, name, menu, qual, bgcolor;
             movie = document.createElement('param');
             movie.setAttribute('name', 'movie');
             movie.setAttribute('value', SWFpath);
@@ -45,29 +45,44 @@ const Manager = function(container, providerType){
             quality.setAttribute('name', 'quality');
             quality.setAttribute('value', 'height');
 
-            if(browserType !== "ie"){
+            name = document.createElement('param');
+            name.setAttribute('name', 'name');
+            name.setAttribute('value', rootId+"-flash");
 
-            }
+            menu = document.createElement('param');
+            menu.setAttribute('name', 'menu');
+            menu.setAttribute('value', 'false');
+
+            qual = document.createElement('param');
+            qual.setAttribute('name', 'quality');
+            qual.setAttribute('value', 'high');
+
+            bgcolor = document.createElement('param');
+            bgcolor.setAttribute('name', 'bgcolor');
+            bgcolor.setAttribute('value', '#000000');
+
             mediaElement = document.createElement('object');
-            mediaElement.setAttribute('type', 'application/x-shockwave-flash');
-            mediaElement.setAttribute('data', SWFpath);
-
             mediaElement.setAttribute('id', rootId+"-flash");
             mediaElement.setAttribute('name', rootId+"-flash");
             mediaElement.setAttribute('width', '100%');
             mediaElement.setAttribute('height', '100%');
 
-            mediaElement.appendChild(movie);
-            mediaElement.appendChild(flashvars);
-            mediaElement.appendChild(allowscriptaccess);
+            if(browserType !== "oldIE"){
+                mediaElement.setAttribute('data', SWFpath);
+                mediaElement.setAttribute('type', 'application/x-shockwave-flash');
+            }else{
+                mediaElement.setAttribute('classid', 'clsid:D27CDB6E-AE6D-11cf-96B8-444553540000');
+
+                mediaElement.appendChild(movie);
+            }
+            mediaElement.appendChild(bgcolor);
+            mediaElement.appendChild(qual);
             mediaElement.appendChild(allowfullscreen);
-            /*if(browserType !== "ie"){
-                mediaElement.appendChild(inner);
-            }*/
+            mediaElement.appendChild(allowscriptaccess);
+            mediaElement.appendChild(flashvars);
 
             container.appendChild(mediaElement);
         }
-
         return mediaElement;
     };
 

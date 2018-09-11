@@ -1,6 +1,6 @@
 {
   "name": "OvenPlayer",
-  "version": "0.7.4",
+  "version": "0.7.5",
   "description": "The OvenPlayer is an HTML5 player designed to make it easier to play ultra-low latency streams from the OvenMediaEngine.",
   "main": "openplayer.js",
   "scripts": {
@@ -21,6 +21,8 @@
   "devDependencies": {
     "babel-core": "^6.26.3",
     "babel-loader": "^7.1.4",
+    "babel-plugin-transform-es3-member-expression-literals": "^6.22.0",
+    "babel-plugin-transform-es3-property-literals": "^6.22.0",
     "babel-plugin-transform-object-assign": "^6.22.0",
     "babel-preset-env": "^1.6.1",
     "copy-webpack-plugin": "^4.5.1",
@@ -32,8 +34,8 @@
     "postcss-loader": "^2.1.6",
     "style-loader": "^0.21.0",
     "uglifyjs-webpack-plugin": "^1.2.7",
+    "url-loader": "^1.1.1",
     "webpack": "^4.1.1",
-    "webpack-cli": "^2.0.11",
-    "url-loader": "^1.1.1"
+    "webpack-cli": "^2.0.11"
   }
 }
