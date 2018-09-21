@@ -51,6 +51,7 @@ const EventEmitter = function(object){
         }
 
         const names = name ? [name] : Object.keys(_events);
+
         for (let i = 0, l = names.length; i < l; i++) {
             name = names[i];
             const events = _events[name];
@@ -59,7 +60,7 @@ const EventEmitter = function(object){
                 if (listener  || context) {
                     for (let j = 0, k = events.length; j < k; j++) {
                         const event = events[j];
-                        if ((listener && listener !== event.listener && listener !== event.listener.listener  && listener !== event.listener._callback)
+                        if ((listener && listener !== event.listener && listener !== event.listener.listener  && listener !== event.listener._listener)
                             ||(context && context !== event.context)
                         ) {
                             retain.push(event);

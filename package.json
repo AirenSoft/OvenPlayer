@@ -1,6 +1,6 @@
 {
   "name": "OvenPlayer",
-  "version": "0.7.5",
+  "version": "0.7.6",
   "description": "The OvenPlayer is an HTML5 player designed to make it easier to play ultra-low latency streams from the OvenMediaEngine.",
   "main": "openplayer.js",
   "scripts": {

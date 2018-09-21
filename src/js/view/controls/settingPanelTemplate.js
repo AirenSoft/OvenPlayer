@@ -33,7 +33,7 @@ export const settingItemTemplate = (title, value, type) => {
 
 export const settingValueTemplate = (title, value, type, isCheck) => {
     return (
-        '<div class="ovp-setting-item ovp-setting-item-value" ovp-panel-type="'+type+'" ovp-data-value="'+value+'">' +
+        '<div class="ovp-setting-item ovp-setting-sub-item" ovp-panel-type="'+type+'" ovp-data-value="'+value+'">' +
             '<span class="ovp-setting-item-checked '+(isCheck?'ovp-show':'')+'">&#x2713;</span>' +
             '<span class="ovp-setting-item-title">'+title+'</span>' +
         '</div>'

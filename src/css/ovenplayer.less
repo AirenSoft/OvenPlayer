@@ -81,10 +81,6 @@
   }
 
   .ovp-ui {
-    position: absolute;
-    top: 0;
-    width: 100%;
-    height: 100%;
     .ovp-controls-container{}
     .ovp-helpers-container{}
   }
@@ -196,7 +192,6 @@
   top: 0;
   left: 0;
   width: 100%;
-  height: 100%;
 
   .ovp-message-container {
     position: absolute;
@@ -313,7 +308,7 @@
       }
     }
 
-    .ovp-setting-item.ovp-setting-item-value{
+    .ovp-setting-item.ovp-setting-sub-item{
       .ovp-setting-item-title {
         margin-left: -6px;
       }
@@ -590,32 +585,31 @@
 
   .ovp-volume-slider-container {
     display: inline-block;
+    visibility: hidden;
     position: relative;
     width: 0px;
+    margin-left: 8px;
+    margin-right: 0;
     height: 100%;
-    overflow: hidden;
     cursor: pointer;
     user-select: none;
     outline: none;
 
-    -moz-transition: margin .2s cubic-bezier(0.4,0.0,1,1),width .2s cubic-bezier(0.4,0.0,1,1);
-    -webkit-transition: margin .2s cubic-bezier(0.4,0.0,1,1),width .2s cubic-bezier(0.4,0.0,1,1);
-    transition: margin .2s cubic-bezier(0.4,0.0,1,1),width .2s cubic-bezier(0.4,0.0,1,1);
+    -moz-transition: visible .2s cubic-bezier(0.4,0.0,1,1),width .2s cubic-bezier(0.4,0.0,1,1);
+    -webkit-transition: visible .2s cubic-bezier(0.4,0.0,1,1),width .2s cubic-bezier(0.4,0.0,1,1);
+    transition: visible .2s cubic-bezier(0.4,0.0,1,1),width .2s cubic-bezier(0.4,0.0,1,1);
 
     &.active{
       width: 70px;
-      margin-left: 8px;
-      margin-right: 0;
-      -moz-transition: margin .2s cubic-bezier(0.0,0.0,0.2,1),width .2s cubic-bezier(0.0,0.0,0.2,1);
-      -webkit-transition: margin .2s cubic-bezier(0.0,0.0,0.2,1),width .2s cubic-bezier(0.0,0.0,0.2,1);
-      transition: margin .2s cubic-bezier(0.0,0.0,0.2,1),width .2s cubic-bezier(0.0,0.0,0.2,1)
+      visibility: visible;
+      -moz-transition: visible .2s cubic-bezier(0.0,0.0,0.2,1),width .2s cubic-bezier(0.0,0.0,0.2,1);
+      -webkit-transition: visible .2s cubic-bezier(0.0,0.0,0.2,1),width .2s cubic-bezier(0.0,0.0,0.2,1);
+      transition: visible .2s cubic-bezier(0.0,0.0,0.2,1),width .2s cubic-bezier(0.0,0.0,0.2,1)
     }
 
     .ovp-volume-silder {
       height: 100%;
       position: relative;
-      overflow: hidden;
-
 
       .ovp-volume-slider-bg, .ovp-volume-slider-value {
         position: absolute;
@@ -679,7 +673,7 @@
   display: inline-block;
   position: relative;
   top: 10px;
-  margin-left: 12px;
+  margin-left: 14px;
   height: 30px;
   white-space: nowrap;
   line-height: 30px;
@@ -762,7 +756,9 @@
     cursor: pointer;
     outline: none;
     font-size: 120%;
-
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
     &:hover {
       background-color: rgba(255,255,255,.1);
     }

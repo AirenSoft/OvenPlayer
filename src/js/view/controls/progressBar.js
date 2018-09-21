@@ -1,15 +1,13 @@
 /**
  * Created by hoho on 2018. 7. 24..
  */
-import OvenTemplate from 'view/engine/OvenTemplate';
-import SettingPanelList from 'view/global/SettingPanelList';
-import {naturalHms} from 'utils/strings'
-import LA$ from 'utils/likeA$';
+import OvenTemplate from "view/engine/OvenTemplate";
+import PanelManager from "view/global/PanelManager";
+import {naturalHms} from "utils/strings"
+import LA$ from "utils/likeA$";
 import {
-    STATE_IDLE,
-    STATE_PLAYING,
-    STATE_COMPLETE,
-    STATE_PAUSED
+    CONTENT_TIME,
+    CONTENT_BUFFER
 } from "api/constants";
 
 const ProgressBar = function($container, api){
@@ -19,6 +17,7 @@ const ProgressBar = function($container, api){
     let currentLoadedPercentage = 0;
 
     let mouseInside = false, mouseDown = false;
+    let panelManager = PanelManager();
 
     let $progressBar = "",
         $progressLoad = "",
@@ -34,11 +33,11 @@ const ProgressBar = function($container, api){
         const progressBarWidth = $progressBar.width();
         const position = progressBarWidth * percentage;
 
-        $progressPlay.css('width', position+ 'px');
-        $progressHover.css('left', position+ 'px');
+        $progressPlay.css("width", position+ "px");
+        $progressHover.css("left", position+ "px");
 
         const knobPostion = (progressBarWidth - knobWidth) * percentage;
-        $knobContainer.css('left', knobPostion+ 'px');
+        $knobContainer.css("left", knobPostion+ "px");
 
         currentPlayingPosition = position;
         currentPlayingPercentage = percentage;
@@ -48,14 +47,14 @@ const ProgressBar = function($container, api){
         const progressBarWidth = $progressBar.width();
         const hoverPosition = progressBarWidth * percentage;
 
-        $progressHover.css('width', percentage == 0? percentage : (hoverPosition - currentPlayingPosition)+ 'px');
+        $progressHover.css("width", percentage == 0? percentage : (hoverPosition - currentPlayingPosition)+ "px");
     };
 
     let drawLoadProgress = function(percentage) {
         const progressBarWidth = $progressBar.width();
         const loadPosition = progressBarWidth * percentage;
 
-        $progressLoad.css('width', loadPosition+ 'px');
+        $progressLoad.css("width", loadPosition+ "px");
         currentLoadedPercentage = percentage;
     };
 
@@ -78,7 +77,7 @@ const ProgressBar = function($container, api){
     };
 
     let drawTimeIndicator = function (percentage, event) {
-       if(SettingPanelList.length > 0){
+       if(panelManager.size() > 0){
            $time.hide();
            return ;
        }
@@ -106,7 +105,7 @@ const ProgressBar = function($container, api){
             }
         };
         let magneticPosition = calculateMagnetic();
-        $time.css('left', magneticPosition+ "px");
+        $time.css("left", magneticPosition+ "px");
     };
 
     let seek = function (percentage) {
@@ -122,21 +121,22 @@ const ProgressBar = function($container, api){
         knobWidth = $knob.width();
         $time = $current.find(".ovp-progressbar-time");
 
-        api.on('time', function(data) {
+        api.on(CONTENT_TIME, function(data) {
             if(data && data.duration && data.position){
                 positionElements(data.position / data.duration);
             }
-        });
+        },template);
 
-        api.on('bufferChanged', function(data) {
+        api.on(CONTENT_BUFFER, function(data) {
             if(data && data.bufferPercent){
                 drawLoadProgress(data.bufferPercent / 100);
             }
-        });
+        },template);
 
     };
-    const onDestroyed = function(){
-
+    const onDestroyed = function(template){
+        api.off(CONTENT_TIME, null, template);
+        api.off(CONTENT_BUFFER, null, template);
     };
     const events = {
         "resize window" : function(event, $current, template){

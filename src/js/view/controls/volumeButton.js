@@ -1,7 +1,12 @@
 /**
  * Created by hoho on 2018. 7. 20..
  */
-import OvenTemplate from 'view/engine/OvenTemplate';
+import OvenTemplate from "view/engine/OvenTemplate";
+import {
+    READY,
+    CONTENT_VOLUME,
+    CONTENT_MUTE
+} from "api/constants";
 
 const VolumeButton = function($container, api){
 
@@ -39,9 +44,8 @@ const VolumeButton = function($container, api){
         setVolumeIcon(percentage);
 
         const handlePosition = maxRange * percentage / 100;
-
-        $sliderHandle.css('left', handlePosition+ 'px');
-        $sliderValue.css('width', handlePosition+ 'px');
+        $sliderHandle.css("left", handlePosition+ "px");
+        $sliderValue.css("width", handlePosition+ "px");
     }
 
     let calculatePercentage = function (event) {
@@ -70,26 +74,31 @@ const VolumeButton = function($container, api){
         $volumeIconSmall = $current.find(".ovp-volume-button-smallicon");
         $volumeIconMute = $current.find(".ovp-volume-button-muteicon");
 
+        //sliderWidth = $sliderContainer.width();
         handleWidth = $sliderHandle.width();
-        maxRange = sliderWidth - handleWidth;
+        maxRange = sliderWidth - (handleWidth/2);
 
-        api.on('ready', function() {
+        $sliderHandle.css("left", maxRange+ "px");
+
+        api.on(READY, function() {
             setVolumeUI(api.getVolume());
-        });
-        api.on('volumeChanged', function(data) {
+        }, template);
+        api.on(CONTENT_VOLUME, function(data) {
             setVolumeUI(data.volume);
-        });
-        api.on('mute', function(data) {
+        }, template);
+        api.on(CONTENT_MUTE, function(data) {
             if (data.mute) {
                 setVolumeUI(0);
             } else {
                 setVolumeUI(api.getVolume());
             }
-        });
+        }, template);
 
     };
-    const onDestroyed = function(){
-
+    const onDestroyed = function(template){
+        api.off(READY, null, template);
+        api.off(CONTENT_VOLUME, null, template);
+        api.off(CONTENT_MUTE, null, template);
     };
     const events = {
         "click .ovp-volume-button" : function(event, $current, template){

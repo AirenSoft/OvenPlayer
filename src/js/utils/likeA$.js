@@ -154,7 +154,12 @@ const La$ = function(selectorOrElement){
     };
 
     that.closest = (selectorString) => {
-        return $element.closest(selectorString);
+        let closestElement = $element.closest(selectorString);
+        if(closestElement){
+            return La$(closestElement);
+        }else{
+            return null;
+        }
     };
 
     return that;

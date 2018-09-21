@@ -1,10 +1,10 @@
 /**
  * Created by hoho on 2018. 7. 24..
  */
-import OvenTemplate from 'view/engine/OvenTemplate';
-import BigButton from 'view/helper/bigButton';
-import MessageBox from 'view/helper/messageBox';
-import Spinner from 'view/helper/spinner';
+import OvenTemplate from "view/engine/OvenTemplate";
+import BigButton from "view/helper/bigButton";
+import MessageBox from "view/helper/messageBox";
+import Spinner from "view/helper/spinner";
 
 import {
     READY,
@@ -42,7 +42,7 @@ const Helper = function($container, api){
 
         api.on(READY, function() {
             createBigButton(STATE_PAUSED);
-        });
+        }, template);
         api.on(PLAYER_STATE, function(data){
             if(data && data.newstate){
                 if(data.newstate === STATE_PLAYING){
@@ -57,42 +57,47 @@ const Helper = function($container, api){
                     }
                 }
             }
-        });
+        }, template);
         api.on(ERROR, function(error) {
-            let message = '';
-
+            let message = "";
+            if(bigButton){
+                bigButton.destroy();
+            }
             if (error.code === 100) {
-                message = 'Initialization failed.';
+                message = "Initialization failed.";
             } else if (error.code === 301) {
-                message = 'Media playback was canceled.';
+                message = "Media playback was canceled.";
             } else if (error.code === 302) {
-                message = 'Some of the media could not be downloaded due to a network error.';
+                message = "Some of the media could not be downloaded due to a network error.";
             } else if (error.code === 303) {
-                message = 'Unable to load media. This may be due to a server or network error, or due to an unsupported format.';
+                message = "Unable to load media. This may be due to a server or network error, or due to an unsupported format.";
             } else if (error.code === 304) {
-                message = 'Media playback has been canceled. It looks like your media is corrupted or your browser does not support the features your media uses.';
+                message = "Media playback has been canceled. It looks like your media is corrupted or your browser does not support the features your media uses.";
             } else if (parseInt(error.code/100) === 5) {
-                message = 'Connection with low-latency server failed.';
+                message = "Connection with low-latency server failed.";
             } else {
-                message = 'Can not play due to unknown reasons.';
+                message = "Can not play due to unknown reasons.";
             }
 
             createMessage(message, null);
-        });
+        }, template);
 
         api.on(NETWORK_UNSTABLED, function(event){
-            let message = 'Because the network connection is unstable, the following media source will be played.';
+            let message = "Because the network connection is unstable, the following media source will be played.";
 
             if(api.getCurrentQuality().index+1 ===  api.getQualityLevels().length){
-                message = 'Network connection is unstable. Check the network connection.';
+                message = "Network connection is unstable. Check the network connection.";
             }
 
             createMessage(message, 5000);
-        });
+        }, template);
 
     };
-    const onDestroyed = function(){
-        //Do nothing.
+    const onDestroyed = function(template){
+        api.off(READY, null, template);
+        api.off(PLAYER_STATE, null, template);
+        api.off(ERROR, null, template);
+        api.off(NETWORK_UNSTABLED, null, template);
     };
     const events = {
 

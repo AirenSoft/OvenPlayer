@@ -124,7 +124,7 @@ const OvenTemplate = function (container, templateName, data, events, onRendered
         }
 
         if (onDestroyed) {
-            onDestroyed();
+            onDestroyed(that);
         }
     };
     return that;

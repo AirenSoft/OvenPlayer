@@ -5,7 +5,6 @@ import LazyCommandExecutor from "api/LazyCommandExecutor";
 import LogManager from "utils/logger";
 import PlaylistManager from "api/playlist/Manager";
 import ProviderController from "api/provider/Controller";
-import Promise, {resolved} from "api/shims/promise";
 import {READY, ERROR, INIT_ERROR, DESTROY, NETWORK_UNSTABLED, PLAYER_FILE_ERROR, PROVIDER_DASH, PROVIDER_HLS, PROVIDER_WEBRTC, PROVIDER_HTML5, PROVIDER_RTMP} from "api/constants";
 import {version} from 'version';
 import {ApiRtmpExpansion} from 'api/ApiExpansions';
@@ -24,7 +23,6 @@ const Api = function(container){
     OvenPlayerConsole.log("[[OvenPlayer]] v."+ version);
     OvenPlayerConsole.log("API loaded.");
     //let captionManager = CaptionManager(that);
-   
     let playlistManager = PlaylistManager();
     let providerController = ProviderController();
     let currentProvider = "";
@@ -66,6 +64,7 @@ const Api = function(container){
 
             //This passes the event created by the Provider to API.
             currentProvider.on("all", function(name, data){
+
                 that.trigger(name, data);
 
                 //Auto next source when player load was fail by amiss source.
@@ -90,6 +89,9 @@ const Api = function(container){
                 lazyQueue.destroy();
 
                 that.trigger(READY);
+            }).catch((error) => {
+                const errorObject = {code : INIT_ERROR, reason : "init error.", message : "Player init error.", error : error};
+                that.trigger(ERROR, errorObject);
             });
         }).catch((error) => {
             const errorObject = {code : INIT_ERROR, reason : "init error.", message : "Player init error.", error : error};
@@ -221,6 +223,8 @@ const Api = function(container){
         }
 
         OvenPlayerConsole.log("API : setCurrentQuality() isSameProvider", isSameProvider);
+
+        //captionManager.flushCaptionList(captionManager.getCurrentCaption());
 
         if(!isSameProvider){
             lazyQueue = LazyCommandExecutor(that, ['play']);

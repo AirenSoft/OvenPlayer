@@ -1,5 +1,4 @@
 import SupportChecker from "api/SupportChecker";
-import Promise, {resolved} from "api/shims/promise";
 import {ApiRtmpExpansion} from 'api/ApiExpansions';
 
 /**

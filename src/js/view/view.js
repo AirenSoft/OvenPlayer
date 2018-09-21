@@ -4,10 +4,9 @@
 import OvenTemplate from 'view/engine/OvenTemplate';
 import Helper from 'view/helper/main';
 import Controls from 'view/controls/main';
-import SettingPanelList from 'view/global/SettingPanelList';
+import PanelManager from "view/global/PanelManager";
 import ContextPanel from 'view/helper/contextPanel';
 import LA$ from 'utils/likeA$';
-import _ from 'utils/underscore';
 import {
     READY,
     DESTROY,
@@ -27,6 +26,7 @@ require('../../css/ovenplayer.less');
 
 const View = function($container){
     let viewTemplate = "", controls = "", helper = "", $playerRoot, contextPanel = "", api = "", autoHideTimer = "";
+    let panelManager = PanelManager();
 
     let setHide = function (hide, autoHide) {
 
@@ -36,7 +36,7 @@ const View = function($container){
         }
 
         if (hide) {
-            if(SettingPanelList.length > 0){
+            if(panelManager.size() > 0){
                 return false;
             }
             $playerRoot.addClass("ovp-autohide");
@@ -45,7 +45,7 @@ const View = function($container){
 
             if (autoHide) {
                 autoHideTimer = setTimeout(function() {
-                    if(SettingPanelList.length > 0){
+                    if(panelManager.size()> 0){
                         return false;
                     }
                     $playerRoot.addClass("ovp-autohide");
@@ -100,6 +100,8 @@ const View = function($container){
     const onRendered = function($current, template){
         $playerRoot = $current;
         viewTemplate = template;
+
+
     };
     const onDestroyed = function(){
         //Do nothing.
@@ -107,23 +109,18 @@ const View = function($container){
     const events = {
         "click .ovenplayer" : function(event, $current, template){
             event.preventDefault();
-
             if(contextPanel){
                 contextPanel.destroy();
                 contextPanel = null;
                 return false;
             }
-            if(!LA$(event.target).closest(".ovp-bottom-panel") &&
-                !LA$(event.target).closest(".ovp-setting-panel")&&
-                !LA$(event.target).closest(".ovp-message-container")){
+
+            if(!(LA$(event.target).closest(".ovp-controls-container") || LA$(event.target).closest(".ovp-setting-panel") )){
+                if(panelManager.size() > 0){
+                    panelManager.clear();
+                    return false;
+                }
                 togglePlayPause();
-            }
-            if(!LA$(event.target).closest(".ovp-setting-panel") && !LA$(event.target).closest(".ovp-setting-button") && SettingPanelList.length > 0){
-                //clear all SettingPanelTemplate
-                _.each(SettingPanelList, function(settingPanel){
-                    settingPanel.destroy();
-                });
-                SettingPanelList.splice(0, SettingPanelList.length);
             }
         },
         "mouseenter .ovenplayer" : function(event, $current, template){
@@ -177,9 +174,12 @@ const View = function($container){
             }
         },
         "contextmenu .ovenplayer" : function(event, $current, template){
-            event.preventDefault();
-            createContextPanel(event.pageX, event.pageY);
-            return false;
+            event.stopPropagation();
+            if(!LA$(event.currentTarget).find("object")){
+                event.preventDefault();
+                createContextPanel(event.pageX, event.pageY);
+                return false;
+            }
         }
     };
 
@@ -192,14 +192,18 @@ const View = function($container){
             api = playerInstance;
             helper = Helper($playerRoot.find(".ovp-ui"), playerInstance);
             controls = Controls($playerRoot.find(".ovp-ui"), playerInstance);
-            api.on(CONTENT_META, function(error) {
+
+            api.on(READY, function(data) {
                 if(!controls){
                     controls = Controls($playerRoot.find(".ovp-ui"), playerInstance);
                 }
             });
+
             api.on(ERROR, function(error) {
-                controls.destroy();
-                controls = null;
+                if(controls){
+                    controls.destroy();
+                    controls = null;
+                }
             });
 
             api.on(DESTROY, function(data) {

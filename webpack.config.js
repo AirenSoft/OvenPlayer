@@ -25,10 +25,12 @@ const defaultConfig = {
     entry: {
         'ovenplayer': './src/js/ovenplayer.js',
         'ovenplayer.sdk' : './src/js/ovenplayer.sdk.js',
+
     },
     resolve: {
         modules: [
-            path.resolve(__dirname, "src/js")
+            path.resolve(__dirname, "src/js"),
+            path.resolve("./node_modules")
         ]
     },
     module: {
@@ -39,20 +41,20 @@ const defaultConfig = {
                 exclude: /node_modules/,
                 options: {
                     babelrc: false,
-
                     plugins: [
-                        'transform-object-assign',
+                        "transform-es3-member-expression-literals",
                         "transform-es3-property-literals",
-                        "transform-es3-member-expression-literals"
+                        "transform-object-assign"
                     ],
                     presets: [
-                        ['env', {
-                            targets: {
-                                browsers: ['ie >= 8']
-                            },
-                            loose: true,
-                        }]
+                        //babel-preset-env is a Babel preset meant to automatically set up babel plugins and include the necessary babel polyfills based on a set of target environments checked against a feature compatibility table.
+                        ['env',{
+                            "targets": {"ie": 8},
+                            "debug": true,
+                            "useBuiltIns" : true // polyfill
+                        } ]
                     ]
+
                 }
             },
             {
@@ -88,11 +90,6 @@ const defaultConfig = {
         ]
     }
 };
-/*
-* useRelativePath :  대상 파일 컨텍스트에 대한 상대 URI를 생성할지 여부를 지정합니다.
-* publicPath : 대상 파일에 대한 사용자 지정 공용 경로를 지정합니다.
-* outputPath : 대상 파일을 저장할 파일 시스템 경로를 지정하십시오.
-* */
 
 const extendConfig = function (){
     console.log(env.npm_lifecycle_event );
@@ -110,7 +107,6 @@ const extendConfig = function (){
                     __VERSION__: `'${getBuildVersion(packageInfo)}'`
                 }),
                 new webpack.BannerPlugin(banner)
-
             ]
         });
     }else{
@@ -128,7 +124,6 @@ const extendConfig = function (){
                     })
                 ]
             },
-
             devtool: 'source-map',
             output: {
                 filename: '[name].js',
@@ -139,15 +134,7 @@ const extendConfig = function (){
                 new webpack.DefinePlugin({
                     __VERSION__: `'${getBuildVersion(packageInfo)}'`
                 }),
-                new webpack.BannerPlugin(banner),
-                new CopyWebpackPlugin(
-                    [
-                        {
-                            from: 'src/assets/OvenPlayerFlash.swf',
-                            to: path.resolve(__dirname, 'dist/production/ovenplayer/')
-                        }
-                    ]
-                )
+                new webpack.BannerPlugin(banner)
             ]
         });
     }

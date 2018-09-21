@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>OvenPlayer</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Noto+Sans" rel="stylesheet">
+
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dashjs/2.7.0/dash.all.min.js"></script>
+    <script src="../dist/development/ovenplayer/ovenplayer.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="container">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="navbar-brand" href="https://github.com/AirenSoft/OvenPlayer">OvenPlayer</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Demo</a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="ome_demo.html">OME Demo</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://github.com/AirenSoft/OvenPlayer" target="_blank">GitHub</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://github.com/AirenSoft/OvenPlayer/blob/master/docs/api.md" target="_blank">Docs</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <div id="demo-navi" class="row">
+            <div class="col-12 mb-4">
+                <div id="player"></div>
+            </div>
+
+            <div class="col-12 mb-2">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">
+                            WebRTC <small >{{titleStatus}}</small>
+
+                            <button class="btn btn-sm btn-outline-primary float-right btnReload" v-on:click="loadSources" v-if="titleStatus == 'OFFLINE'">Reload Player</button>
+                        </h4>
+                        <p class="card-text">
+                            On this page, you can experience Ultra-low latency with <a href="https://github.com/AirenSoft/OvenMediaEngine" class="text-primary" target="_blank">OvenMediaEngine</a>. Please follow our instructions to taste Ultra-low latency using broadcast tools like OBS.
+                        </p>
+                        <form class="">
+                            <div class="form-group row mb-0">
+                                <label class="col-sm-3 col-form-label">URL</label>
+                                <div class="col-sm-9">
+                                    <div class="form-control-plaintext">rtmp://dev2.airensoft.com/app</div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label">Stream Key</label>
+                                <div class="col-sm-9">
+                                    <div class="form-control-plaintext">stream</div>
+                                </div>
+                            </div>
+                            <div class="form-group row mb-0">
+                                <label class="col-sm-3 col-form-label">How to broadcast with OME</label>
+                                <div class="col-sm-9">
+                                    <div class="form-control-plaintext">
+                                        <ol>
+                                            <li>Download "OBS Studio" on the official OBS website (<a href="https://obsproject.com/" class="text-primary" target="_blank">https://obsproject.com/</a>).</li>
+                                            <li>Install OBS on your PC and click "File" > "Settings".</li>
+                                            <li>Select "Stream" tab and make the following settings:</li>
+                                                <ul>
+                                                    <li>Stream Type: Custom Streaming Server</li>
+                                                    <li>URL: rtmp://dev2.airensoft.com/app (This address is mentioned above.)</li>
+                                                    <li>Stream key: stream </li>
+                                                </ul>
+                                            <li>Press "OK" button to complete the settings.</li>
+                                            <li>Press the "Start Streaming" button on the right side of OBS.</li>
+                                        </ol>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+
+
+                        <h4 class="card-title mt-2">What is OME?</h4>
+                        <p class="card-text mb-2">
+                            OvenMediaEngine(OME) is a streaming engine for real-time live broadcasting with Ultra-low latency. It receives the RTMP stream from general broadcasting studios such as OBS, XSplit and transmit it on WebRTC. Video streams with Ultra-low latency can be played in a browser without plug-ins.
+                            <a href="https://github.com/AirenSoft/OvenMediaEngine" class="text-primary" target="_blank">More Info</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 mb-2">
+                <div class="text-center mt-2">
+                    <small>
+                        Powered by <a href="https://github.com/AirenSoft/OvenMediaEngine" class="text-primary" target="_blank">OvenMediaEngine</a> and <a href="https://github.com/AirenSoft/OvenPlayer" class="text-primary" target="_blank">OvenPlayer</a>.
+                    </small>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+
+
+    <script>
+        var player = "", preSources = "", errorOccured = false;
+        var getParameterByName = function (name, url) {
+            if (!url) url = window.location.href;
+            name = name.replace(/[\[\]]/g, '\\$&');
+            var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+                results = regex.exec(url);
+            if (!results) return null;
+            if (!results[2]) return '';
+            return decodeURIComponent(results[2].replace(/\+/g, ' '));
+        }
+        var urlSources = getParameterByName("sources");
+        if(urlSources){
+            preSources = JSON.parse(urlSources);
+        }
+        console.log("PRE SOURCE : ");
+        console.log(preSources);
+        $( document ).ready(function() {
+            omeURL = {
+                type: 'webrtc',
+                file:  'wss://dev2.airensoft.com:3333/app/stream_o',
+                label: 'AirenSoft'
+            };
+
+            var clipboard = new ClipboardJS('.btnExport');
+
+            clipboard.on('success', function(e) {
+                $('.btnExport').tooltip('show');
+                setTimeout(function(){
+                    $('.btnExport').tooltip('hide');
+                },3000);
+
+                e.clearSelection();
+            });
+
+
+            player = OvenPlayer.create("player", {
+                sources:[omeURL]
+            });
+            player.on("ready", function(data){
+                errorOccured = false;
+
+            });
+            player.on("stateChanged", function(data){
+                if(data && data.newstate && (data.newstate === "playing" || data.newstate === "pause" )){
+                    navigation.titleStatus = "LIVE";
+                }
+            });
+            player.on("error", function(error){
+                errorOccured = true;
+                console.log(error);
+                navigation.errorMessage = error.message;
+                navigation.titleStatus = "OFFLINE";
+            });
+
+
+        });
+
+        var navigation = new Vue({
+            el: '#demo-navi',
+            data: {
+                errorMessage : "",
+                titleStatus : "loading..."
+            },
+            methods: {
+                loadSources: function () {
+                    if(errorOccured){
+                        player.remove();
+                        player = OvenPlayer.create("player", {
+                            sources: [omeURL]
+                        });
+                    }
+
+                }
+            }
+        });
+
+
+
+
+    </script>
+</body>
+</html>

@@ -2,12 +2,13 @@
  * Created by hoho on 2018. 7. 26..
  */
 import OvenTemplate from 'view/engine/OvenTemplate';
-import SettingPanelList from 'view/global/SettingPanelList';
+import PanelManager from "view/global/PanelManager";
 import LA$ from 'utils/likeA$';
-import _ from 'utils/underscore';
+
 const PLAYER_MIN_HEIGHT = 220;
 const SettingPanel = function($container, api, data){
     const $root = LA$("#"+api.getContainerId());
+    let panelManager = PanelManager();
 
     let extractPanelData = function(panelType){
         let panel = {title : "", body : [], type : panelType};
@@ -56,17 +57,14 @@ const SettingPanel = function($container, api, data){
         "click .ovp-setting-main-item": function (event, $current, template) {
             event.preventDefault();
             let panelType = LA$(event.currentTarget).attr("ovp-panel-type");
-            //parent must be not $current!
-            SettingPanelList.push(SettingPanel($container, api, extractPanelData(panelType)));
+            let panel = SettingPanel($container, api, extractPanelData(panelType));
+            panelManager.add(panel);
         },
         "click .ovp-setting-title" : function(event, $current, template){
             event.preventDefault();
-
-            //Remove Current Panel
-            let last = SettingPanelList.pop();
-            last.destroy();
+            panelManager.removeLastItem();
         },
-        "click .ovp-setting-item-value" : function(event, $current, template){
+        "click .ovp-setting-sub-item" : function(event, $current, template){
             event.preventDefault();
 
             let panelType = LA$(event.currentTarget).attr("ovp-panel-type");
@@ -78,14 +76,8 @@ const SettingPanel = function($container, api, data){
                 }else if(panelType === "qualitylevel"){
                     api.setCurrentQuality(parseInt(value));
                 }
-
-                //clear all SettingPanelTemplate
-                _.each(SettingPanelList, function(settingPanel){
-                    settingPanel.destroy();
-                });
-                SettingPanelList.splice(0, SettingPanelList.length);
             }
-
+            panelManager.clear();
         }
     };
 

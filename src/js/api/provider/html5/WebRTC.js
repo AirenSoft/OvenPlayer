@@ -4,7 +4,6 @@
 import MediaManager from "api/media/Manager";
 import Provider from "api/provider/html5/Provider";
 import WebRTCLoader from "api/provider/html5/WebRTCLoader";
-import Promise, {resolved} from "api/shims/promise";
 import {isWebRTC} from "utils/validator";
 import {ERROR, STATE_ERROR, PROVIDER_WEBRTC} from "api/constants";
 

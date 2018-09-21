@@ -1,6 +1,7 @@
 import OvenPlayerSDK, {checkAndGetContainerElement} from './ovenplayer.sdk'
 import View from './view/view';
 import dom from './utils/polyfills/dom.js';
+import 'babel-polyfill';
 import {getScriptPath} from 'utils/webpack';
 import {getBrowser} from 'utils/browser';
 
@@ -17,10 +18,6 @@ window.OvenPlayer = OvenPlayer;
 Object.assign(OvenPlayer, OvenPlayerSDK);
 
 OvenPlayer.create = function (container, options) {
-    let browserName = getBrowser();
-    if(browserName === "ie"){
-
-    }
     let containerElement = checkAndGetContainerElement(container);
 
     var player = View(containerElement);

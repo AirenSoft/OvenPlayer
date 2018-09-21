@@ -1,51 +1,51 @@
 // STATE
-export const STATE_BUFFERING = 'buffering';
-export const STATE_IDLE = 'idle';
-export const STATE_COMPLETE = 'complete';
-export const STATE_PAUSED = 'paused';
-export const STATE_PLAYING = 'playing';
-export const STATE_ERROR = 'error';
-export const STATE_LOADING = 'loading';
-export const STATE_STALLED = 'stalled';
+export const STATE_BUFFERING = "buffering";
+export const STATE_IDLE = "idle";
+export const STATE_COMPLETE = "complete";
+export const STATE_PAUSED = "paused";
+export const STATE_PLAYING = "playing";
+export const STATE_ERROR = "error";
+export const STATE_LOADING = "loading";
+export const STATE_STALLED = "stalled";
 
 
 // PROVIDER
-export const PROVIDER_HTML5 = 'html5';
-export const PROVIDER_WEBRTC = 'webrtc';
-export const PROVIDER_DASH = 'dash';
-export const PROVIDER_HLS = 'hls';
-export const PROVIDER_RTMP = 'rtmp';
+export const PROVIDER_HTML5 = "html5";
+export const PROVIDER_WEBRTC = "webrtc";
+export const PROVIDER_DASH = "dash";
+export const PROVIDER_HLS = "hls";
+export const PROVIDER_RTMP = "rtmp";
 
 // EVENTS
 export const CONTENT_COMPLETE = STATE_COMPLETE;
-export const READY = 'ready';
-export const DESTROY = 'destroy';
-export const CONTENT_SEEK = 'seek';
-export const CONTENT_BUFFER_FULL = 'bufferFull';
-export const DISPLAY_CLICK = 'displayClick';
-export const CONTENT_LOADED = 'loaded';
-export const CONTENT_SEEKED = 'seeked';
-export const NETWORK_UNSTABLED = 'unstableNetwork';
+export const READY = "ready";
+export const DESTROY = "destroy";
+export const CONTENT_SEEK = "seek";
+export const CONTENT_BUFFER_FULL = "bufferFull";
+export const DISPLAY_CLICK = "displayClick";
+export const CONTENT_LOADED = "loaded";
+export const CONTENT_SEEKED = "seeked";
+export const NETWORK_UNSTABLED = "unstableNetwork";
 
-export const ERROR = 'error';
+export const ERROR = "error";
 
 // STATE OF PLAYER
-export const PLAYER_STATE = 'stateChanged';
+export const PLAYER_STATE = "stateChanged";
 export const PLAYER_COMPLETE = STATE_COMPLETE;
-export const PLAYER_PAUSE = 'pause';
-export const PLAYER_PLAY = 'play';
+export const PLAYER_PAUSE = "pause";
+export const PLAYER_PLAY = "play";
 
-export const CONTENT_BUFFER = 'bufferChanged';
-export const CONTENT_TIME = 'time';
-export const CONTENT_RATE_CHANGE = 'ratechange';
-export const CONTENT_VOLUME = 'volumeChanged';
-export const CONTENT_MUTE = 'mute';
-export const CONTENT_META = 'metaChanged';
-export const CONTENT_LEVELS = 'qualityLevelChanged';
-export const CONTENT_LEVEL_CHANGED = 'currentQualityLevelChanged';
-export const PLAYBACK_RATE_CHANGED = 'playbackRateChanged';
-export const CONTENT_CAPTION_CUE_CHANGED = 'cueChanged';
-export const CONTENT_CAPTION_CHANGED = 'captionChanged';
+export const CONTENT_BUFFER = "bufferChanged";
+export const CONTENT_TIME = "time";
+export const CONTENT_RATE_CHANGE = "ratechange";
+export const CONTENT_VOLUME = "volumeChanged";
+export const CONTENT_MUTE = "mute";
+export const CONTENT_META = "metaChanged";
+export const CONTENT_LEVELS = "qualityLevelChanged";
+export const CONTENT_LEVEL_CHANGED = "currentQualityLevelChanged";
+export const PLAYBACK_RATE_CHANGED = "playbackRateChanged";
+export const CONTENT_CAPTION_CUE_CHANGED = "cueChanged";
+export const CONTENT_CAPTION_CHANGED = "captionChanged";
 
 
 export const INIT_ERROR = 100;

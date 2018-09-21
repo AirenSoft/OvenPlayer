@@ -1,8 +1,8 @@
 /**
  * Created by hoho on 2018. 7. 26..
  */
-import OvenTemplate from 'view/engine/OvenTemplate';
-import LA$ from 'utils/likeA$';
+import OvenTemplate from "view/engine/OvenTemplate";
+import LA$ from "utils/likeA$";
 
 const FullScreenButton = function($container, api){
     const $root = LA$("#"+api.getContainerId());
@@ -69,8 +69,8 @@ const FullScreenButton = function($container, api){
     };
 
     const onRendered = function($current, template){
-        $iconExpand = $current.find('.ovp-fullscreen-button-expandicon');
-        $iconCompress = $current.find('.ovp-fullscreen-button-compressicon');
+        $iconExpand = $current.find(".ovp-fullscreen-button-expandicon");
+        $iconCompress = $current.find(".ovp-fullscreen-button-compressicon");
 
         //Bind Global(document) Event
         Object.keys(fullScreenEventTypes).forEach(eventName => {

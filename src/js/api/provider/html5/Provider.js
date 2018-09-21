@@ -4,7 +4,6 @@
 import EventEmitter from "api/EventEmitter";
 import EventsListener from "api/provider/html5/Listener";
 import _ from "utils/underscore.js";
-import Promise, {resolved} from "api/shims/promise";
 import {
     STATE_IDLE, STATE_PLAYING, STATE_PAUSED, STATE_COMPLETE,
     PLAYER_STATE, PLAYER_COMPLETE, PLAYER_PAUSE, PLAYER_PLAY,
@@ -49,7 +48,6 @@ const Provider = function (providerName, extendedElement, playerConfig, onBefore
 
     let posterImage = playerConfig.getConfig().image||"";
     elVideo.playbackRate = elVideo.defaultPlaybackRate = playerConfig.getDefaultPlaybackRate();
-
 
     const pickCurrentQuality = (sources) =>{
         var quality = Math.max(0, currentQuality);

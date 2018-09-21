@@ -1,15 +1,14 @@
 /**
  * Created by hoho on 2018. 7. 20..
  */
-import OvenTemplate from 'view/engine/OvenTemplate';
-import PlayButton from 'view/controls/playButton';
-import VolumeButton from 'view/controls/volumeButton';
-import ProgressBar from 'view/controls/progressBar';
-import TimeDisplay from 'view/controls/timeDisplay';
-import FullScreenButton from 'view/controls/fullScreenButton';
-import SettingPanel from 'view/controls/settingPanel';
-import SettingPanelList from 'view/global/SettingPanelList';
-import _ from 'utils/underscore';
+import OvenTemplate from "view/engine/OvenTemplate";
+import PlayButton from "view/controls/playButton";
+import VolumeButton from "view/controls/volumeButton";
+import ProgressBar from "view/controls/progressBar";
+import TimeDisplay from "view/controls/timeDisplay";
+import FullScreenButton from "view/controls/fullScreenButton";
+import SettingPanel from "view/controls/settingPanel";
+import PanelManager from "view/global/PanelManager";
 import {
     READY,
     CONTENT_META,
@@ -19,7 +18,7 @@ import {
 
 const Controls = function($container, api){
     let volumeButton = "", playButton= "", progressBar = "", timeDisplay = "", fullScreenButton = "";
-
+    let panelManager = PanelManager();
     let generateMainPanelData = function(){
         let panel = {title : "Settings", isMain : true, body : []};
         let currentSource = api.getCurrentQuality();
@@ -65,8 +64,7 @@ const Controls = function($container, api){
         volumeButton = VolumeButton($current.find(".ovp-left-controls"), api);
         fullScreenButton = FullScreenButton($current.find(".ovp-right-controls"), api);
 
-
-        api.on(CONTENT_META, function(data) {
+        api.on(CONTENT_META, function(data){
             initTimeDisplay(data);
             if(data.duration === Infinity){
                 //live
@@ -77,11 +75,25 @@ const Controls = function($container, api){
                 //vod
                 initProgressBar();
             }
-        });
-
+        }, template);
     };
-    const onDestroyed = function(){
-        //Do nothing.
+    const onDestroyed = function(template){
+        api.off(CONTENT_META, null, template);
+        if(timeDisplay){
+            timeDisplay.destroy();
+        }
+        if(playButton){
+            playButton.destroy();
+        }
+        if(progressBar){
+            progressBar.destroy();
+        }
+        if(fullScreenButton){
+            fullScreenButton.destroy();
+        }
+        if(volumeButton){
+            volumeButton.destroy();
+        }
     };
     const events = {
         "mouseleave .ovp-controls" : function(event, $current, template){
@@ -92,22 +104,14 @@ const Controls = function($container, api){
         },
         "click .ovp-setting-button" : function(event, $current, template){
             event.preventDefault();
-
-            //toggle
-            if(SettingPanelList.length > 0){
-                //clear all SettingPanelTemplate
-                _.each(SettingPanelList, function(settingPanel){
-                    settingPanel.destroy();
-                });
-                SettingPanelList.splice(0, SettingPanelList.length);
+            if(panelManager.size() > 0){
+                panelManager.clear();
             }else{
-                SettingPanelList.push(SettingPanel($current, api, generateMainPanelData()));
+                let panelData = generateMainPanelData();
+                panelManager.add(SettingPanel($current, api, panelData));
             }
         }
     };
-
-
-
 
     return OvenTemplate($container, "Controls",  null , events, onRendered, onDestroyed);
 };

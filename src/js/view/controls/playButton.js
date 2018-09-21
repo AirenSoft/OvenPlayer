@@ -1,7 +1,7 @@
 /**
  * Created by hoho on 2018. 7. 24..
  */
-import OvenTemplate from 'view/engine/OvenTemplate';
+import OvenTemplate from "view/engine/OvenTemplate";
 import {
     ERROR,
     STATE_IDLE,
@@ -48,10 +48,10 @@ const PlayButton = function ($container, api) {
             if(data && data.newstate){
                 setButtonState(data.newstate);
             }
-        });
+        }, template);
     };
-    const onDestroyed = function(){
-        //Do nothing.
+    const onDestroyed = function(template){
+        api.off(PLAYER_STATE, null, template);
     };
     const events = {
         "click .ovp-play-button" : function(event, $current, template){

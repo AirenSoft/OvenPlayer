@@ -1,5 +1,4 @@
 import adapter from 'utils/adapter';
-import Promise, {resolved} from "api/shims/promise";
 import _ from "utils/underscore";
 import {
     PLAYER_WEBRTC_WS_ERROR,

@@ -3,7 +3,6 @@
  */
 import EventEmitter from "api/EventEmitter";
 import EventsListener from "api/provider/flash/Listener";
-import Promise, {resolved} from "api/shims/promise";
 import {
     STATE_IDLE, STATE_PLAYING, STATE_PAUSED, STATE_COMPLETE,
     PLAYER_STATE, PLAYER_COMPLETE, PLAYER_PAUSE, PLAYER_PLAY,
@@ -104,25 +103,25 @@ const Provider = function(providerName, element, playerConfig){
 
     };
     that.getBuffer = () => {
-        return elFlash.getBuffer();
+        return elFlash.getBuffer ? elFlash.getBuffer() : null;
     };
     that.getDuration = () => {
-        return elFlash.getDuration();
+        return elFlash.getDuration ? elFlash.getDuration() : 0;
     };
     that.getPosition = () => {
-        return elFlash.getPosition();
+        return elFlash.getPosition ? elFlash.getPosition() : 0;
     };
     that.setVolume = (volume) => {
-        return elFlash.setVolume(volume);
+        return elFlash.setVolume ? elFlash.setVolume(volume) : 0;
     };
     that.getVolume = () => {
-        return elFlash.getVolume();
+        return elFlash.setVolume ? elFlash.getVolume() : 0;
     };
     that.setMute = () =>{
         elFlash.setMute();
     };
     that.getMute = () =>{
-        return elFlash.getMute();
+        return elFlash.getMute ? elFlash.getMute() : false;
     };
 
     that.preload = (sources_, lastPlayPosition) =>{
@@ -131,15 +130,17 @@ const Provider = function(providerName, element, playerConfig){
 
         sources = sources_;
         currentQuality = pickCurrentQuality(sources);
-
+        console.log(elFlash);
         return new Promise(function (resolve, reject) {
             (function checkSwfIsReady(){
                 retryCount ++;
+
+                //console.log(getSWF(elFlash.id), elFlash);
                 if(elFlash.isFlashReady && elFlash.isFlashReady()){
                     _load(lastPlayPosition || 0);
                     return resolve();
                 }else{
-                    if(retryCount < 30){
+                    if(retryCount < 100){
                         setTimeout(checkSwfIsReady, 100);
                     }else{
                         return reject();
@@ -156,10 +157,14 @@ const Provider = function(providerName, element, playerConfig){
     };
 
     that.play = () =>{
-        elFlash.play();
+        if(elFlash.play){
+            elFlash.play();
+        }
     }
     that.pause = () =>{
-        elFlash.pause();
+        if(elFlash.pause){
+            elFlash.pause();
+        }
     };
     that.seek = (position) =>{
         elFlash.seek(position);
