@@ -189,18 +189,20 @@ const View = function($container){
             return $playerRoot.find(".ovp-media-element-container").get();
         },
         setApi: function (playerInstance) {
+            let isReady = false;
             api = playerInstance;
             helper = Helper($playerRoot.find(".ovp-ui"), playerInstance);
             controls = Controls($playerRoot.find(".ovp-ui"), playerInstance);
 
             api.on(READY, function(data) {
+                isReady = true;
                 if(!controls){
                     controls = Controls($playerRoot.find(".ovp-ui"), playerInstance);
                 }
             });
 
             api.on(ERROR, function(error) {
-                if(controls){
+                if(controls && !isReady && api.getQualityLevels().length <= 1){
                     controls.destroy();
                     controls = null;
                 }
