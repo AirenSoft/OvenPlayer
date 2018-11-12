@@ -2,6 +2,7 @@
  * Created by hoho on 2018. 11. 12..
  */
 import {ERROR, STATE_ERROR} from "api/constants";
+import _ from "utils/underscore";
 
 export const extractVideoElement = function(extendedElement) {
     if(_.isElement(extendedElement)){
