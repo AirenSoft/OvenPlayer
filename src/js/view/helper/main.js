@@ -79,7 +79,7 @@ const Helper = function($container, api){
                 message = "Can not play due to unknown reasons.";
             }
 
-            createMessage(message, null);
+            createMessage(message, 5000);
         }, template);
 
         api.on(NETWORK_UNSTABLED, function(event){

@@ -22,8 +22,8 @@ const Controller = function(){
 
     const ProviderLoader ={
         html5: function() {
-            return require.ensure(['api/provider/html5/Html5'], function(require) {
-                    const provider = require('api/provider/html5/Html5').default;
+            return require.ensure(['api/provider/html5/providers/Html5'], function(require) {
+                    const provider = require('api/provider/html5/providers/Html5').default;
                     registeProvider("html5", provider);
                     return provider;
                 }, function(err){
@@ -32,8 +32,8 @@ const Controller = function(){
             );
         },
         webrtc : function(){
-            return require.ensure(['api/provider/html5/WebRTC'], function(require) {
-                    const provider = require('api/provider/html5/WebRTC').default;
+            return require.ensure(['api/provider/html5/providers/WebRTC'], function(require) {
+                    const provider = require('api/provider/html5/providers/WebRTC').default;
                     registeProvider("webrtc", provider);
                     return provider;
                 }, function(err){
@@ -42,8 +42,8 @@ const Controller = function(){
             );
         },
         dash : function(){
-            return require.ensure(['api/provider/html5/Dash'], function(require) {
-                    const provider = require('api/provider/html5/Dash').default;
+            return require.ensure(['api/provider/html5/providers/Dash'], function(require) {
+                    const provider = require('api/provider/html5/providers/Dash').default;
                     registeProvider("dash", provider);
                     return provider;
                 }, function(err){
@@ -52,8 +52,8 @@ const Controller = function(){
             );
         },
         hls : function(){
-            return require.ensure(['api/provider/html5/Hls'], function(require) {
-                    const provider = require('api/provider/html5/Hls').default;
+            return require.ensure(['api/provider/html5/providers/Hls'], function(require) {
+                    const provider = require('api/provider/html5/providers/Hls').default;
                     registeProvider("hls", provider);
                     return provider;
                 }, function(err){
@@ -62,8 +62,8 @@ const Controller = function(){
             );
         },
         rtmp : function(){
-            return require.ensure(['api/provider/flash/Rtmp'], function(require) {
-                    const provider = require('api/provider/flash/Rtmp').default;
+            return require.ensure(['api/provider/flash/providers/Rtmp'], function(require) {
+                    const provider = require('api/provider/flash/providers/Rtmp').default;
                     registeProvider("rtmp", provider);
                     return provider;
                 }, function(err){

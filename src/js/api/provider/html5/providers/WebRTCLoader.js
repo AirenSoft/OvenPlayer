@@ -12,7 +12,7 @@ import {
 } from "api/constants";
 
 
-const WebRTCLoader = function(provider, url, errorCallback){
+const WebRTCLoader = function(provider, url, errorTrigger){
     var url = url;
     let ws = "";
     let peerConnection = "";
@@ -121,9 +121,7 @@ const WebRTCLoader = function(provider, url, errorCallback){
                                         return false;
                                     }
                                     peerConnection.getStats().then(function(stats) {
-                                        //console.log(stats);
                                         stats.forEach(function(state){
-                                            //console.log(state);
                                             if(state.type === "inbound-rtp" && !state.isRemote ){
                                                 OvenPlayerConsole.log(state);
 
@@ -222,7 +220,7 @@ const WebRTCLoader = function(provider, url, errorCallback){
             peerConnection = null;
         };
         if(error){
-            errorCallback(error);
+            errorTrigger(error, provider);
         }
     }
 

@@ -3,7 +3,8 @@
  */
 import MediaManager from "api/media/Manager";
 import Provider from "api/provider/html5/Provider";
-import {PROVIDER_HTML5, STATE_ERROR, ERROR} from "api/constants";
+import {errorTrigger} from "api/provider/utils";
+import {PROVIDER_HTML5, STATE_IDLE} from "api/constants";
 
 /**
  * @brief   html5 provider extended core.
@@ -16,15 +17,31 @@ const Html5 = function(container, playerConfig){
     let mediaManager = MediaManager(container, PROVIDER_HTML5);
     let element = mediaManager.create();
 
-    let that = Provider(PROVIDER_HTML5, element, playerConfig);
-    let super_destroy  = that.super('destroy');
+    let spec = {
+        name : PROVIDER_HTML5,
+        extendedElement : element,
+        listener : null,
+        canSeek : false,
+        isLive : false,
+        seeking : false,
+        state : STATE_IDLE,
+        buffer : 0,
+        currentQuality : -1,
+        sources : []
+    };
+
+    let that = Provider(spec, playerConfig, null);
+    let superDestroy_func  = that.super('destroy');
 
     OvenPlayerConsole.log("HTML5 PROVIDER LOADED.");
 
     that.destroy = () =>{
         mediaManager.destroy();
+        mediaManager = null;
+        element = null;
         OvenPlayerConsole.log("HTML5 : PROVIDER DESTROYED.");
-        super_destroy();
+
+        superDestroy_func();
     };
 
     return that;

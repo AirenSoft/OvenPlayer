@@ -13,7 +13,7 @@ export default (data) => {
                                 if(data.isMain){
                                     elements += settingItemTemplate(body.title, body.value, body.type);
                                 }else{
-                                    elements += settingValueTemplate(body.title, body.value, data.type, body.isCheck);
+                                    elements += settingValueTemplate(body.title, body.value, data.type, body.isCheck, body.metaQuality);
                                 }
                             });
     elements+=          '</div>' +
@@ -31,7 +31,7 @@ export const settingItemTemplate = (title, value, type) => {
     );
 };
 
-export const settingValueTemplate = (title, value, type, isCheck) => {
+export const settingValueTemplate = (title, value, type, isCheck, metaList) => {
     return (
         '<div class="ovp-setting-item ovp-setting-sub-item" ovp-panel-type="'+type+'" ovp-data-value="'+value+'">' +
             '<span class="ovp-setting-item-checked '+(isCheck?'ovp-show':'')+'">&#x2713;</span>' +

@@ -3,9 +3,10 @@
  */
 import MediaManager from "api/media/Manager";
 import Provider from "api/provider/html5/Provider";
-import WebRTCLoader from "api/provider/html5/WebRTCLoader";
+import WebRTCLoader from "api/provider/html5/providers/WebRTCLoader";
 import {isWebRTC} from "utils/validator";
-import {ERROR, STATE_ERROR, PROVIDER_WEBRTC} from "api/constants";
+import {errorTrigger} from "api/provider/utils";
+import {PROVIDER_WEBRTC, STATE_IDLE} from "api/constants";
 
 /**
  * @brief   webrtc provider extended core.
@@ -14,36 +15,44 @@ import {ERROR, STATE_ERROR, PROVIDER_WEBRTC} from "api/constants";
  * */
 
 const WebRTC = function(container, playerConfig){
+    let that = {};
+    let webrtcLoader = null;
+    let superDestroy_func  = null;
 
     let mediaManager = MediaManager(container, PROVIDER_WEBRTC);
     let element = mediaManager.create();
 
-    let webrtcLoader = null;
-    let that = {}, super_destroy  = "", listener = "";
-
-    let errorHandler = function(error){
-        that.setState(STATE_ERROR);
-        that.pause();
-        that.trigger(ERROR, error );
+    let spec = {
+        name : PROVIDER_WEBRTC,
+        extendedElement : element,
+        listener : null,
+        canSeek : false,
+        isLive : false,
+        seeking : false,
+        state : STATE_IDLE,
+        buffer : 0,
+        currentQuality : -1,
+        sources : []
     };
-    const onBeforeLoad = (source) => {
+
+    that = Provider(spec, playerConfig, function(source){
         if(isWebRTC(source.file, source.type)){
             OvenPlayerConsole.log("WEBRTC : onBeforeLoad : ", source);
             if(webrtcLoader){
                 webrtcLoader.destroy();
                 webrtcLoader = null;
             }
-            webrtcLoader = WebRTCLoader(that, source.file, errorHandler);
+            webrtcLoader = WebRTCLoader(that, source.file, errorTrigger);
             webrtcLoader.connect().then(function(stream){
                 element.srcObject = stream;
-                element.play();
+                that.play();
             });
         }
-    };
+    });
+    superDestroy_func = that.super('destroy');
 
-    that = Provider(PROVIDER_WEBRTC, element, playerConfig, onBeforeLoad);
     OvenPlayerConsole.log("WEBRTC PROVIDER LOADED.");
-    super_destroy = that.super('destroy');
+
 
     that.destroy = () =>{
         if(webrtcLoader){
@@ -51,9 +60,11 @@ const WebRTC = function(container, playerConfig){
             webrtcLoader = null;
         }
         mediaManager.destroy();
-
-        super_destroy();
+        mediaManager = null;
+        element = null;
         OvenPlayerConsole.log("WEBRTC :  PROVIDER DESTROYED.");
+
+        superDestroy_func();
 
     };
     return that;

@@ -3,13 +3,13 @@ export default (data) => {
             (data.duration === Infinity
                 ?
                 (
-                    '<button class="ovp-live-badge ovp-button" disabled="disabled">' +
+                    '<span class="ovp-live-badge" disabled="disabled">' +
                         (data.type ==='webrtc'
                         ?
                         '<span class="ovp-live-badge-lowlatency">low latency live</span>'
                         :
                         '<span>live</span>') +
-                    '</button>'
+                    '</span>'
                 )
                 :
                 (

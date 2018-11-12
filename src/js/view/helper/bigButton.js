@@ -18,14 +18,14 @@ const BigButton = function($container, api, playerState){
         //Do nothing!
     };
     const events = {
-        /*"click .ovp-bigbutton-container" : function(event){
+        "click .ovp-bigbutton-container" : function(event){
             event.preventDefault();
 
             const currentState = api.getState();
             if (currentState === STATE_IDLE || currentState === STATE_PAUSED || currentState === STATE_COMPLETE) {
                 api.play();
             }
-        }*/
+        }
     };
 
     return OvenTemplate($container, "BigButton", playerState, events, onRendered, onDestroyed );

@@ -25,7 +25,7 @@ import {
 require('../../css/ovenplayer.less');
 
 const View = function($container){
-    let viewTemplate = "", controls = "", helper = "", $playerRoot, contextPanel = "", api = "", autoHideTimer = "";
+    let viewTemplate = "", controls = "", helper = "", $playerRoot, contextPanel = "", api = "", autoHideTimer = "", playerState = STATE_IDLE;
     let panelManager = PanelManager();
 
     let setHide = function (hide, autoHide) {
@@ -54,7 +54,7 @@ const View = function($container){
         }
     };
     let togglePlayPause = function () {
-        const currentState = api.getState();
+        const currentState = playerState;
 
         if (currentState === STATE_IDLE || currentState === STATE_PAUSED || currentState === STATE_COMPLETE) {
             api.play();
@@ -120,13 +120,13 @@ const View = function($container){
                     panelManager.clear();
                     return false;
                 }
-                togglePlayPause();
+                //togglePlayPause();
             }
         },
         "mouseenter .ovenplayer" : function(event, $current, template){
             event.preventDefault();
 
-            if (api.getState() === STATE_PLAYING) {
+            if (playerState === STATE_PLAYING) {
                 setHide(false, true);
             } else {
                 setHide(false);
@@ -135,7 +135,7 @@ const View = function($container){
         "mousemove .ovenplayer" : function(event, $current, template){
             event.preventDefault();
 
-            if (api.getState() === STATE_PLAYING) {
+            if (playerState === STATE_PLAYING) {
                 setHide(false, true);
             } else {
                 setHide(false);
@@ -144,7 +144,7 @@ const View = function($container){
         "mouseleave .ovenplayer" : function(event, $current, template){
             event.preventDefault();
 
-            if(api.getState() === STATE_PLAYING){
+            if(playerState === STATE_PLAYING){
                 setHide(true);
             }
         },
@@ -202,7 +202,8 @@ const View = function($container){
             });
 
             api.on(ERROR, function(error) {
-                if(controls && !isReady && api.getQualityLevels().length <= 1){
+                let qualityLevels = api.getQualityLevels();
+                if(controls && !isReady && (!qualityLevels ||  (qualityLevels && qualityLevels.length <= 1))){
                     controls.destroy();
                     controls = null;
                 }
@@ -214,6 +215,7 @@ const View = function($container){
 
             api.on(PLAYER_STATE, function(data){
                 if(data && data.newstate){
+                    playerState = data.newstate;
                     if(data.newstate === STATE_PLAYING){
                         setHide(false, true);
                     }else{

@@ -3,6 +3,7 @@
  */
 import EventEmitter from "api/EventEmitter";
 import EventsListener from "api/provider/flash/Listener";
+import {extractVideoElement, separateLive, pickCurrentQualityIndex} from "api/provider/utils";
 import {
     STATE_IDLE, STATE_PLAYING, STATE_PAUSED, STATE_COMPLETE,
     PLAYER_STATE, PLAYER_COMPLETE, PLAYER_PAUSE, PLAYER_PLAY,
@@ -17,39 +18,17 @@ import {
  * */
 
 
-const Provider = function(providerName, element, playerConfig){
+const Provider = function(spec, playerConfig){
     OvenPlayerConsole.log("CORE loaded. ");
 
     let that = {};
     EventEmitter(that);
 
-    let elFlash = element;
-    let listener = EventsListener(elFlash, that);
-    let canSeek = false;
-    let seeking = false;
-    let state = STATE_IDLE;
-    let buffer = 0;
-    let currentQuality = -1;
-    let sources = [];
-
-    const pickCurrentQuality = (sources) =>{
-        var quality = Math.max(0, currentQuality);
-        const label ="";
-        if (sources) {
-            for (var i = 0; i < sources.length; i++) {
-                if (sources[i].default) {
-                    quality = i;
-                }
-                if (playerConfig.getQualityLabel() && sources[i].label === playerConfig.getQualityLabel() ) {
-                    return i;
-                }
-            }
-        }
-        return quality;
-    };
+    let listener = EventsListener(spec.extendedElement, that);
+    let elFlash = extractVideoElement(spec.extendedElement);
 
     const _load = (lastPlayPosition) =>{
-        const source =  sources[currentQuality];
+        const source =  spec.sources[spec.currentQuality];
         OvenPlayerConsole.log("source loaded : ", source, "lastPlayPosition : "+ lastPlayPosition);
         const previousSource = elFlash.getCurrentSource();
         const sourceChanged = (source.file !== previousSource);
@@ -64,7 +43,7 @@ const Provider = function(providerName, element, playerConfig){
             that.play();
         }
         that.trigger(CONTENT_LEVELS, {
-            currentQuality: currentQuality
+            currentQuality: spec.currentQuality
         });
     };
 
@@ -77,27 +56,27 @@ const Provider = function(providerName, element, playerConfig){
         }
     };
     that.getName = () => {
-        return providerName;
+        return spec.name;
     };
 
     that.canSeek = () => {
-        return canSeek;
+        return spec.canSeek;
     };
-    that.setCanSeek = (canSeek_) => {
-        canSeek = canSeek_;
+    that.setCanSeek = (canSeek) => {
+        spec.canSeek = canSeek;
     };
     that.isSeeking = ()=>{
-        return seeking;
+        return spec.seeking;
     };
-    that.setSeeking = (seeking_)=>{
-        seeking = seeking_;
+    that.setSeeking = (seeking)=>{
+        spec.seeking = seeking;
     };
 
     that.setState = (newState) => {
-        state = newState;
+        spec.state = newState;
     };
     that.getState = () =>{
-        return state;
+        return spec.state;
     };
     that.setBuffer = (newBuffer) => {
 
@@ -124,18 +103,17 @@ const Provider = function(providerName, element, playerConfig){
         return elFlash.getMute ? elFlash.getMute() : false;
     };
 
-    that.preload = (sources_, lastPlayPosition) =>{
-        OvenPlayerConsole.log("CORE : preload() ", sources_, lastPlayPosition);
+    that.preload = (sources, lastPlayPosition) =>{
+        OvenPlayerConsole.log("CORE : preload() ", sources, lastPlayPosition);
         let retryCount = 0;
 
-        sources = sources_;
-        currentQuality = pickCurrentQuality(sources);
-        console.log(elFlash);
+        spec.sources = sources;
+        spec.currentQuality = pickCurrentQualityIndex(sources, spec.currentQuality, playerConfig);
+
         return new Promise(function (resolve, reject) {
             (function checkSwfIsReady(){
                 retryCount ++;
 
-                //console.log(getSWF(elFlash.id), elFlash);
                 if(elFlash.isFlashReady && elFlash.isFlashReady()){
                     _load(lastPlayPosition || 0);
                     return resolve();
@@ -150,10 +128,10 @@ const Provider = function(providerName, element, playerConfig){
             })();
         });
     };
-    that.load = (sources_) =>{
-        sources = sources_;
-        currentQuality = pickCurrentQuality(sources);
-        _load(sources_.starttime || 0);
+    that.load = (sources) =>{
+        spec.sources = sources;
+        spec.currentQuality = pickCurrentQualityIndex(sources, spec.currentQuality, playerConfig);
+        _load(spec.sources_.starttime || 0);
     };
 
     that.play = () =>{
@@ -176,7 +154,7 @@ const Provider = function(providerName, element, playerConfig){
         return 0;
     };
     that.getQualityLevels = () => {
-        let qualityLevels = sources.map(function(source, index) {
+        let qualityLevels = spec.sources.map(function(source, index) {
             return {
                 file: source.file,
                 type: source.type,
@@ -187,36 +165,36 @@ const Provider = function(providerName, element, playerConfig){
         return qualityLevels;
     };
     that.getCurrentQuality = () => {
-        var source = sources[currentQuality];
+        var source = spec.sources[spec.currentQuality];
         return {
             file: source.file,
             type: source.type,
             label: source.label,
-            index : currentQuality
+            index : spec.currentQuality
         };
     };
     that.setCurrentQuality = (qualityIndex, needProviderChange) => {
-        if(currentQuality == qualityIndex){
+        if(spec.currentQuality === qualityIndex){
             return false;
         }
 
         if(qualityIndex > -1){
-            if(sources && sources.length > qualityIndex){
+            if(spec.sources && spec.sources.length > qualityIndex){
                 //that.pause();
                 that.setState(STATE_IDLE);
                 OvenPlayerConsole.log("source changed : " + qualityIndex);
-                currentQuality = qualityIndex;
+                spec.currentQuality = qualityIndex;
 
                 that.trigger(CONTENT_LEVEL_CHANGED, {
                     currentQuality: qualityIndex
                 });
 
-                playerConfig.setQualityLabel(sources[qualityIndex].label);
+                playerConfig.setQualityLabel(spec.sources[qualityIndex].label);
                 if(needProviderChange){
 
                     _load(elFlash.getCurrentTime() || 0);
                 }
-                return currentQuality;
+                return spec.currentQuality;
             }
         }
     };

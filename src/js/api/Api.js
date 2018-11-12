@@ -101,7 +101,8 @@ const Api = function(container){
             //This works for this case.
             //player = OvenPlayer.create("elId", {});
             //player.load(soruces);
-            lazyQueue.removeAndExcuteOnce("load");
+            lazyQueue.off();
+            //lazyQueue.removeAndExcuteOnce("load");
         });
     };
 
@@ -114,7 +115,10 @@ const Api = function(container){
      **/
     that.init = (options) =>{
         //It collects the commands and executes them at the time when they are executable.
-        lazyQueue = LazyCommandExecutor(that, ['load','play','pause','seek','stop', 'getDuration', 'getPosition', 'getVolume', 'getMute', 'getBuffer', 'getState']);
+        lazyQueue = LazyCommandExecutor(that, [
+            'load','play','pause','seek','stop', 'getDuration', 'getPosition', 'getVolume'
+            , 'getMute', 'getBuffer', 'getState' , 'getQualityLevels'
+        ]);
         playerConfig = Configurator(options);
         if(!playerConfig.isDebug()){
             logManager.disable();
@@ -137,32 +141,37 @@ const Api = function(container){
     };
 
     that.getDuration = () => {
-        if(!currentProvider){return;}
+        if(!currentProvider){return null;}
         OvenPlayerConsole.log("API : getDuration()", currentProvider.getDuration());
         return currentProvider.getDuration();
     };
     that.getPosition = () => {
-        if(!currentProvider){return;}
+        if(!currentProvider){return null;}
+
         OvenPlayerConsole.log("API : getPosition()", currentProvider.getPosition());
         return currentProvider.getPosition();
     };
     that.getVolume = () => {
-        if(!currentProvider){return;}
+        if(!currentProvider){return null;}
+
         OvenPlayerConsole.log("API : getVolume()", currentProvider.getVolume());
         return currentProvider.getVolume();
     };
     that.setVolume = (volume) => {
-        if(!currentProvider){return;}
+        if(!currentProvider){return null;}
+
         OvenPlayerConsole.log("API : setVolume() " + volume);
         currentProvider.setVolume(volume);
     };
     that.setMute = (state) => {
-        if(!currentProvider){return;}
+        if(!currentProvider){return null;}
+
         OvenPlayerConsole.log("API : setMute() " + state);
         return currentProvider.setMute(state);
     };
     that.getMute = () => {
-        if(!currentProvider){return;}
+        if(!currentProvider){return null;}
+
         OvenPlayerConsole.log("API : getMute() " + currentProvider.getMute());
         return currentProvider.getMute();
     };
@@ -180,34 +189,50 @@ const Api = function(container){
 
     };
     that.play = () => {
+        if(!currentProvider){return null;}
+
         OvenPlayerConsole.log("API : play() ");
         currentProvider.play();
     }
     that.pause = () => {
+        if(!currentProvider){return null;}
+
         OvenPlayerConsole.log("API : pause() ");
         currentProvider.pause();
     };
     that.seek = (position) => {
+        if(!currentProvider){return null;}
+
         OvenPlayerConsole.log("API : seek() "+ position);
         currentProvider.seek(position);
     };
     that.setPlaybackRate = (playbackRate) =>{
+        if(!currentProvider){return null;}
+
         OvenPlayerConsole.log("API : setPlaybackRate() ", playbackRate);
         return currentProvider.setPlaybackRate(playerConfig.setDefaultPlaybackRate(playbackRate));
     };
     that.getPlaybackRate = () =>{
+        if(!currentProvider){return null;}
+
         OvenPlayerConsole.log("API : getPlaybackRate() ", currentProvider.getPlaybackRate());
         return currentProvider.getPlaybackRate();
     };
     that.getQualityLevels = () =>{
+        if(!currentProvider){return null;}
+
         OvenPlayerConsole.log("API : getQualityLevels() ", currentProvider.getQualityLevels());
         return currentProvider.getQualityLevels();
     };
     that.getCurrentQuality = () =>{
+        if(!currentProvider){return null;}
+
         OvenPlayerConsole.log("API : getCurrentQuality() ", currentProvider.getCurrentQuality());
         return currentProvider.getCurrentQuality();
     };
     that.setCurrentQuality = (qualityIndex) =>{
+        if(!currentProvider){return null;}
+
         OvenPlayerConsole.log("API : setCurrentQuality() ", qualityIndex);
 
         let sources = playlistManager.getCurrentSources();
@@ -252,19 +277,26 @@ const Api = function(container){
      }*/
 
     that.getBuffer = () => {
+        if(!currentProvider){return null;}
+
         OvenPlayerConsole.log("API : getBuffer() ", currentProvider.getBuffer());
         currentProvider.getBuffer();
     };
     that.getState = () => {
-        if(!currentProvider){return;}
+        if(!currentProvider){return null;}
+
         OvenPlayerConsole.log("API : getState() ", currentProvider.getState());
         return currentProvider.getState();
     };
     that.stop = () => {
+        if(!currentProvider){return null;}
+
         OvenPlayerConsole.log("API : stop() ");
         currentProvider.stop();
     };
     that.remove = () => {
+        if(!currentProvider){return null;}
+
         OvenPlayerConsole.log("API : remove() ");
         lazyQueue.destroy();
         if(currentProvider){

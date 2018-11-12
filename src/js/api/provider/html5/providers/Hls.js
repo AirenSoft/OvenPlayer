@@ -3,7 +3,8 @@
  */
 import MediaManager from "api/media/Manager";
 import Provider from "api/provider/html5/Provider";
-import {PROVIDER_HLS} from "api/constants";
+import {errorTrigger} from "api/provider/utils";
+import {PROVIDER_HLS, STATE_IDLE} from "api/constants";
 
 /**
  * @brief   hlsjs provider extended core.
@@ -13,41 +14,50 @@ import {PROVIDER_HLS} from "api/constants";
 
 
 const Hls = function(container, playerConfig){
+    let that = {};
+    let hls = null;
+    let superDestroy_func = null;
 
     let mediaManager = MediaManager(container, PROVIDER_HLS);
     let element = mediaManager.create();
-
-    let hls = "";
-    let that = {};
-    let super_play = "", super_destroy = "";
 
     try {
         hls = new Hls({debug: false});
         hls.attachMedia(element);
 
-        const onBeforeLoad = (source, lastPlayPosition) => {
-            OvenPlayerConsole.log("HLS : onBeforeLoad : ", source, "lastPlayPosition : "+ lastPlayPosition);
+        let spec = {
+            name : PROVIDER_HLS,
+            extendedElement : hls,
+            listener : null,
+            canSeek : false,
+            isLive : false,
+            seeking : false,
+            state : STATE_IDLE,
+            buffer : 0,
+            currentQuality : -1,
+            sources : []
+        };
+        that = Provider(spec, playerConfig, function(source, lastPlayPosition){
+            OvenPlayerConsole.log("HLS : onExtendedLoad : ", source, "lastPlayPosition : "+ lastPlayPosition);
             hls.loadSource(source.file);
+
             if(lastPlayPosition > 0){
                 element.seek(lastPlayPosition);
-                super_play();
+                that.play();
             }
-
-        };
-
-        that = Provider(PROVIDER_HLS, hls, playerConfig, onBeforeLoad);
+        });
+        superDestroy_func = that.super('destroy');
         OvenPlayerConsole.log("HLS PROVIDER LOADED.");
-        super_play = that.super('play');
-        super_destroy = that.super('destroy');
-
 
         that.destroy = () =>{
             hls.destroy();
             hls = null;
             mediaManager.destroy();
+            mediaManager = null;
+            element = null;
             OvenPlayerConsole.log("HLS : PROVIDER DESTROUYED.");
 
-            super_destroy();
+            superDestroy_func();
         };
     }catch(error){
         throw new Error(error);

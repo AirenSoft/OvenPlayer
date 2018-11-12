@@ -25,6 +25,7 @@ import {
     PROVIDER_DASH,
     PROVIDER_HLS
 } from "api/constants";
+import {extractVideoElement, separateLive} from "api/provider/utils";
 
 
 /**
@@ -35,11 +36,14 @@ import {
  * @param   Provider provider  html5Provider
  * */
 
-const Listener = function(providerName, extendedElement, elVideo, provider){
+
+const Listener = function(extendedElement, provider){
     const lowLevelEvents = {};
 
-    OvenPlayerConsole.log("EventListener loaded.");
+    OvenPlayerConsole.log("EventListener loaded.",extendedElement ,provider );
     const that = {};
+
+    let elVideo = extractVideoElement(extendedElement);
     const between = function (num, min, max) {
         return Math.max(Math.min(num, max), min);
     }
@@ -84,14 +88,12 @@ const Listener = function(providerName, extendedElement, elVideo, provider){
     };
     //Fires when the browser has loaded meta data for the audio/video
     lowLevelEvents.loadedmetadata = () => {
-        //ToDo : You consider hlsjs. But not now because we don't support hlsjs.
-        let isLive = (elVideo.duration == Infinity? true : (providerName === PROVIDER_DASH? extendedElement.isDynamic() : false));
+        let isLive = (elVideo.duration === Infinity) ? true : separateLive(extendedElement);
         let type = provider.getCurrentQuality() ? provider.getCurrentQuality().type : "";
         var metadata = {
             duration: isLive ?  Infinity : elVideo.duration,
             type :type
         };
-        //provider.setLive(isLive);
 
         OvenPlayerConsole.log("EventListener : on loadedmetadata", metadata);
         provider.trigger(CONTENT_META, metadata);
@@ -161,10 +163,10 @@ const Listener = function(providerName, extendedElement, elVideo, provider){
         if(!provider.isSeeking() && !elVideo.paused){
             provider.setState(STATE_PLAYING);
         }
-        OvenPlayerConsole.log("EventListener : on timeupdate" , {
+        /*OvenPlayerConsole.log("EventListener : on timeupdate" , {
             position: position,
             duration: duration
-        });
+        });*/
         if (provider.getState() === STATE_PLAYING || provider.isSeeking()) {
             provider.trigger(CONTENT_TIME, {
                 position: position,
@@ -225,8 +227,6 @@ const Listener = function(providerName, extendedElement, elVideo, provider){
         OvenPlayerConsole.log("EventListener : on error", errorCodeGen);
         onError(errorCodeGen);
     };
-
-
 
     Object.keys(lowLevelEvents).forEach(eventName => {
         elVideo.removeEventListener(eventName, lowLevelEvents[eventName]);

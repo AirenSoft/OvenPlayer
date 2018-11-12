@@ -31,12 +31,12 @@ const SettingPanel = function($container, api, data){
 
             let qualityLevels = api.getQualityLevels();
             let currentQuality = api.getCurrentQuality();
-
             for (let i = 0; i < qualityLevels.length; i ++) {
                 let body = {
                     title : qualityLevels[i].label,
                     isCheck : currentQuality.index === i,
-                    value : i
+                    value : i,
+                    metaQuality :  qualityLevels[i].metaQuality
                 };
                 panel.body.push(body);
             }
