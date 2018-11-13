@@ -13,10 +13,9 @@ import {
 
 /**
  * @brief   Core For Html5 Video.
- * @param   providerName provider name
- * @param   extendedElement extended media object by mse. or video element.
+ * @param   spec member value
  * @param   playerConfig  player config
- * @param   onLoad on load handler
+ * @param   onExtendedLoad on load handler
  * */
 const Provider = function (spec, playerConfig, onExtendedLoad){
     OvenPlayerConsole.log("CORE loaded. ");

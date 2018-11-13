@@ -30,9 +30,7 @@ import {extractVideoElement, separateLive} from "api/provider/utils";
 
 /**
  * @brief   Trigger on various video events.
- * @param   providerName child Provider Name
  * @param   extendedElement extended media object by mse.
- * @param   element elVideo  video
  * @param   Provider provider  html5Provider
  * */
 

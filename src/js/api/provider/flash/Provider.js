@@ -13,7 +13,7 @@ import {
 
 /**
  * @brief   Core For Flash Video.
- * @param   element flash object element
+ * @param   spec member value
  * @param   playerConfig  player config
  * */
 

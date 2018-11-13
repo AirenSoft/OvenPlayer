@@ -22,7 +22,7 @@ const OvenTemplate = function (container, templateName, data, events, onRendered
     let $template;
     let viewEvents = {};
     let that = {};
-
+    that.data = data;
     let createAndSelectElement = function (html) {
         const newElement = document.createElement('div');
         newElement.innerHTML = html;

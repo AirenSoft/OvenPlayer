@@ -10,7 +10,7 @@ import {PROVIDER_WEBRTC, STATE_IDLE} from "api/constants";
 
 /**
  * @brief   webrtc provider extended core.
- * @param   element video element.
+ * @param   container player element.
  * @param   playerConfig    config.
  * */
 

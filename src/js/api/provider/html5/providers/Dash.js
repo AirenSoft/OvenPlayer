@@ -8,7 +8,7 @@ import {STATE_IDLE, PLAYER_UNKNWON_NEWWORK_ERROR, PROVIDER_DASH, CONTENT_META} f
 
 /**
  * @brief   dashjs provider extended core.
- * @param   element video element.
+ * @param   container player element.
  * @param   playerConfig    config.
  * */
 const DASHERROR = {

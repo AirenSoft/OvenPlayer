@@ -8,7 +8,7 @@ import {PROVIDER_HLS, STATE_IDLE} from "api/constants";
 
 /**
  * @brief   hlsjs provider extended core.
- * @param   element video element.
+ * @param   container player element.
  * @param   playerConfig    config.
  * */
 

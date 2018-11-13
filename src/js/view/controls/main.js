@@ -8,7 +8,7 @@ import ProgressBar from "view/controls/progressBar";
 import TimeDisplay from "view/controls/timeDisplay";
 import FullScreenButton from "view/controls/fullScreenButton";
 import SettingPanel from "view/controls/settingPanel";
-import PanelManager from "view/global/PanelManager";
+import PanelManager,{extractMainPanelData} from "view/global/PanelManager";
 import {
     READY,
     CONTENT_META,
@@ -19,31 +19,8 @@ import {
 const Controls = function($container, api){
     let volumeButton = "", playButton= "", progressBar = "", timeDisplay = "", fullScreenButton = "";
     let panelManager = PanelManager();
-    let generateMainPanelData = function(){
-        let panel = {title : "Settings", isMain : true, body : []};
-        let currentSource = api.getCurrentQuality();
-        if(api.getDuration() !== Infinity && currentSource.type !== PROVIDER_RTMP){
-            let body = {
-                title : "Speed",
-                value :  api.getPlaybackRate() === 1 ? "Normal" : api.getPlaybackRate(),
-                type : "playbackrate"
-            };
-            panel.body.push(body);
-        }
 
-        if (api.getQualityLevels().length > 0) {
-            let currentQuality = api.getCurrentQuality();
 
-            let body = {
-                title : "Source",
-                value : currentQuality ? currentQuality.label : "Default",
-                type : "qualitylevel"
-            };
-
-            panel.body.push(body);
-        }
-        return panel;
-    };
 
     const onRendered = function($current, template){
 
@@ -107,7 +84,7 @@ const Controls = function($container, api){
             if(panelManager.size() > 0){
                 panelManager.clear();
             }else{
-                let panelData = generateMainPanelData();
+                let panelData = extractMainPanelData(api);
                 panelManager.add(SettingPanel($current, api, panelData));
             }
         }
