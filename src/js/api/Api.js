@@ -37,7 +37,7 @@ const Api = function(container){
                     if (sources[i].default) {
                         quality = i;
                     }
-                    if (playerConfig.getQualityLabel() && sources[i].label === playerConfig.getQualityLabel() ) {
+                    if (playerConfig.getSourceLabel() && sources[i].label === playerConfig.getSourceLabel() ) {
                         return i;
                     }
                 }
@@ -70,12 +70,12 @@ const Api = function(container){
                 //Auto next source when player load was fail by amiss source.
                 //data.code === PLAYER_FILE_ERROR
                 if( (name === ERROR && (parseInt(data.code/100) === 3 || parseInt(data.code/100) === 5))|| name === NETWORK_UNSTABLED ){
-                    let currentQuality = that.getCurrentQuality();
-                    if(currentQuality.index+1 < that.getQualityLevels().length){
+                    let currentSourceIndex = that.getCurrentSource();
+                    if(currentSourceIndex+1 < that.getSources().length){
                         //this sequential has available source.
                         that.pause();
 
-                        that.setCurrentQuality(currentQuality.index+1);
+                        that.setCurrentSource(currentSourceIndex+1);
                     }
                 }
             });
@@ -218,6 +218,48 @@ const Api = function(container){
         OvenPlayerConsole.log("API : getPlaybackRate() ", currentProvider.getPlaybackRate());
         return currentProvider.getPlaybackRate();
     };
+
+    that.getSources = () => {
+        if(!currentProvider){return null;}
+
+        OvenPlayerConsole.log("API : getSources() ", currentProvider.getSources());
+        return currentProvider.getSources();
+    };
+    that.getCurrentSource = () =>{
+        if(!currentProvider){return null;}
+
+        OvenPlayerConsole.log("API : getCurrentSource() ", currentProvider.getCurrentSource());
+        return currentProvider.getCurrentSource();
+    };
+    that.setCurrentSource = (sourceIndex) =>{
+        if(!currentProvider){return null;}
+
+        OvenPlayerConsole.log("API : setCurrentSource() ", sourceIndex);
+
+        let sources = currentProvider.getSources();
+        let currentSource = sources[currentProvider.getCurrentSource()];
+        let newSource = sources[sourceIndex];
+        let lastPlayPosition = currentProvider.getPosition();
+        let isSameProvider = providerController.isSameProvider(currentSource, newSource);
+        // provider.serCurrentQuality -> playerConfig setting -> load
+        let resultSourceIndex = currentProvider.setCurrentSource(sourceIndex, isSameProvider);
+
+        if(!newSource){
+            return null;
+        }
+
+        OvenPlayerConsole.log("API : setCurrentQuality() isSameProvider", isSameProvider);
+
+        if(!isSameProvider){
+            lazyQueue = LazyCommandExecutor(that, ['play']);
+            initProvider(lastPlayPosition);
+        }
+
+        return resultSourceIndex;
+    };
+
+
+
     that.getQualityLevels = () =>{
         if(!currentProvider){return null;}
 
@@ -235,28 +277,7 @@ const Api = function(container){
 
         OvenPlayerConsole.log("API : setCurrentQuality() ", qualityIndex);
 
-        let sources = playlistManager.getCurrentSources();
-        let currentSource = sources[that.getCurrentQuality().index];
-        let newSource = sources[qualityIndex];
-        let lastPlayPosition = that.getPosition();
-        let isSameProvider = providerController.isSameProvider(currentSource, newSource);
-        // provider.serCurrentQuality -> playerConfig setting -> load
-        let resQualityIndex = currentProvider.setCurrentQuality(qualityIndex, isSameProvider);
-
-        if(!newSource){
-            return null;
-        }
-
-        OvenPlayerConsole.log("API : setCurrentQuality() isSameProvider", isSameProvider);
-
-        //captionManager.flushCaptionList(captionManager.getCurrentCaption());
-
-        if(!isSameProvider){
-            lazyQueue = LazyCommandExecutor(that, ['play']);
-            initProvider(lastPlayPosition);
-        }
-
-        return resQualityIndex;
+        return currentProvider.setCurrentQuality(qualityIndex);
     };
 
     /* Captions : This is not supported in the current version.*/

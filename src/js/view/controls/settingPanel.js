@@ -35,7 +35,9 @@ const SettingPanel = function($container, api, data){
                 if(panelType && value){
                     if(panelType === "playbackrate"){
                         api.setPlaybackRate(parseFloat(value));
-                    }else if(panelType === "qualitylevel"){
+                    }else if(panelType === "source"){
+                        api.setCurrentSource(parseInt(value));
+                    }else if(panelType === "quality"){
                         api.setCurrentQuality(parseInt(value));
                     }
                 }

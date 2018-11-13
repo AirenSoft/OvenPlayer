@@ -87,7 +87,9 @@ const Listener = function(extendedElement, provider){
     //Fires when the browser has loaded meta data for the audio/video
     lowLevelEvents.loadedmetadata = () => {
         let isLive = (elVideo.duration === Infinity) ? true : separateLive(extendedElement);
-        let type = provider.getCurrentQuality() ? provider.getCurrentQuality().type : "";
+        let sources = provider.getSources();
+        let sourceIndex = provider.getCurrentSource();
+        let type = sourceIndex > -1 ? sources[sourceIndex].type : "";
         var metadata = {
             duration: isLive ?  Infinity : elVideo.duration,
             type :type
@@ -197,7 +199,7 @@ const Listener = function(extendedElement, provider){
         OvenPlayerConsole.log("EventListener : on waiting", provider.getState());
         if(provider.isSeeking()){
             provider.setState(STATE_LOADING);
-        }else if(provider.getState() == STATE_PLAYING){
+        }else if(provider.getState() === STATE_PLAYING){
             provider.setState(STATE_STALLED);
         }
     };

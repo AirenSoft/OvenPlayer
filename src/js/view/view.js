@@ -49,7 +49,7 @@ const View = function($container){
                         return false;
                     }
                     $playerRoot.addClass("ovp-autohide");
-                }, 1800);
+                }, 3000);
             }
         }
     };
@@ -202,8 +202,8 @@ const View = function($container){
             });
 
             api.on(ERROR, function(error) {
-                let qualityLevels = api.getQualityLevels();
-                if(controls && !isReady && (!qualityLevels ||  (qualityLevels && qualityLevels.length <= 1))){
+                let sources = api.getSources();
+                if(controls && !isReady && (!sources ||  (sources && sources.length <= 1))){
                     controls.destroy();
                     controls = null;
                 }

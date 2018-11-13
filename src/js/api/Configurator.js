@@ -144,6 +144,7 @@ const Configurator = function(options){
     let playbackRates = config.playbackRates || [0.5, 1, 1.25, 1.5, 2];
     let playlist = config.playlist || [];
     let qualityLabel = config.qualityLabel || "";
+    let sourceLabel = config.sourceLabel || "";
     let repeat = config.repeat || false;
     let stretching = config.stretching || 'uniform';
 
@@ -162,6 +163,9 @@ const Configurator = function(options){
 
     that.getQualityLabel = () => {return qualityLabel;};
     that.setQualityLabel = (newLabel) => {qualityLabel = newLabel;};
+
+    that.getSourceLabel = () => {return sourceLabel;};
+    that.setSourceLabel = (newLabel) => {sourceLabel = newLabel;};
 
     that.getPlaybackRates =()=>{return playbackRates;};
     that.isPlaybackRateControls =()=>{return playbackRateControls;};

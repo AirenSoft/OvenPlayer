@@ -209,15 +209,15 @@ Mutes the player.
 |-|-|-|
 |`volume`|Number|Set the volume of the player between 1-100
 
-####  `qualityLevels` = player.getQualityLevels()
+####  `sourceList` = player.getSources()
 
-Returns an array of objects based on each quality level of a media item
+Returns an array of objects based on each sources of a media item
 
 ||Type|Memo|
 |-|-|-|
-|`qualityLevels`|Array.\<Object\>|See the example of qualityLevels.
+|`sourceList`|Array.\<Object\>|See the example of sourceList.
 
-##### Example qualityLevels
+##### Example sourceList
 ```javascript
 [
     {
@@ -230,29 +230,60 @@ Returns an array of objects based on each quality level of a media item
 ]
 ```
 
-#### `qualityLevel` =  player.getCurrentQuality()
+#### `currentSourceIndex` =  player.getCurrentSource()
 
 ||Type|Memo|
 |-|-|-|
-|`qualityLevel`|Object|Object of the current quality
+|`currentSourceIndex`|Number|Number of the sources index
 
-##### Example qualityLevels
-```javascript
-    {
-        label : '720p',
-        file : '',
-        type : 'rtmp',
-        index : 0
-    }
-```
 
-####  player.setCurrentQuality(`qualityLevelIndex`)
+####  player.setCurrentSource(`sourceIndex`)
 
 Change the quality level to the provided index.
 
 ||Type|Memo|
 |-|-|-|
+|`sourceIndex`|Number|Sets stream source to a specified index|
+
+
+####  `qualityLevels` = player.getQualityLevels()
+
+Returns an array of objects based on each quality level of a stream meta
+
+||Type|Memo|
+|-|-|-|
+|`qualityLevels`|Array.\<Object\>|See the example of qualityLevels.
+
+##### Example qualityLevels
+```javascript
+[
+    {
+        bitrate : 250000,
+        height : 720,
+        width : 1080,
+        index : 0,
+        label : "1080x720, 25000"
+    },
+    ... // And more objects
+]
+```
+
+#### `currentQualityIndex` =  player.getCurrentQuality()
+
+||Type|Memo|
+|-|-|-|
+|`currentQualityIndex`|Number|Number of the current quality
+
+
+####  player.setCurrentQuality(`qualityLevelIndex`)
+
+Change the quality level to the stream quality index.
+
+||Type|Memo|
+|-|-|-|
 |`qualityLevelIndex`|Number|Sets stream quality to a specified index|
+
+
 
 
 ## Events

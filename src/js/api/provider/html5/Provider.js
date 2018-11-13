@@ -3,11 +3,11 @@
  */
 import EventEmitter from "api/EventEmitter";
 import EventsListener from "api/provider/html5/Listener";
-import {extractVideoElement, separateLive, pickCurrentQualityIndex} from "api/provider/utils";
+import {extractVideoElement, separateLive, pickCurrentSource} from "api/provider/utils";
 import {
     STATE_IDLE, STATE_PLAYING, STATE_PAUSED, STATE_COMPLETE,
     PLAYER_STATE, PLAYER_COMPLETE, PLAYER_PAUSE, PLAYER_PLAY,
-    CONTENT_LEVELS, CONTENT_LEVEL_CHANGED, CONTENT_TIME, CONTENT_CAPTION_CUE_CHANGED,
+    CONTENT_TIME, CONTENT_CAPTION_CUE_CHANGED, CONTENT_SOURCE_CHANGED,
     PLAYBACK_RATE_CHANGED, CONTENT_MUTE, PROVIDER_HTML5, PROVIDER_WEBRTC, PROVIDER_DASH, PROVIDER_HLS
 } from "api/constants";
 
@@ -30,7 +30,7 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
 
 
     const _load = (lastPlayPosition) =>{
-        const source =  spec.sources[spec.currentQuality];
+        const source =  spec.sources[spec.currentSource];
         if(onExtendedLoad){
             onExtendedLoad(source, lastPlayPosition);
         }else{
@@ -41,7 +41,7 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
             sourceElement.src = source.file;
             const sourceChanged = (sourceElement.src !== previousSource);
             if (sourceChanged) {
-                elVideo.src = spec.sources[spec.currentQuality].file;
+                elVideo.src = spec.sources[spec.currentSource].file;
                 // Do not call load if src was not set. load() will cancel any active play promise.
                 if (previousSource) {
                     elVideo.load();
@@ -53,9 +53,9 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
                 that.seek(lastPlayPosition);
                 that.play();
             }
-            that.trigger(CONTENT_LEVELS, {
-                currentQuality: spec.currentQuality
-            });
+            /*that.trigger(CONTENT_SOURCE_CHANGED, {
+                currentSource: spec.currentSource
+            });*/
 
             if(posterImage){
                 elVideo.poster = posterImage;
@@ -166,7 +166,7 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
 
     that.preload = (sources, lastPlayPosition) =>{
         spec.sources = sources;
-        spec.currentQuality = pickCurrentQualityIndex(sources, spec.currentQuality, playerConfig);
+        spec.currentSource = pickCurrentSource(sources, spec.currentSource, playerConfig);
         _load(lastPlayPosition || 0);
 
         return new Promise(function (resolve, reject) {
@@ -176,7 +176,7 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
     };
     that.load = (sources) =>{
         spec.sources = sources;
-        spec.currentQuality = pickCurrentQualityIndex(sources, spec.currentQuality, playerConfig);
+        spec.currentSource = pickCurrentSource(sources, spec.currentSource, playerConfig);
         _load(spec.sources.starttime || 0);
     };
 
@@ -229,57 +229,65 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
         }
         return elVideo.playbackRate;
     };
-    that.getQualityLevels = () => {
+
+    that.getSources = () => {
         if(!elVideo){
             return [];
         }
-        let qualityLevels = spec.sources.map(function(source, index) {
+
+        return spec.sources.map(function(source, index) {
             return {
                 file: source.file,
                 type: source.type,
                 label: source.label,
-                index : index,
-                metaQuality : source.metaQuality
+                index : index
             };
         });
-        return qualityLevels;
+    };
+    that.getCurrentSource = () =>{
+        return spec.currentSource;
+    };
+    that.setCurrentSource = (sourceIndex, needProviderChange) => {
+        if(spec.currentQuality === sourceIndex){
+            return false;
+        }
+
+        if(sourceIndex > -1){
+            if(spec.sources && spec.sources.length > sourceIndex){
+                //that.pause();
+                that.setState(STATE_IDLE);
+                OvenPlayerConsole.log("source changed : " + sourceIndex);
+                spec.currentSource = sourceIndex;
+
+                that.trigger(CONTENT_SOURCE_CHANGED, {
+                    currentSource: sourceIndex
+                });
+
+                playerConfig.setSourceLabel(spec.sources[sourceIndex].label);
+                if(needProviderChange){
+
+                    _load(elVideo.currentTime || 0);
+                }
+                return spec.currentSource;
+            }
+        }
+    };
+
+
+    that.getQualityLevels = () => {
+        if(!elVideo){
+            return [];
+        }
+        return spec.qualityLevels;
     };
     that.getCurrentQuality = () => {
         if(!elVideo){
             return null;
         }
-        var source = spec.sources[spec.currentQuality];
-        return {
-            file: source.file,
-            type: source.type,
-            label: source.label,
-            index : spec.currentQuality
-        };
+        return spec.currentQuality;
     };
     that.setCurrentQuality = (qualityIndex, needProviderChange) => {
-        if(spec.currentQuality === qualityIndex){
-            return false;
-        }
 
-        if(qualityIndex > -1){
-            if(spec.sources && spec.sources.length > qualityIndex){
-                //that.pause();
-                that.setState(STATE_IDLE);
-                OvenPlayerConsole.log("source changed : " + qualityIndex);
-                spec.currentQuality = qualityIndex;
-
-                that.trigger(CONTENT_LEVEL_CHANGED, {
-                    currentQuality: qualityIndex
-                });
-
-                playerConfig.setQualityLabel(spec.sources[qualityIndex].label);
-                if(needProviderChange){
-
-                    _load(elVideo.currentTime || 0);
-                }
-                return spec.currentQuality;
-            }
-        }
     };
 
     that.stop = () =>{

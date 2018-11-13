@@ -4,7 +4,7 @@
 import MediaManager from "api/media/Manager";
 import Provider from "api/provider/html5/Provider";
 import {errorTrigger} from "api/provider/utils";
-import {STATE_IDLE, PLAYER_UNKNWON_NEWWORK_ERROR, PROVIDER_DASH, CONTENT_META} from "api/constants";
+import {STATE_IDLE, PLAYER_UNKNWON_NEWWORK_ERROR, CONTENT_LEVEL_CHANGED,  PROVIDER_DASH, CONTENT_META} from "api/constants";
 
 /**
  * @brief   dashjs provider extended core.
@@ -40,6 +40,8 @@ const Dash = function(container, playerConfig){
             state : STATE_IDLE,
             buffer : 0,
             currentQuality : -1,
+            currentSource : -1,
+            qualityLevels : [],
             sources : []
         };
 
@@ -59,16 +61,16 @@ const Dash = function(container, playerConfig){
         });
         that.on(CONTENT_META, function(meta){
             OvenPlayerConsole.log("GetStreamInfo  : ", dash.getQualityFor("video"), dash.getBitrateInfoListFor('video'), dash.getBitrateInfoListFor('video')[dash.getQualityFor("video")]);
-            let currentSource = spec.sources[spec.currentQuality];
+
             let subQualityList = dash.getBitrateInfoListFor('video');
-            currentSource.metaQuality = [];
+            spec.currentQuality = dash.getQualityFor("video");
             for(let i = 0; i < subQualityList.length; i ++){
-                currentSource.metaQuality.push({
+                spec.qualityLevels.push({
                     bitrate: subQualityList[i].bitrate,
                     height: subQualityList[i].height,
                     width: subQualityList[i].width,
-                    qualityIndex: subQualityList[i].qualityIndex,
-                    title : subQualityList[i].height+" p"
+                    index: subQualityList[i].qualityIndex,
+                    label : subQualityList[i].width+"x"+subQualityList[i].height+", "+ subQualityList[i].bitrate
                 });
             }
 
@@ -81,7 +83,15 @@ const Dash = function(container, playerConfig){
                 }
             }
         }, that);
-
+        that.setCurrentQuality = (qualityIndex) => {
+            //dash.setAutoSwitchQuality(false);
+            dash.setQualityFor("video", qualityIndex);
+            spec.currentQuality = dash.getQualityFor("video");
+            that.trigger(CONTENT_LEVEL_CHANGED, {
+                currentQuality: spec.currentQuality
+            });
+            return spec.currentQuality;
+        };
         that.destroy = () =>{
             dash.reset();
             mediaManager.destroy();

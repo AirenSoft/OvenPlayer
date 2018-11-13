@@ -32,18 +32,18 @@ export const errorTrigger = function(error, provider){
     provider.trigger(ERROR, error );
 };
 
-export const pickCurrentQualityIndex = (sources, currentQualityIndex, playerConfig) => {
-    let quality = Math.max(0, currentQualityIndex);
+export const pickCurrentSource = (sources, currentSource, playerConfig) => {
+    let sourceIndex = Math.max(0, currentSource);
     const label ="";
     if (sources) {
         for (var i = 0; i < sources.length; i++) {
             if (sources[i].default) {
-                quality = i;
+                sourceIndex = i;
             }
-            if (playerConfig.getQualityLabel() && sources[i].label === playerConfig.getQualityLabel() ) {
+            if (playerConfig.getSourceLabel() && sources[i].label === playerConfig.getSourceLabel() ) {
                 return i;
             }
         }
     }
-    return quality;
+    return sourceIndex;
 };

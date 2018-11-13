@@ -50,29 +50,48 @@ export default PanelManager;
 
 export const extractMainPanelData = function(api){
     let panel = {title : "Settings", isRoot : true, body : [], id : "panel-"+new Date().getTime()};
-    let currentSource = api.getCurrentQuality();
-    if(api.getDuration() !== Infinity && currentSource.type !== PROVIDER_RTMP){
+    let sources = api.getSources();
+    let currentSource = sources && sources.length > 0 ? sources[api.getCurrentSource()] : null;
+
+    let qualityLevels = api.getQualityLevels();
+    let currentQuality = qualityLevels && qualityLevels.length > 0 ? qualityLevels[api.getCurrentQuality()] : null;
+
+
+    if(api.getDuration() !== Infinity && currentSource && currentSource.type !== PROVIDER_RTMP){
         let body = {
             title : "Speed",
             value :  api.getPlaybackRate() === 1 ? "Normal" : api.getPlaybackRate(),
+            description :  api.getPlaybackRate() === 1 ? "Normal" : api.getPlaybackRate(),
             panelType : "playbackrate",
             hasNext : true
         };
         panel.body.push(body);
     }
-
-    if (api.getQualityLevels().length > 0) {
-        let currentQuality = api.getCurrentQuality();
+    if (sources.length > 0) {
 
         let body = {
             title : "Source",
-            value : currentQuality ? currentQuality.label : "Default",
-            panelType : "qualitylevel",
+            value : currentSource ? currentSource.label : "Default",
+            description : currentSource ? currentSource.label : "Default",
+            panelType : "source",
             hasNext : true
         };
 
         panel.body.push(body);
     }
+    if (qualityLevels.length > 0) {
+
+        let body = {
+            title : "Quality",
+            value : currentQuality ? currentQuality.label : "Default",
+            description : currentQuality ? currentQuality.label : "Default",
+            panelType : "quality",
+            hasNext : true
+        };
+
+        panel.body.push(body);
+    }
+
     return panel;
 };
 
@@ -87,21 +106,33 @@ export const extractPanelData = function(api, panelType){
                 title : (playBackRates[i] === 1? "Normal" : playBackRates[i]),
                 isCheck : currentPlaybackRate === playBackRates[i],
                 value : playBackRates[i],
+                description : playBackRates[i],
                 panelType : panelType
             };
             panel.body.push(body);
         }
 
-    }else if(panelType === "qualitylevel"){
+    }else if(panelType === "source"){
         panel.title = "Source";
+        let sources = api.getSources();
+        for (let i = 0; i < sources.length; i ++) {
+            let body = {
+                title : sources[i].label,
+                isCheck : api.getCurrentSource() === i,
+                value : i,
+                panelType : panelType
+            };
+            panel.body.push(body);
+        }
+
+    }else if(panelType === "quality"){
+        panel.title = "Quality";
         let qualityLevels = api.getQualityLevels();
-        let currentQuality = api.getCurrentQuality();
         for (let i = 0; i < qualityLevels.length; i ++) {
             let body = {
                 title : qualityLevels[i].label,
-                isCheck : currentQuality.index === i,
+                isCheck : api.getCurrentQuality() === i,
                 value : i,
-                metaQuality :  qualityLevels[i].metaQuality,
                 panelType : panelType
             };
             panel.body.push(body);

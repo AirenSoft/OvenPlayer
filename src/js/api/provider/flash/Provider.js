@@ -3,11 +3,11 @@
  */
 import EventEmitter from "api/EventEmitter";
 import EventsListener from "api/provider/flash/Listener";
-import {extractVideoElement, separateLive, pickCurrentQualityIndex} from "api/provider/utils";
+import {extractVideoElement, separateLive, pickCurrentSource} from "api/provider/utils";
 import {
     STATE_IDLE, STATE_PLAYING, STATE_PAUSED, STATE_COMPLETE,
     PLAYER_STATE, PLAYER_COMPLETE, PLAYER_PAUSE, PLAYER_PLAY,
-    CONTENT_LEVELS, CONTENT_LEVEL_CHANGED, CONTENT_TIME, CONTENT_CAPTION_CUE_CHANGED,
+    CONTENT_SOURCE_CHANGED, CONTENT_LEVEL_CHANGED, CONTENT_TIME, CONTENT_CAPTION_CUE_CHANGED,
     PLAYBACK_RATE_CHANGED, CONTENT_MUTE, PROVIDER_HTML5, PROVIDER_WEBRTC, PROVIDER_DASH, PROVIDER_HLS
 } from "api/constants";
 
@@ -28,7 +28,7 @@ const Provider = function(spec, playerConfig){
     let elFlash = extractVideoElement(spec.extendedElement);
 
     const _load = (lastPlayPosition) =>{
-        const source =  spec.sources[spec.currentQuality];
+        const source =  spec.sources[spec.currentSource];
         OvenPlayerConsole.log("source loaded : ", source, "lastPlayPosition : "+ lastPlayPosition);
         const previousSource = elFlash.getCurrentSource();
         const sourceChanged = (source.file !== previousSource);
@@ -42,9 +42,6 @@ const Provider = function(spec, playerConfig){
             that.seek(lastPlayPosition);
             that.play();
         }
-        that.trigger(CONTENT_LEVELS, {
-            currentQuality: spec.currentQuality
-        });
     };
 
     //This is why. Flash does not self trig to ads,lmalm,
@@ -108,7 +105,7 @@ const Provider = function(spec, playerConfig){
         let retryCount = 0;
 
         spec.sources = sources;
-        spec.currentQuality = pickCurrentQualityIndex(sources, spec.currentQuality, playerConfig);
+        spec.currentSource = pickCurrentSource(sources, spec.currentSource, playerConfig);
 
         return new Promise(function (resolve, reject) {
             (function checkSwfIsReady(){
@@ -130,7 +127,7 @@ const Provider = function(spec, playerConfig){
     };
     that.load = (sources) =>{
         spec.sources = sources;
-        spec.currentQuality = pickCurrentQualityIndex(sources, spec.currentQuality, playerConfig);
+        spec.currentSource = pickCurrentSource(sources, spec.currentSource, playerConfig);
         _load(spec.sources_.starttime || 0);
     };
 
@@ -153,8 +150,12 @@ const Provider = function(spec, playerConfig){
     that.getPlaybackRate = () =>{
         return 0;
     };
-    that.getQualityLevels = () => {
-        let qualityLevels = spec.sources.map(function(source, index) {
+    that.getSources = () => {
+        if(!elFlash){
+            return [];
+        }
+
+        return spec.sources.map(function(source, index) {
             return {
                 file: source.file,
                 type: source.type,
@@ -162,41 +163,50 @@ const Provider = function(spec, playerConfig){
                 index : index
             };
         });
-        return qualityLevels;
     };
-    that.getCurrentQuality = () => {
-        var source = spec.sources[spec.currentQuality];
-        return {
-            file: source.file,
-            type: source.type,
-            label: source.label,
-            index : spec.currentQuality
-        };
+    that.getCurrentSource = () =>{
+        return spec.currentSource;
     };
-    that.setCurrentQuality = (qualityIndex, needProviderChange) => {
-        if(spec.currentQuality === qualityIndex){
+    that.setCurrentSource = (sourceIndex, needProviderChange) => {
+        if(spec.currentQuality === sourceIndex){
             return false;
         }
 
-        if(qualityIndex > -1){
-            if(spec.sources && spec.sources.length > qualityIndex){
+        if(sourceIndex > -1){
+            if(spec.sources && spec.sources.length > sourceIndex){
                 //that.pause();
                 that.setState(STATE_IDLE);
-                OvenPlayerConsole.log("source changed : " + qualityIndex);
-                spec.currentQuality = qualityIndex;
+                OvenPlayerConsole.log("source changed : " + sourceIndex);
+                spec.currentSource = sourceIndex;
 
-                that.trigger(CONTENT_LEVEL_CHANGED, {
-                    currentQuality: qualityIndex
+                that.trigger(CONTENT_SOURCE_CHANGED, {
+                    currentSource: sourceIndex
                 });
 
-                playerConfig.setQualityLabel(spec.sources[qualityIndex].label);
+                playerConfig.setSourceLabel(spec.sources[sourceIndex].label);
                 if(needProviderChange){
 
                     _load(elFlash.getCurrentTime() || 0);
                 }
-                return spec.currentQuality;
+                return spec.currentSource;
             }
         }
+    };
+
+    that.getQualityLevels = () => {
+        if(!elFlash){
+            return [];
+        }
+        return spec.qualityLevels;
+    };
+    that.getCurrentQuality = () => {
+        if(!elFlash){
+            return null;
+        }
+        return spec.currentQuality;
+    };
+    that.setCurrentQuality = (qualityIndex, needProviderChange) => {
+
     };
 
     that.stop = () =>{

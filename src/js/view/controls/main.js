@@ -11,7 +11,7 @@ import SettingPanel from "view/controls/settingPanel";
 import PanelManager,{extractMainPanelData} from "view/global/PanelManager";
 import {
     READY,
-    CONTENT_META,
+    CONTENT_META, CONTENT_LEVEL_CHANGED,
     PROVIDER_RTMP,
     ERROR
 } from "api/constants";
@@ -53,6 +53,9 @@ const Controls = function($container, api){
                 initProgressBar();
             }
         }, template);
+        /*api.on(CONTENT_LEVEL_CHANGED, function(data){
+            //console.log("LEVEL CHANGED !@@", data);
+        }, template);*/
     };
     const onDestroyed = function(template){
         api.off(CONTENT_META, null, template);
