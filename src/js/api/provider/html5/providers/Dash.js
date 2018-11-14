@@ -4,6 +4,7 @@
 import MediaManager from "api/media/Manager";
 import Provider from "api/provider/html5/Provider";
 import {errorTrigger} from "api/provider/utils";
+import sizeHumanizer from "utils/sizeHumanizer";
 import {STATE_IDLE, PLAYER_UNKNWON_NEWWORK_ERROR, CONTENT_LEVEL_CHANGED,  PROVIDER_DASH, CONTENT_META} from "api/constants";
 
 /**
@@ -29,7 +30,6 @@ const Dash = function(container, playerConfig){
         dash = dashjs.MediaPlayer().create();
         dash.getDebug().setLogToBrowserConsole(false);
         dash.initialize(element, null, false);
-
         let spec = {
             name : PROVIDER_DASH,
             extendedElement : dash,
@@ -59,8 +59,19 @@ const Dash = function(container, playerConfig){
                 errorTrigger({code : PLAYER_UNKNWON_NEWWORK_ERROR, reason : "Unknown network error", message : "Unknown network error"}, that);
             }
         });
+
+
+        /*dash.on("streamInitialized", function () {
+            ;
+           // dash.setQualityFor("video", 3);
+            console.log('My streamInitialized:', dash.getAutoSwitchQuality());
+        });*/
+
+
         that.on(CONTENT_META, function(meta){
             OvenPlayerConsole.log("GetStreamInfo  : ", dash.getQualityFor("video"), dash.getBitrateInfoListFor('video'), dash.getBitrateInfoListFor('video')[dash.getQualityFor("video")]);
+
+
 
             let subQualityList = dash.getBitrateInfoListFor('video');
             spec.currentQuality = dash.getQualityFor("video");
@@ -70,7 +81,7 @@ const Dash = function(container, playerConfig){
                     height: subQualityList[i].height,
                     width: subQualityList[i].width,
                     index: subQualityList[i].qualityIndex,
-                    label : subQualityList[i].width+"x"+subQualityList[i].height+", "+ subQualityList[i].bitrate
+                    label : subQualityList[i].width+"x"+subQualityList[i].height+", "+ sizeHumanizer(subQualityList[i].bitrate, true, "bps")
                 });
             }
 
@@ -84,7 +95,10 @@ const Dash = function(container, playerConfig){
             }
         }, that);
         that.setCurrentQuality = (qualityIndex) => {
-            //dash.setAutoSwitchQuality(false);
+            console.log("IsAUTO : ", dash.getAutoSwitchQuality());
+            if(dash.getAutoSwitchQuality()){
+                dash.setAutoSwitchQuality(false);
+            }
             dash.setQualityFor("video", qualityIndex);
             spec.currentQuality = dash.getQualityFor("video");
             that.trigger(CONTENT_LEVEL_CHANGED, {
