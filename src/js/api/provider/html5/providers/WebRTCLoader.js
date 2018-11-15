@@ -209,8 +209,16 @@ const WebRTCLoader = function(provider, url, errorTrigger){
         if(!!ws) {
             OvenPlayerConsole.log('Closing websocket connection...');
             OvenPlayerConsole.log("Send Signaling : Stop.");
-            ws.send(JSON.stringify({command : "stop"}));
-            ws.close();
+            /*
+            0 (CONNECTING)
+            1 (OPEN)
+            2 (CLOSING)
+            3 (CLOSED)
+            */
+            if(ws.state < 2){
+                ws.send(JSON.stringify({command : "stop"}));
+                ws.close();
+            }
             ws = null;
         }
         if(peerConnection) {

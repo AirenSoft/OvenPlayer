@@ -7,8 +7,8 @@ import VolumeButton from "view/controls/volumeButton";
 import ProgressBar from "view/controls/progressBar";
 import TimeDisplay from "view/controls/timeDisplay";
 import FullScreenButton from "view/controls/fullScreenButton";
-import SettingPanel from "view/controls/settingPanel";
-import PanelManager,{extractMainPanelData} from "view/global/PanelManager";
+import RootPanel, {extractRootPanelData} from "view/controls/settingPanel/rootPanel";
+import PanelManager from "view/global/PanelManager";
 import {
     READY,
     CONTENT_META, CONTENT_LEVEL_CHANGED,
@@ -85,8 +85,8 @@ const Controls = function($container, api){
             if(panelManager.size() > 0){
                 panelManager.clear();
             }else{
-                let panelData = extractMainPanelData(api);
-                panelManager.add(SettingPanel($current, api, panelData));
+                let panelData = extractRootPanelData(api);
+                panelManager.add(RootPanel($current, api, panelData));
             }
         }
     };

@@ -48,6 +48,9 @@ const WebRTC = function(container, playerConfig){
             webrtcLoader.connect().then(function(stream){
                 element.srcObject = stream;
                 that.play();
+            }).catch(function(error){
+                //that.destroy();
+                //Do nothing
             });
         }
     });

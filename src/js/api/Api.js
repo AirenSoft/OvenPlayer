@@ -71,6 +71,7 @@ const Api = function(container){
                 //data.code === PLAYER_FILE_ERROR
                 if( (name === ERROR && (parseInt(data.code/100) === 3 || parseInt(data.code/100) === 5))|| name === NETWORK_UNSTABLED ){
                     let currentSourceIndex = that.getCurrentSource();
+                    console.log(currentSourceIndex, that.getSources());
                     if(currentSourceIndex+1 < that.getSources().length){
                         //this sequential has available source.
                         that.pause();

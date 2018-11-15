@@ -23,7 +23,7 @@ const MessageBox = function($container, api, message, withTimer){
     const onDestroyed = function(){
     };
     const events = {
-        "click .ovp-message-text" : function(event, $current, template){
+        "click .ovp-message-button" : function(event, $current, template){
             event.preventDefault();
 
             if(autoDestroyTimer){

@@ -180,22 +180,31 @@
   top: 0;
   left: 0;
   width: 100%;
+  height: 100%;
 
   .ovp-message-container {
     position: absolute;
-    top: 60px;
+    top: 40%;
+    margin-top : -35px;
     width: 100%;
     padding: 0 12px;
     text-align: center;
+    color: #fff;
+    text-shadow: 0 0 2px rgba(0,0,0,.5);
 
     .ovp-message-text {
-      font-size: 1.1rem;
-      background-color: rgba(28,28,28,.7);
-      text-shadow: 0 0 2px rgba(0,0,0,.5);
-      color: #fff;
+      display: inline-block;
+      background-color: rgba(28,28,28,.4);
       padding: 1rem 3rem;
       word-wrap: break-word;
-      line-height: 1.5rem;
+      max-width : 90%;
+    }
+    .ovp-message-button{
+      display: inline-block;
+      padding : 1rem;
+      margin-left : 0.4rem;
+      background-color: rgba(28,28,28,.4);
+      cursor : pointer;
     }
   }
 }
@@ -251,9 +260,9 @@
   background-color: rgba(28,28,28,.9);
   text-shadow: 0 0 2px rgba(0,0,0,.5);
 
-  opacity: .6;
-  &.front{
-    opacity: 1;
+  &.background{
+    //opacity: .6;
+    background-color: rgba(28,28,28,.4);
   }
   .ovp-setting-title, .ovp-setting-item {
     width: 100%;

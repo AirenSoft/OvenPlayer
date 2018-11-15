@@ -15,7 +15,10 @@ import ProgressBarTemplate from 'view/controls/progressBarTemplate';
 import PlayButtonTemplate from 'view/controls/playButtonTemplate';
 import TimeDisplayTemplate from 'view/controls/timeDisplayTemplate';
 import FullScreenButtonTemplate from 'view/controls/fullScreenButtonTemplate';
-import SettingPanelTemplate from 'view/controls/settingPanelTemplate';
+import RootPanelTemplate from 'view/controls/settingPanel/rootPanelTemplate';
+import SpeedPanelTemplate from 'view/controls/settingPanel/rootPanelTemplate';
+import SourcePanelTemplate from 'view/controls/settingPanel/rootPanelTemplate';
+import QualityPanelTemplate from 'view/controls/settingPanel/rootPanelTemplate';
 
 const Templates = {
     TextViewTemplate,
@@ -32,7 +35,10 @@ const Templates = {
     PlayButtonTemplate,
     TimeDisplayTemplate,
     FullScreenButtonTemplate,
-    SettingPanelTemplate
+    RootPanelTemplate,
+    SpeedPanelTemplate,
+    SourcePanelTemplate,
+    QualityPanelTemplate
 };
 
 export default Templates;

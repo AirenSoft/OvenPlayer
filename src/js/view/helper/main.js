@@ -67,18 +67,24 @@ const Helper = function($container, api){
 
         //show spinner cuz dashjs spends long time for level change.
         api.on(CONTENT_LEVEL_CHANGED, function(data){
-            if(data.currentQuality < 0 || data.isAuto){
+            if(data.currentQuality < 0 ){
                 return false;
             }
-            if(data.type === "request"){
-                newQualityLevel = data.currentQuality;
-                qualityLevelChanging = true;
-                spinner.show(true);
-            }else if(data.type === "render" && newQualityLevel === data.currentQuality){
+            if(data.isAuto){
                 qualityLevelChanging = false;
                 spinner.show(false);
-                //createMessage("quality changed.", 3000);
+            }else{
+                if(data.type === "request"){
+                    newQualityLevel = data.currentQuality;
+                    qualityLevelChanging = true;
+                    spinner.show(true);
+                }else if(data.type === "render" && newQualityLevel === data.currentQuality){
+                    qualityLevelChanging = false;
+                    spinner.show(false);
+                    //createMessage("quality changed.", 3000);
+                }
             }
+
          }, template);
         api.on(ERROR, function(error) {
             let message = "";
@@ -101,7 +107,7 @@ const Helper = function($container, api){
                 message = "Can not play due to unknown reasons.";
             }
 
-            createMessage(message, 5000);
+            createMessage(message);
         }, template);
 
         api.on(NETWORK_UNSTABLED, function(event){
