@@ -5,7 +5,7 @@ import MediaManager from "api/media/Manager";
 import Provider from "api/provider/html5/Provider";
 import {errorTrigger} from "api/provider/utils";
 import sizeHumanizer from "utils/sizeHumanizer";
-import {STATE_IDLE, PLAYER_UNKNWON_NEWWORK_ERROR, CONTENT_LEVEL_CHANGED,  PROVIDER_DASH, CONTENT_META} from "api/constants";
+import {STATE_IDLE, PLAYER_UNKNWON_NEWWORK_ERROR, CONTENT_LEVEL_CHANGED,  STATE_PLAYING, PROVIDER_DASH, CONTENT_META} from "api/constants";
 
 /**
  * @brief   dashjs provider extended core.
@@ -47,6 +47,7 @@ const Dash = function(container, playerConfig){
 
         that = Provider(spec, playerConfig, function(source, lastPlayPosition){
             OvenPlayerConsole.log("DASH : onExtendedLoad : ", source, "lastPlayPosition : "+ lastPlayPosition);
+            dash.setAutoSwitchQuality(true);
             dash.attachSource(source.file);
             seekPosition_sec = lastPlayPosition;
         });
@@ -60,18 +61,29 @@ const Dash = function(container, playerConfig){
             }
         });
 
-
-        /*dash.on("streamInitialized", function () {
-            ;
-           // dash.setQualityFor("video", 3);
-            console.log('My streamInitialized:', dash.getAutoSwitchQuality());
-        });*/
-
+        dash.on(dashjs.MediaPlayer.events.QUALITY_CHANGE_REQUESTED, function(event){
+            console.log("QUALITY_CHANGE_REQUESTED : ", event);
+            if(event && event.mediaType && event.mediaType === "video"){
+                that.trigger(CONTENT_LEVEL_CHANGED, {
+                    isAuto: dash.getAutoSwitchQuality(),
+                    currentQuality: spec.currentQuality,
+                    type : "request"
+                });
+            }
+        });
+        dash.on(dashjs.MediaPlayer.events.QUALITY_CHANGE_RENDERED, function(event){
+            if(event && event.mediaType && event.mediaType === "video"){
+                spec.currentQuality = event.newQuality;
+                that.trigger(CONTENT_LEVEL_CHANGED, {
+                    isAuto: dash.getAutoSwitchQuality(),
+                    currentQuality: event.newQuality,
+                    type : "render"
+                });
+            }
+        });
 
         that.on(CONTENT_META, function(meta){
             OvenPlayerConsole.log("GetStreamInfo  : ", dash.getQualityFor("video"), dash.getBitrateInfoListFor('video'), dash.getBitrateInfoListFor('video')[dash.getQualityFor("video")]);
-
-
 
             let subQualityList = dash.getBitrateInfoListFor('video');
             spec.currentQuality = dash.getQualityFor("video");
@@ -95,16 +107,22 @@ const Dash = function(container, playerConfig){
             }
         }, that);
         that.setCurrentQuality = (qualityIndex) => {
-            console.log("IsAUTO : ", dash.getAutoSwitchQuality());
+            if(that.getState() !== STATE_PLAYING){
+                that.play();
+            }
+            spec.currentQuality = qualityIndex;
             if(dash.getAutoSwitchQuality()){
                 dash.setAutoSwitchQuality(false);
             }
             dash.setQualityFor("video", qualityIndex);
-            spec.currentQuality = dash.getQualityFor("video");
-            that.trigger(CONTENT_LEVEL_CHANGED, {
-                currentQuality: spec.currentQuality
-            });
+
             return spec.currentQuality;
+        };
+        that.isAutoQuality = () => {
+            return dash.getAutoSwitchQuality();
+        };
+        that.setAutoQuality = (isAuto) => {
+            dash.setAutoSwitchQuality(isAuto);
         };
         that.destroy = () =>{
             dash.reset();

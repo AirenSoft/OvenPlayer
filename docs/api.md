@@ -284,6 +284,20 @@ Change the quality level to the stream quality index.
 |`qualityLevelIndex`|Number|Sets stream quality to a specified index|
 
 
+#### `isAutoQuality` =  player.isAutoQuality()
+
+||Type|Memo|
+|-|-|-|
+|`isAutoQuality`|Boolean|Boolean of adaptive is on
+
+####  player.setAutoQuality(`isAuto`)
+
+Change the quality level auto changing.
+
+||Type|Memo|
+|-|-|-|
+|`isAuto`|Boolean|Sets stream quality level auto changing|
+
 
 
 ## Events
@@ -413,22 +427,23 @@ Attribute|Type|Memo
 ------|------|-------
 `volume`|Number|New volume percentage (0-100)
 
-#### player.on('qualityLevelChanged')
+#### player.on('sourceChanged')
 
-Fired when the list of available quality levels is updated. Happens e.g. shortly after a playlist item starts playing.
+Fired when the active source(protocol) is changed. Happens in response to e.g. a user clicking an option in the source menu or a script calling `setCurrentSource`.
 
 Attribute|Type|Memo
 ------|------|-------
-`levels`|Array|The full array of qualities, including the new additions. Includes the same information as getQualityLevels()
+`currentSource`|Number|index of the new quality level in the getSources() array
 
-#### player.on('currentQualityLevelChanged')
+#### player.on('qualityChanged')
 
 Fired when the active quality level is changed. Happens in response to e.g. a user clicking an option in the quality menu or a script calling `setCurrentQuality`.
 
 Attribute|Type|Memo
 ------|------|-------
 `currentQuality`|Number|index of the new quality level in the getQualityLevels() array
-
+`type`|String|"request" : Triggered when user sets quality level., "render" : Streaming rendered. 
+`isAuto`|Boolean|The player's auto switching quality state.
 
 #### player.on('cueChanged')
 
@@ -447,6 +462,3 @@ Attribute|Type|Memo
 ------|------|-------
 
 
-## State Transition Diagram
-
-![2018-04-27 5 22 16](https://user-images.githubusercontent.com/21077205/39353030-80e201a8-4a41-11e8-8c68-60160d6b152e.png)

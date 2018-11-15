@@ -279,6 +279,18 @@ const Api = function(container){
 
         return currentProvider.setCurrentQuality(qualityIndex);
     };
+    that.isAutoQuality = () => {
+        if(!currentProvider){return null;}
+
+        OvenPlayerConsole.log("API : isAutoQuality()");
+        return currentProvider.isAutoQuality();
+    };
+    that.setAutoQuality = (isAuto) => {
+        if(!currentProvider){return null;}
+
+        OvenPlayerConsole.log("API : setAutoQuality() ", isAuto);
+        return currentProvider.setAutoQuality(isAuto);
+    }
 
     /* Captions : This is not supported in the current version.*/
     /*that.setCurrentCaption = (index) =>{

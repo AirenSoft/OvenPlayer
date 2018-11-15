@@ -17,6 +17,7 @@ import {
     STATE_PAUSED,
     STATE_ERROR,
     PLAYER_STATE,
+    CONTENT_LEVEL_CHANGED,
     NETWORK_UNSTABLED
 } from "api/constants";
 
@@ -26,6 +27,7 @@ const Helper = function($container, api){
 
 
     const onRendered = function($current, template){
+        let qualityLevelChanging = false, newQualityLevel = -1;
         let createBigButton = function(state){
             if(bigButton){
                 bigButton.destroy();
@@ -47,17 +49,37 @@ const Helper = function($container, api){
             if(data && data.newstate){
                 if(data.newstate === STATE_PLAYING){
                     bigButton.destroy();
-                    spinner.show(false);
+                    if(!qualityLevelChanging){
+                        spinner.show(false);
+                    }
                 }else{
                     createBigButton(data.newstate);
                     if(data.newstate === STATE_STALLED || data.newstate === STATE_LOADING ){
                         spinner.show(true);
                     }else{
-                        spinner.show(false);
+                        if(!qualityLevelChanging){
+                            spinner.show(false);
+                        }
                     }
                 }
             }
         }, template);
+
+        //show spinner cuz dashjs spends long time for level change.
+        api.on(CONTENT_LEVEL_CHANGED, function(data){
+            if(data.currentQuality < 0 || data.isAuto){
+                return false;
+            }
+            if(data.type === "request"){
+                newQualityLevel = data.currentQuality;
+                qualityLevelChanging = true;
+                spinner.show(true);
+            }else if(data.type === "render" && newQualityLevel === data.currentQuality){
+                qualityLevelChanging = false;
+                spinner.show(false);
+                //createMessage("quality changed.", 3000);
+            }
+         }, template);
         api.on(ERROR, function(error) {
             let message = "";
             if(bigButton){

@@ -53,9 +53,7 @@ const Controls = function($container, api){
                 initProgressBar();
             }
         }, template);
-        /*api.on(CONTENT_LEVEL_CHANGED, function(data){
-            //console.log("LEVEL CHANGED !@@", data);
-        }, template);*/
+
     };
     const onDestroyed = function(template){
         api.off(CONTENT_META, null, template);

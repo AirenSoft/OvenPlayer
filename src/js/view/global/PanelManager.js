@@ -49,7 +49,7 @@ export default PanelManager;
 
 
 export const extractMainPanelData = function(api){
-    let panel = {title : "Settings", isRoot : true, body : [], id : "panel-"+new Date().getTime()};
+    let panel = {title : "Settings", isRoot : true, body : [], id : "panel-"+new Date().getTime(), panelType : ""};
     let sources = api.getSources();
     let currentSource = sources && sources.length > 0 ? sources[api.getCurrentSource()] : null;
 
@@ -96,7 +96,7 @@ export const extractMainPanelData = function(api){
 };
 
 export const extractPanelData = function(api, panelType){
-    let panel = {title : "", body : [], useCheck : true, id : "panel-"+new Date().getTime()};
+    let panel = {title : "", body : [], useCheck : true, id : "panel-"+new Date().getTime() , panelType : panelType};
     if(panelType === "playbackrate"){
         panel.title = "Speed";
         let playBackRates = api.getConfig().playbackRates;
@@ -128,6 +128,12 @@ export const extractPanelData = function(api, panelType){
     }else if(panelType === "quality"){
         panel.title = "Quality";
         let qualityLevels = api.getQualityLevels();
+        panel.body.push({
+            title : "auto",
+            isCheck : api.isAutoQuality(),
+            value : "auto",
+            panelType : panelType
+        });
         for (let i = 0; i < qualityLevels.length; i ++) {
             let body = {
                 title : qualityLevels[i].label,
