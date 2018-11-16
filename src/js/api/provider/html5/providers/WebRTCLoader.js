@@ -206,7 +206,7 @@ const WebRTCLoader = function(provider, url, errorTrigger){
 
     function closePeer(error) {
         OvenPlayerConsole.log('WebRTC Loader closePeear()');
-        if(!!ws) {
+        if(ws) {
             OvenPlayerConsole.log('Closing websocket connection...');
             OvenPlayerConsole.log("Send Signaling : Stop.");
             /*
@@ -215,7 +215,7 @@ const WebRTCLoader = function(provider, url, errorTrigger){
             2 (CLOSING)
             3 (CLOSED)
             */
-            if(ws.state < 2){
+            if(ws.readyState == 1){
                 ws.send(JSON.stringify({command : "stop"}));
                 ws.close();
             }
@@ -226,7 +226,7 @@ const WebRTCLoader = function(provider, url, errorTrigger){
             if(statisticsTimer){clearTimeout(statisticsTimer);}
             peerConnection.close();
             peerConnection = null;
-        };
+        }
         if(error){
             errorTrigger(error, provider);
         }
@@ -237,6 +237,7 @@ const WebRTCLoader = function(provider, url, errorTrigger){
         return initialize();
     };
     that.destroy = () => {
+        console.log("WEBRTC LOADER destroy");
         closePeer();
     };
     return that;
