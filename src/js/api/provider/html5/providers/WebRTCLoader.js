@@ -237,7 +237,7 @@ const WebRTCLoader = function(provider, url, errorTrigger){
         return initialize();
     };
     that.destroy = () => {
-        console.log("WEBRTC LOADER destroy");
+        peerConnection.log("WEBRTC LOADER destroy");
         closePeer();
     };
     return that;

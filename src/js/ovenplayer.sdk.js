@@ -111,7 +111,6 @@ OvenPlayerSDK.getPlayerByIndex = function(index) {
  * @return     {null}
  */
 OvenPlayerSDK.removePlayer = function(playerId) {
-    console.log(playerId);
     for (let i = 0; i < playerList.length; i ++) {
 
         if (playerList[i].getContainerId() === playerId) {

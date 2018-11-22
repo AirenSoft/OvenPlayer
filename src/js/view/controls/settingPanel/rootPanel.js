@@ -8,6 +8,7 @@ import sizeHumanizer from "utils/sizeHumanizer";
 import SpeedPanel from "view/controls/settingPanel/speedPanel";
 import SourcePanel from "view/controls/settingPanel/sourcePanel";
 import QualityPanel from "view/controls/settingPanel/qualityPanel";
+import CaptionPanel from "view/controls/settingPanel/captionPanel";
 import {
     CONTENT_LEVEL_CHANGED, PROVIDER_RTMP
 } from "api/constants";
@@ -65,6 +66,25 @@ const RootPanel = function($container, api, data){
                 panel.body.push(body);
             }
 
+        }else if(panelType === "caption"){
+            panel.title = "Caption";
+            let captions = api.getCaptionList();
+            panel.body.push({
+                title : "off",
+                isCheck : api.getCurrentCaption() === -1,
+                value : -1,
+                panelType : panelType
+            });
+            for (let i = 0; i < captions.length; i ++) {
+                let body = {
+                    title : captions[i].label,
+                    isCheck : api.getCurrentCaption() === i,
+                    value : i,
+                    panelType : panelType
+                };
+                panel.body.push(body);
+            }
+
         }
         return panel;
     };
@@ -112,6 +132,8 @@ const RootPanel = function($container, api, data){
                 panel = SourcePanel($container, api, extractPanelData(api, panelType));
             }else if(panelType === "quality"){
                 panel = QualityPanel($container, api, extractPanelData(api, panelType));
+            }else if(panelType === "caption"){
+                panel = CaptionPanel($container, api, extractPanelData(api, panelType));
             }
 
             panelManager.add(panel);
@@ -134,12 +156,16 @@ export default RootPanel;
 
 export const extractRootPanelData = function(api){
     let panel = {title : "Settings", isRoot : true, body : [], id : "panel-"+new Date().getTime(), panelType : ""};
+
     let sources = api.getSources();
     let currentSource = sources && sources.length > 0 ? sources[api.getCurrentSource()] : null;
 
     let qualityLevels = api.getQualityLevels();
     let currentQuality = qualityLevels && qualityLevels.length > 0 ? qualityLevels[api.getCurrentQuality()] : null;
 
+    let captions = api.getCaptionList();
+    console.log(captions);
+    let currentCaption = api.getCurrentCaption();
 
     if(api.getDuration() !== Infinity && currentSource && currentSource.type !== PROVIDER_RTMP){
         let body = {
@@ -170,6 +196,18 @@ export const extractRootPanelData = function(api){
             value : currentQuality ? currentQuality.label : "Default",
             description : currentQuality ? currentQuality.label : "Default",
             panelType : "quality",
+            hasNext : true
+        };
+
+        panel.body.push(body);
+    }
+    if (captions.length > 0) {
+
+        let body = {
+            title : "Caption",
+            value : captions[currentCaption] ? captions[currentCaption].label : "off",
+            description : captions[currentCaption] ? captions[currentCaption].label : "off",
+            panelType : "caption",
             hasNext : true
         };
 

@@ -4,6 +4,7 @@
 import OvenTemplate from "view/engine/OvenTemplate";
 import BigButton from "view/helper/bigButton";
 import MessageBox from "view/helper/messageBox";
+import CaptionViewer from "view/helper/captionViewer";
 import Spinner from "view/helper/spinner";
 
 import {
@@ -22,9 +23,7 @@ import {
 } from "api/constants";
 
 const Helper = function($container, api){
-    let bigButton = "", messageBox = "", spinner = "";
-
-
+    let bigButton = "", messageBox = "",  captionViewer = "", spinner = "";
 
     const onRendered = function($current, template){
         let qualityLevelChanging = false, newQualityLevel = -1;
@@ -41,6 +40,7 @@ const Helper = function($container, api){
             messageBox = MessageBox($current, api, message, withTimer);
         };
         spinner = Spinner($current, api);
+        captionViewer = CaptionViewer($current, api);
 
         api.on(READY, function() {
             createBigButton(STATE_PAUSED);

@@ -1,4 +1,4 @@
-//import CaptionManager from "api/caption/Manager";
+import CaptionManager from "api/caption/Manager";
 import Configurator from "api/Configurator";
 import EventEmitter from "api/EventEmitter";
 import LazyCommandExecutor from "api/LazyCommandExecutor";
@@ -22,7 +22,7 @@ const Api = function(container){
 
     OvenPlayerConsole.log("[[OvenPlayer]] v."+ version);
     OvenPlayerConsole.log("API loaded.");
-    //let captionManager = CaptionManager(that);
+    let captionManager = CaptionManager(that);
     let playlistManager = PlaylistManager();
     let providerController = ProviderController();
     let currentProvider = "";
@@ -71,7 +71,6 @@ const Api = function(container){
                 //data.code === PLAYER_FILE_ERROR
                 if( (name === ERROR && (parseInt(data.code/100) === 3 || parseInt(data.code/100) === 5))|| name === NETWORK_UNSTABLED ){
                     let currentSourceIndex = that.getCurrentSource();
-                    console.log(currentSourceIndex, that.getSources());
                     if(currentSourceIndex+1 < that.getSources().length){
                         //this sequential has available source.
                         that.pause();
@@ -293,22 +292,26 @@ const Api = function(container){
         return currentProvider.setAutoQuality(isAuto);
     }
 
-    /* Captions : This is not supported in the current version.*/
-    /*that.setCurrentCaption = (index) =>{
-     return captionManager.setCurrentCaption(index);
-     }
-     that.getCurrentCaption = () =>{
-     return captionManager.getCurrentCaption();
-     }
-     that.getCaptionList = () => {
-     return captionManager.getCaptionList();
-     }
-     that.addCaption = (track) => {
-     return captionManager.addCaption();
-     }
-     that.getCaptionList = () => {
-     return captionManager.getCaptionList();
-     }*/
+    that.setCurrentCaption = (index) => {
+        OvenPlayerConsole.log("API : setCurrentCaption() ", index);
+        captionManager.setCurrentCaption(index);
+    }
+    that.getCurrentCaption = () => {
+        OvenPlayerConsole.log("API : getCurrentCaption() ", captionManager.getCurrentCaption());
+        return captionManager.getCurrentCaption();
+    }
+    that.getCaptionList = () => {
+        OvenPlayerConsole.log("API : getCaptionList() ", captionManager.getCaptionList());
+        return captionManager.getCaptionList();
+    }
+    that.addCaption = (track) => {
+        OvenPlayerConsole.log("API : addCaption() ")
+        return captionManager.addCaption(track);
+    }
+    that.removeCaption = (index) => {
+        OvenPlayerConsole.log("API : removeCaption() ", index)
+        return captionManager.removeCaption(index);
+    }
 
     that.getBuffer = () => {
         if(!currentProvider){return null;}

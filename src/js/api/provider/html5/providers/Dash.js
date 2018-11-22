@@ -62,7 +62,6 @@ const Dash = function(container, playerConfig){
         });
 
         dash.on(dashjs.MediaPlayer.events.QUALITY_CHANGE_REQUESTED, function(event){
-            console.log("QUALITY_CHANGE_REQUESTED : ", event);
             if(event && event.mediaType && event.mediaType === "video"){
                 that.trigger(CONTENT_LEVEL_CHANGED, {
                     isAuto: dash.getAutoSwitchQuality(),

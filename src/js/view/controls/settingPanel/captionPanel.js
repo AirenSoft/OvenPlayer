@@ -1,0 +1,43 @@
+/**
+ * Created by hoho on 2018. 7. 26..
+ */
+import OvenTemplate from 'view/engine/OvenTemplate';
+import PanelManager from "view/global/PanelManager";
+import LA$ from 'utils/likeA$';
+
+
+const CaptionPanel = function($container, api, data){
+    const $root = LA$("#"+api.getContainerId());
+    let panelManager = PanelManager();
+
+    data.setFront = function(isFront){
+        if(isFront){
+            $root.find("#"+data.id).removeClass("background");
+        }else{
+            $root.find("#"+data.id).addClass("background");
+        }
+    };
+    const onRendered = function($current, template){
+        //Do nothing
+    };
+    const onDestroyed = function(template){
+        //Do nothing
+    };
+    const events = {
+        "click .ovp-setting-item": function (event, $current, template) {
+            event.preventDefault();
+            let value = LA$(event.currentTarget).attr("ovp-data-value");
+            api.setCurrentCaption(parseFloat(value));
+            panelManager.clear();
+        },
+        "click .ovp-setting-title" : function(event, $current, template){
+            event.preventDefault();
+            panelManager.removeLastItem();
+        }
+    };
+
+    return OvenTemplate($container, "CaptionPanel", data, events, onRendered, onDestroyed );
+
+};
+
+export default CaptionPanel;

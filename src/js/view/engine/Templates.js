@@ -8,6 +8,7 @@ import BigButtonTemplate from 'view/helper/bigButtonTemplate';
 import MessageBoxTemplate from 'view/helper/messageBoxTemplate';
 import SpinnerTemplate from 'view/helper/spinnerTemplate';
 import ContextPanelTemplate from 'view/helper/contextPanelTemplate';
+import CaptionViewerTemplate from 'view/helper/captionViewerTemplate';
 
 import ControlsTemplate from 'view/controls/mainTemplate';
 import VolumeButtonTemplate from 'view/controls/volumeButtonTemplate';
@@ -19,6 +20,7 @@ import RootPanelTemplate from 'view/controls/settingPanel/rootPanelTemplate';
 import SpeedPanelTemplate from 'view/controls/settingPanel/rootPanelTemplate';
 import SourcePanelTemplate from 'view/controls/settingPanel/rootPanelTemplate';
 import QualityPanelTemplate from 'view/controls/settingPanel/rootPanelTemplate';
+import CaptionPanelTemplate from 'view/controls/settingPanel/rootPanelTemplate';
 
 const Templates = {
     TextViewTemplate,
@@ -28,6 +30,7 @@ const Templates = {
     MessageBoxTemplate,
     SpinnerTemplate,
     ContextPanelTemplate,
+    CaptionViewerTemplate,
 
     ControlsTemplate,
     VolumeButtonTemplate,
@@ -38,7 +41,8 @@ const Templates = {
     RootPanelTemplate,
     SpeedPanelTemplate,
     SourcePanelTemplate,
-    QualityPanelTemplate
+    QualityPanelTemplate,
+    CaptionPanelTemplate
 };
 
 export default Templates;

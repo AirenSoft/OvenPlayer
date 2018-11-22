@@ -91,13 +91,15 @@ const La$ = function(selectorOrElement){
     };
 
     that.text = (text) => { //IE8+
-        if(text){
-            $element.textContent = text;
-        }else{
+        if(text === undefined){
             return $element.textContent;
+        }else{
+            $element.textContent = text;
         }
     };
-
+    that.html = (text) => {
+        $element.innerHTML = text;
+    };
     that.hasClass = (name) => { //IE8+
         if($element.classList){
             return $element.classList.contains(name);

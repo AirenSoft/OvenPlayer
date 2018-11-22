@@ -61,3 +61,43 @@ export function naturalHms(second) {
         return minutes+':'+seconds;
     }
 }
+
+
+export function hmsToSecond(str, frameRate) {
+    if(!str) {
+        return 0;
+    }
+    if(_.isNumber(str) && !_.isNaN(str)){
+        return str;
+    }
+    str = str.replace(',', '.');
+    let arr = str.split(':');
+    let arrLength = arr.length;
+    let sec = 0;
+    if (str.slice(-1) === 's'){
+        sec = parseFloat(str);
+    }else if (str.slice(-1) === 'm'){
+        sec = parseFloat(str) * 60;
+    }else if (str.slice(-1) === 'h'){
+        sec = parseFloat(str) * 3600;
+    }else if (arrLength > 1) {
+        var secIndex = arrLength - 1;
+        if (arrLength === 4) {
+            if (frameRate) {
+                sec = parseFloat(arr[secIndex]) / frameRate;
+            }
+            secIndex -= 1;
+        }
+        sec += parseFloat(arr[secIndex]);
+        sec += parseFloat(arr[secIndex - 1]) * 60;
+        if (arrLength >= 3) {
+            sec += parseFloat(arr[secIndex - 2]) * 3600;
+        }
+    } else {
+        sec = parseFloat(str);
+    }
+    if (_.isNaN(sec)) {
+        return 0;
+    }
+    return sec;
+}
