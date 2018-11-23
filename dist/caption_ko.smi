@@ -1,0 +1,24 @@
+<SAMI>
+<HEAD>
+<TITLE></TITLE>
+<STYLE TYPE="text/css">
+<!--
+.KRCC { name: Korean; lang: kr-KR; SAMIType: CC; }
+-->
+</STYLE>
+</HEAD>
+<BODY>
+<SYNC Start=0>
+<P Class=KRCC>
+안녕하세요. 오븐플레이어입니다.
+</P>
+</SYNC>
+
+<SYNC Start=2275>
+<P Class=KRCC>
+오븐플레이어는 OvenMediaEngine의 초저지연 스트림을 더욱 쉽게 재생할 수 있도록 개발된 HTML5 플레이어입니다.
+</P>
+</SYNC>
+
+</BODY>
+</SAMI>

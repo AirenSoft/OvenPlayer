@@ -1,0 +1,8 @@
+1
+00:00:00,000 --> 00:00:02,275
+Hi. This is OvenPlayer.
+
+2
+00:00:02,275 --> 00:00:10,942
+The OvenPlayer is a HTML5 player designed to make it easier to play Ultra-low latency streams from the OvenMediaEngine.
+
