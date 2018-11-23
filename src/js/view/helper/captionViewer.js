@@ -34,11 +34,11 @@ const CaptionViewer = function($container, api, playerState){
 
                 $container.find(".ovp-caption-text").html(data.text);
 
-                /*if(hideGap){
+                if(hideGap){
                     deleteTimer = setTimeout(function(){
                         $container.find(".ovp-caption-text").text("");
                     },hideGap * 1000);
-                }*/
+                }
 
             }
 
