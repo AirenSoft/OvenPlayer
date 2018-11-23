@@ -292,17 +292,17 @@ const Api = function(container){
         return currentProvider.setAutoQuality(isAuto);
     }
 
-    that.setCurrentCaption = (index) => {
-        OvenPlayerConsole.log("API : setCurrentCaption() ", index);
-        captionManager.setCurrentCaption(index);
+    that.getCaptionList = () => {
+        OvenPlayerConsole.log("API : getCaptionList() ", captionManager.getCaptionList());
+        return captionManager.getCaptionList();
     }
     that.getCurrentCaption = () => {
         OvenPlayerConsole.log("API : getCurrentCaption() ", captionManager.getCurrentCaption());
         return captionManager.getCurrentCaption();
     }
-    that.getCaptionList = () => {
-        OvenPlayerConsole.log("API : getCaptionList() ", captionManager.getCaptionList());
-        return captionManager.getCaptionList();
+    that.setCurrentCaption = (index) => {
+        OvenPlayerConsole.log("API : setCurrentCaption() ", index);
+        captionManager.setCurrentCaption(index);
     }
     that.addCaption = (track) => {
         OvenPlayerConsole.log("API : addCaption() ")

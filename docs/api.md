@@ -299,6 +299,65 @@ Change the quality level auto changing.
 |`isAuto`|Boolean|Sets stream quality level auto changing|
 
 
+####  `captionList` = player.getCaptionList()
+
+Returns an array of objects based on inputed captions
+
+||Type|Memo|
+|-|-|-|
+|`captionList`|Array.\<Object\>|See the example of captionList.
+
+##### Example captionList
+```javascript
+[
+    {
+        data : (3) [VTTCue, VTTCue, VTTCue],
+        file : "/caption_ko.vtt",
+        id : "captions0"
+        label : "KOR VTT",
+        name : "KOR VTT"        
+    },
+    ... // And more objects
+]
+```
+
+#### `currentCaptionIndex` =  player.getCurrentCaption()
+
+||Type|Memo|
+|-|-|-|
+|`currentCaptionIndex`|Number|Number of the current caption 
+
+
+####  player.setCurrentCaption(`captionIndex`)
+
+Change the caption to the caption index.
+
+||Type|Memo|
+|-|-|-|
+|`captionIndex`|Number|Sets captions to a specified index|
+
+
+####  player.addCaption(`track`)
+
+Add the caption track to the captionList when video is playing.
+
+||Type|Memo|
+|-|-|-|
+|`track`|Object|file : "url of caption", kind : "captions" , label : title of caption, default : true or false |
+
+
+####  player.removeCaption(`captionIndex`)
+
+Remove the captionList to the caption index.
+
+||Type|Memo|
+|-|-|-|
+|`captionIndex`|Number|a specified index |
+
+
+
+
+
 
 ## Events
 

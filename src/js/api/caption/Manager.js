@@ -26,14 +26,14 @@ const Manager = function(api){
     let bindTrack = function(track, vttCues){
         track.data = vttCues || [];
         track.name = track.label || track.name || track.language;
-        track._id = (function(track, tracksCount) {
+        track.id = (function(track, tracksCount) {
             var trackId;
             var prefix = track.kind || 'cc';
             if (track.default || track.defaulttrack) {
                 trackId = 'default';
 
             } else {
-                trackId = track._id || (prefix + tracksCount);
+                trackId = track.id || (prefix + tracksCount);
             }
             if(isFisrtLoad){
                 //This execute only on. and then use flushCaptionList(lastCaptionIndex);
@@ -45,7 +45,7 @@ const Manager = function(api){
         })(track, captionList.length);
 
         captionList.push(track);
-        return track._id;
+        return track.id;
     };
     let changeCurrentCaption = function(index){
         currentCaptionIndex = index;
