@@ -14,6 +14,7 @@ import ControlsTemplate from 'view/controls/mainTemplate';
 import VolumeButtonTemplate from 'view/controls/volumeButtonTemplate';
 import ProgressBarTemplate from 'view/controls/progressBarTemplate';
 import PlayButtonTemplate from 'view/controls/playButtonTemplate';
+import FrameButtonsTemplate from 'view/controls/frameButtonsTemplate';
 import TimeDisplayTemplate from 'view/controls/timeDisplayTemplate';
 import FullScreenButtonTemplate from 'view/controls/fullScreenButtonTemplate';
 import RootPanelTemplate from 'view/controls/settingPanel/rootPanelTemplate';
@@ -36,6 +37,7 @@ const Templates = {
     VolumeButtonTemplate,
     ProgressBarTemplate,
     PlayButtonTemplate,
+    FrameButtonsTemplate,
     TimeDisplayTemplate,
     FullScreenButtonTemplate,
     RootPanelTemplate,

@@ -172,7 +172,7 @@ const View = function($container){
                     volume(false);
                     break;
             }
-        },
+        }/*,
         "contextmenu .ovenplayer" : function(event, $current, template){
             event.stopPropagation();
             if(!LA$(event.currentTarget).find("object")){
@@ -180,7 +180,7 @@ const View = function($container){
                 createContextPanel(event.pageX, event.pageY);
                 return false;
             }
-        }
+        }*/
     };
 
 

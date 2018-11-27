@@ -164,7 +164,6 @@ export const extractRootPanelData = function(api){
     let currentQuality = qualityLevels && qualityLevels.length > 0 ? qualityLevels[api.getCurrentQuality()] : null;
 
     let captions = api.getCaptionList();
-    console.log(captions);
     let currentCaption = api.getCurrentCaption();
 
     if(api.getDuration() !== Infinity && currentSource && currentSource.type !== PROVIDER_RTMP){

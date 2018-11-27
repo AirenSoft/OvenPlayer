@@ -139,6 +139,27 @@ const Api = function(container){
         OvenPlayerConsole.log("API : getConfig()", playerConfig.getConfig());
         return playerConfig.getConfig();
     };
+    that.setTimecodeMode = (isShow) =>{
+        OvenPlayerConsole.log("API : setTimecodeMode()", isShow);
+        return playerConfig.setTimecodeMode(isShow);
+    };
+    that.isTimecodeMode = () => {
+        OvenPlayerConsole.log("API : isTimecodeMode()");
+        return playerConfig.isTimecodeMode();
+    };
+    that.getFramerate = () => {
+        OvenPlayerConsole.log("API : getFramerate()", currentProvider.getFramerate());
+        return currentProvider.getFramerate();
+    };
+    that.setFramerate = (framerate) => {
+        OvenPlayerConsole.log("API : setFramerate()", framerate);
+        return currentProvider.setFramerate(framerate);
+    };
+    that.seekFrame = (frameCount) => {
+        if(!currentProvider){return null;}
+        OvenPlayerConsole.log("API : seekFrame()", frameCount);
+        return currentProvider.seekFrame(frameCount);
+    };
 
     that.getDuration = () => {
         if(!currentProvider){return null;}

@@ -31,6 +31,7 @@ const WebRTC = function(container, playerConfig){
         seeking : false,
         state : STATE_IDLE,
         buffer : 0,
+        framerate : 0,
         currentQuality : -1,
         currentSource : -1,
         qualityLevels : [],

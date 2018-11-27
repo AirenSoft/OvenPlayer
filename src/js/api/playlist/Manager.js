@@ -67,6 +67,7 @@ const Manager = function(){
             default:
                 break;
         }
+
         Object.keys(source).forEach(function(key) {
             if (source[key] === '') {
                 delete source[key];

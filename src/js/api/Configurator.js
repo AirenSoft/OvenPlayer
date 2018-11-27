@@ -13,9 +13,7 @@ const Configurator = function(options){
             playbackRateControls: false,
             playbackRates: [0.25, 0.5, 1, 1.5, 2],
             mute: false,
-            volume: 90,
-            width: 640,
-            height: 360
+            volume: 90
         };
         const serialize = function (val) {
             if (val === undefined) {
@@ -72,9 +70,6 @@ const Configurator = function(options){
         }
         deserialize(options);
         let config = Object.assign({}, Defaults, options);
-        config.width = normalizeSize(config.width);
-        config.height = normalizeSize(config.height);
-        config.aspectratio = evaluateAspectRatio(config.aspectratio, config.width);
 
         let rateControls = config.playbackRateControls;
         if (rateControls) {
@@ -101,10 +96,6 @@ const Configurator = function(options){
         }
 
         config.playbackRate = config.defaultPlaybackRate;
-
-        if (!config.aspectratio) {
-            delete config.aspectratio;
-        }
 
         const configPlaylist = config.playlist;
         if (!configPlaylist) {
@@ -136,7 +127,6 @@ const Configurator = function(options){
     OvenPlayerConsole.log("Configurator loaded.", options);
     let config = composeSourceOptions(options);
 
-    let aspectratio = config.aspectratio || "16:9";
     let debug = config.debug;
     let defaultPlaybackRate = config.defaultPlaybackRate || 1;
     let image = config.image;
@@ -147,14 +137,12 @@ const Configurator = function(options){
     let sourceLabel = config.sourceLabel || "";
     let repeat = config.repeat || false;
     let stretching = config.stretching || 'uniform';
+    let isTimecodeMode = config.isTimecodeMode || true;
 
 
 
     const that = {};
     that.getConfig = () => {return config;};
-
-    that.getAspectratio =()=>{return aspectratio;};
-    that.setAspectratio =(aspectratio_)=>{aspectratio = aspectratio_;};
 
     that.isDebug =()=>{return debug;};
 
@@ -166,6 +154,14 @@ const Configurator = function(options){
 
     that.getSourceLabel = () => {return sourceLabel;};
     that.setSourceLabel = (newLabel) => {sourceLabel = newLabel;};
+
+    that.setTimecodeMode = (isShow) => {
+        isTimecodeMode = isShow;
+    };
+    that.isTimecodeMode = () => {
+        return isTimecodeMode;
+    };
+
 
     that.getPlaybackRates =()=>{return playbackRates;};
     that.isPlaybackRateControls =()=>{return playbackRateControls;};

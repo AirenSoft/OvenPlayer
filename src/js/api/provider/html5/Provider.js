@@ -31,6 +31,7 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
 
     const _load = (lastPlayPosition) =>{
         const source =  spec.sources[spec.currentSource];
+        spec.framerate = source.framerate;
         if(onExtendedLoad){
             onExtendedLoad(source, lastPlayPosition);
         }else{
@@ -248,7 +249,7 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
         return spec.currentSource;
     };
     that.setCurrentSource = (sourceIndex, needProviderChange) => {
-        if(spec.currentQuality === sourceIndex){
+            if(spec.currentSource === sourceIndex){
             return false;
         }
 
@@ -262,8 +263,8 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
                 that.trigger(CONTENT_SOURCE_CHANGED, {
                     currentSource: sourceIndex
                 });
-
                 playerConfig.setSourceLabel(spec.sources[sourceIndex].label);
+                //spec.currentQuality = sourceIndex;
                 if(needProviderChange){
 
                     _load(elVideo.currentTime || 0);
@@ -296,6 +297,21 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
         //Do nothing
     };
 
+    that.getFramerate = () => {
+        return spec.framerate;
+    };
+    that.setFramerate = (framerate) => {
+        return spec.framerate = framerate;
+    };
+    that.seekFrame = (frameCount) =>{
+        let fps = spec.framerate;
+        let currentFrames = elVideo.currentTime * fps;
+        let newPosition = (currentFrames + frameCount) / fps;
+        newPosition = newPosition + 0.00001; // FIXES A SAFARI SEEK ISSUE. myVdieo.currentTime = 0.04 would give SMPTE 00:00:00:00 wheras it should give 00:00:00:01
+
+        that.pause();
+        that.seek(newPosition);
+    };
 
     that.stop = () =>{
         if(!elVideo){

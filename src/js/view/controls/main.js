@@ -3,6 +3,7 @@
  */
 import OvenTemplate from "view/engine/OvenTemplate";
 import PlayButton from "view/controls/playButton";
+import FrameButtons from "view/controls/frameButtons";
 import VolumeButton from "view/controls/volumeButton";
 import ProgressBar from "view/controls/progressBar";
 import TimeDisplay from "view/controls/timeDisplay";
@@ -17,7 +18,7 @@ import {
 } from "api/constants";
 
 const Controls = function($container, api){
-    let volumeButton = "", playButton= "", progressBar = "", timeDisplay = "", fullScreenButton = "";
+    let volumeButton = "", playButton= "", progressBar = "", timeDisplay = "", fullScreenButton = "", frameButtons = "";
     let panelManager = PanelManager();
 
 
@@ -36,6 +37,12 @@ const Controls = function($container, api){
             }
             progressBar = ProgressBar($current.find(".ovp-progressbar-container"), api);
         };
+        let initFrameJumpButtons = function(){
+            if(frameButtons){
+                frameButtons.destroy();
+            }
+            frameButtons = FrameButtons($current.find(".ovp-controls"), api);
+        };
 
         playButton = PlayButton($current.find(".ovp-left-controls"), api);
         volumeButton = VolumeButton($current.find(".ovp-left-controls"), api);
@@ -43,6 +50,15 @@ const Controls = function($container, api){
 
         api.on(CONTENT_META, function(data){
             initTimeDisplay(data);
+
+            if(api.getFramerate() > 0){
+                initFrameJumpButtons();
+            }else{
+                if(frameButtons){
+                    frameButtons.destroy();
+                }
+            }
+
             if(data.duration === Infinity){
                 //live
                 if(progressBar){
@@ -76,7 +92,6 @@ const Controls = function($container, api){
     const events = {
         "mouseleave .ovp-controls" : function(event, $current, template){
             event.preventDefault();
-
             volumeButton.setMouseDown(false);
             $current.find(".ovp-volume-slider-container").removeClass("active");
         },

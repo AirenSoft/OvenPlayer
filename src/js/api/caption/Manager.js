@@ -56,15 +56,12 @@ const Manager = function(api){
         if(api.getConfig().playlist && api.getConfig().playlist.length > 0){
             let playlist = api.getConfig().playlist[0];
             if(playlist && playlist.tracks && playlist.tracks.length > 0){
-                console.log("Original Tracks : ",  playlist.tracks ,  playlist.tracks.length);
                 for(let i = 0; i < playlist.tracks.length; i ++){
                     const track = playlist.tracks[i];
-                    console.log(i);
                     if(isSupport(track.kind) && ! _.findWhere(track, {file : track.file})){
                         captionLoader.load(track, function(vttCues){
                             if(vttCues && vttCues.length > 0){
                                 let captionId = bindTrack(track, vttCues);
-                                console.log("Bined Track : ", captionId);
                             }
                         }, function(error){
                             api.trigger(ERROR, {code : PLAYER_CAPTION_ERROR, reason : "caption load error.", message : "caption load error.", error : error});
@@ -93,7 +90,6 @@ const Manager = function(api){
         //currentCaptionIndex = lastCaptionIndex;
     };
     that.getCaptionList = () =>{
-        console.log("captionList :", captionList, captionList.length);
         return captionList||[];
     };
     that.getCurrentCaption = () =>{

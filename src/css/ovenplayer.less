@@ -52,6 +52,16 @@
     transform: translate3d(0, 0, 0);
   }
 }
+@font-face {
+  font-family: "frameIcon";
+  src: url("../assets/images/ic-player-frame-jump.eot?rxg7gj");
+  src: url("../assets/images/ic-player-frame-jump.eot?rxg7gj#iefix") format('embedded-opentype'),
+        url("../assets/images/ic-player-frame-jump.ttf?rxg7gj") format('truetype'),
+//        url("../assets/images/ic-player-frame-jump.woff?rxg7gj") format('woff'),
+        url("../assets/images/ic-player-frame-jump.svg?rxg7gj#icomoon") format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
 
 /**
  * @brief   common style
@@ -379,32 +389,83 @@
         height: 30px;
         cursor: pointer;
       }
+      .ovp-setting-button {
+        position: relative;
+        top: 10px;
+        margin-right: 12px;
 
+        & > i{
+          display: inline-block;
+          width: 100%;
+          height: 100%;
+          background-size: 100%;
+          &{
+            background: url('../assets/images/ic-player-setting.svg');
+          }
+        }
+      }
       .ovp-left-controls {
         float: left;
         height: 100%;
+
       }
 
       .ovp-right-controls {
+        display: inline-block;
         float: right;
         height: 100%;
+      }
 
-        /*setting button*/
-        .ovp-setting-button {
+      .ovp-frame-buttons {
+        position: relative;
+        display: inline-block;
+        margin-left: 14px;
+        overflow: hidden;
+        font-weight: 100;
+        height: 30px;
+        top: 10px;
+
+        .ovp-frame-button{
+          font-size: 1rem;
           position: relative;
-          top: 10px;
-          margin-right: 12px;
+          text-align: center;
+          .frame-icon{
+            position: relative;
 
-          & > i{
-            display: inline-block;
-            width: 100%;
-            height: 100%;
-            background-size: 100%;
-            &{
-              background: url('../assets/images/ic-player-setting.svg');
+            &.reverse{
+              &:after {
+                content: '\e900';
+              }
             }
+            &:after {
+              font-family: 'frameIcon' !important;
+              speak: none;
+              content: '\e901';
+              font-style: normal;
+              font-weight: normal;
+              font-variant: normal;
+              text-transform: none;
+
+              /* Better Font Rendering =========== */
+              -webkit-font-smoothing: antialiased;
+              -moz-osx-font-smoothing: grayscale;
+              position: absolute;
+              font-size: 2.4rem;
+              left : 0;
+              line-height:30px;
+              height:30px;
+            }
+            .btn-text{
+              font-weight: bold;
+              font-size : 0.8rem;
+              line-height:30px;
+              height:30px;
+            }
+
           }
+
         }
+
       }
     }
   }
@@ -1091,14 +1152,14 @@
     -webkit-transition: bottom .25s cubic-bezier(0.0,0.0,0.2,1);
     transition: bottom .25s cubic-bezier(0.0,0.0,0.2,1);
     .ovp-caption-text {
-      font-size: 2rem;
+      font-size: 1rem;
+      line-height: 1rem;
+
       text-shadow: 2px 2px 2px gray;
       color: #fff;
       padding: .1rem .3rem;
-      line-height: 2.6rem;
       user-select: none;
       word-break: break-word;
-      white-space: initial;
     }
   }
 }
@@ -1117,6 +1178,9 @@
 .ovp-caption-active .ovp-caption-button > i {
   color: #F36446;
 }
+
+
+
 
 /*lowlatency panel*/
 /*not use*/
@@ -1159,4 +1223,21 @@
 .ovp-lowlatency-info-close{
   margin-left : 4px;
 }*/
+// Small devices (landscape phones, 576px and up)
+@media (min-width: 576px) {
+  .ovp-wrapper.ovenplayer{
+    .ovp-caption-text{
+      font-size: 2rem;
+      line-height: 2.6rem;
+    }
+  }
+}
 
+// Medium devices (tablets, 768px and up)
+@media (min-width: 768px) {  }
+
+// Large devices (desktops, 992px and up)
+@media (min-width: 992px) {  }
+
+// Extra large devices (large desktops, 1200px and up)
+@media (min-width: 1200px) {  }
