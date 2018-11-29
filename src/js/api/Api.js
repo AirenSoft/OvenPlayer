@@ -5,7 +5,7 @@ import LazyCommandExecutor from "api/LazyCommandExecutor";
 import LogManager from "utils/logger";
 import PlaylistManager from "api/playlist/Manager";
 import ProviderController from "api/provider/Controller";
-import {READY, ERROR, INIT_ERROR, DESTROY, NETWORK_UNSTABLED, PLAYER_FILE_ERROR, PROVIDER_DASH, PROVIDER_HLS, PROVIDER_WEBRTC, PROVIDER_HTML5, PROVIDER_RTMP} from "api/constants";
+import {READY, ERROR, CONTENT_TIME_MODE_CHANGED, INIT_ERROR, DESTROY, NETWORK_UNSTABLED, PLAYER_FILE_ERROR, PROVIDER_DASH, PROVIDER_HLS, PROVIDER_WEBRTC, PROVIDER_HTML5, PROVIDER_RTMP} from "api/constants";
 import {version} from 'version';
 import {ApiRtmpExpansion} from 'api/ApiExpansions';
 
@@ -119,7 +119,7 @@ const Api = function(container){
             'load','play','pause','seek','stop', 'getDuration', 'getPosition', 'getVolume'
             , 'getMute', 'getBuffer', 'getState' , 'getQualityLevels'
         ]);
-        playerConfig = Configurator(options);
+        playerConfig = Configurator(options, that);
         if(!playerConfig.isDebug()){
             logManager.disable();
         }
@@ -141,7 +141,7 @@ const Api = function(container){
     };
     that.setTimecodeMode = (isShow) =>{
         OvenPlayerConsole.log("API : setTimecodeMode()", isShow);
-        return playerConfig.setTimecodeMode(isShow);
+        playerConfig.setTimecodeMode(isShow);
     };
     that.isTimecodeMode = () => {
         OvenPlayerConsole.log("API : isTimecodeMode()");
@@ -150,10 +150,6 @@ const Api = function(container){
     that.getFramerate = () => {
         OvenPlayerConsole.log("API : getFramerate()", currentProvider.getFramerate());
         return currentProvider.getFramerate();
-    };
-    that.setFramerate = (framerate) => {
-        OvenPlayerConsole.log("API : setFramerate()", framerate);
-        return currentProvider.setFramerate(framerate);
     };
     that.seekFrame = (frameCount) => {
         if(!currentProvider){return null;}

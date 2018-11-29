@@ -9,9 +9,18 @@ import SpeedPanel from "view/controls/settingPanel/speedPanel";
 import SourcePanel from "view/controls/settingPanel/sourcePanel";
 import QualityPanel from "view/controls/settingPanel/qualityPanel";
 import CaptionPanel from "view/controls/settingPanel/captionPanel";
+import TimeDisplayPanel from "view/controls/settingPanel/timeDisplayPanel";
 import {
     CONTENT_LEVEL_CHANGED, PROVIDER_RTMP
 } from "api/constants";
+
+const PANEL_TITLE = {
+    "speed" : "Speed",
+    "source" : "Source",
+    "quality" : "Quality",
+    "caption" : "Caption",
+    "display" : "Display"
+};
 
 const RootPanel = function($container, api, data){
     const $root = LA$("#"+api.getContainerId());
@@ -19,8 +28,8 @@ const RootPanel = function($container, api, data){
 
     const extractPanelData = function(api, panelType){
         let panel = {title : "", body : [], useCheck : true, id : "panel-"+new Date().getTime() , panelType : panelType};
+        panel.title = PANEL_TITLE[panelType];
         if(panelType === "speed"){
-            panel.title = "Speed";
             let playBackRates = api.getConfig().playbackRates;
             let currentPlaybackRate = api.getPlaybackRate();
             for (let i = 0; i < playBackRates.length; i ++) {
@@ -35,7 +44,6 @@ const RootPanel = function($container, api, data){
             }
 
         }else if(panelType === "source"){
-            panel.title = "Source";
             let sources = api.getSources();
             for (let i = 0; i < sources.length; i ++) {
                 let body = {
@@ -48,7 +56,6 @@ const RootPanel = function($container, api, data){
             }
 
         }else if(panelType === "quality"){
-            panel.title = "Quality";
             let qualityLevels = api.getQualityLevels();
             panel.body.push({
                 title : "auto",
@@ -67,7 +74,6 @@ const RootPanel = function($container, api, data){
             }
 
         }else if(panelType === "caption"){
-            panel.title = "Caption";
             let captions = api.getCaptionList();
             panel.body.push({
                 title : "off",
@@ -80,6 +86,21 @@ const RootPanel = function($container, api, data){
                     title : captions[i].label,
                     isCheck : api.getCurrentCaption() === i,
                     value : i,
+                    panelType : panelType
+                };
+                panel.body.push(body);
+            }
+
+        }else if(panelType === "display"){
+            let displayModes = [
+                "timecode",
+                "framecode"
+            ];
+            for (let i = 0; i < displayModes.length; i ++) {
+                let body = {
+                    title : displayModes[i],
+                    isCheck : api.isTimecodeMode() ? (displayModes[i] === "timecode") : (displayModes[i] === "framecode"),
+                    value : displayModes[i],
                     panelType : panelType
                 };
                 panel.body.push(body);
@@ -134,6 +155,8 @@ const RootPanel = function($container, api, data){
                 panel = QualityPanel($container, api, extractPanelData(api, panelType));
             }else if(panelType === "caption"){
                 panel = CaptionPanel($container, api, extractPanelData(api, panelType));
+            }else if(panelType === "display"){
+                panel = TimeDisplayPanel($container, api, extractPanelData(api, panelType));
             }
 
             panelManager.add(panel);
@@ -166,9 +189,11 @@ export const extractRootPanelData = function(api){
     let captions = api.getCaptionList();
     let currentCaption = api.getCurrentCaption();
 
+    let framerate = api.getFramerate();
+
     if(api.getDuration() !== Infinity && currentSource && currentSource.type !== PROVIDER_RTMP){
         let body = {
-            title : "Speed",
+            title : PANEL_TITLE.speed,
             value :  api.getPlaybackRate() === 1 ? "Normal" : api.getPlaybackRate(),
             description :  api.getPlaybackRate() === 1 ? "Normal" : api.getPlaybackRate(),
             panelType : "speed",
@@ -179,7 +204,7 @@ export const extractRootPanelData = function(api){
     if (sources.length > 0) {
 
         let body = {
-            title : "Source",
+            title : PANEL_TITLE.source,
             value : currentSource ? currentSource.label : "Default",
             description : currentSource ? currentSource.label : "Default",
             panelType : "source",
@@ -191,7 +216,7 @@ export const extractRootPanelData = function(api){
     if (qualityLevels.length > 0) {
 
         let body = {
-            title : "Quality",
+            title : PANEL_TITLE.quality,
             value : currentQuality ? currentQuality.label : "Default",
             description : currentQuality ? currentQuality.label : "Default",
             panelType : "quality",
@@ -203,10 +228,21 @@ export const extractRootPanelData = function(api){
     if (captions.length > 0) {
 
         let body = {
-            title : "Caption",
+            title : PANEL_TITLE.caption,
             value : captions[currentCaption] ? captions[currentCaption].label : "off",
             description : captions[currentCaption] ? captions[currentCaption].label : "off",
             panelType : "caption",
+            hasNext : true
+        };
+
+        panel.body.push(body);
+    }
+    if(framerate > 0){
+        let body = {
+            title : PANEL_TITLE.display,
+            value : api.isTimecodeMode() ? "timecode" : "framecode",
+            description : api.isTimecodeMode() ? "timecode" : "framecode",
+            panelType : "display",
             hasNext : true
         };
 

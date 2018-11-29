@@ -32,6 +32,10 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
     const _load = (lastPlayPosition) =>{
         const source =  spec.sources[spec.currentSource];
         spec.framerate = source.framerate;
+        if(!spec.framerate){
+            //init timecode mode
+            playerConfig.setTimecodeMode(true);
+        }
         if(onExtendedLoad){
             onExtendedLoad(source, lastPlayPosition);
         }else{

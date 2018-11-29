@@ -271,8 +271,9 @@
   text-shadow: 0 0 2px rgba(0,0,0,.5);
 
   &.background{
-    //opacity: .6;
-    background-color: rgba(28,28,28,.4);
+    //opacity: 0;
+    //background-color: rgba(28,28,28,.0);
+    display: none;
   }
   .ovp-setting-title, .ovp-setting-item {
     width: 100%;
@@ -426,7 +427,7 @@
         top: 10px;
 
         .ovp-frame-button{
-          font-size: 1rem;
+          margin-right: 6px;
           position: relative;
           text-align: center;
           .frame-icon{
@@ -655,7 +656,6 @@
     visibility: hidden;
     position: relative;
     width: 0px;
-    margin-left: 8px;
     margin-right: 0;
     height: 100%;
     cursor: pointer;
@@ -668,6 +668,7 @@
 
     &.active{
       width: 70px;
+      margin-left: 8px;
       visibility: visible;
       -moz-transition: visible .2s cubic-bezier(0.0,0.0,0.2,1),width .2s cubic-bezier(0.0,0.0,0.2,1);
       -webkit-transition: visible .2s cubic-bezier(0.0,0.0,0.2,1),width .2s cubic-bezier(0.0,0.0,0.2,1);
@@ -677,7 +678,6 @@
     .ovp-volume-silder {
       height: 100%;
       position: relative;
-
       .ovp-volume-slider-bg, .ovp-volume-slider-value {
         position: absolute;
         display: block;

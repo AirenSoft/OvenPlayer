@@ -4,7 +4,8 @@
 import OvenTemplate from "view/engine/OvenTemplate";
 import {naturalHms} from "utils/strings";
 import {
-    CONTENT_TIME
+    CONTENT_TIME,
+    CONTENT_TIME_MODE_CHANGED
 } from "api/constants";
 
 const TimeDisplay = function($container, api, data){
@@ -15,19 +16,41 @@ const TimeDisplay = function($container, api, data){
     };
 
     const onRendered = function($current, template){
+        let isTimecode = api.isTimecodeMode();
         $position = $current.find(".ovp-time-current");
         $duration = $current.find(".ovp-time-duration");
 
         if(data.duration !== Infinity){
 
-            $duration.text(convertHumanizeTime(data.duration));
+            if(isTimecode){
+                $duration.text(convertHumanizeTime(data.duration));
+            }else{
+                $duration.text( Math.round (data.duration * api.getFramerate()) + " ("+api.getFramerate()+"fps)");
+            }
+
+            api.on(CONTENT_TIME_MODE_CHANGED, function(isTimecodeMode){
+                isTimecode = isTimecodeMode;
+                console.log("CONTENT_TIME_MODE_CHANGED : ", isTimecodeMode);
+                if(isTimecode){
+                    $duration.text(convertHumanizeTime(data.duration));
+                }else{
+                    $duration.text( Math.round (data.duration * api.getFramerate()) + " ("+api.getFramerate()+"fps)");
+                }
+            },template);
+
             api.on(CONTENT_TIME, function(data) {
-                $position.text(convertHumanizeTime(data.position));
+                if(isTimecode){
+                    $position.text(convertHumanizeTime(data.position));
+                }else{
+                    $position.text( Math.round (data.position * api.getFramerate()));
+                }
+
             },template);
         }
 
     };
     const onDestroyed = function(template){
+        api.off(CONTENT_TIME_MODE_CHANGED, null, template);
         api.off(CONTENT_TIME, null, template);
     };
     const events = {

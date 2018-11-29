@@ -1,11 +1,14 @@
 import _ from "utils/underscore";
+import {
+    CONTENT_TIME_MODE_CHANGED
+} from "api/constants";
 
 /**
  * @brief   This initializes the input options.
  * @param   options
  *
  * */
-const Configurator = function(options){
+const Configurator = function(options, provider){
 
     const composeSourceOptions = function(options){
         const Defaults = {
@@ -156,7 +159,11 @@ const Configurator = function(options){
     that.setSourceLabel = (newLabel) => {sourceLabel = newLabel;};
 
     that.setTimecodeMode = (isShow) => {
-        isTimecodeMode = isShow;
+        if(isTimecodeMode !== isShow){
+            isTimecodeMode = isShow;
+            console.log("CONTENT_TIME_MODE_CHANGEDCONTENT_TIME_MODE_CHANGEDCONTENT_TIME_MODE_CHANGEDCONTENT_TIME_MODE_CHANGED : ", isTimecodeMode);
+            provider.trigger(CONTENT_TIME_MODE_CHANGED, isTimecodeMode);
+        }
     };
     that.isTimecodeMode = () => {
         return isTimecodeMode;

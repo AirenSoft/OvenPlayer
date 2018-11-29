@@ -12,7 +12,7 @@ import RootPanel, {extractRootPanelData} from "view/controls/settingPanel/rootPa
 import PanelManager from "view/global/PanelManager";
 import {
     READY,
-    CONTENT_META, CONTENT_LEVEL_CHANGED,
+    CONTENT_META, CONTENT_LEVEL_CHANGED, CONTENT_TIME_MODE_CHANGED,
     PROVIDER_RTMP,
     ERROR
 } from "api/constants";

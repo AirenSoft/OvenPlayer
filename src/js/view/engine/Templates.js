@@ -22,6 +22,7 @@ import SpeedPanelTemplate from 'view/controls/settingPanel/rootPanelTemplate';
 import SourcePanelTemplate from 'view/controls/settingPanel/rootPanelTemplate';
 import QualityPanelTemplate from 'view/controls/settingPanel/rootPanelTemplate';
 import CaptionPanelTemplate from 'view/controls/settingPanel/rootPanelTemplate';
+import TimeDisplayPanelTemplate from 'view/controls/settingPanel/rootPanelTemplate';
 
 const Templates = {
     TextViewTemplate,
@@ -44,7 +45,8 @@ const Templates = {
     SpeedPanelTemplate,
     SourcePanelTemplate,
     QualityPanelTemplate,
-    CaptionPanelTemplate
+    CaptionPanelTemplate,
+    TimeDisplayPanelTemplate
 };
 
 export default Templates;

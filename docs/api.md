@@ -355,7 +355,34 @@ Remove the captionList to the caption index.
 |`captionIndex`|Number|a specified index |
 
 
+#### `isTimecodeMode` =  player.isTimecodeMode()
 
+||Type|Memo|
+|-|-|-|
+|`isTimecodeMode`|Boolean|Boolean of timecode mode is on 
+
+####  player.setTimecodeMode(`isTimecodeMode`)
+
+Change the timecode mode or framecode mode when you input framerate.
+
+||Type|Memo|
+|-|-|-|
+|`isTimecodeMode`|Number|Change the timecode mode or framecode mode.|
+
+#### `currentFramerate` =  player.getFramerate()
+
+||Type|Memo|
+|-|-|-|
+|`currentFramerate`|Number|Number of the sources framerate
+
+
+#### player.seekFrame(`framePosition`)
+
+Jump to the specified position within the currently playing item.
+
+||Type|Memo|
+|-|-|-|
+|`framePosition`|Number|The position (in frame) to seek to.
 
 
 
@@ -511,6 +538,16 @@ Fired when VTTCue is changed.
 Attribute|Type|Memo
 ------|------|-------
 `VTTVcue`|Object|VTTCue Object 
+
+
+#### player.on('timeDisplayModeChanged')
+
+Fired when timecode mode is changed.
+
+Attribute|Type|Memo
+------|------|-------
+`isTimecodeDisplaying`|boolean| changed displaying mode
+
 
 
 #### player.on('destroy')

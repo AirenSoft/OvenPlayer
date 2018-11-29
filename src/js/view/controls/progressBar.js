@@ -85,9 +85,13 @@ const ProgressBar = function($container, api){
         const duration = api.getDuration();
         const second = duration * percentage;
 
-        const hms = naturalHms(second);
+        if(api.isTimecodeMode()){
+            $time.text(naturalHms(second));
+        }else{
+            $time.text(Math.round (second * api.getFramerate()));
+        }
 
-        $time.text(hms);
+
 
         const timeElemWidth = $time.width();
         const progressBarWidth = $progressBar.width();
