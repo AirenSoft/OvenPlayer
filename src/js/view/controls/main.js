@@ -6,6 +6,7 @@ import PlayButton from "view/controls/playButton";
 import FrameButtons from "view/controls/frameButtons";
 import VolumeButton from "view/controls/volumeButton";
 import ProgressBar from "view/controls/progressBar";
+import LA$ from 'utils/likeA$';
 import TimeDisplay from "view/controls/timeDisplay";
 import FullScreenButton from "view/controls/fullScreenButton";
 import RootPanel, {extractRootPanelData} from "view/controls/settingPanel/rootPanel";
@@ -20,8 +21,12 @@ import {
 const Controls = function($container, api){
     let volumeButton = "", playButton= "", progressBar = "", timeDisplay = "", fullScreenButton = "", frameButtons = "";
     let panelManager = PanelManager();
-
-
+    const $root = LA$("#"+api.getContainerId());
+    let setPanelMaxHeight = function(){
+        if($root.find(".ovp-setting-panel")){
+            $root.find(".ovp-setting-panel").css("max-height",  $root.height() - $root.find(".ovp-bottom-panel").height() + "px");
+        }
+    };
 
     const onRendered = function($current, template){
 
@@ -103,6 +108,10 @@ const Controls = function($container, api){
                 let panelData = extractRootPanelData(api);
                 panelManager.add(RootPanel($current, api, panelData));
             }
+        },
+        "resize window" : function(event, $current, template){
+            event.preventDefault();
+            setPanelMaxHeight();
         }
     };
 

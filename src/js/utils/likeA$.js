@@ -24,7 +24,7 @@ const La$ = function(selectorOrElement){
 
     let $element = "";
 
-    if( _.every(selectorOrElement, function(item){return _.isElement(item)})){
+    if( _.isElement(selectorOrElement) || _.every(selectorOrElement, function(item){return _.isElement(item)})){
         $element = selectorOrElement;
     }else if(selectorOrElement === "document"){
         $element = document;

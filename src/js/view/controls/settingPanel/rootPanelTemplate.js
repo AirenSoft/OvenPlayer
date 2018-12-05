@@ -1,7 +1,7 @@
 import _ from "utils/underscore";
 
 export default (data) => {
-    let elements = '<div id="'+data.id+'" class="ovp-setting-panel '+(data.isRoot ? 'animated fadeIn': '')+'">' +
+    let elements = '<div id="'+data.id+'" class="ovp-setting-panel '+(data.isRoot ? 'animated fadeIn': '')+'" style="max-height: '+data.height+'px">' +
                         '<div class="ovp-setting-title-container">' +
                             '<div class="ovp-setting-title" tabindex="0">' +
                                 (data.isRoot ? '' : '<span class="ovp-setting-title-previcon">&lt;</span>') +

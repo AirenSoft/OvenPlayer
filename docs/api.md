@@ -97,17 +97,20 @@ Loads source.
     {
         type : "mp4", 
         file :  "https://path.to/your_video", 
+        framerate : 30,
         label : "360P"
     },
     {
         type : "mp4", 
         file :  "https://path.to/your_video", 
+        framerate : 30,
         label: "480P"
     },
     
     {
         type : "mp4", 
         file : "https://path.to/your_video", 
+        framerate : 30,
         label : "720p",
         isDefault : "true"
     }

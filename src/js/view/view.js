@@ -104,7 +104,14 @@ const View = function($container){
 
     };
     const onDestroyed = function(){
-        //Do nothing.
+        if(helper){
+            helper.destroy();
+            helper = null;
+        }
+        if(controls){
+            controls.destroy();
+            controls = null;
+        }
     };
     const events = {
         "click .ovenplayer" : function(event, $current, template){

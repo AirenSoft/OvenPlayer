@@ -26,8 +26,15 @@ const RootPanel = function($container, api, data){
     const $root = LA$("#"+api.getContainerId());
     let panelManager = PanelManager();
 
-    const extractPanelData = function(api, panelType){
-        let panel = {title : "", body : [], useCheck : true, id : "panel-"+new Date().getTime() , panelType : panelType};
+    const extractSubPanelData = function(api, panelType){
+        let panel = {
+            id : "panel-"+new Date().getTime() ,
+            title : "",
+            body : [],
+            useCheck : true,
+            panelType : panelType,
+            height : $root.height() - $root.find(".ovp-bottom-panel").height()
+        };
         panel.title = PANEL_TITLE[panelType];
         if(panelType === "speed"){
             let playBackRates = api.getConfig().playbackRates;
@@ -117,7 +124,15 @@ const RootPanel = function($container, api, data){
             $root.find("#"+data.id).addClass("background");
         }
     };
+    let setPanelMaxHeight = function(){
+        if($root.find(".ovp-setting-panel")){
+            console.log( $root.height() - $root.find(".ovp-bottom-panel").height() + "px");
+            $root.find(".ovp-setting-panel").css("max-height",  $root.height() - $root.find(".ovp-bottom-panel").height() + "px");
+        }
+    };
     const onRendered = function($current, template){
+        setPanelMaxHeight();
+
         api.on(CONTENT_LEVEL_CHANGED, function(data){
             let newQuality = data.currentQuality;
             if(data.type === "render"){
@@ -148,15 +163,15 @@ const RootPanel = function($container, api, data){
             let panelType = LA$(event.currentTarget).attr("ovp-panel-type");
             let panel = null;
             if(panelType === "speed"){
-                panel = SpeedPanel($container, api, extractPanelData(api, panelType));
+                panel = SpeedPanel($container, api, extractSubPanelData(api, panelType));
             }else if(panelType === "source"){
-                panel = SourcePanel($container, api, extractPanelData(api, panelType));
+                panel = SourcePanel($container, api, extractSubPanelData(api, panelType));
             }else if(panelType === "quality"){
-                panel = QualityPanel($container, api, extractPanelData(api, panelType));
+                panel = QualityPanel($container, api, extractSubPanelData(api, panelType));
             }else if(panelType === "caption"){
-                panel = CaptionPanel($container, api, extractPanelData(api, panelType));
+                panel = CaptionPanel($container, api, extractSubPanelData(api, panelType));
             }else if(panelType === "display"){
-                panel = TimeDisplayPanel($container, api, extractPanelData(api, panelType));
+                panel = TimeDisplayPanel($container, api, extractSubPanelData(api, panelType));
             }
 
             panelManager.add(panel);
@@ -178,7 +193,13 @@ export default RootPanel;
 
 
 export const extractRootPanelData = function(api){
-    let panel = {title : "Settings", isRoot : true, body : [], id : "panel-"+new Date().getTime(), panelType : ""};
+    let panel = {
+        id : "panel-"+new Date().getTime(),
+        title : "Settings",
+        body : [],
+        isRoot : true,
+        panelType : ""
+    };
 
     let sources = api.getSources();
     let currentSource = sources && sources.length > 0 ? sources[api.getCurrentSource()] : null;
