@@ -22,6 +22,9 @@ const getBuildVersion = function (build) {
 }
 
 const defaultConfig = {
+    node: {
+        fs: 'empty'
+    },
     entry: {
         'ovenplayer': './src/js/ovenplayer.js',
         'ovenplayer.sdk' : './src/js/ovenplayer.sdk.js',

@@ -1,6 +1,6 @@
 {
   "name": "OvenPlayer",
-  "version": "0.7.795",
+  "version": "0.7.798",
   "description": "The OvenPlayer is an HTML5 player designed to make it easier to play ultra-low latency streams from the OvenMediaEngine.",
   "main": "openplayer.js",
   "scripts": {
@@ -19,24 +19,33 @@
   },
   "homepage": "https://github.com/AirenSoft/OvenPlayer",
   "devDependencies": {
+    "net": "^1.0.2",
+    "tls": "0.0.1"
+  },
+  "dependencies": {
     "babel-core": "^6.26.3",
-    "babel-loader": "^7.1.4",
+    "babel-loader": "^7.1.5",
     "babel-plugin-transform-es3-member-expression-literals": "^6.22.0",
     "babel-plugin-transform-es3-property-literals": "^6.22.0",
     "babel-plugin-transform-object-assign": "^6.22.0",
-    "babel-preset-env": "^1.6.1",
-    "copy-webpack-plugin": "^4.5.1",
-    "css-loader": "^1.0.0",
+    "babel-preset-env": "^1.7.0",
+    "buffer": "^5.2.1",
+    "copy-webpack-plugin": "^4.6.0",
+    "css-loader": "^1.0.1",
+    "es6-request": "^2.4.0",
     "file-loader": "^1.1.11",
+    "file-system": "^2.2.2",
     "git-revision-webpack-plugin": "^3.0.3",
-    "less": "^3.8.0",
+    "iconv-lite": "^0.4.24",
+    "jschardet": "^1.6.0",
+    "less": "^3.9.0",
     "less-loader": "^4.1.0",
     "postcss-loader": "^2.1.6",
+    "request": "^2.88.0",
     "style-loader": "^0.21.0",
-    "uglifyjs-webpack-plugin": "^1.2.7",
-    "url-loader": "^1.1.1",
-    "webpack": "^4.1.1",
+    "uglifyjs-webpack-plugin": "^1.3.0",
+    "url-loader": "^1.1.2",
+    "webpack": "^4.27.0",
     "webpack-cli": "^3.1.2"
-  },
-  "dependencies": {}
+  }
 }

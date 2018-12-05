@@ -1,18 +1,18 @@
 /**
  * Created by hoho on 2018. 7. 4..
  */
-import ajax from "utils/ajax.min";
 import SrtParser from "api/caption/parser/SrtParser";
 import SamiParser from "api/caption/parser/SmiParser";
-import VTTCue from 'utils/captions/vttCue';
-
+import VTTCue from "utils/captions/vttCue";
+import Request from "request";
+const Buffer = require('buffer').Buffer;
+const iconv = require('iconv-lite');
 
 const Loader = function(){
     const that = {};
 
     //for test. dst_type : webvtt, srt, sami
     let convertVTTUrl = function(trackUrl){
-
         return "https://subtitles.ovencloud.com:8453/v1/subtitles?url="+escape(trackUrl)+"&src_type=srt&dst_type=webvtt&file_name=ovenplayer2018";
     };
     let convertToVTTCues = function (cues) {
@@ -20,13 +20,19 @@ const Loader = function(){
     }
 
     that.load = (track, successCallback, errorCallback) => {
-        ajax().get(track.file).then(function(response, xhr){
-            let cues = [];
-            let vttCues = [];
-            OvenPlayerConsole.log("AJAX");
-            OvenPlayerConsole.log(xhr);
-            try {
-                var responseText = xhr.responseText;
+
+        var requestOptions  = { method: "GET",
+            uri : track.file
+            ,headers: { "User-Agent": "Mozilla/5.0" }
+            ,encoding: null
+        };
+        Request(requestOptions, function(error, response, body) {
+            if(error){
+                errorCallback(error);
+            }else{
+                let cues = [];
+                let vttCues = [];
+                var responseText = body;
                 if (responseText.indexOf('WEBVTT') >= 0) {
                     OvenPlayerConsole.log("WEBVTT LOADED");
                     loadVttParser().then(WebVTT => {
@@ -47,7 +53,8 @@ const Loader = function(){
                     });
                 }else if(responseText.indexOf('SAMI') >= 0){
                     OvenPlayerConsole.log("SAMI LOADED");
-                    let parsedData = SamiParser(responseText, {});
+                    let buffered = new Buffer(responseText);
+                    let parsedData = SamiParser(iconv.decode(buffered, 'EUC-KR').toString(), {});
                     vttCues = convertToVTTCues(parsedData.result);
                     successCallback(vttCues);
                 }else{
@@ -57,10 +64,6 @@ const Loader = function(){
                     successCallback(vttCues);
                 }
 
-
-            } catch (error) {
-                //delete track.xhr;
-                errorCallback(error);
             }
         });
     };
