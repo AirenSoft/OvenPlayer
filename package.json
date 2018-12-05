@@ -37,7 +37,6 @@
     "file-system": "^2.2.2",
     "git-revision-webpack-plugin": "^3.0.3",
     "iconv-lite": "^0.4.24",
-    "jschardet": "^1.6.0",
     "less": "^3.9.0",
     "less-loader": "^4.1.0",
     "postcss-loader": "^2.1.6",

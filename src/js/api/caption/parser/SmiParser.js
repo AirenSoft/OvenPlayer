@@ -6,9 +6,6 @@
  *  https://github.com/elegantcoder/sami-parser
  *
  */
-const Buffer = require('buffer').Buffer;
-const iconv = require('iconv-lite');
-const jschardet = require('jschardet');
 
 const langCodes = ["ab","aa","af", "ak", "sq", "am", "ar", "an", "hy", "as", "av", "ae", "ay", "az", "bm", "ba", "eu", "be", "bn", "bh", "bi", "nb","bs","br","bg","my","es","ca","km","ch","ce","ny","ny","zh","za","cu","cu","cv","kw",
     "co","cr","hr","cs","da","dv","dv","nl","dz","en","eo","et","ee","fo","fj","fi","nl","fr","ff","gd","gl","lg","ka","de","ki","el","kl","gn","gu","ht","ht","ha","he","hz","hi","ho","hu","is","io","ig","id","ia","ie","iu","ik","ga",
@@ -181,14 +178,7 @@ const SmiParser = function(sami, options) {
             element = element.replace(reLineEnding, '');
             element = element.replace(reBr, "\n");
             innerText = strip_tags(element).trim();
-            //let buffer = new Buffer(innerText);
-            //let encoded = iconv.encode(responseText, 'utf-8');
-            //console.log(jschardet.detect(innerText).encoding);
-            //console.log(iconv.decode(buffer, jschardet.detect(innerText).encoding));
-            /*var strContents = new Buffer(innerText);
-            console.log(iconv.decode(strContents, 'euc-kr').toString('utf-8'));*/
 
-            //console.log(decodeURIComponent(escape(innerText)));
             //HSLEE : 20180530 - 우린 랭기지 구분이 필요 없다. 있는거 그대로 보여줄뿐
             item = {
                 start: startTime,
