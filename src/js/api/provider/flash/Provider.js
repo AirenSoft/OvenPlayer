@@ -214,7 +214,21 @@ const Provider = function(spec, playerConfig){
     that.setAutoQuality = (isAuto) => {
         //Do nothing
     };
+    that.getFramerate = () => {
+        return spec.framerate;
+    };
+    that.setFramerate = (framerate) => {
+        return spec.framerate = framerate;
+    };
+    that.seekFrame = (frameCount) =>{
+        let fps = spec.framerate;
+        let currentFrames = elFlash.getCurrentTime() * fps;
+        let newPosition = (currentFrames + frameCount) / fps;
+        newPosition = newPosition + 0.00001; // FIXES A SAFARI SEEK ISSUE. myVdieo.currentTime = 0.04 would give SMPTE 00:00:00:00 wheras it should give 00:00:00:01
 
+        that.pause();
+        that.seek(newPosition);
+    };
 
     that.stop = () =>{
         OvenPlayerConsole.log("CORE : stop() ");

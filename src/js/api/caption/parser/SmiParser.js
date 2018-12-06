@@ -169,8 +169,10 @@ const SmiParser = function(sami, options) {
             if (startTime === null || startTime < 0) {
                 error('ERROR_INVALID_TIME');
             }
-            //HSLEE : 20180530 - 우린 랭기지 구분이 필요 없다. 있는거 그대로 보여줄뿐
-            lang = getLanguage(element);
+
+            // We don't need complex language. cus SMI doens't obey the rules...
+            //lang = getLanguage(element);
+            lang = "ko";
             /*if (!lang) {
                 error('ERROR_INVALID_LANGUAGE');
             }*/
@@ -183,11 +185,10 @@ const SmiParser = function(sami, options) {
             item = {
                 start: startTime,
                 //languages: {},
-                language : lang,
+                //language : lang,
                 text: "",
                 contents: innerText
             };
-            //HSLEE : 20180530 - 우린 랭기지 구분이 필요 없다. 있는거 그대로 보여줄뿐
             if (lang) {
                 //item.languages[lang] = innerText;
                 item.text = innerText;
@@ -198,17 +199,12 @@ const SmiParser = function(sami, options) {
             }
 
         }
-        //HSLEE : 20180530 - 우린 랭기지 구분이 필요 없다. 있는거 그대로 보여줄뿐
         for (lang in tempRet) {
             langItem = tempRet[lang];
             langItem = _sort(langItem);
             langItem = makeEndTime(langItem);
-            //HSLEE : 이왕이면 SRT 파서와 포맷을 맞추자
-            //langItem.start = langItem.start / 1000;
-            //langItem.end = langItem.end / 1000;
             ret = ret.concat(langItem);
         }
-        //HSLEE : 20180530 - 우린 랭기지 구분이 필요 없다. 있는거 그대로 보여줄뿐
         //ret = _mergeMultiLanguages(ret);
         ret = _sort(ret);
         return ret;

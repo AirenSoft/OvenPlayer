@@ -136,13 +136,14 @@
   top: 0;
   bottom: 0;
   width: 100%;
+  //height: 100%;
   .ovp-media-element-container {
     display: block;
-    position: absolute;
+    /*position: absolute;
     top: 0;
     bottom: 0;
     left: 0;
-    right: 0;
+    right: 0;*/
     height: 100%;
     width: 100%;
     & > *{
@@ -340,7 +341,7 @@
     right: 0px;
     bottom: 0px;
     height: 54px;
-    z-index: 60;
+    //z-index: 60;
 
     .ovp-gradient-bottom {
       position: absolute;
@@ -373,7 +374,7 @@
         width: 100%;
         height: 16px;
         bottom: 0;
-        z-index: 28;
+        //z-index: 28;
       }
     }
 
@@ -384,7 +385,7 @@
       width: 100%;
       height: 50px;
       text-align: left;
-      z-index: 23;
+      //z-index: 23;
       .ovp-button {
         min-width: 30px;
         height: 30px;
@@ -484,7 +485,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 31;
+  //z-index: 31;
   outline: none;
 
   .ovp-play-background-color {
@@ -495,7 +496,7 @@
     position: relative;
     height: 100%;
     background: rgba(255,255,255,0.2);
-    z-index: 39;
+    //z-index: 39;
 
     .ovp-load-progress,
     .ovp-play-progress,
@@ -512,13 +513,13 @@
     }
     .ovp-play-progress {
       width: 0;
-      z-index: 34;
+      //z-index: 34;
       -webkit-transition: width 0.1s ease;
       transition: width 0.1s ease;
     }
     .ovp-load-progress {
       width: 0;
-      z-index: 33;
+      //z-index: 33;
       background-color: rgba(255,255,255,.5);
       -webkit-transition: width 0.5s ease;
       transition: width 0.5s ease;
@@ -526,7 +527,7 @@
     .ovp-hover-progress {
       left: 0;
       width: 0;
-      z-index: 35;
+      //z-index: 35;
       background-color: rgba(255,255,255,.6);
     }
 
@@ -536,7 +537,7 @@
     position: absolute;
     top: -5px;
     left: 0px;
-    z-index: 43;
+    //z-index: 43;
 
     -moz-transition: -moz-transform .1s cubic-bezier(0.4,0.0,1,1);
     -webkit-transition: -webkit-transform .1s cubic-bezier(0.4,0.0,1,1);
@@ -716,7 +717,7 @@
           height: 4px;
           margin-top: -2px;
           width: 80px;
-          z-index: -1;
+          //z-index: -1;
         }
         &:before {
           left: -58px;
@@ -795,7 +796,7 @@
   padding: 6px 0;
   background: rgba(28,28,28,0.9);
   text-shadow: 0 0 2px rgba(0,0,0,.5);
-  z-index: 2300;
+  z-index: 23;
   font-family: Roboto,Arial,Helvetica,sans-serif;
   font-weight : lighter;
   user-select: none;
@@ -869,7 +870,7 @@
   left: 50%;
   margin-left: -32px;
   margin-top: -32px;
-  z-index: 100000;
+  z-index: 1000;
   display : none;
 
   .lds-ellipsis {

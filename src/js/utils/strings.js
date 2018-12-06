@@ -1,7 +1,7 @@
 import _ from './underscore';
 
 export function trim(string) {
-    return string.replace(/^\s+|\s+$/g, '');
+    return string ? string.replace(/^\s+|\s+$/g, '') : "";
 }
 
 /**

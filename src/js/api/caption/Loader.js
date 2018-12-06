@@ -5,8 +5,11 @@ import SrtParser from "api/caption/parser/SrtParser";
 import SamiParser from "api/caption/parser/SmiParser";
 import VTTCue from "utils/captions/vttCue";
 import Request from "request";
-const Buffer = require('buffer').Buffer;
-const iconv = require('iconv-lite');
+import _ from "utils/underscore";
+import Buffer_ from "buffer";
+import Iconv from "iconv-lite";
+import Chardet from "chardet";
+const Buffer = Buffer_.Buffer;
 
 const Loader = function(){
     const that = {};
@@ -32,7 +35,14 @@ const Loader = function(){
             }else{
                 let cues = [];
                 let vttCues = [];
-                var responseText = body;
+                let buffered =[];
+
+                if(_.isArray(body)){
+                    buffered = body;
+                }else{
+                    buffered = new Buffer(body);
+                }
+                var responseText = Iconv.decode(buffered, Chardet.detect(buffered)).toString();
                 if (responseText.indexOf('WEBVTT') >= 0) {
                     OvenPlayerConsole.log("WEBVTT LOADED");
                     loadVttParser().then(WebVTT => {
@@ -53,8 +63,7 @@ const Loader = function(){
                     });
                 }else if(responseText.indexOf('SAMI') >= 0){
                     OvenPlayerConsole.log("SAMI LOADED");
-                    let buffered = new Buffer(responseText);
-                    let parsedData = SamiParser(iconv.decode(buffered, 'EUC-KR').toString(), {});
+                    let parsedData = SamiParser(responseText, {});
                     vttCues = convertToVTTCues(parsedData.result);
                     successCallback(vttCues);
                 }else{
