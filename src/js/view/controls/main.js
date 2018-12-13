@@ -57,7 +57,7 @@ const Controls = function($container, api){
             initTimeDisplay(data);
 
             if(api.getFramerate() > 0){
-                initFrameJumpButtons();
+                //initFrameJumpButtons();
             }else{
                 if(frameButtons){
                     frameButtons.destroy();
@@ -109,7 +109,7 @@ const Controls = function($container, api){
                 panelManager.add(RootPanel($current, api, panelData));
             }
         },
-        "resize window" : function(event, $current, template){
+        "resize body" : function(event, $current, template){
             event.preventDefault();
             setPanelMaxHeight();
         }

@@ -41,7 +41,7 @@ const RootPanel = function($container, api, data){
             let currentPlaybackRate = api.getPlaybackRate();
             for (let i = 0; i < playBackRates.length; i ++) {
                 let body = {
-                    title : (playBackRates[i] === 1? "Normal" : playBackRates[i]),
+                    title : playBackRates[i]+"x", //(playBackRates[i] === 1? "Normal" : playBackRates[i]),
                     isCheck : currentPlaybackRate === playBackRates[i],
                     value : playBackRates[i],
                     description : playBackRates[i],
@@ -65,9 +65,9 @@ const RootPanel = function($container, api, data){
         }else if(panelType === "quality"){
             let qualityLevels = api.getQualityLevels();
             panel.body.push({
-                title : "auto",
+                title : "AUTO",
                 isCheck : api.isAutoQuality(),
-                value : "auto",
+                value : "AUTO",
                 panelType : panelType
             });
             for (let i = 0; i < qualityLevels.length; i ++) {
@@ -83,7 +83,7 @@ const RootPanel = function($container, api, data){
         }else if(panelType === "caption"){
             let captions = api.getCaptionList();
             panel.body.push({
-                title : "off",
+                title : "OFF",
                 isCheck : api.getCurrentCaption() === -1,
                 value : -1,
                 panelType : panelType
@@ -100,13 +100,13 @@ const RootPanel = function($container, api, data){
 
         }else if(panelType === "display"){
             let displayModes = [
-                "timecode",
-                "framecode"
+                "Play time",
+                "Framecode"
             ];
             for (let i = 0; i < displayModes.length; i ++) {
                 let body = {
                     title : displayModes[i],
-                    isCheck : api.isTimecodeMode() ? (displayModes[i] === "timecode") : (displayModes[i] === "framecode"),
+                    isCheck : api.isTimecodeMode() ? (displayModes[i] === "Play time") : (displayModes[i] === "Framecode"),
                     value : displayModes[i],
                     panelType : panelType
                 };
@@ -126,7 +126,6 @@ const RootPanel = function($container, api, data){
     };
     let setPanelMaxHeight = function(){
         if($root.find(".ovp-setting-panel")){
-            console.log( $root.height() - $root.find(".ovp-bottom-panel").height() + "px");
             $root.find(".ovp-setting-panel").css("max-height",  $root.height() - $root.find(".ovp-bottom-panel").height() + "px");
         }
     };
@@ -215,8 +214,8 @@ export const extractRootPanelData = function(api){
     if(api.getDuration() !== Infinity && currentSource && currentSource.type !== PROVIDER_RTMP){
         let body = {
             title : PANEL_TITLE.speed,
-            value :  api.getPlaybackRate() === 1 ? "Normal" : api.getPlaybackRate(),
-            description :  api.getPlaybackRate() === 1 ? "Normal" : api.getPlaybackRate(),
+            value :  api.getPlaybackRate() + "x",
+            description :  api.getPlaybackRate() + "x",
             panelType : "speed",
             hasNext : true
         };
@@ -250,8 +249,8 @@ export const extractRootPanelData = function(api){
 
         let body = {
             title : PANEL_TITLE.caption,
-            value : captions[currentCaption] ? captions[currentCaption].label : "off",
-            description : captions[currentCaption] ? captions[currentCaption].label : "off",
+            value : captions[currentCaption] ? captions[currentCaption].label : "OFF",
+            description : captions[currentCaption] ? captions[currentCaption].label : "OFF",
             panelType : "caption",
             hasNext : true
         };
@@ -261,8 +260,8 @@ export const extractRootPanelData = function(api){
     if(framerate > 0){
         let body = {
             title : PANEL_TITLE.display,
-            value : api.isTimecodeMode() ? "timecode" : "framecode",
-            description : api.isTimecodeMode() ? "timecode" : "framecode",
+            value : api.isTimecodeMode() ? "Play time" : "Framecode",
+            description : api.isTimecodeMode() ? "Play time" : "Framecode",
             panelType : "display",
             hasNext : true
         };

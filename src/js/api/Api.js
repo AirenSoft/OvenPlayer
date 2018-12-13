@@ -20,6 +20,7 @@ const Api = function(container){
     const that = {};
     EventEmitter(that);
 
+
     OvenPlayerConsole.log("[[OvenPlayer]] v."+ version);
     OvenPlayerConsole.log("API loaded.");
     let captionManager = CaptionManager(that);
@@ -130,11 +131,6 @@ const Api = function(container){
         OvenPlayerConsole.log("API : init() sources : " , playlistManager.getCurrentSources());
         initProvider();
     };
-
-    /*that.getContainerId = () =>{
-        return container.id;
-    };*/
-
     that.getConfig = () => {
         OvenPlayerConsole.log("API : getConfig()", playerConfig.getConfig());
         return playerConfig.getConfig();
@@ -332,13 +328,11 @@ const Api = function(container){
 
     that.getBuffer = () => {
         if(!currentProvider){return null;}
-
         OvenPlayerConsole.log("API : getBuffer() ", currentProvider.getBuffer());
         currentProvider.getBuffer();
     };
     that.getState = () => {
         if(!currentProvider){return null;}
-
         OvenPlayerConsole.log("API : getState() ", currentProvider.getState());
         return currentProvider.getState();
     };
@@ -366,9 +360,12 @@ const Api = function(container){
         that.off();
 
         OvenPlayerConsole.log("API : remove() - lazyQueue, currentProvider, providerController, playlistManager, playerConfig, api event destroed. ");
-        logManager.destroy();
-        logManager = null;
         OvenPlayerSDK.removePlayer(that.getContainerId());
+        if(OvenPlayerSDK.getPlayerList().length  === 0){
+            console.log("OvenPlayerSDK.playerList",  OvenPlayerSDK.getPlayerList());
+            logManager.destroy();
+            logManager = null;
+        }
     };
 
 

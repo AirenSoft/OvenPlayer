@@ -46,13 +46,14 @@ export const extractExtension = function(path) {
 export function naturalHms(second) {
     let secNum = parseInt(second, 10);
     if(!second){
-        return "--:--";
+        return "00:00";
     }
     let hours   = Math.floor(secNum / 3600);
     let minutes = Math.floor((secNum - (hours * 3600)) / 60);
     let seconds = secNum - (hours * 3600) - (minutes * 60);
 
-    if (hours > 0) {minutes = "0"+minutes;}
+    //if (hours > 0) {minutes = "0"+minutes;}
+    if (minutes < 10) {minutes = "0"+minutes;}
     if (seconds < 10) {seconds = "0"+seconds;}
 
     if (hours > 0) {

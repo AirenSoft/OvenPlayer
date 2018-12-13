@@ -2,7 +2,7 @@
  * Created by hoho on 2018. 5. 24..
  */
 
-const logger = function(){
+const logger = function(id){
     const that = {};
     let prevConsoleLog = null;
 
@@ -18,6 +18,9 @@ const logger = function(){
         prevConsoleLog = console.log;
         OvenPlayerConsole['log'] = function(){};
     };
+    /*that.log = () => {
+
+    };*/
     that.destroy = () =>{
         window.OvenPlayerConsole = null;
     };

@@ -27,7 +27,7 @@ const TimeDisplayPanel = function($container, api, data){
         "click .ovp-setting-item": function (event, $current, template) {
             event.preventDefault();
             let value = LA$(event.currentTarget).attr("ovp-data-value");
-            api.setTimecodeMode(value === "timecode");
+            api.setTimecodeMode(value === "Play time");
             panelManager.clear();
         },
         "click .ovp-setting-title" : function(event, $current, template){

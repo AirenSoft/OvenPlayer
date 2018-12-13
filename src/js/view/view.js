@@ -26,6 +26,7 @@ require('../../css/ovenplayer.less');
 
 const View = function($container){
     let viewTemplate = "", controls = "", helper = "", $playerRoot, contextPanel = "", api = "", autoHideTimer = "", playerState = STATE_IDLE;
+    let isShiftPressed = false;
     let panelManager = PanelManager();
 
     let setHide = function (hide, autoHide) {
@@ -155,20 +156,32 @@ const View = function($container){
                 setHide(true);
             }
         },
-
         "keydown .ovenplayer" : function(event, $current, template){
+            let frameMode = api.getFramerate();
             switch(event.keyCode){
+                case 16 :   //shift
+                    event.preventDefault();
+                    isShiftPressed = true;
+                    break;
                 case 32 :   //sapce
                     event.preventDefault();
                     togglePlayPause();
                     break;
                 case 37 : //arrow left
                     event.preventDefault();
-                    seek(5, true);
+                    if(isShiftPressed && frameMode){
+                        api.seekFrame(-1);
+                    }else{
+                        seek(5, true);
+                    }
                     break;
                 case 39 : //arrow right
                     event.preventDefault();
-                    seek(5, false);
+                    if(isShiftPressed && frameMode){
+                        api.seekFrame(1);
+                    }else{
+                        seek(5, false);
+                    }
                     break;
                 case 38 : //arrow up
                     event.preventDefault();
@@ -179,7 +192,17 @@ const View = function($container){
                     volume(false);
                     break;
             }
-        }/*,
+
+        },
+        "keyup .ovenplayer" : function(event, $current, template){
+            switch(event.keyCode) {
+                case 16 :   //shift
+                    event.preventDefault();
+                    isShiftPressed = false;
+                    break;
+            }
+
+        },
         "contextmenu .ovenplayer" : function(event, $current, template){
             event.stopPropagation();
             if(!LA$(event.currentTarget).find("object")){
@@ -187,7 +210,7 @@ const View = function($container){
                 createContextPanel(event.pageX, event.pageY);
                 return false;
             }
-        }*/
+        }
     };
 
 
