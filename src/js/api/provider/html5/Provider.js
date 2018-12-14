@@ -63,7 +63,9 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
             });*/
 
             if(posterImage){
-                elVideo.poster = posterImage;
+                //There is no way to verify the posterImage URL. This will be blnak until have a good idea.
+                //elVideo.style.background = "transparent url('"+posterImage+"') no-repeat 0 0";
+                //elVideo.poster = posterImage;
             }
         }
     };
