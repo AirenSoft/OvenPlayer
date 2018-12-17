@@ -33,7 +33,6 @@ const Loader = function(){
                 }else{
                     buffered = new Buffer(body);
                 }
-                console.log(body);
                 if (body.indexOf('WEBVTT') >= 0) {
                     OvenPlayerConsole.log("WEBVTT LOADED");
                     loadVttParser().then(WebVTT => {
