@@ -127,7 +127,7 @@ const extendConfig = function (){
                     })
                 ]
             },
-            devtool: 'source-map',
+            devtool: false,
             output: {
                 filename: '[name].js',
                 path: path.resolve(__dirname, 'dist/production/ovenplayer')

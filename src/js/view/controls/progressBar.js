@@ -143,7 +143,7 @@ const ProgressBar = function($container, api){
         api.off(CONTENT_BUFFER, null, template);
     };
     const events = {
-        "resize window" : function(event, $current, template){
+        "resize body" : function(event, $current, template){
             event.preventDefault();
 
             positionElements(currentPlayingPercentage);

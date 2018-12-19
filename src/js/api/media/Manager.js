@@ -30,7 +30,7 @@ const Manager = function(container, providerType){
 
             flashvars = document.createElement('param');
             flashvars.setAttribute('name', 'flashvars');
-            //playerId uses SWF for ExternalInterface.call().
+            //playerId is to use SWF for ExternalInterface.call().
             flashvars.setAttribute('value', 'playerId='+rootId);
 
             allowscriptaccess = document.createElement('param');
@@ -61,11 +61,16 @@ const Manager = function(container, providerType){
             bgcolor.setAttribute('name', 'bgcolor');
             bgcolor.setAttribute('value', '#000000');
 
+            let test = document.createElement('param');
+            test.setAttribute('name', 'SCALE');
+            test.setAttribute('value', 'default');
+
             mediaElement = document.createElement('object');
             mediaElement.setAttribute('id', rootId+"-flash");
             mediaElement.setAttribute('name', rootId+"-flash");
             mediaElement.setAttribute('width', '100%');
             mediaElement.setAttribute('height', '100%');
+            mediaElement.setAttribute('scale', 'default');
 
             if(browserType !== "oldIE"){
                 mediaElement.setAttribute('data', SWFpath);
@@ -75,6 +80,7 @@ const Manager = function(container, providerType){
 
                 mediaElement.appendChild(movie);
             }
+            mediaElement.appendChild(test);
             mediaElement.appendChild(bgcolor);
             mediaElement.appendChild(qual);
             mediaElement.appendChild(allowfullscreen);

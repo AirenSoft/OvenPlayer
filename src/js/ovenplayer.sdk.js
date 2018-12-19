@@ -15,6 +15,15 @@ const OvenPlayerSDK = window.OvenPlayerSDK = {};
 const playerList = OvenPlayerSDK.playerList = [];
 
 export const checkAndGetContainerElement = function(container) {
+    if (!window.console || Object.keys(window.console).length === 0) {
+        window.console = {
+            log: function() {},
+            info: function() {},
+            error: function() {},
+            warn: function() {}
+        };
+    }
+
 
     if (!container) {
 

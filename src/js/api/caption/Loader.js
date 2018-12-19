@@ -4,7 +4,6 @@
 import SrtParser from "api/caption/parser/SrtParser";
 import VTTCue from "utils/captions/vttCue";
 import Request from "utils/downloader";
-import _ from "utils/underscore";
 
 const Loader = function(){
     const that = {};
@@ -26,13 +25,7 @@ const Loader = function(){
             }else{
                 let cues = [];
                 let vttCues = [];
-                let buffered =[];
 
-                if(_.isArray(body)){
-                    buffered = body;
-                }else{
-                    buffered = new Buffer(body);
-                }
                 if (body.indexOf('WEBVTT') >= 0) {
                     OvenPlayerConsole.log("WEBVTT LOADED");
                     loadVttParser().then(WebVTT => {

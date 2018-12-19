@@ -8,13 +8,11 @@
 //2018-12-14 underdog@airensoft.com pre decoding
 import Iconv from "iconv-lite";
 import Chardet from "chardet";
-
-var http = require('http');
-var util = require('utils-extend');
-var url = require('url');
-var path = require('path');
-var querystring = require('querystring');
-//var file = require('file-system');
+import http from "http";
+import url from "url";
+import path from "path";
+import querystring from "querystring";
+import _ from "utils/underscore";
 
 /**
  * @description
@@ -37,10 +35,10 @@ function request(options, callback) {
         json: false
     };
 
-    if (util.isString(options)) {
+    if (_.isString(options)) {
         opts.url = options;
     } else {
-        util.extend(opts, options);
+        _.extend(opts, options);
     }
 
     // Append request data
@@ -55,7 +53,7 @@ function request(options, callback) {
 
     // Extend request url object
     //2018-12-14 underdog@airensoft.com Added 'protocol' params. cus This is don't loading https file.
-    util.extend(opts, util.pick(url.parse(opts.url), 'protocol', 'hostname', 'port', 'path', 'auth'));
+    _.extend(opts, _.pick(url.parse(opts.url), 'protocol', 'hostname', 'port', 'path', 'auth'));
     delete opts.url;
 
     var req = http.request(opts, function(res) {
