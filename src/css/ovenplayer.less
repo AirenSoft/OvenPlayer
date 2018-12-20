@@ -128,7 +128,10 @@
     padding-bottom: 56.25%; /*16:9*/
   }
 
-
+  & ::-webkit-scrollbar {width:5px; height:8px;}
+  & ::-webkit-scrollbar-button:start:decrement, ::-webkit-scrollbar-button:end:increment {display: block; height:3px; background:#2f2f3e;}
+  & ::-webkit-scrollbar-track {background: #2f2f3e; -webkit-border-radius: 10px; border-radius:10px;}
+  & ::-webkit-scrollbar-thumb {height: 50px; width: 50px; background:#606071; -webkit-border-radius: 8px; border-radius: 8px;}
 }
 
 .ovp-player {
