@@ -3,31 +3,31 @@
  */
 import TextViewTemplate from 'view/example/mainTemplate';
 import ViewTemplate from 'view/viewTemplate';
-import HelperTemplate from 'view/helper/mainTemplate';
-import BigButtonTemplate from 'view/helper/bigButtonTemplate';
-import MessageBoxTemplate from 'view/helper/messageBoxTemplate';
-import SpinnerTemplate from 'view/helper/spinnerTemplate';
-import ContextPanelTemplate from 'view/helper/contextPanelTemplate';
-import CaptionViewerTemplate from 'view/helper/captionViewerTemplate';
+import HelpersTemplate from 'view/components/helpers/mainTemplate';
+import BigButtonTemplate from 'view/components/helpers/bigButtonTemplate';
+import MessageBoxTemplate from 'view/components/helpers/messageBoxTemplate';
+import SpinnerTemplate from 'view/components/helpers/spinnerTemplate';
+import ContextPanelTemplate from 'view/components/helpers/contextPanelTemplate';
+import CaptionViewerTemplate from 'view/components/helpers/captionViewerTemplate';
 
-import ControlsTemplate from 'view/controls/mainTemplate';
-import VolumeButtonTemplate from 'view/controls/volumeButtonTemplate';
-import ProgressBarTemplate from 'view/controls/progressBarTemplate';
-import PlayButtonTemplate from 'view/controls/playButtonTemplate';
-import FrameButtonsTemplate from 'view/controls/frameButtonsTemplate';
-import TimeDisplayTemplate from 'view/controls/timeDisplayTemplate';
-import FullScreenButtonTemplate from 'view/controls/fullScreenButtonTemplate';
-import RootPanelTemplate from 'view/controls/settingPanel/rootPanelTemplate';
-import SpeedPanelTemplate from 'view/controls/settingPanel/rootPanelTemplate';
-import SourcePanelTemplate from 'view/controls/settingPanel/rootPanelTemplate';
-import QualityPanelTemplate from 'view/controls/settingPanel/rootPanelTemplate';
-import CaptionPanelTemplate from 'view/controls/settingPanel/rootPanelTemplate';
-import TimeDisplayPanelTemplate from 'view/controls/settingPanel/rootPanelTemplate';
+import ControlsTemplate from 'view/components/controls/mainTemplate';
+import VolumeButtonTemplate from 'view/components/controls/volumeButtonTemplate';
+import ProgressBarTemplate from 'view/components/controls/progressBarTemplate';
+import PlayButtonTemplate from 'view/components/controls/playButtonTemplate';
+import FrameButtonsTemplate from 'view/components/controls/frameButtonsTemplate';
+import TimeDisplayTemplate from 'view/components/controls/timeDisplayTemplate';
+import FullScreenButtonTemplate from 'view/components/controls/fullScreenButtonTemplate';
+import PanelsTemplate from 'view/components/controls/settingPanel/mainTemplate';
+import SpeedPanelTemplate from 'view/components/controls/settingPanel/mainTemplate';
+import SourcePanelTemplate from 'view/components/controls/settingPanel/mainTemplate';
+import QualityPanelTemplate from 'view/components/controls/settingPanel/mainTemplate';
+import CaptionPanelTemplate from 'view/components/controls/settingPanel/mainTemplate';
+import TimeDisplayPanelTemplate from 'view/components/controls/settingPanel/mainTemplate';
 
 const Templates = {
     TextViewTemplate,
     ViewTemplate,
-    HelperTemplate,
+    HelpersTemplate,
     BigButtonTemplate,
     MessageBoxTemplate,
     SpinnerTemplate,
@@ -41,7 +41,7 @@ const Templates = {
     FrameButtonsTemplate,
     TimeDisplayTemplate,
     FullScreenButtonTemplate,
-    RootPanelTemplate,
+    PanelsTemplate,
     SpeedPanelTemplate,
     SourcePanelTemplate,
     QualityPanelTemplate,

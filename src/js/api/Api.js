@@ -2,7 +2,6 @@ import CaptionManager from "api/caption/Manager";
 import Configurator from "api/Configurator";
 import EventEmitter from "api/EventEmitter";
 import LazyCommandExecutor from "api/LazyCommandExecutor";
-import LogManager from "utils/logger";
 import PlaylistManager from "api/playlist/Manager";
 import ProviderController from "api/provider/Controller";
 import {READY, ERROR, CONTENT_TIME_MODE_CHANGED, INIT_ERROR, DESTROY, NETWORK_UNSTABLED, PLAYER_FILE_ERROR, PROVIDER_DASH, PROVIDER_HLS, PROVIDER_WEBRTC, PROVIDER_HTML5, PROVIDER_RTMP} from "api/constants";
@@ -16,7 +15,6 @@ import {ApiRtmpExpansion} from 'api/ApiExpansions';
  * */
 
 const Api = function(container){
-    let logManager = LogManager();
     const that = {};
     EventEmitter(that);
 
@@ -124,9 +122,6 @@ const Api = function(container){
             , 'getMute', 'getBuffer', 'getState' , 'getQualityLevels'
         ]);
         playerConfig = Configurator(options, that);
-        if(!playerConfig.isDebug()){
-            logManager.disable();
-        }
         OvenPlayerConsole.log("API : init()");
         OvenPlayerConsole.log("API : init() config : ", playerConfig);
 
@@ -377,8 +372,6 @@ const Api = function(container){
         OvenPlayerSDK.removePlayer(that.getContainerId());
         if(OvenPlayerSDK.getPlayerList().length  === 0){
             console.log("OvenPlayerSDK.playerList",  OvenPlayerSDK.getPlayerList());
-            logManager.destroy();
-            logManager = null;
         }
     };
 

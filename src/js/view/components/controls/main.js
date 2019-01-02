@@ -2,14 +2,14 @@
  * Created by hoho on 2018. 7. 20..
  */
 import OvenTemplate from "view/engine/OvenTemplate";
-import PlayButton from "view/controls/playButton";
-import FrameButtons from "view/controls/frameButtons";
-import VolumeButton from "view/controls/volumeButton";
-import ProgressBar from "view/controls/progressBar";
+import PlayButton from "view/components/controls/playButton";
+import FrameButtons from "view/components/controls/frameButtons";
+import VolumeButton from "view/components/controls/volumeButton";
+import ProgressBar from "view/components/controls/progressBar";
 import LA$ from 'utils/likeA$';
-import TimeDisplay from "view/controls/timeDisplay";
-import FullScreenButton from "view/controls/fullScreenButton";
-import RootPanel, {extractRootPanelData} from "view/controls/settingPanel/rootPanel";
+import TimeDisplay from "view/components/controls/timeDisplay";
+import FullScreenButton from "view/components/controls/fullScreenButton";
+import Panels, {generateMainData} from "view/components/controls/settingPanel/main";
 import PanelManager from "view/global/PanelManager";
 import {
     READY,
@@ -105,8 +105,8 @@ const Controls = function($container, api){
             if(panelManager.size() > 0){
                 panelManager.clear();
             }else{
-                let panelData = extractRootPanelData(api);
-                panelManager.add(RootPanel($current, api, panelData));
+                let panelData = generateMainData(api);
+                panelManager.add(Panels($current, api, panelData));
             }
         },
         "resize body" : function(event, $current, template){

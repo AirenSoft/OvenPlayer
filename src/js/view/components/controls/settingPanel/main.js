@@ -5,11 +5,11 @@ import OvenTemplate from 'view/engine/OvenTemplate';
 import PanelManager from "view/global/PanelManager";
 import LA$ from 'utils/likeA$';
 import sizeHumanizer from "utils/sizeHumanizer";
-import SpeedPanel from "view/controls/settingPanel/speedPanel";
-import SourcePanel from "view/controls/settingPanel/sourcePanel";
-import QualityPanel from "view/controls/settingPanel/qualityPanel";
-import CaptionPanel from "view/controls/settingPanel/captionPanel";
-import TimeDisplayPanel from "view/controls/settingPanel/timeDisplayPanel";
+import SpeedPanel from "view/components/controls/settingPanel/speedPanel";
+import SourcePanel from "view/components/controls/settingPanel/sourcePanel";
+import QualityPanel from "view/components/controls/settingPanel/qualityPanel";
+import CaptionPanel from "view/components/controls/settingPanel/captionPanel";
+import TimeDisplayPanel from "view/components/controls/settingPanel/timeDisplayPanel";
 import {
     CONTENT_LEVEL_CHANGED, PROVIDER_RTMP
 } from "api/constants";
@@ -22,7 +22,7 @@ const PANEL_TITLE = {
     "display" : "Display"
 };
 
-const RootPanel = function($container, api, data){
+const Panels = function($container, api, data){
     const $root = LA$("#"+api.getContainerId());
     let panelManager = PanelManager();
 
@@ -184,14 +184,14 @@ const RootPanel = function($container, api, data){
         }
     };
 
-    return OvenTemplate($container, "RootPanel", data, events, onRendered, onDestroyed );
+    return OvenTemplate($container, "Panels", data, events, onRendered, onDestroyed );
 
 };
 
-export default RootPanel;
+export default Panels;
 
 
-export const extractRootPanelData = function(api){
+export const generateMainData = function(api){
     let panel = {
         id : "panel-"+new Date().getTime(),
         title : "Settings",

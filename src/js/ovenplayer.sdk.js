@@ -15,16 +15,6 @@ const OvenPlayerSDK = window.OvenPlayerSDK = {};
 const playerList = OvenPlayerSDK.playerList = [];
 
 export const checkAndGetContainerElement = function(container) {
-    if (!window.console || Object.keys(window.console).length === 0) {
-        window.console = {
-            log: function() {},
-            info: function() {},
-            error: function() {},
-            warn: function() {}
-        };
-    }
-
-
     if (!container) {
 
         // TODO(rock): Should cause an error.
@@ -134,7 +124,7 @@ OvenPlayerSDK.removePlayer = function(playerId) {
  * Generate webrtc source for player source type.
  *
  * @param      {Object | Array}  source   webrtc source
- * @return     {Array}  Player source Obejct.
+ * @return     {Array}  Player source Object.
  */
 OvenPlayerSDK.generateWebrtcUrls = function(sources) {
     return (_.isArray(sources) ? sources : [sources]).map(function(source, index){
@@ -142,6 +132,21 @@ OvenPlayerSDK.generateWebrtcUrls = function(sources) {
             return {file : source.host + "/" + source.application + "/" + source.stream, type : "webrtc", label : source.label ? source.label : "webrtc-"+(index+1) };
         }
     });
+};
+
+/**
+ * Whether show the player core log or not.
+ *
+ * @param      {boolean}  boolean   run debug mode or not.
+ * @return     {boolean}  run debug mode or not.
+ */
+OvenPlayerSDK.debug = function(isDebugMode) {
+    if(isDebugMode){
+        window.OvenPlayerConsole = {log : window['console']['log']};
+    }else{
+        OvenPlayerConsole['log'] = function(){};
+    }
+    return isDebugMode;
 };
 
 export default OvenPlayerSDK;

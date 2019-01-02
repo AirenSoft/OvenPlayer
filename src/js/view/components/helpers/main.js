@@ -2,10 +2,10 @@
  * Created by hoho on 2018. 7. 24..
  */
 import OvenTemplate from "view/engine/OvenTemplate";
-import BigButton from "view/helper/bigButton";
-import MessageBox from "view/helper/messageBox";
-import CaptionViewer from "view/helper/captionViewer";
-import Spinner from "view/helper/spinner";
+import BigButton from "view/components/helpers/bigButton";
+import MessageBox from "view/components/helpers/messageBox";
+import CaptionViewer from "view/components/helpers/captionViewer";
+import Spinner from "view/components/helpers/spinner";
 
 import {
     READY,
@@ -22,7 +22,7 @@ import {
     NETWORK_UNSTABLED
 } from "api/constants";
 
-const Helper = function($container, api){
+const Helpers = function($container, api){
     let bigButton = "", messageBox = "",  captionViewer = "", spinner = "";
 
     const onRendered = function($current, template){
@@ -131,7 +131,7 @@ const Helper = function($container, api){
 
     };
 
-    return OvenTemplate($container, "Helper", null, events, onRendered, onDestroyed );
+    return OvenTemplate($container, "Helpers", null, events, onRendered, onDestroyed );
 };
 
-export default Helper;
+export default Helpers;

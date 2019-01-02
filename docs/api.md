@@ -71,6 +71,15 @@ or
 ]
 ```
 
+#### `player` = OvenPlayer.debug(`true or false`)
+
+Whether run a player with debug mode or not.
+
+||Type|Memo
+|-|-|-|
+|`true or false`|Boolean| Whether run the debug mode or not||
+
+
 ## Instance Methods
         
 ####  `config` = player.getConfig()

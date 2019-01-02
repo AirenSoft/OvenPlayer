@@ -2,10 +2,10 @@
  * Created by hoho on 2018. 7. 20..
  */
 import OvenTemplate from 'view/engine/OvenTemplate';
-import Helper from 'view/helper/main';
-import Controls from 'view/controls/main';
+import Helpers from 'view/components/helpers/main';
+import Controls from 'view/components/controls/main';
 import PanelManager from "view/global/PanelManager";
-import ContextPanel from 'view/helper/contextPanel';
+import ContextPanel from 'view/components/helpers/contextPanel';
 import LA$ from 'utils/likeA$';
 import {
     READY,
@@ -220,7 +220,7 @@ const View = function($container){
         },
         setApi: function (playerInstance) {
             api = playerInstance;
-            helper = Helper($playerRoot.find(".ovp-ui"), playerInstance);
+            helper = Helpers($playerRoot.find(".ovp-ui"), playerInstance);
             controls = Controls($playerRoot.find(".ovp-ui"), playerInstance);
 
             api.on(READY, function(data) {
