@@ -2,7 +2,7 @@
  * Created by hoho on 2018. 5. 17..
  */
 import CaptionLoader from 'api/caption/Loader';
-import {READY, ERROR, CONTENT_TIME, CONTENT_CAPTION_CUE_CHANGED, CONTENT_CAPTION_CHANGED, PLAYER_CAPTION_ERROR} from "api/constants";
+import {READY, ERROR, CONTENT_META, CONTENT_TIME, CONTENT_CAPTION_CUE_CHANGED, CONTENT_CAPTION_CHANGED, PLAYER_CAPTION_ERROR} from "api/constants";
 import _ from "utils/underscore";
 
 const isSupport = function(kind){
@@ -51,27 +51,27 @@ const Manager = function(api){
         currentCaptionIndex = index;
         api.trigger(CONTENT_CAPTION_CHANGED, currentCaptionIndex);
     };
+    if(api.getConfig().playlist && api.getConfig().playlist.length > 0){
+        let playlist = api.getConfig().playlist[0];
+        if(playlist && playlist.tracks && playlist.tracks.length > 0){
+            for(let i = 0; i < playlist.tracks.length; i ++){
+                const track = playlist.tracks[i];
+                if(isSupport(track.kind) && ! _.findWhere(track, {file : track.file})){
+                    //that.flushCaptionList(currentCaptionIndex);
 
-    api.on(READY, function(){
-        if(api.getConfig().playlist && api.getConfig().playlist.length > 0){
-            let playlist = api.getConfig().playlist[0];
-            if(playlist && playlist.tracks && playlist.tracks.length > 0){
-                for(let i = 0; i < playlist.tracks.length; i ++){
-                    const track = playlist.tracks[i];
-                    if(isSupport(track.kind) && ! _.findWhere(track, {file : track.file})){
-                        captionLoader.load(track, function(vttCues){
-                            if(vttCues && vttCues.length > 0){
-                                let captionId = bindTrack(track, vttCues);
-                            }
-                        }, function(error){
-                            api.trigger(ERROR, {code : PLAYER_CAPTION_ERROR, reason : "caption load error.", message : "caption load error.", error : error});
-                        });
-                    }
+                    captionLoader.load(track, function(vttCues){
+                        if(vttCues && vttCues.length > 0){
+                            let captionId = bindTrack(track, vttCues);
+                        }
+                    }, function(error){
+                        api.trigger(ERROR, {code : PLAYER_CAPTION_ERROR, reason : "caption load error.", message : "caption load error.", error : error});
+                    });
                 }
-
             }
+
         }
-    });
+    }
+
     api.on(CONTENT_TIME, function(meta){
         let position = meta.position;
         if(currentCaptionIndex > -1 && captionList[currentCaptionIndex]){
@@ -120,6 +120,10 @@ const Manager = function(api){
         }else{
             return null;
         }
+    };
+    that.destroy = () => {
+        captionList = [];
+        api.off(CONTENT_TIME, null, that);
     };
 
     return that;

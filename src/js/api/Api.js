@@ -23,12 +23,13 @@ const Api = function(container){
 
     OvenPlayerConsole.log("[[OvenPlayer]] v."+ version);
     OvenPlayerConsole.log("API loaded.");
-    let captionManager = CaptionManager(that);
+
     let playlistManager = PlaylistManager();
     let providerController = ProviderController();
     let currentProvider = "";
     let playerConfig = "";
     let lazyQueue = "";
+    let captionManager = "";
 
     const initProvider = function(lastPlayPosition){
         const pickQualityFromSource = (sources) =>{
@@ -52,11 +53,13 @@ const Api = function(container){
                 currentProvider = null;
             }
 
+
             let currentSourceIndex = pickQualityFromSource(playlistManager.getCurrentSources());
             OvenPlayerConsole.log( "current source index : "+ currentSourceIndex);
 
             //Call Provider.
             currentProvider = Providers[currentSourceIndex](container, playerConfig);
+
 
             if(currentProvider.getName() === PROVIDER_RTMP){
                 //If provider type is RTMP, we accepts RtmpExpansion.
@@ -129,6 +132,11 @@ const Api = function(container){
 
         playlistManager.setPlaylist(playerConfig.getPlaylist());
         OvenPlayerConsole.log("API : init() sources : " , playlistManager.getCurrentSources());
+
+
+        captionManager = CaptionManager(that);
+        OvenPlayerConsole.log("API : init() captions");
+
         initProvider();
     };
     that.getConfig = () => {
@@ -347,10 +355,16 @@ const Api = function(container){
 
         OvenPlayerConsole.log("API : remove() ");
         lazyQueue.destroy();
+        if(captionManager){
+            captionManager.destroy();
+            captionManager = null;
+        }
+
         if(currentProvider){
             currentProvider.destroy();
             currentProvider = null;
         }
+
         providerController = null;
         playlistManager = null;
         playerConfig = null;
