@@ -14,7 +14,7 @@ import Provider from "api/provider/flash/Provider";
 const Rtmp = function(container, playerConfig){
     let that = {};
     let superDestroy_func = null;
-    let mediaManager = MediaManager(container, PROVIDER_RTMP);
+    let mediaManager = MediaManager(container, PROVIDER_RTMP, playerConfig.isLoop());
     let element = mediaManager.create();
 
     let spec = {

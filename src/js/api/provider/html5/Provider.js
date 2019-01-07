@@ -26,7 +26,7 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
     let listener = EventsListener(spec.extendedElement, that);
     let elVideo = extractVideoElement(spec.extendedElement);
     let posterImage = playerConfig.getConfig().image||"";
-    elVideo.playbackRate = elVideo.defaultPlaybackRate = playerConfig.getDefaultPlaybackRate();
+    elVideo.playbackRate = elVideo.defaultPlaybackRate = playerConfig.getPlaybackRate();
 
 
     const _load = (lastPlayPosition) =>{
@@ -178,6 +178,16 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
 
         return new Promise(function (resolve, reject) {
             resolve();
+
+            if(playerConfig.isAutoStart()){
+                that.play();
+            }
+            if(playerConfig.isMute()){
+                that.setMute(true);
+            }
+            if(playerConfig.getVolume()){
+                that.setVolume(playerConfig.getVolume());
+            }
         });
 
     };

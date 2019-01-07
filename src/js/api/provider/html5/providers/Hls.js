@@ -18,7 +18,7 @@ const Hls = function(container, playerConfig){
     let hls = null;
     let superDestroy_func = null;
 
-    let mediaManager = MediaManager(container, PROVIDER_HLS);
+    let mediaManager = MediaManager(container, PROVIDER_HLS, playerConfig.isLoop());
     let element = mediaManager.create();
 
     try {

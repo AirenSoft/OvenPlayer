@@ -30,7 +30,6 @@ const TimeDisplay = function($container, api, data){
 
             api.on(CONTENT_TIME_MODE_CHANGED, function(isTimecodeMode){
                 isTimecode = isTimecodeMode;
-                console.log("CONTENT_TIME_MODE_CHANGED : ", isTimecodeMode);
                 if(isTimecode){
                     $duration.text(convertHumanizeTime(data.duration));
                 }else{

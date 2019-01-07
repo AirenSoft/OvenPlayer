@@ -226,7 +226,7 @@ const Api = function(container){
         if(!currentProvider){return null;}
 
         OvenPlayerConsole.log("API : setPlaybackRate() ", playbackRate);
-        return currentProvider.setPlaybackRate(playerConfig.setDefaultPlaybackRate(playbackRate));
+        return currentProvider.setPlaybackRate(playerConfig.setPlaybackRate(playbackRate));
     };
     that.getPlaybackRate = () =>{
         if(!currentProvider){return null;}

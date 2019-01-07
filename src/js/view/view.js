@@ -220,11 +220,15 @@ const View = function($container){
         },
         setApi: function (playerInstance) {
             api = playerInstance;
+            let showControlBar = api.getConfig() && api.getConfig().controls;
+
             helper = Helpers($playerRoot.find(".ovp-ui"), playerInstance);
-            controls = Controls($playerRoot.find(".ovp-ui"), playerInstance);
+            if(showControlBar){
+                controls = Controls($playerRoot.find(".ovp-ui"), playerInstance);
+            }
 
             api.on(READY, function(data) {
-                if(!controls){
+                if(!controls && showControlBar){
                     controls = Controls($playerRoot.find(".ovp-ui"), playerInstance);
                 }
             });

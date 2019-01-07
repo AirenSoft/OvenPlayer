@@ -23,7 +23,7 @@ const Dash = function(container, playerConfig){
     let seekPosition_sec = 0;
     let isFirstError = false;
 
-    let mediaManager = MediaManager(container, PROVIDER_DASH);
+    let mediaManager = MediaManager(container, PROVIDER_DASH, playerConfig.isLoop());
     let element =  mediaManager.create();
 
     try {

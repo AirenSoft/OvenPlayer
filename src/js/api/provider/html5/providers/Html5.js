@@ -14,7 +14,7 @@ import {PROVIDER_HTML5, STATE_IDLE} from "api/constants";
 
 const Html5 = function(container, playerConfig){
 
-    let mediaManager = MediaManager(container, PROVIDER_HTML5);
+    let mediaManager = MediaManager(container, PROVIDER_HTML5, playerConfig.isLoop());
     let element = mediaManager.create();
 
     let spec = {

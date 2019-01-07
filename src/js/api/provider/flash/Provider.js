@@ -118,6 +118,15 @@ const Provider = function(spec, playerConfig){
                     if(retryCount < 100){
                         setTimeout(checkSwfIsReady, 100);
                     }else{
+                        if(playerConfig.isAutoStart()){
+                            that.play();
+                        }
+                        if(playerConfig.isMute()){
+                            that.setMute(true);
+                        }
+                        if(playerConfig.getVolume()){
+                            that.setVolume(playerConfig.getVolume());
+                        }
                         return reject();
                     }
                 }

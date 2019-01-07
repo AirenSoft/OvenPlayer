@@ -109,6 +109,13 @@
                             <div class="card-body">
 <pre>
 player = OvenPlayer.create("player", {
+    loop : false,
+    autoStart : false,
+    playbackRates : [1.5,1,0.5],
+    playbackRate : 1,
+    mute : false,
+    volume : 100,
+    controls : true,
     sources: {{getSources()}}
 });
 </pre>

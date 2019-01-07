@@ -5,6 +5,7 @@ const packageInfo = require('./package.json');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const GitRevisionPlugin = require('git-revision-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const {BundleAnalyzerPlugin} = require('webpack-bundle-analyzer');
 const banner = packageInfo.name + 'v' + packageInfo.version + ' | ' +
     '(c)' + new Date().getFullYear() + ' ' + packageInfo.author + ' | MIT license (' +
     packageInfo.license + ') | Github : ' +
@@ -109,7 +110,10 @@ const extendConfig = function (){
                 new webpack.DefinePlugin({
                     __VERSION__: `'${getBuildVersion(packageInfo)}'`
                 }),
-                new webpack.BannerPlugin(banner)
+                new webpack.BannerPlugin(banner),
+                new BundleAnalyzerPlugin({
+                    analyzerMode: 'disabled'
+                })
             ]
         });
     }else{
@@ -137,7 +141,10 @@ const extendConfig = function (){
                 new webpack.DefinePlugin({
                     __VERSION__: `'${getBuildVersion(packageInfo)}'`
                 }),
-                new webpack.BannerPlugin(banner)
+                new webpack.BannerPlugin(banner),
+                new BundleAnalyzerPlugin({
+                    analyzerMode: 'static'
+                })
             ]
         });
     }
