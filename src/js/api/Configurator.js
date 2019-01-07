@@ -9,14 +9,19 @@ import {
  *
  * */
 const Configurator = function(options, provider){
+    //sources, tracks,
+
 
     const composeSourceOptions = function(options){
         const Defaults = {
-            defaultPlaybackRate: 1,
-            playbackRateControls: false,
             playbackRates: [2, 1.5, 1, 0.5, 0.25],
+            playbackRate: 1,
             mute: false,
-            volume: 90
+            volume: 100,
+            loop : false,
+            controls : true,
+            autoStart : false,
+            timecode : true
         };
         const serialize = function (val) {
             if (val === undefined) {
@@ -44,61 +49,25 @@ const Configurator = function(options, provider){
                 options[key] = serialize(options[key]);
             });
         }
-        const normalizeSize = function (val) {
-            if (val.slice && val.slice(-2) === 'px') {
-                val = val.slice(0, -2);
-            }
-            return val;
-        }
-        const evaluateAspectRatio = function (ar, width) {
-            if (width.toString().indexOf('%') === -1) {
-                return 0;
-            }
-            if (typeof ar !== 'string' || !ar) {
-                return 0;
-            }
-            if (/^\d*\.?\d+%$/.test(ar)) {
-                return ar;
-            }
-            const index = ar.indexOf(':');
-            if (index === -1) {
-                return 0;
-            }
-            const w = parseFloat(ar.substr(0, index));
-            const h = parseFloat(ar.substr(index + 1));
-            if (w <= 0 || h <= 0) {
-                return 0;
-            }
-            return (h / w * 100) + '%';
-        }
+
         deserialize(options);
         let config = Object.assign({}, Defaults, options);
 
-        let rateControls = config.playbackRateControls;
-        if (rateControls) {
-            let rates = config.playbackRates;
+        let playbackRates = config.playbackRates;
 
-            if (Array.isArray(rateControls)) {
-                rates = rateControls;
-            }
-            rates = rates.filter(rate => _.isNumber(rate) && rate >= 0.25 && rate <= 4)
-                .map(rate => Math.round(rate * 4) / 4);
+        playbackRates = playbackRates.filter(rate => _.isNumber(rate) && rate >= 0.25 && rate <= 4).map(rate => Math.round(rate * 4) / 4);
 
-            if (rates.indexOf(1) < 0) {
-                rates.push(1);
-            }
-            rates.sort();
-
-            config.playbackRateControls = true;
-            config.playbackRates = rates;
+        if (playbackRates.indexOf(1) < 0) {
+            playbackRates.push(1);
         }
+        playbackRates.sort();
+
+        config.playbackRates = playbackRates;
 
 
-        if (!config.playbackRateControls || config.playbackRates.indexOf(config.defaultPlaybackRate) < 0) {
-            config.defaultPlaybackRate = 1;
+        if (config.playbackRates.indexOf(config.playbackRate) < 0) {
+            config.playbackRate = 1;
         }
-
-        config.playbackRate = config.defaultPlaybackRate;
 
         const configPlaylist = config.playlist;
         if (!configPlaylist) {
@@ -106,13 +75,10 @@ const Configurator = function(options, provider){
                 'title',
                 'description',
                 'type',
-                'mediaid',
                 'image',
                 'file',
                 'sources',
                 'tracks',
-                'preload',
-                'duration',
                 'host',
                 'application',
                 'stream'
@@ -128,64 +94,80 @@ const Configurator = function(options, provider){
         return config;
     };
     OvenPlayerConsole.log("Configurator loaded.", options);
-    let config = composeSourceOptions(options);
-
-    let debug = config.debug;
-    let defaultPlaybackRate = config.defaultPlaybackRate || 1;
-    let image = config.image;
-    let playbackRateControls = config.playbackRateControls || true;
-    let playbackRates = config.playbackRates || [0.5, 1, 1.25, 1.5, 2];
-    let playlist = config.playlist || [];
-    let qualityLabel = config.qualityLabel || "";
-    let sourceLabel = config.sourceLabel || "";
-    let repeat = config.repeat || false;
-    let stretching = config.stretching || 'uniform';
-    let isTimecodeMode = config.isTimecodeMode || true;
-
+    let spec = composeSourceOptions(options);
 
 
     const that = {};
-    that.getConfig = () => {return config;};
+    that.getConfig = () => {
+        return spec;
+    };
+    that.setConfig = (config, value) => {
+        spec[config] = value;
+    };
 
-    that.isDebug =()=>{return debug;};
+    that.getPlaybackRate =()=>{
+        return spec.playbackRate;
+    };
+    that.setPlaybackRate =(playbackRate)=>{
+        spec.playbackRate = playbackRate;
+        return playbackRate;
+    };
 
-    that.getDefaultPlaybackRate =()=>{return defaultPlaybackRate;};
-    that.setDefaultPlaybackRate =(playbackRate)=>{defaultPlaybackRate = playbackRate; return playbackRate;};
+    that.getQualityLabel = () => {
+        return spec.qualityLabel;
+    };
+    that.setQualityLabel = (newLabel) => {
+        spec.qualityLabel = newLabel;
+    };
 
-    that.getQualityLabel = () => {return qualityLabel;};
-    that.setQualityLabel = (newLabel) => {qualityLabel = newLabel;};
+    that.getSourceLabel = () => {
+        return spec.sourceLabel;
+    };
+    that.setSourceLabel = (newLabel) => {
+        spec.sourceLabel = newLabel;
+    };
 
-    that.getSourceLabel = () => {return sourceLabel;};
-    that.setSourceLabel = (newLabel) => {sourceLabel = newLabel;};
-
-    that.setTimecodeMode = (isShow) => {
-        if(isTimecodeMode !== isShow){
-            isTimecodeMode = isShow;
-            console.log("CONTENT_TIME_MODE_CHANGEDCONTENT_TIME_MODE_CHANGEDCONTENT_TIME_MODE_CHANGEDCONTENT_TIME_MODE_CHANGED : ", isTimecodeMode);
-            provider.trigger(CONTENT_TIME_MODE_CHANGED, isTimecodeMode);
+    that.setTimecodeMode = (timecode) => {
+        if(spec.timecode !== timecode){
+            spec.timecode = timecode;
+            provider.trigger(CONTENT_TIME_MODE_CHANGED, timecode);
         }
     };
     that.isTimecodeMode = () => {
-        return isTimecodeMode;
+        return spec.timecode;
     };
 
+    that.isMute = () =>{
+        return spec.mute;
+    };
+    that.getVolume = () =>{
+        return spec.volume;
+    };
+    that.isLoop = () =>{
+        return spec.loop;
+    };
+    that.isAutoStart = () =>{
+        return spec.autoStart;
+    };
+    that.isControls = () =>{
+        return spec.controls;
+    };
 
-    that.getPlaybackRates =()=>{return playbackRates;};
-    that.isPlaybackRateControls =()=>{return playbackRateControls;};
+    that.getPlaybackRates =()=>{
+        return spec.playbackRates;
+    };
 
-    that.getPlaylist =()=>{return playlist;};
-    that.setPlaylist =(playlist_ )=>{
-        if(_.isArray(playlist_)){
-            playlist = playlist_;
+    that.getPlaylist =()=>{
+        return spec.playlist;
+    };
+    that.setPlaylist =(playlist)=>{
+        if(_.isArray(playlist)){
+            spec.playlist = playlist;
         }else{
-            playlist = [playlist_];
+            spec.playlist = [playlist];
         }
-        return playlist;
+        return spec.playlist;
     };
-
-    that.isRepeat =()=>{return repeat;};
-
-    that.getStretching =()=>{return stretching;};
 
     return that;
 };

@@ -1,5 +1,140 @@
 # API and Configuration
 
+
+##Options
+```javascript
+player = OvenPlayer.create("player", {
+    loop : false,
+    autoStart : false,
+    playbackRate : 1,
+    playbackRates : [2, 1.5, 1, 0.5, 0.25],
+    mute : false,
+    volume : 100,
+    controls : true,
+    sources: [{
+            type : "mpd", 
+            file :  "https://path.to/your_video.mpd", 
+            framerate : 30,
+            label: "360P DASH"
+        }],
+    tracks: [{
+            kind : "captions", 
+            file :  "https://path.to/your_caption.vtt", 
+            label : "KO vtt"
+        }]
+});
+```
+
+#### loop 
+type|default
+------|------
+boolean|false
+
+Restart as soon as the video ends.
+
+#### autoStart 
+type|default
+------|------
+boolean|false
+
+Automatically play when the source is loaded.
+
+#### playbackRate 
+type|default
+------|------
+number|1
+
+Sets the default playback rate.
+
+#### playbackRates 
+type|default
+------|------
+Array|[2, 1.5, 1, 0.5, 0.25]
+
+Sets the playback rate list to be displayed on the controls.
+
+#### mute 
+type|default
+------|------
+boolean|false
+
+Mutes the player.
+
+#### volume 
+type|default
+------|------
+number|100
+
+Sets the Player default volume.
+
+#### controls 
+type|default
+------|------
+boolean|true
+
+Shows the Player control bar.
+
+#### sources 
+type|default
+------|------
+Array| none
+
+Sets the Player url for various video protocols.
+```javascript
+[
+    {
+        type : "mp4", 
+        file :  "https://path.to/your_video", 
+        framerate : 30,
+        label : "360P"
+    },
+    {
+        type : "mpd", 
+        file :  "https://path.to/your_video.mpd", 
+        framerate : 30,
+        label: "360P DASH"
+    },
+    {
+        type : "hls", 
+        file :  "https://path.to/your_video.m3u8", 
+        framerate : 30,
+        label: "360P HLS"
+    },
+    {
+        type : "rtmp", 
+        file :  "rtmp://path.to/your_video", 
+        framerate : 30,
+        label: "360P RTMP"
+    }
+] 
+```
+
+#### tracks 
+type|default
+------|------
+Array| none
+
+Sets the Player caption url for various caption type.
+```javascript
+[
+    {
+        kind : "captions", 
+        file :  "https://path.to/your_caption.vtt", 
+        label : "KO vtt"
+    },
+    {
+        kind : "captions", 
+        file :  "https://path.to/your_caption.srt", 
+        label : "KO srt"
+    },
+    {
+        kind : "captions", 
+        file :  "https://path.to/your_caption.smi", 
+        label : "KO smi"
+    }
+] 
+```
+
 ## Static Methods
 
 #### `player` = OvenPlayer.create(`container`, `options`)
@@ -88,7 +223,7 @@ Returns the player settings.
 
 ||Type|Memo|
 |-|-|-|
-|`config`|Object|defaultPlaybackRate, width, height, playbackRates, aspectRatio, etc|
+|`config`|Object|autoStart,controls,loop,mute,playbackRate,playbackRates,sources,timecode,tracks,volume|
 
 #### player.load(`sources`)
 
@@ -121,7 +256,7 @@ Loads source.
         file : "https://path.to/your_video", 
         framerate : 30,
         label : "720p",
-        isDefault : "true"
+        default : "true"
     }
 ] 
 
@@ -568,5 +703,6 @@ Player is destroyed.
 
 Attribute|Type|Memo
 ------|------|-------
+
 
 

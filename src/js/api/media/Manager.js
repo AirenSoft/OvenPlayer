@@ -7,7 +7,7 @@ import {getBrowser} from "utils/browser";
 import {PROVIDER_RTMP} from "api/constants";
 import SWFpath from '../../../assets/OvenPlayerFlash.swf';
 
-const Manager = function(container, providerType){
+const Manager = function(container, providerType, loop){
     const that = {};
     let rootId = container.getAttribute("data-parent-id");
     let mediaElement = "";
@@ -20,10 +20,13 @@ const Manager = function(container, providerType){
             mediaElement.setAttribute('disableRemotePlayback', '');
             mediaElement.setAttribute('webkit-playsinline', '');
             mediaElement.setAttribute('playsinline', '');
+            if(loop){
+                mediaElement.setAttribute('loop', '');
+            }
             container.appendChild(mediaElement);
 
         }else{
-            let movie, flashvars, allowscriptaccess, allowfullscreen, quality, name, menu, qual, bgcolor;
+            let movie, flashvars, allowscriptaccess, allowfullscreen, quality, name, menu, qual, bgcolor, loop;
             movie = document.createElement('param');
             movie.setAttribute('name', 'movie');
             movie.setAttribute('value', SWFpath);
@@ -61,9 +64,11 @@ const Manager = function(container, providerType){
             bgcolor.setAttribute('name', 'bgcolor');
             bgcolor.setAttribute('value', '#000000');
 
-            let test = document.createElement('param');
-            test.setAttribute('name', 'SCALE');
-            test.setAttribute('value', 'default');
+            if(loop){
+                loop = document.createElement('param');
+                loop.setAttribute('name', 'loop');
+                loop.setAttribute('value', 'true');
+            }
 
             mediaElement = document.createElement('object');
             mediaElement.setAttribute('id', rootId+"-flash");
@@ -80,7 +85,7 @@ const Manager = function(container, providerType){
 
                 mediaElement.appendChild(movie);
             }
-            mediaElement.appendChild(test);
+            mediaElement.appendChild(loop);
             mediaElement.appendChild(bgcolor);
             mediaElement.appendChild(qual);
             mediaElement.appendChild(allowfullscreen);
