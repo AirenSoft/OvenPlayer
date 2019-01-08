@@ -113,20 +113,23 @@ const Provider = function(spec, playerConfig){
 
                 if(elFlash.isFlashReady && elFlash.isFlashReady()){
                     _load(lastPlayPosition || 0);
+
+                    if(playerConfig.isAutoStart()){
+                        that.play();
+                    }
+
+                    if(playerConfig.isMute()){
+                        that.setMute(true);
+                    }
+                    if(playerConfig.getVolume()){
+                        that.setVolume(playerConfig.getVolume());
+                    }
+
                     return resolve();
                 }else{
                     if(retryCount < 100){
                         setTimeout(checkSwfIsReady, 100);
                     }else{
-                        if(playerConfig.isAutoStart()){
-                            that.play();
-                        }
-                        if(playerConfig.isMute()){
-                            that.setMute(true);
-                        }
-                        if(playerConfig.getVolume()){
-                            that.setVolume(playerConfig.getVolume());
-                        }
                         return reject();
                     }
                 }

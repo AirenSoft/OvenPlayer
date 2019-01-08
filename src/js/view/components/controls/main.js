@@ -109,9 +109,11 @@ const Controls = function($container, api){
                 panelManager.add(Panels($current, api, panelData));
             }
         },
-        "resize body" : function(event, $current, template){
+        "resize window" : function(event, $current, template){
             event.preventDefault();
+            console.log("resize");
             setPanelMaxHeight();
+
         }
     };
 
