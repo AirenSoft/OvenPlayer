@@ -51,7 +51,7 @@ OvenMediaEngine(OME) is a streaming engine for real-time live broadcasting with 
 
 ## API and Configuration
 
-Visit [demo site](https://airensoft.github.io/OvenPlayer/docs/index.html).
+Start the [Demo](https://airensoft.github.io/OvenPlayer/docs/demo.html).
 
 Visit [API and Configuration](docs/api.md) for more details.
 
