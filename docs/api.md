@@ -1,7 +1,7 @@
 # API and Configuration
 
 
-##Options
+## Options
 ```javascript
 player = OvenPlayer.create("player", {
     loop : false,
@@ -30,28 +30,28 @@ type|default
 ------|------
 boolean|false
 
-Restart as soon as the video ends.
+When the video ends, it plays again.
 
 #### autoStart 
 type|default
 ------|------
 boolean|false
 
-Automatically play when the source is loaded.
-
+When the source is loaded, it plays automatically.
+ 
 #### playbackRate 
 type|default
 ------|------
 number|1
 
-Sets the default playback rate.
+Sets the default playback rate when playing.
 
 #### playbackRates 
 type|default
 ------|------
 Array|[2, 1.5, 1, 0.5, 0.25]
 
-Sets the playback rate list to be displayed on the controls.
+Sets the list of playback rate items in the control menu.
 
 #### mute 
 type|default
@@ -65,21 +65,21 @@ type|default
 ------|------
 number|100
 
-Sets the Player default volume.
+Sets the default volume when playing.
 
 #### controls 
 type|default
 ------|------
 boolean|true
 
-Shows the Player control bar.
+Sets whether to show or hide the player control bar.
 
 #### sources 
 type|default
 ------|------
 Array| none
 
-Sets the Player url for various video protocols.
+Enter the URLs of the diverse protocols to play.
 ```javascript
 [
     {
@@ -114,7 +114,7 @@ type|default
 ------|------
 Array| none
 
-Sets the Player caption url for various caption type.
+Enter the URLs of the various caption types to display.
 ```javascript
 [
     {
