@@ -9,18 +9,9 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black" />
 
-    <meta name="author" content="airensoft">
-    <meta name="title" content="OvenPlayer">
-    <meta name="keywords" content="html5-player,ultra-low-latency,webrtc,oven-media-engine">
-    <meta name="description" content="The OvenPlayer is a HTML5 player designed to make it easier to play Ultra-low latency streams from the OvenMediaEngine.">
-    <meta property="og:title" content="OvenPlayer">
-    <meta property="og:description" content="The OvenPlayer is a HTML5 player designed to make it easier to play Ultra-low latency streams from the OvenMediaEngine.">
-
-
     <title>OvenPlayer</title>
     <link rel="stylesheet" href="lib/bootstrap.min.css">
     <link href="https://fonts.googleapis.com/css?family=Noto+Sans" rel="stylesheet">
-    <link href="lib/new-age.min.css" rel="stylesheet">
 
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-40491361-8"></script>
@@ -39,70 +30,118 @@
     <script src="lib/popper.min.js"></script>
     <script src="lib/bootstrap.min.js"></script>
     <script src="../dist/development/ovenplayer/ovenplayer.js"></script>
-    <style>
-        header.masthead {
-            position: relative;
-            width: 100%;
-            padding-top: 150px;
-            padding-bottom: 100px;
-            color: #fff;
-            background: url(lib/bg_landing.png),#3a3552;
-            background: url(lib/bg_landing.png),-webkit-gradient(linear,right top,left top,from(#3a3552),to(#221d39));
-            background: url(lib/bg_landing.png),linear-gradient(to left,#3a3552,#221d39);
-        }
-        .btn:hover{
-            border : 1px solid  #50e3c2;
-            background: #50e3c2;
-        }
-    </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light fixed-top">
-        <a class="navbar-brand text-light" href="index.html">OVENPLAYER</a>
-        <button class="navbar-toggler bg-light" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="index.html">OVENPLAYER</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <div class="navbar-nav mr-auto">
             </div>
-            <ul class="navbar-nav   my-2 my-lg-0 ">
+            <ul class="navbar-nav my-2 my-lg-0">
                 <li class="nav-item active">
-                    <a class="nav-link text-light" href="demo.html">Player Demo</a>
+                    <a class="nav-link" href="demo.html">Player Demo</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-light" href="ome_demo.html">Ultra Low Latency Demo</a>
+                    <a class="nav-link" href="ome_demo.html">Ultra Low Latency Demo</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-light" href="https://github.com/AirenSoft/OvenPlayer" target="_blank">GitHub</a>
+                    <a class="nav-link" href="https://github.com/AirenSoft/OvenPlayer" target="_blank">GitHub</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-light" href="https://github.com/AirenSoft/OvenPlayer/blob/master/docs/api.md" target="_blank">Docs</a>
+                    <a class="nav-link" href="https://github.com/AirenSoft/OvenPlayer/blob/master/docs/api.md" target="_blank">Docs</a>
                 </li>
             </ul>
         </div>
     </nav>
+    <div class="container mt-4">
+        <div id="demo-navi" class="row">
+            <div class="col-12 mb-4">
+                <div id="player"></div>
+            </div>
+            <div class="col-12 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Test Stream</h5>
+                        <div class="row mb-2">
+                            <div class="col-12">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ choicedProtocol }}</button>
+                                        <div class="dropdown-menu">
+                                            <a v-for="protocol in protocols" class="dropdown-item" v-bind:data-value="protocol" v-on:click="setProtocol(protocol)">
+                                                {{ protocol }}
+                                            </a>
+                                        </div>
+                                    </div>
 
-    <header class="masthead">
-        <div class="container h-100">
-            <div class="row h-100">
-                <div class="col-lg-5 my-auto">
-                    <div class="header-content mx-auto">
-                        <h4 class="mb-5">The OvenPlayer is a HTML5 player designed to make it easier to play Ultra-low latency streams from the OvenMediaEngine.</h4>
-                        <a href="https://github.com/AirenSoft/OvenPlayer" class="btn btn-outline btn-xl">Download on GitHub</a>
+                                    <input type="text" class="form-control" placeholder="Please Enter URL." v-model="url">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-outline-success" type="button" v-on:click="addSource">Add Source</button>
+                                    </div>
+                                </div>
+                                <small v-if="errorMessage" class="form-text text-danger text-center">
+                                    {{ errorMessage }}
+                                </small>
+
+                            </div>
+                        </div>
+
+                        <div class="card mb-2" v-for="(source, index) in sources">
+                            <div class="card-body">
+                                <strong>{{ source.type }}</strong> {{ source.file }}
+                                <button type="button" class="close" aria-label="Close" v-on:click="removeSource(index)">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="mt-2 text-right"  v-if="sources.length">
+                            <button type="button" class="btn btn-primary" v-on:click="loadSources">Load Player</button>
+                        </div>
                     </div>
                 </div>
-                <div class="col-lg-7 my-auto">
-                    <div id="player"></div>
+                <div class="card mt-2">
+                    <div class="card-body ">
+                        <h5 class="card-title">Usage</h5>
+                        <div class="card bg-light">
+                            <div class="card-body">
+<pre>
+player = OvenPlayer.create("player", {
+    sources: {{getSources()}}
+});
+</pre>
+                            </div>
+                        </div>
+                        <div  v-if="sources.length">
+                            <h5 class="card-title mt-4">Export</h5>
+                            <div class="input-group">
+                                <input type="text" id="exportURL" v-model="exportUrl" readonly class="form-control">
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-danger btnExport" type="button" data-clipboard-target="#exportURL"  data-trigger="manual" data-placement="top" title="Copied to clipboard.">Export Source</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <div class="col-12 mb-2">
+                <div class="text-center mt-2">
+                    <small>
+                        Powered by <a href="https://github.com/AirenSoft/OvenMediaEngine" class="text-primary" target="_blank">OvenMediaEngine</a> and <a href="https://github.com/AirenSoft/OvenPlayer" class="text-primary" target="_blank">OvenPlayer</a>.
+                    </small>
                 </div>
             </div>
         </div>
-    </header>
 
-    <footer>
-        <div class="container">
-            <p>Powered by <a href="https://github.com/AirenSoft/OvenMediaEngine" class="text-primary" target="_blank">OvenMediaEngine</a> and <a href="https://github.com/AirenSoft/OvenPlayer" class="text-primary" target="_blank">OvenPlayer</a>.</p>
-        </div>
-    </footer>
+    </div>
+
+
 
 
     <script>
@@ -197,7 +236,7 @@
                 sources : preSources||[],
                 sourceId : 0,
                 errorMessage : "",
-                exportUrl : preSources ?  "https://airensoft.github.io/OvenPlayer/docs/index.html?sources="+ encodeURIComponent(JSON.stringify(preSources)) : ""
+                exportUrl : preSources ?  "https://airensoft.github.io/OvenPlayer/docs/demo.html?sources="+ encodeURIComponent(JSON.stringify(preSources)) : ""
             },
             methods : {
                 setProtocol : function(protocol){
@@ -230,14 +269,14 @@
                     this.url = "";
 
                     if(this.sources){
-                        this.exportUrl = "https://airensoft.github.io/OvenPlayer/docs/index.html?sources="+ encodeURIComponent(JSON.stringify(this.sources));
+                        this.exportUrl = "https://airensoft.github.io/OvenPlayer/docs/demo.html?sources="+ encodeURIComponent(JSON.stringify(this.sources));
                     }
                 },
                 removeSource : function(index){
                     this.sources.splice(index, 1);
 
                     if(this.sources){
-                        this.exportUrl = "https://airensoft.github.io/OvenPlayer/docs/index.html?sources="+ encodeURIComponent(JSON.stringify(this.sources));
+                        this.exportUrl = "https://airensoft.github.io/OvenPlayer/docs/demo.html?sources="+ encodeURIComponent(JSON.stringify(this.sources));
                     }
                 },
                 loadSources : function(){
