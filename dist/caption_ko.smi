@@ -16,7 +16,13 @@
 
 <SYNC Start=2275>
 <P Class=KRCC>
-오븐플레이어는 OvenMediaEngine의 초저지연 스트림을 더욱 쉽게 재생할 수 있도록 개발된 HTML5 플레이어입니다.
+오븐플레이어는 OvenMediaEngine의 초저지연 스트림을
+</P>
+</SYNC>
+
+<SYNC Start=5942>
+<P Class=KRCC>
+더욱 쉽게 재생할 수 있도록 개발된 HTML5 플레이어입니다.
 </P>
 </SYNC>
 
