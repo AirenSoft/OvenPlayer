@@ -10,8 +10,22 @@ import {
     CONTENT_CAPTION_CHANGED,
     CONTENT_CAPTION_CUE_CHANGED
 } from "api/constants";
+import LA$ from 'utils/likeA$';
 
 const CaptionViewer = function($container, api, playerState){
+    const $root = LA$("#"+api.getContainerId());
+    const resizeCaption = function(){
+        if($root.width() > 1200){
+            $root.find(".ovp-caption-text").css("font-size", "2rem");
+            $root.find(".ovp-caption-text").css("line-height", "2.4rem");
+        }else if($root.width() > 768){
+            $root.find(".ovp-caption-text").css("font-size", "1.4rem");
+            $root.find(".ovp-caption-text").css("line-height", "1.6rem");
+        }else {
+            $root.find(".ovp-caption-text").css("font-size", "1rem");
+            $root.find(".ovp-caption-text").css("line-height", "1.2rem");
+        }
+    };
 
     const onRendered = function($container, $current, template){
         let isDisable = false;
@@ -52,7 +66,11 @@ const CaptionViewer = function($container, api, playerState){
         api.off(CONTENT_CAPTION_CUE_CHANGED, null, template);
     };
     const events = {
+        "resize window" : function(event, $current, template){
+            event.preventDefault();
 
+            resizeCaption();
+        }
     };
 
     return OvenTemplate($container, "CaptionViewer", playerState, events, onRendered, onDestroyed );

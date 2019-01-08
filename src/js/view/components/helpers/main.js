@@ -6,7 +6,6 @@ import BigButton from "view/components/helpers/bigButton";
 import MessageBox from "view/components/helpers/messageBox";
 import CaptionViewer from "view/components/helpers/captionViewer";
 import Spinner from "view/components/helpers/spinner";
-
 import {
     READY,
     ERROR,
@@ -24,7 +23,6 @@ import {
 
 const Helpers = function($container, api){
     let bigButton = "", messageBox = "",  captionViewer = "", spinner = "";
-
     const onRendered = function($current, template){
         let qualityLevelChanging = false, newQualityLevel = -1;
         let createBigButton = function(state){
