@@ -49,7 +49,7 @@ const OvenTemplate = function (container, templateName, data, events, onRendered
 
         let $target = "";
 
-        if(target === "document" || target === "window"){
+        if(target === "document" || target === "window" || target === "body"){
             $target = LA$(target);
         }else{
             $target = $template.find(target) || ($template.hasClass(target.replace(".","")) ? $template : null);
@@ -91,7 +91,7 @@ const OvenTemplate = function (container, templateName, data, events, onRendered
             let event = viewEvents[id];
             let $target = "";
 
-            if(event.target === "document" || event.target === "window"){
+            if(event.target === "document" || event.target === "window" ||  event.target === "body"){
                 $target = LA$(event.target);
             }else{
                 $target = $template.find(event.target) || ($template.hasClass(event.target.replace(".","")) ? $template : null);
