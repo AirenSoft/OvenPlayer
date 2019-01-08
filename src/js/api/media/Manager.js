@@ -85,7 +85,9 @@ const Manager = function(container, providerType, loop){
 
                 mediaElement.appendChild(movie);
             }
-            mediaElement.appendChild(loop);
+            if(loop){
+                mediaElement.appendChild(loop);
+            }
             mediaElement.appendChild(bgcolor);
             mediaElement.appendChild(qual);
             mediaElement.appendChild(allowfullscreen);
