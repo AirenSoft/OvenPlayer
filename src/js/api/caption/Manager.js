@@ -2,7 +2,7 @@
  * Created by hoho on 2018. 5. 17..
  */
 import CaptionLoader from 'api/caption/Loader';
-import {READY, ERROR, CONTENT_META, CONTENT_TIME, CONTENT_CAPTION_CUE_CHANGED, CONTENT_CAPTION_CHANGED, PLAYER_CAPTION_ERROR} from "api/constants";
+import {READY, ERRORS, ERROR, PLAYER_CAPTION_ERROR, CONTENT_META, CONTENT_TIME, CONTENT_CAPTION_CUE_CHANGED, CONTENT_CAPTION_CHANGED} from "api/constants";
 import _ from "utils/underscore";
 
 const isSupport = function(kind){
@@ -64,7 +64,9 @@ const Manager = function(api){
                             let captionId = bindTrack(track, vttCues);
                         }
                     }, function(error){
-                        api.trigger(ERROR, {code : PLAYER_CAPTION_ERROR, reason : "caption load error.", message : "caption load error.", error : error});
+                        let tempError = ERRORS[PLAYER_CAPTION_ERROR];
+                        tempError.error = error;
+                        api.trigger(ERROR, tempError);
                     });
                 }
             }
@@ -109,7 +111,9 @@ const Manager = function(api){
                     bindTrack(track, vttCues);
                 }
             }, function(error){
-                api.trigger(ERROR, {code : PLAYER_CAPTION_ERROR, reason : "caption load error.", message : "caption load error.", error : error});
+                let tempError = ERRORS[PLAYER_CAPTION_ERROR];
+                tempError.error = error;
+                api.trigger(ERROR, tempError);
             });
         }
     };

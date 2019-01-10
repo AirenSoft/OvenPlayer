@@ -5,7 +5,7 @@ import MediaManager from "api/media/Manager";
 import Provider from "api/provider/html5/Provider";
 import {errorTrigger} from "api/provider/utils";
 import sizeHumanizer from "utils/sizeHumanizer";
-import {STATE_IDLE, PLAYER_UNKNWON_NEWWORK_ERROR, CONTENT_LEVEL_CHANGED,  STATE_PLAYING, PROVIDER_DASH, CONTENT_META} from "api/constants";
+import {STATE_IDLE, ERRORS, PLAYER_UNKNWON_NEWWORK_ERROR, CONTENT_LEVEL_CHANGED,  STATE_PLAYING, PROVIDER_DASH, CONTENT_META} from "api/constants";
 
 /**
  * @brief   dashjs provider extended core.
@@ -58,7 +58,9 @@ const Dash = function(container, playerConfig){
         dash.on(dashjs.MediaPlayer.events.ERROR, function(error){
             if(error && !isFirstError && ( error.error === DASHERROR.DOWNLOAD || error.error === DASHERROR.MANIFESTERROR )){
                 isFirstError = true;
-                errorTrigger({code : PLAYER_UNKNWON_NEWWORK_ERROR, reason : "Unknown network error", message : "Unknown network error"}, that);
+                let tempError = ERRORS[PLAYER_UNKNWON_NEWWORK_ERROR];
+                tempError.error = error;
+                errorTrigger(tempError, that);
             }
         });
 

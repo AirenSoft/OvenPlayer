@@ -89,22 +89,13 @@ const Helpers = function($container, api){
             if(bigButton){
                 bigButton.destroy();
             }
-            if (error.code === 100) {
-                message = "Initialization failed.";
-            } else if (error.code === 301) {
-                message = "Media playback was canceled.";
-            } else if (error.code === 302) {
-                message = "Some of the media could not be downloaded due to a network error.";
-            } else if (error.code === 303) {
-                message = "Unable to load media. This may be due to a server or network error, or due to an unsupported format.";
-            } else if (error.code === 304) {
-                message = "Media playback has been canceled. It looks like your media is corrupted or your browser does not support the features your media uses.";
-            } else if (parseInt(error.code/100) === 5) {
-                message = "Connection with low-latency server failed.";
-            } else {
+            if (error && error.code && error.code >= 100 && error.code < 1000) {
+                message = error.message;
+
+            }  else {
                 message = "Can not play due to unknown reasons.";
             }
-
+            OvenPlayerConsole.log("error occured : ", error);
             createMessage(message);
         }, template);
 

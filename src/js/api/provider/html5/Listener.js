@@ -1,4 +1,5 @@
 import {
+    ERRORS,
     ERROR,
     STATE_IDLE,
     STATE_PLAYING,
@@ -25,8 +26,7 @@ import {
     PROVIDER_DASH,
     PROVIDER_HLS
 } from "api/constants";
-import {extractVideoElement, separateLive} from "api/provider/utils";
-
+import {extractVideoElement, separateLive, errorTrigger} from "api/provider/utils";
 
 /**
  * @brief   Trigger on various video events.
@@ -45,13 +45,6 @@ const Listener = function(extendedElement, provider){
     const between = function (num, min, max) {
         return Math.max(Math.min(num, max), min);
     }
-    const onError = function(error){
-        provider.setState(STATE_ERROR);
-        provider.pause();
-
-        //PRIVATE_STATE_ERROR
-        provider.trigger(ERROR, error);
-    };
 
     //Fires when the browser can start playing the audio/video
     lowLevelEvents.canplay = () => {
@@ -215,17 +208,16 @@ const Listener = function(extendedElement, provider){
 
     lowLevelEvents.error = () => {
         const code = (elVideo.error && elVideo.error.code) || 0;
-        const errorCodeGen = ({
-            0: {code : PLAYER_UNKNWON_ERROR, reason : "Unknown html5 video error", message : "Unknown html5 video error"},
-            1: {code : PLAYER_UNKNWON_OPERATION_ERROR, reason : "Unknown operation aborted", message : "Unknown operation aborted"},
-            2: {code : PLAYER_UNKNWON_NEWWORK_ERROR, reason : "Unknown network error", message : "Unknown network error"},
-            3: {code : PLAYER_UNKNWON_DECODE_ERROR, reason : "Unknown decode error", message : "Unknown decode error"},
-            4: {code : PLAYER_FILE_ERROR, reason : "File could not be played", message : "File could not be played"}
+        let convertedErroCode = ({
+            0: PLAYER_UNKNWON_ERROR,
+            1: PLAYER_UNKNWON_OPERATION_ERROR,
+            2: PLAYER_UNKNWON_NEWWORK_ERROR,
+            3: PLAYER_UNKNWON_DECODE_ERROR,
+            4: PLAYER_FILE_ERROR
         }[code]||0);
-        errorCodeGen.error = elVideo.error;
 
-        OvenPlayerConsole.log("EventListener : on error", errorCodeGen);
-        onError(errorCodeGen);
+        OvenPlayerConsole.log("EventListener : on error", convertedErroCode);
+        errorTrigger(ERRORS[convertedErroCode]);
     };
 
     Object.keys(lowLevelEvents).forEach(eventName => {

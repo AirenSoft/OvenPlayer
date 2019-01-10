@@ -4,7 +4,8 @@ import EventEmitter from "api/EventEmitter";
 import LazyCommandExecutor from "api/LazyCommandExecutor";
 import PlaylistManager from "api/playlist/Manager";
 import ProviderController from "api/provider/Controller";
-import {READY, ERROR, CONTENT_TIME_MODE_CHANGED, INIT_ERROR, DESTROY, NETWORK_UNSTABLED, PLAYER_FILE_ERROR, PROVIDER_DASH, PROVIDER_HLS, PROVIDER_WEBRTC, PROVIDER_HTML5, PROVIDER_RTMP} from "api/constants";
+import {READY, ERRORS, ERROR, CONTENT_TIME_MODE_CHANGED, INIT_UNKNWON_ERROR, INIT_UNSUPPORT_ERROR, DESTROY, NETWORK_UNSTABLED,
+    PLAYER_FILE_ERROR, PROVIDER_DASH, PROVIDER_HLS, PROVIDER_WEBRTC, PROVIDER_HTML5, PROVIDER_RTMP} from "api/constants";
 import {version} from 'version';
 import {ApiRtmpExpansion} from 'api/ApiExpansions';
 
@@ -46,6 +47,10 @@ const Api = function(container){
         };
 
         return providerController.loadProviders(playlistManager.getPlaylist()).then(Providers => {
+            if(Providers.length < 1){
+                throw ERRORS[INIT_UNSUPPORT_ERROR];
+            }
+
             if(currentProvider){
                 currentProvider.destroy();
                 currentProvider = null;
@@ -69,9 +74,9 @@ const Api = function(container){
 
                 that.trigger(name, data);
 
-                //Auto next source when player load was fail by amiss source.
+                //Auto switching next source when player load failed by amiss source.
                 //data.code === PLAYER_FILE_ERROR
-                if( (name === ERROR && (parseInt(data.code/100) === 3 || parseInt(data.code/100) === 5))|| name === NETWORK_UNSTABLED ){
+                if( name === ERROR || name === NETWORK_UNSTABLED ){
                     let currentSourceIndex = that.getCurrentSource();
                     if(currentSourceIndex+1 < that.getSources().length){
                         //this sequential has available source.
@@ -92,12 +97,23 @@ const Api = function(container){
 
                 that.trigger(READY);
             }).catch((error) => {
-                const errorObject = {code : INIT_ERROR, reason : "init error.", message : "Player init error.", error : error};
-                that.trigger(ERROR, errorObject);
+                if(error && error.code && ERRORS[error.code]){
+                    that.trigger(ERROR, ERRORS[error.code]);
+                }else {
+                    let tempError = ERRORS[INIT_UNKNWON_ERROR];
+                    tempError.error = error;
+                    that.trigger(ERROR, tempError);
+                }
             });
         }).catch((error) => {
-            const errorObject = {code : INIT_ERROR, reason : "init error.", message : "Player init error.", error : error};
-            that.trigger(ERROR, errorObject);
+            //INIT ERROR
+            if(error && error.code && ERRORS[error.code]){
+                that.trigger(ERROR, ERRORS[error.code]);
+            }else {
+                let tempError = ERRORS[INIT_UNKNWON_ERROR];
+                tempError.error = error;
+                that.trigger(ERROR, tempError);
+            }
 
             //xxx : If you init empty sources. (I think this is strange case.)
             //This works for this case.

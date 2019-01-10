@@ -1,6 +1,7 @@
 import adapter from 'utils/adapter';
 import _ from "utils/underscore";
 import {
+    ERRORS,
     PLAYER_WEBRTC_WS_ERROR,
     PLAYER_WEBRTC_WS_CLOSED,
     PLAYER_WEBRTC_ADD_ICECANDIDATE_ERROR,
@@ -54,7 +55,9 @@ const WebRTCLoader = function(provider, url, errorTrigger){
                     sdp: localSDP
                 }));
             }).catch(function(error){
-                closePeer({code : PLAYER_WEBRTC_SET_LOCAL_DESC_ERROR, reason : "setLocalDescription error occurred", message : "setLocalDescription error occurred", error : error});
+                let tempError = ERRORS[PLAYER_WEBRTC_SET_LOCAL_DESC_ERROR];
+                tempError.error = error;
+                closePeer(tempError);
             });
         };
 
@@ -68,9 +71,9 @@ const WebRTCLoader = function(provider, url, errorTrigger){
                 ws.onmessage = function(e) {
                     const message = JSON.parse(e.data);
                     if(message.error){
-                        OvenPlayerConsole.log(message.error);
-                        closePeer({code : PLAYER_WEBRTC_WS_ERROR, reason : "websocket error occured", message : "websocket error occurred", error : message});
-
+                        let tempError = ERRORS[PLAYER_WEBRTC_WS_ERROR];
+                        tempError.error = error;
+                        closePeer(tempError);
                         return false;
                     }
                     if(message.list) {
@@ -101,8 +104,10 @@ const WebRTCLoader = function(provider, url, errorTrigger){
                             peerConnection.createOffer().then(function(desc) {
                                 OvenPlayerConsole.log("createOffer : success")
                                 onLocalDescription(message.id, peerConnection, desc);
-                            }).catch(function(err){
-                                closePeer({code : PLAYER_WEBRTC_CREATE_ANSWER_ERROR, reason : "createOffer error occurred", message : "createOffer error occurred", error : error});
+                            }).catch(function(error){
+                                let tempError = ERRORS[PLAYER_WEBRTC_CREATE_ANSWER_ERROR];
+                                tempError.error = error;
+                                closePeer(tempError);
                             });
                         };
 
@@ -171,11 +176,15 @@ const WebRTCLoader = function(provider, url, errorTrigger){
                                     OvenPlayerConsole.log("createAnswer : success");
                                     onLocalDescription(message.id, peerConnection, desc);
                                 }).catch(function(error){
-                                    closePeer({code : PLAYER_WEBRTC_CREATE_ANSWER_ERROR, reason : "createAnswer error occurred", message : "createAnswer error occurred", error : error});
+                                    let tempError = ERRORS[PLAYER_WEBRTC_CREATE_ANSWER_ERROR];
+                                    tempError.error = error;
+                                    closePeer(tempError);
                                 });
                             }
                         }).catch(function(error){
-                            closePeer({code : PLAYER_WEBRTC_SET_REMOTE_DESC_ERROR, reason : "setRemoteDescription error occurred", message : "setRemoteDescription error occurred", error : error});
+                            let tempError = ERRORS[PLAYER_WEBRTC_SET_REMOTE_DESC_ERROR];
+                            tempError.error = error;
+                            closePeer(tempError);
                         });
                     }
 
@@ -187,19 +196,23 @@ const WebRTCLoader = function(provider, url, errorTrigger){
                                 peerConnection.addIceCandidate(new RTCIceCandidate(message.candidates[i])).then(function(){
                                     OvenPlayerConsole.log("addIceCandidate : success");
                                 }).catch(function(error){
-                                    closePeer({code : PLAYER_WEBRTC_ADD_ICECANDIDATE_ERROR, reason : "addIceCandidate error occurred", message : "addIceCandidate error occurred", error : error});
+                                    let tempError = ERRORS[PLAYER_WEBRTC_ADD_ICECANDIDATE_ERROR];
+                                    tempError.error = error;
+                                    closePeer(tempError);
                                 });
                             }
                         }
                     }
 
                 };
-                ws.onerror = function(e) {
-                    closePeer({code : PLAYER_WEBRTC_WS_ERROR, reason : "websocket error occured", message : "websocket error occurred", error : e});
+                ws.onerror = function(error) {
+                    let tempError = ERRORS[PLAYER_WEBRTC_WS_ERROR];
+                    tempError.error = error;
+                    closePeer(tempError);
                     reject(e);
                 };
             }catch(error){
-                closePeer({code : PLAYER_WEBRTC_WS_ERROR, reason : "websocket error occured", message : "websocket error occurred", error : error});
+                closePeer(error);
             }
         });
     }
