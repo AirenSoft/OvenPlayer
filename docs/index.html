@@ -106,17 +106,7 @@
 
 
     <script>
-        var player = "", preSources = "", errorOccured = false;
-        var getParameterByName = function (name, url) {
-            if (!url) url = window.location.href;
-            name = name.replace(/[\[\]]/g, '\\$&');
-            var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
-                results = regex.exec(url);
-            if (!results) return null;
-            if (!results[2]) return '';
-            return decodeURIComponent(results[2].replace(/\+/g, ' '));
-        }
-        var urlSources = getParameterByName("sources");
+
         var defaultSources = [{
                 type: 'mp4',
                 file:  '../dist/OCP_480.mp4',
@@ -154,39 +144,21 @@
                 label: "KOR VTT"
             }
         ];
-        if(urlSources){
-            preSources = JSON.parse(urlSources);
-        }
-        console.log("PRE SOURCE : ");
-        console.log(preSources);
         $( document ).ready(function() {
 
-            var clipboard = new ClipboardJS('.btnExport');
-
-            clipboard.on('success', function(e) {
-                $('.btnExport').tooltip('show');
-                setTimeout(function(){
-                    $('.btnExport').tooltip('hide');
-                },3000);
-
-                e.clearSelection();
-            });
-
-
-            player = OvenPlayer.create("player", {
-                sources: preSources || defaultSources,
+            var player = OvenPlayer.create("player", {
+                sources: defaultSources,
                 tracks : tracks
             });
-            player.on("ready", function(error){
-                errorOccured = false;
+            player.on("ready", function(data){
             });
             player.on("error", function(error){
-                errorOccured = true;
                 console.log(error);
-                navigation.errorMessage = error.message;
             });
 
         });
+
+
 
     </script>
 </body>
