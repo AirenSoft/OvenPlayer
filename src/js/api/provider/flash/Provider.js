@@ -5,6 +5,7 @@ import EventEmitter from "api/EventEmitter";
 import EventsListener from "api/provider/flash/Listener";
 import {extractVideoElement, separateLive, pickCurrentSource} from "api/provider/utils";
 import {
+    ERRORS, INIT_RTMP_SETUP_ERROR,
     STATE_IDLE, STATE_PLAYING, STATE_PAUSED, STATE_COMPLETE,
     PLAYER_STATE, PLAYER_COMPLETE, PLAYER_PAUSE, PLAYER_PLAY,
     CONTENT_SOURCE_CHANGED, CONTENT_LEVEL_CHANGED, CONTENT_TIME, CONTENT_CAPTION_CUE_CHANGED,
@@ -130,7 +131,7 @@ const Provider = function(spec, playerConfig){
                     if(retryCount < 100){
                         setTimeout(checkSwfIsReady, 100);
                     }else{
-                        return reject();
+                        return reject(ERRORS[INIT_RTMP_SETUP_ERROR]);
                     }
                 }
 

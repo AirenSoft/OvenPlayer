@@ -49,7 +49,9 @@ export const CONTENT_CAPTION_CHANGED = "captionChanged";
 export const CONTENT_TIME_MODE_CHANGED = "timeDisplayModeChanged";
 
 
-export const INIT_ERROR = 100;
+export const INIT_UNKNWON_ERROR = 100;
+export const INIT_UNSUPPORT_ERROR = 101;
+export const INIT_RTMP_SETUP_ERROR = 102;
 export const PLAYER_UNKNWON_ERROR = 300;
 export const PLAYER_UNKNWON_OPERATION_ERROR = 301;
 export const PLAYER_UNKNWON_NEWWORK_ERROR = 302;
@@ -57,9 +59,26 @@ export const PLAYER_UNKNWON_DECODE_ERROR = 303;
 export const PLAYER_FILE_ERROR = 304;
 export const PLAYER_CAPTION_ERROR = 305;
 export const PLAYER_WEBRTC_WS_ERROR = 501;
-export const PLAYER_WEBRTC_WS_CLOSED = 502;
-export const PLAYER_WEBRTC_ADD_ICECANDIDATE_ERROR = 503;
-export const PLAYER_WEBRTC_SET_REMOTE_DESC_ERROR = 504;
-export const PLAYER_WEBRTC_CREATE_ANSWER_ERROR = 505;
-export const PLAYER_WEBRTC_SET_LOCAL_DESC_ERROR = 506;
+export const PLAYER_WEBRTC_ADD_ICECANDIDATE_ERROR = 502;
+export const PLAYER_WEBRTC_SET_REMOTE_DESC_ERROR = 503;
+export const PLAYER_WEBRTC_CREATE_ANSWER_ERROR = 504;
+export const PLAYER_WEBRTC_SET_LOCAL_DESC_ERROR = 505;
 export const PLAYER_WEBRTC_NETWORK_SLOW = 510;
+
+export const ERRORS = {
+    100 : {code : 100 , message : "Can not load due to unknown reasons.", reason :"Can not load due to unknown reasons."},
+    101 : {code : 101 , message : "Can not load due to unsupported media.", reason :"Can not load due to unsupported media."},
+    102 : {code : 102 , message : "Flash fetching process aborted.", reason :"It looks like not found swf or your environment is localhost."},
+    300 : {code : 300 , message : "Can not play due to unknown reasons.", reason :"Can not play due to unknown reasons."},
+    301 : {code : 301 , message : "Fetching process aborted by user.", reason :"Fetching process aborted by user."},
+    302 : {code : 302 , message : "Some of the media could not be downloaded due to a network error.", reason :"Error occurred when downloading."},
+    303 : {code : 303 , message : "Unable to load media. This may be due to a server or network error, or due to an unsupported format.", reason :"Error occurred when decoding."},
+    304 : {code : 304 , message : "Media playback has been canceled. It looks like your media is corrupted or your browser does not support the features your media uses.", reason :"Media playback not supported."},
+    305 : {code : 305 , message : "Can not load captions due to unknown reasons.", reason :"Can not load captions due to unknown reasons."},
+    501 : {code : 501 , message : "Connection with low-latency(OME) server failed.", reason :"WebSocket connection failed."},
+    502 : {code : 502 , message : "Connection with low-latency(OME) server failed.", reason :"WebRTC addIceCandidate failed."},
+    503 : {code : 503 , message : "Connection with low-latency(OME) server failed.", reason :"WebRTC setRemoteDescription failed."},
+    504 : {code : 504 , message : "Connection with low-latency(OME) server failed.", reason :"WebRTC peer createOffer failed."},
+    505 : {code : 505 , message : "Connection with low-latency(OME) server failed.", reason :"WebRTC setLocalDescription failed."},
+    510 : {code : 510 , message : "Network connection is unstable. Check the network connection.", reason :"Network is slow."}
+};
