@@ -33,7 +33,7 @@
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="../index.html">OVENPLAYER</a>
+        <a class="navbar-brand" href="index.html">OVENPLAYER</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -236,7 +236,7 @@ player = OvenPlayer.create("player", {
                 sources : preSources||[],
                 sourceId : 0,
                 errorMessage : "",
-                exportUrl : preSources ?  "https://airensoft.github.io/OvenPlayer/docs/demo.html?sources="+ encodeURIComponent(JSON.stringify(preSources)) : ""
+                exportUrl : preSources ?  "https://ovenplayer.com/docs/demo.html?sources="+ encodeURIComponent(JSON.stringify(preSources)) : ""
             },
             methods : {
                 setProtocol : function(protocol){
@@ -245,17 +245,17 @@ player = OvenPlayer.create("player", {
                 addSource : function(){
                     var type = "", data = {};
                     if(this.choicedProtocol == "Protocol"){
-                        this.errorMessage = "Could you please choice a protocol?";
+                        this.errorMessage = "Please enter a protocol.";
                         return;
                     }
                     if(!this.url){
-                        this.errorMessage = "Could you please enter a streaming url?";
+                        this.errorMessage = "Please enter a playback url.";
                         return;
                     }
 
 
                     if(this.choicedProtocol === "webrtc" && ( this.url.indexOf('ws:') !== 0 && this.url.indexOf('wss:') !== 0)){
-                        this.errorMessage = "Could you please enter a correct OME URL? ex)ws://dev2.airensoft.com:3333/app/stream_o";
+                        this.errorMessage = "Please enter a correct OME URL. ex)ws://dev2.airensoft.com:3333/app/stream_o";
                         return;
                     }
 
@@ -269,14 +269,14 @@ player = OvenPlayer.create("player", {
                     this.url = "";
 
                     if(this.sources){
-                        this.exportUrl = "https://airensoft.github.io/OvenPlayer/docs/demo.html?sources="+ encodeURIComponent(JSON.stringify(this.sources));
+                        this.exportUrl = "https://ovenplayer.com/docs/demo.html?sources="+ encodeURIComponent(JSON.stringify(this.sources));
                     }
                 },
                 removeSource : function(index){
                     this.sources.splice(index, 1);
 
                     if(this.sources){
-                        this.exportUrl = "https://airensoft.github.io/OvenPlayer/docs/demo.html?sources="+ encodeURIComponent(JSON.stringify(this.sources));
+                        this.exportUrl = "https://ovenplayer.com/docs/demo.html?sources="+ encodeURIComponent(JSON.stringify(this.sources));
                     }
                 },
                 loadSources : function(){
@@ -291,7 +291,7 @@ player = OvenPlayer.create("player", {
                         }
                         this.errorMessage = "";
                     }else{
-                        this.errorMessage = "Could you please add streaming url?";
+                        this.errorMessage = "Please add a playback info.";
                     }
                 },
                 getSources : function(){
