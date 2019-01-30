@@ -11,7 +11,8 @@ const Loader = function(){
     const convertToVTTCues = function (cues) {
         return cues.map(cue => new VTTCue(cue.start, cue.end, cue.text));
     }
-    that.load = (track, successCallback, errorCallback) => {
+    //language : for SMI format.
+    that.load = (track, language, successCallback, errorCallback) => {
 
         var requestOptions  = {
             method: "GET",
@@ -47,7 +48,7 @@ const Loader = function(){
                 }else if(body.indexOf('SAMI') >= 0){
                     OvenPlayerConsole.log("SAMI LOADED");
                     loadSmiParser().then(SmiParser => {
-                        let parsedData = SmiParser(body, {});
+                        let parsedData = SmiParser(body, {fixedLang : language});
                         vttCues = convertToVTTCues(parsedData.result);
                         successCallback(vttCues);
                     }).catch(error => {

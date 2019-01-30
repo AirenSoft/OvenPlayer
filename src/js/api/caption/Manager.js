@@ -58,8 +58,7 @@ const Manager = function(api){
                 const track = playlist.tracks[i];
                 if(isSupport(track.kind) && ! _.findWhere(track, {file : track.file})){
                     //that.flushCaptionList(currentCaptionIndex);
-
-                    captionLoader.load(track, function(vttCues){
+                    captionLoader.load(track, track.lang, function(vttCues){
                         if(vttCues && vttCues.length > 0){
                             let captionId = bindTrack(track, vttCues);
                         }

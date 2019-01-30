@@ -1,3 +1,4 @@
+import {getBrowserLanguage} from "utils/browser";
 /*
  *  sami-parser
  *  The MIT License (MIT)
@@ -135,7 +136,7 @@ const _mergeMultiLanguages = function(arr) {
 };
 
 const SmiParser = function(sami, options) {
-    var definedLangs, duration, errors, getDefinedLangs, getLanguage, key, makeEndTime, parse, result, value, _ref;
+    var definedLangs, duration, errors, getDefinedLangs, getLanguage, key, makeEndTime, parse, result, value, _ref, fixedLang;
     parse = function() {
         var element, error, innerText, isBroken, item, lang, langItem, lineNum, nextStartTagIdx, ret, startTagIdx, startTime, str, tempRet, _ref, _ref1, _ref2;
         error = function(error) {
@@ -165,17 +166,18 @@ const SmiParser = function(sami, options) {
                 error('ERROR_BROKEN_TAGS');
             }
             str = str.slice(startTagIdx + nextStartTagIdx);
-            startTime = +((_ref1 = element.match(reStartTime)) != null ? _ref1[1]/1000 : void 0);  //HSLEE ms -> s 로 변경
+            startTime = +((_ref1 = element.match(reStartTime)) != null ? parseFloat(_ref1[1]/1000) : void 0);  //HSLEE ms -> s 로 변경
             if (startTime === null || startTime < 0) {
                 error('ERROR_INVALID_TIME');
             }
 
             // We don't need complex language. cus SMI doens't obey the rules...
-            //lang = getLanguage(element);
-            lang = "ko";
-            /*if (!lang) {
+            lang = getLanguage(element);
+            //lang = "ko";
+            if (!lang) {
+               // continue;
                 error('ERROR_INVALID_LANGUAGE');
-            }*/
+            }
             lineNum += ((_ref2 = element.match(reLineEnding)) != null ? _ref2.length : void 0) || 0;
             element = element.replace(reLineEnding, '');
             element = element.replace(reBr, "\n");
@@ -185,7 +187,6 @@ const SmiParser = function(sami, options) {
             item = {
                 start: startTime,
                 //languages: {},
-                //language : lang,
                 text: "",
                 contents: innerText
             };
@@ -194,17 +195,29 @@ const SmiParser = function(sami, options) {
                 item.text = innerText;
             }
             tempRet[lang] || (tempRet[lang] = []);
+            //tempRet[lang].push(item);
             if(item.start){
                 tempRet[lang].push(item);
             }
 
         }
-        for (lang in tempRet) {
-            langItem = tempRet[lang];
+
+        //fixed by hslee 190130
+        //SMI was designed for multi language. But global standard (my guess) SRT, VTT doesn't support multi language.
+        //This update is handling if SMI has multiple languages.
+        fixedLang = fixedLang || getBrowserLanguage();
+        let convertedLanguageNames = Object.keys(tempRet);
+        if(convertedLanguageNames && convertedLanguageNames.length > 0){
+            if(convertedLanguageNames.indexOf(fixedLang) > -1){
+                langItem = tempRet[fixedLang];
+            }else{
+                langItem = tempRet[convertedLanguageNames[0]];
+            }
             langItem = _sort(langItem);
             langItem = makeEndTime(langItem);
             ret = ret.concat(langItem);
         }
+
         //ret = _mergeMultiLanguages(ret);
         ret = _sort(ret);
         return ret;
@@ -323,6 +336,7 @@ const SmiParser = function(sami, options) {
         }
     }
     duration = (options != null ? options.duration : void 0) || 10; //HSLEE ms -> s 로 변경
+    fixedLang = options.fixedLang;
     sami = sami.trim();
     //getDefinedLangs();
     result = parse();
