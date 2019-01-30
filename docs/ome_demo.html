@@ -91,16 +91,24 @@
                                 <div class="col-sm-9">
                                     <div class="form-control-plaintext">
                                         <ol>
-                                            <li>Download "OBS Studio" on the official OBS website (<a href="https://obsproject.com/" class="text-primary" target="_blank">https://obsproject.com/</a>).</li>
-                                            <li>Install OBS on your PC and click "File" > "Settings".</li>
-                                            <li>Select "Stream" tab and make the following settings:</li>
+                                            <li>Download "OBS Studio" from official OBS website (<a href="https://obsproject.com/" class="text-primary" target="_blank">https://obsproject.com/</a>).</li>
+                                            <li>Install OBS on your PC and run it.</li>
+                                            <li>Click "File" in the top menu, then "Settings" or press "Settings" on the bottom-right.</li>
+                                            <li>Select the "Stream" tab and make the following settings:</li>
                                                 <ul>
                                                     <li>Stream Type: Custom Streaming Server</li>
                                                     <li>URL: rtmp://dev2.airensoft.com/app (This address is mentioned above.)</li>
                                                     <li>Stream key: stream </li>
                                                 </ul>
-                                            <li>Press "OK" button to complete the settings.</li>
-                                            <li>Press the "Start Streaming" button on the right side of OBS.</li>
+                                            <li> Go to the "Output" tab and set the following entries:</li>
+                                                <ul>
+                                                    <li>Output Mode: Advanced</li>
+                                                    <li>Profile: baseline</li>
+                                                    <li>Tune: zerolatency</li>
+                                                </ul>
+                                                <small>(When the Output Mode sets to Advanced, the Streaming Sub tab including Profile, Tune, etc. appears at the bottom.)</small>
+                                            <li>Click the "OK" button to complete the settings.</li>
+                                            <li>Press the "Start Streaming" button on the lower-right to broadcast.</li>
                                         </ol>
 
                                     </div>
