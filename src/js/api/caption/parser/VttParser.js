@@ -267,8 +267,10 @@ function parseCue(input, cue, regionList) {
             }
         }, /:/, /\s/);
 
+        //hslee remove these fields.
+        //Because safari dies here always. And Player doen't use style fields.
         // Apply default values for any missing fields.
-        cue.region = settings.get("region", null);
+        /*cue.region = settings.get("region", null);
         cue.vertical = settings.get("vertical", "");
         cue.line = settings.get("line", "auto");
         cue.lineAlign = settings.get("lineAlign", "start");
@@ -282,7 +284,8 @@ function parseCue(input, cue, regionList) {
             middle: "middle",
             end: "end",
             right: "end"
-        }, cue.align);
+        }, cue.align
+        );*/
     }
 
     function skipWhitespace() {
