@@ -21,9 +21,12 @@ const CaptionViewer = function($container, api, playerState){
         }else if($root.width() > 768){
             $root.find(".ovp-caption-text").css("font-size", "1.4rem");
             $root.find(".ovp-caption-text").css("line-height", "1.6rem");
-        }else {
+        }else if($root.width() > 300) {
             $root.find(".ovp-caption-text").css("font-size", "1rem");
             $root.find(".ovp-caption-text").css("line-height", "1.2rem");
+        }else {
+            $root.find(".ovp-caption-text").css("font-size", "0.8rem");
+            $root.find(".ovp-caption-text").css("line-height", "1rem");
         }
     };
 
