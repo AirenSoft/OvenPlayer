@@ -18,8 +18,8 @@ const Manager = function(container, providerType, loop){
         if(providerType !== PROVIDER_RTMP){
             mediaElement = document.createElement('video');
             mediaElement.setAttribute('disableRemotePlayback', '');
-            mediaElement.setAttribute('webkit-playsinline', '');
-            mediaElement.setAttribute('playsinline', '');
+            mediaElement.setAttribute('webkit-playsinline', 'true');
+            mediaElement.setAttribute('playsinline', 'true');
             if(loop){
                 mediaElement.setAttribute('loop', '');
             }

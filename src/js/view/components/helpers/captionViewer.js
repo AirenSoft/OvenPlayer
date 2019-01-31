@@ -11,9 +11,11 @@ import {
     CONTENT_CAPTION_CUE_CHANGED
 } from "api/constants";
 import LA$ from 'utils/likeA$';
+import ResizeSensor from "resize-sensor";
 
 const CaptionViewer = function($container, api, playerState){
     const $root = LA$("#"+api.getContainerId());
+    let resizeSensor = "";
     const resizeCaption = function(){
         if($root.width() > 1200){
             $root.find(".ovp-caption-text").css("font-size", "2rem");
@@ -33,6 +35,11 @@ const CaptionViewer = function($container, api, playerState){
     const onRendered = function($container, $current, template){
         let isDisable = false;
         let deleteTimer = 0;
+
+        new ResizeSensor($root.get(), function() {
+            resizeCaption();
+        });
+
         api.on(CONTENT_CAPTION_CHANGED, function(index) {
             if(index > -1){
                 isDisable = false;
@@ -69,11 +76,6 @@ const CaptionViewer = function($container, api, playerState){
         api.off(CONTENT_CAPTION_CUE_CHANGED, null, template);
     };
     const events = {
-        "resize window" : function(event, $current, template){
-            event.preventDefault();
-
-            resizeCaption();
-        }
     };
 
     return OvenTemplate($container, "CaptionViewer", playerState, events, onRendered, onDestroyed );
