@@ -17,7 +17,6 @@ const Loader = function(){
         var requestOptions  = {
             method: "GET",
             url : track.file,
-            headers: { "User-Agent": "Mozilla/5.0" },
             encoding: null
         };
         Request(requestOptions, function(error, response, body) {
