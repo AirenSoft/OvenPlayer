@@ -207,7 +207,7 @@ const SmiParser = function(sami, options) {
         //This update is handling if SMI has multiple languages.
         fixedLang = fixedLang || getBrowserLanguage();
         let convertedLanguageNames = Object.keys(tempRet);
-        console.log(convertedLanguageNames);
+
         if(convertedLanguageNames && convertedLanguageNames.length > 0){
             if(convertedLanguageNames.indexOf(fixedLang) > -1){
                 langItem = tempRet[fixedLang];
