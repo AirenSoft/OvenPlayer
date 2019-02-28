@@ -72,7 +72,7 @@ const WebRTCLoader = function(provider, url, errorTrigger){
                     const message = JSON.parse(e.data);
                     if(message.error){
                         let tempError = ERRORS[PLAYER_WEBRTC_WS_ERROR];
-                        tempError.error = error;
+                        tempError.error = message.error;
                         closePeer(tempError);
                         return false;
                     }
@@ -209,7 +209,7 @@ const WebRTCLoader = function(provider, url, errorTrigger){
                     let tempError = ERRORS[PLAYER_WEBRTC_WS_ERROR];
                     tempError.error = error;
                     closePeer(tempError);
-                    reject(e);
+                    reject(error);
                 };
             }catch(error){
                 closePeer(error);

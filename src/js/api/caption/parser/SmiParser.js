@@ -207,11 +207,12 @@ const SmiParser = function(sami, options) {
         //This update is handling if SMI has multiple languages.
         fixedLang = fixedLang || getBrowserLanguage();
         let convertedLanguageNames = Object.keys(tempRet);
+
         if(convertedLanguageNames && convertedLanguageNames.length > 0){
             if(convertedLanguageNames.indexOf(fixedLang) > -1){
                 langItem = tempRet[fixedLang];
             }else{
-                langItem = tempRet[convertedLanguageNames[0]];
+                langItem = tempRet[convertedLanguageNames.filter(function(name){return name !== "undefined"})[0]];
             }
             langItem = _sort(langItem);
             langItem = makeEndTime(langItem);

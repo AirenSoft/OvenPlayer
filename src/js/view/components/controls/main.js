@@ -17,6 +17,7 @@ import {
     PROVIDER_RTMP,
     ERROR
 } from "api/constants";
+import ResizeSensor from "resize-sensor";
 
 const Controls = function($container, api){
     let volumeButton = "", playButton= "", progressBar = "", timeDisplay = "", fullScreenButton = "", frameButtons = "";
@@ -52,6 +53,10 @@ const Controls = function($container, api){
         playButton = PlayButton($current.find(".ovp-left-controls"), api);
         volumeButton = VolumeButton($current.find(".ovp-left-controls"), api);
         fullScreenButton = FullScreenButton($current.find(".ovp-right-controls"), api);
+
+        new ResizeSensor($root.get(), function() {
+            setPanelMaxHeight();
+        });
 
         api.on(CONTENT_META, function(data){
             initTimeDisplay(data);
@@ -108,12 +113,6 @@ const Controls = function($container, api){
                 let panelData = generateMainData(api);
                 panelManager.add(Panels($current, api, panelData));
             }
-        },
-        "resize window" : function(event, $current, template){
-            event.preventDefault();
-            console.log("resize");
-            setPanelMaxHeight();
-
         }
     };
 

@@ -42,7 +42,9 @@ const FullScreenButton = function($container, api){
             $root.get().mozRequestFullScreen();
         } else if ($root.get().msRequestFullscreen) {
             $root.get().msRequestFullscreen();
-        } else {
+        } else if ($root.find("video").get().webkitEnterFullScreen){
+            $root.find("video").get().webkitEnterFullScreen();
+        }else {
             // TODO(rock): warn not supported
         }
     };

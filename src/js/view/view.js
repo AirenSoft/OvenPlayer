@@ -101,8 +101,6 @@ const View = function($container){
     const onRendered = function($current, template){
         $playerRoot = $current;
         viewTemplate = template;
-
-
     };
     const onDestroyed = function(){
         if(helper){

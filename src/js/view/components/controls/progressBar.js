@@ -9,6 +9,7 @@ import {
     CONTENT_TIME,
     CONTENT_BUFFER
 } from "api/constants";
+//import ResizeSensor from "resize-sensor";
 
 const ProgressBar = function($container, api){
     const $root = LA$("#"+api.getContainerId());
@@ -125,6 +126,12 @@ const ProgressBar = function($container, api){
         knobWidth = $knob.width();
         $time = $current.find(".ovp-progressbar-time");
 
+        /*new ResizeSensor($progressBar.get(), function() {
+            console.log('Changed  $progressBar' );
+            positionElements(currentPlayingPercentage);
+            drawLoadProgress(currentLoadedPercentage);
+        });*/
+
         api.on(CONTENT_TIME, function(data) {
             if(data && data.duration && data.position){
                 positionElements(data.position / data.duration);
@@ -143,11 +150,6 @@ const ProgressBar = function($container, api){
         api.off(CONTENT_BUFFER, null, template);
     };
     const events = {
-        "resize window" : function(event, $current, template){
-            event.preventDefault();
-            positionElements(currentPlayingPercentage);
-            drawLoadProgress(currentLoadedPercentage);
-        },
         "mouseenter .ovp-progressbar" : function(event, $current, template){
             event.preventDefault();
 
