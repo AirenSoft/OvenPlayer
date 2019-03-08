@@ -62,6 +62,16 @@
   font-weight: normal;
   font-style: normal;
 }
+@font-face {
+  font-family: 'ovp-icons';
+  src: url('../assets/fonts/fontello.eot?13010392');
+  src: url('../assets/fonts/fontello.eot?13010392#iefix') format('embedded-opentype'),
+    //url('../assets/fonts/fontello.woff?13010392') format('woff'),
+  url('../assets/fonts/fontello.ttf?13010392') format('truetype'),
+  url('../assets/fonts/fontello.svg?13010392#fontello') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
 
 /**
  * @brief   common style
@@ -79,10 +89,8 @@
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
   color: #eee;
-  font-family: 'Noto Sans', sans-serif;
-  font-size: 1rem;
-  line-height: 1.3;
-  font-weight: normal;
+  font-size: 14px;
+  font-weight: 100;
   outline: 0;
 
   object{
@@ -187,8 +195,175 @@
   }
 }
 
+.ovp-icon-button{
+  font-family: "ovp-icons";
+  font-style: normal;
+  font-weight: normal;
+  speak: none;
+
+  display: inline-block;
+  text-decoration: inherit;
+  width: 1em;
+  text-align: center;
+
+  /* For safety - reset parent styles, that can break glyph codes*/
+  font-variant: normal;
+  text-transform: none;
+
+  /* Font smoothing. That was taken from TWBS */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  cursor: pointer;
+
+  &.disable {
+    color : #4f4f4f;
+  }
+}
+.ovp-badge{
+  display: inline-block;
+  padding: .75em .714em .714em .680em;
+  font-size: 1em;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: 0.286em;
+  color: #fff;
+  background-color: #12121c;
+}
+.ovp-playlist {
+  position : absolute;
+  width : 100%;
+  height:100%;
+  left: 0;
+  top : 0;
+  padding: 2.857em;
+  background: #000;
+  .ovp-badge{
+    position: absolute;
+    top: 0.857em;
+    right: 0.857em;
+    opacity: 0.7;
+  }
+  .btn-left {
+    float : left;
+    font-size:2.857em;
+  }
+  .btn-right {
+    float : right;
+    font-size: 2.857em;
+  }
+
+  .ovp-playlist-header{
+    font-size: 2.857em;
+    font-weight: bold;
+    &:after{
+      dispaly: block;
+      content: '';
+      clear: both;
+    }
+    .btn-close{
+      float : right;
+    }
+  }
+  .ovp-playlist-body{
+    height: 100%;
+    overflow: hidden;
+    position : relative;
+    .ovp-playlist-body-arrows{
+      margin: 0;
+      position: absolute;
+      top: 50%;
+      -ms-transform: translateY(-50%);
+      transform: translateY(-50%);
+      width: 100%;
+      left: 0;
+    }
+    .ovp-playlist-body-container{
+      width: 100%;
+      height : 100%;
+      position : relative;
+      margin-right : auto;
+      margin-left : auto;
+      max-width : 992px;
+
+      .ovp-playlist-body-center{
+        margin: 0;
+        position: absolute;
+        top: 50%;
+        padding-right : 3em;
+        padding-left : 3em;
+        -ms-transform: translateY(-50%);
+        transform: translateY(-50%);
+        width: 100%;
+      }
+    }
+    .ovp-playlist-body-row{
+      margin-right: -15px;
+      margin-left: -15px;
+      display: -ms-flexbox;
+      display: flex;
+      -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
 
 
+      .ovp-playlist-card{
+        padding-right : 15px;
+        padding-left : 15px;
+        margin : 15px 0;
+        -ms-flex-preferred-size: 0;
+        flex-basis: 0;
+        -ms-flex-positive: 1;
+        flex-grow: 1;
+        -ms-flex: 0 0 33.333333%;
+        flex: 0 0 33.333333%;
+        max-width: 33.333333%;
+        cursor: pointer;
+
+        &.active {
+          color : #50e3c2;
+          .ovp-playlist-card-thumbnail{
+            border-color : #50e3c2;
+          }
+        }
+
+        .ovp-playlist-card-thumbnail{
+          position: relative;
+          display: block;
+          width: 100%;
+          padding: 0;
+          overflow: hidden;
+          border : 0.214em solid transparent;
+          img{
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+          }
+          &::before {
+            padding-top: 56.25%;
+            display: block;
+            content: "";
+          }
+        }
+        .ovp-playlist-card-title{
+          margin-top : 0.857em;
+          font-size: 1.429em;
+          padding: 2px 0;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+      }
+    }
+
+  }
+}
 
 
 /**
@@ -215,14 +390,14 @@
     .ovp-message-text {
       display: inline-block;
       background-color: rgba(28,28,28,.4);
-      padding: 1rem 3rem;
+      padding: 1em 3em;
       word-wrap: break-word;
       max-width : 90%;
     }
     .ovp-message-button{
       display: inline-block;
-      padding : 1rem;
-      margin-left : 0.4rem;
+      padding : 1em;
+      margin-left : 0.4em;
       background-color: rgba(28,28,28,.4);
       cursor : pointer;
     }
@@ -275,7 +450,7 @@
   overflow-y : auto;
   max-height:100%;
   width: 260px;
-  font-size: 0.8rem;
+  font-size: 0.8em;
   user-select: none;
   background-color: rgba(28,28,28,.9);
   text-shadow: 0 0 2px rgba(0,0,0,.5);
@@ -298,6 +473,7 @@
     .ovp-setting-title{
       .ovp-setting-title-title {
         padding-left: 12px;
+        font-weight: bold;
         //font-size: 0.9rem;
       }
       .ovp-setting-title-previcon {
@@ -415,6 +591,21 @@
           }
         }
       }
+      .ovp-playlist-button {
+        position: relative;
+        top: 10px;
+        margin-right: 12px;
+
+        & > i{
+          display: inline-block;
+          width: 100%;
+          height: 100%;
+          background-size: 100%;
+          &{
+            background: url('../assets/images/ic-player-playlist.svg');
+          }
+        }
+      }
       .ovp-left-controls {
         float: left;
         height: 100%;
@@ -462,14 +653,14 @@
               -webkit-font-smoothing: antialiased;
               -moz-osx-font-smoothing: grayscale;
               position: absolute;
-              font-size: 2.4rem;
+              font-size: 2.4em;
               left : 0;
               line-height:30px;
               height:30px;
             }
             .btn-text{
               font-weight: bold;
-              font-size : 0.8rem;
+              font-size : 0.8em;
               line-height:30px;
               height:30px;
             }
@@ -580,7 +771,7 @@
     background-color: rgba(28,28,28,0.9);
     border-radius: 2px;
     padding: 5px 9px;
-    font-size: 0.8rem;
+    font-size: 0.8em;
     line-height: 15px;
     user-select: none;
   }
@@ -758,7 +949,7 @@
   white-space: nowrap;
   line-height: 30px;
   vertical-align: top;
-  font-size: 1rem;
+  font-size: 14px;
   user-select: none; /*흠 이부분 어떻게 처리하지*/
 
   .ovp-time-current,
@@ -832,7 +1023,7 @@
     color: #eee;
     cursor: pointer;
     outline: none;
-    font-size: 0.8rem;
+    font-size: 0.8em;
     font-weight: lighter;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -1165,11 +1356,11 @@
     -webkit-transition: bottom .25s cubic-bezier(0.0,0.0,0.2,1);
     transition: bottom .25s cubic-bezier(0.0,0.0,0.2,1);
     .ovp-caption-text {
-      font-size: 1rem;
-      line-height: 1.2rem;
+      font-size: 1em;
+      line-height: 1.2em;
       text-shadow: 2px 2px 2px gray;
       color: #fff;
-      padding: .1rem .3rem;
+      padding: .1em .3em;
       user-select: none;
       word-break: break-word;
       white-space: pre-line;
@@ -1194,6 +1385,53 @@
 }
 
 
+
+/*Responsive  */
+
+.ovp-wrapper.ovenplayer.large{
+  font-size : 14px;
+  .ovp-caption-text{
+    font-size : 2em;
+    line-height : 2em;
+  }
+
+}
+.ovp-wrapper.ovenplayer.medium{
+  font-size : 12px;
+  .ovp-caption-text{
+    font-size : 1.4em;
+    line-height : 1.4em;
+  }
+}
+.ovp-wrapper.ovenplayer.small{
+  font-size : 10px;
+  .ovp-caption-text{
+    font-size : 1.4em;
+    line-height : 1.4em;
+  }
+  .ovp-playlist{
+    padding : 1rem;
+
+  }
+
+}
+.ovp-wrapper.ovenplayer.xsmall{
+  font-size : 8px;
+  .ovp-caption-text{
+    font-size : 1.4em;
+    line-height : 1.4em;
+  }
+  .ovp-playlist{
+    padding : 1rem;
+    .ovp-playlist-card{
+      -ms-flex: 0 0 100%;
+      flex: 0 0 100%;
+      max-width: 100%;
+      padding : 0 40px;
+    }
+  }
+
+}
 
 
 /*lowlatency panel*/

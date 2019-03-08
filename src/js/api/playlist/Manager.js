@@ -2,15 +2,20 @@ import _ from "utils/underscore";
 import {isRtmp, isWebRTC, isDash } from "utils/validator";
 import {extractExtension ,trim} from "../../utils/strings";
 import SupportChecker from "../SupportChecker";
+import {PLAYLIST_CHANGED} from "api/constants";
 
 /**
  * @brief   This manages Playlist or Sources.
  * @param
  *
  * */
-const Manager = function(){
+const Manager = function(provider){
     const that = {};
-    let currentPlaylist = [];
+    let currentPlaylistItem = [];
+    let spec = {
+        playlist : [],
+        currentIndex : 0
+    };
     let supportChecker = SupportChecker();
 
     OvenPlayerConsole.log("PlaylistManager loaded.");
@@ -78,7 +83,7 @@ const Manager = function(){
 
     }
 
-    that.setPlaylist =(playlist) =>{
+    that.initPlaylist =(playlist) =>{
         OvenPlayerConsole.log("PlaylistManager setPlaylist() ", playlist);
         const prettiedPlaylist = (_.isArray(playlist) ? playlist : [playlist]).map(function(item){
             if(!_.isArray(item.tracks)) {
@@ -163,17 +168,34 @@ const Manager = function(){
 
             return playlistItem;
         });
-        currentPlaylist = prettiedPlaylist;
+        spec.playlist = prettiedPlaylist;
         return prettiedPlaylist;
     };
     that.getPlaylist = () => {
-        OvenPlayerConsole.log("PlaylistManager getPlaylist() ", currentPlaylist);
-        return currentPlaylist;
+        OvenPlayerConsole.log("PlaylistManager getPlaylist() ", spec.playlist);
+        return spec.playlist;
+    };
+    that.getCurrentPlayList = () => {
+        if(spec.playlist[spec.currentIndex]){
+            return spec.playlist[spec.currentIndex];
+        }else{
+            return [];
+        }
+    };
+    that.getCurrentPlaylistIndex = () => {
+        return spec.currentIndex;
+    };
+    that.setCurrentPlaylist = (index) => {
+        if(spec.playlist[index]){
+            spec.currentIndex = index;
+            provider.trigger(PLAYLIST_CHANGED, spec.currentIndex);
+        }
+        return spec.currentIndex;
     };
     that.getCurrentSources = () => {
         //We do not support "PLAYLIST" not yet. So this returns playlist of 0.
-        OvenPlayerConsole.log("PlaylistManager getCurrentSources() ", currentPlaylist[0].sources);
-        return currentPlaylist[0].sources;
+        OvenPlayerConsole.log("PlaylistManager getCurrentSources() ", spec.playlist[spec.currentIndex].sources);
+        return spec.playlist[spec.currentIndex].sources;
     };
 
     return that;

@@ -142,23 +142,23 @@ const SupportChecker = function(){
             }
         }
     };
-    that.findProviderNamesByPlaylist = (playlist_) => {
-        OvenPlayerConsole.log("SupportChecker : findProviderNamesByPlaylist()", playlist_);
+    that.findProviderNamesByPlaylist = (playlistItem) => {
+        OvenPlayerConsole.log("SupportChecker : findProviderNamesByPlaylist()", playlistItem);
         let supportNames = [];
-        for (let i = playlist_.length; i--;) {
-            const item = playlist_[i];
-            let source = "";
-            for(let j = 0; j < item.sources.length; j ++){
-                source = item.sources[j];
-                if (source) {
-                    const supported = that.findProviderNameBySource(source);
-                    if (supported) {
-                        supportNames.push(supported);
-                    }
+        /*for (let i = playlist_.length; i--;) {
+
+
+        }*/
+        const item = playlistItem;
+        let source = "";
+        for(let j = 0; j < item.sources.length; j ++){
+            source = item.sources[j];
+            if (source) {
+                const supported = that.findProviderNameBySource(source);
+                if (supported) {
+                    supportNames.push(supported);
                 }
             }
-
-
         }
 
         return supportNames;

@@ -11,17 +11,32 @@ player = OvenPlayer.create("player", {
     mute : false,
     volume : 100,
     controls : true,
-    sources: [{
-            type : "mpd", 
-            file :  "https://path.to/your_video.mpd", 
-            framerate : 30,
-            label: "360P DASH"
-        }],
-    tracks: [{
-            kind : "captions", 
-            file :  "https://path.to/your_caption.vtt", 
-            label : "KO vtt"
-        }]
+    playlist : [
+        {
+                title : "01. I drive slow.",
+                image : "https://path.to/your_video_thumbnail.jpeg",
+                duration : 7343,
+                sources: [{
+                        type : "mpd", 
+                        file :  "https://path.to/your_video.mpd", 
+                        framerate : 30,
+                        label: "360P DASH"
+                    }],
+                tracks: [{
+                        kind : "captions", 
+                        file :  "https://path.to/your_caption.vtt", 
+                        label : "KO vtt"
+                    }]
+        }
+    ]
+... or simple 
+ player = OvenPlayer.create("player", {
+      sources: [{
+                              type : "mpd", 
+                              file :  "https://path.to/your_video.mpd", 
+                              framerate : 30,
+                              label: "360P DASH"
+                          }]
 });
 ```
 
@@ -107,6 +122,86 @@ Enter the URLs of the diverse protocols to play.
         label: "360P RTMP"
     }
 ] 
+```
+
+#### playlist 
+type|default
+------|------
+Array| none
+
+Enter the URLs of the diverse sources to play.
+```javascript
+
+ [
+        {
+                title : "01",
+                image : "https://path.to/your_video_thumbnail.jpeg",
+                duration : 7343,
+                sources: [    {
+                                  type : "mp4", 
+                                  file :  "https://path.to/your_video", 
+                                  framerate : 30,
+                                  label : "360P"
+                              },
+                              {
+                                  type : "mpd", 
+                                  file :  "https://path.to/your_video.mpd", 
+                                  framerate : 30,
+                                  label: "360P DASH"
+                              },
+                              {
+                                  type : "hls", 
+                                  file :  "https://path.to/your_video.m3u8", 
+                                  framerate : 30,
+                                  label: "360P HLS"
+                              },
+                              {
+                                  type : "rtmp", 
+                                  file :  "rtmp://path.to/your_video", 
+                                  framerate : 30,
+                                  label: "360P RTMP"
+                              }],
+                tracks: [{
+                        kind : "captions", 
+                        file :  "https://path.to/your_caption.vtt", 
+                        label : "KO vtt"
+                    }]
+        },
+        {
+                        title : "02",
+                        image : "https://path.to/your_video_thumbnail2.jpeg",
+                        duration : 8333,
+                        sources: [    {
+                                          type : "mp4", 
+                                          file :  "https://path.to/your_video2", 
+                                          framerate : 30,
+                                          label : "360P"
+                                      },
+                                      {
+                                          type : "mpd", 
+                                          file :  "https://path.to/your_video.mpd2", 
+                                          framerate : 30,
+                                          label: "360P DASH"
+                                      },
+                                      {
+                                          type : "hls", 
+                                          file :  "https://path.to/your_video.m3u82", 
+                                          framerate : 30,
+                                          label: "360P HLS"
+                                      },
+                                      {
+                                          type : "rtmp", 
+                                          file :  "rtmp://path.to/your_video2", 
+                                          framerate : 30,
+                                          label: "360P RTMP"
+                                      }],
+                        tracks: [{
+                                kind : "captions", 
+                                file :  "https://path.to/your_caption2.vtt", 
+                                label : "KO vtt"
+                            }]
+                }
+ ]
 ```
 
 #### tracks 
@@ -356,6 +451,69 @@ Mutes the player.
 |-|-|-|
 |`volume`|Number|Set the volume of the player between 1-100
 
+####  `playlist` = player.getPlaylist()
+
+Returns an array of objects based on each playlist 
+
+||Type|Memo|
+|-|-|-|
+|`playlist`|Array.\<Object\>|See the example of playlist.
+
+##### Example playlist
+```javascript
+[
+        {
+                title : "01",
+                image : "https://path.to/your_video_thumbnail.jpeg",
+                duration : 7343,
+                sources: [    {
+                                  type : "mp4", 
+                                  file :  "https://path.to/your_video", 
+                                  framerate : 30,
+                                  label : "360P"
+                              },
+                              {
+                                  type : "mpd", 
+                                  file :  "https://path.to/your_video.mpd", 
+                                  framerate : 30,
+                                  label: "360P DASH"
+                              },
+                              {
+                                  type : "hls", 
+                                  file :  "https://path.to/your_video.m3u8", 
+                                  framerate : 30,
+                                  label: "360P HLS"
+                              },
+                              {
+                                  type : "rtmp", 
+                                  file :  "rtmp://path.to/your_video", 
+                                  framerate : 30,
+                                  label: "360P RTMP"
+                              }],
+                tracks: [{
+                        kind : "captions", 
+                        file :  "https://path.to/your_caption.vtt", 
+                        label : "KO vtt"
+                    }]
+        }
+]
+```
+
+#### `currentPlaylistIndex` =  player.getCurrentPlaylist()
+
+||Type|Memo|
+|-|-|-|
+|`currentPlaylistIndex`|Number|Number of the playlist index
+
+####  player.setCurrentPlaylist(`index`)
+
+Change the playlist to the playlist index.
+
+||Type|Memo|
+|-|-|-|
+|`index`|Number|Sets playlist to a specified index|
+
+
 ####  `sourceList` = player.getSources()
 
 Returns an array of objects based on each sources of a media item
@@ -594,6 +752,17 @@ Attribute|Type|Memo
 ------|------|-------
 `newstate`|String| idle, complete, paused, playing, error, loading
 
+
+#### player.on('resized')
+
+Fired when the player's size has been changed.
+
+Attribute|Type|Memo
+------|------|-------
+`size`|String|The new player size. large(>992), medium(<992), small(<768), xsmall(<576).
+
+
+
 #### player.on('play')
 
 Fired when the player enters the playing state.
@@ -659,6 +828,16 @@ Triggered when the player's volume is changed.
 Attribute|Type|Memo
 ------|------|-------
 `volume`|Number|New volume percentage (0-100)
+
+
+#### player.on('playlistChanged')
+
+Fired when the active playlist is changed. Happens in response to e.g. a user clicking an option in the playlist menu or a script calling `setCurrentPlaylist` or prev playlist has been completed.
+
+Attribute|Type|Memo
+------|------|-------
+``|Number|index of the new playlist index
+
 
 #### player.on('sourceChanged')
 

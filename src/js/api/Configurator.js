@@ -21,7 +21,8 @@ const Configurator = function(options, provider){
             loop : false,
             controls : true,
             autoStart : false,
-            timecode : true
+            timecode : true,
+            sourceLabel : ""
         };
         const serialize = function (val) {
             if (val === undefined) {

@@ -1,5 +1,5 @@
 
-const Controls = function(){
+const Controls = function(hasPlaylist){
     return '<div class="ovp-controls-container">'+
 
          '<div class="ovp-bottom-panel">' +
@@ -10,6 +10,7 @@ const Controls = function(){
          '        <div class="ovp-left-controls">' +
          '        </div>' +
          '        <div class="ovp-right-controls">' +
+        (hasPlaylist? ('<button class="ovp-button ovp-playlist-button"><i class="ovp-setting-button-icon"></i></button>') : '') +
          '               <button class="ovp-button ovp-setting-button"><i class="ovp-setting-button-icon"></i></button>' +
          '        </div>' +
          '    </div>' +

@@ -24,8 +24,10 @@ export const CONTENT_SEEK = "seek";
 export const CONTENT_BUFFER_FULL = "bufferFull";
 export const DISPLAY_CLICK = "displayClick";
 export const CONTENT_LOADED = "loaded";
+export const PLAYLIST_CHANGED = "playlistChanged";
 export const CONTENT_SEEKED = "seeked";
 export const NETWORK_UNSTABLED = "unstableNetwork";
+
 
 export const ERROR = "error";
 
@@ -34,6 +36,7 @@ export const PLAYER_STATE = "stateChanged";
 export const PLAYER_COMPLETE = STATE_COMPLETE;
 export const PLAYER_PAUSE = "pause";
 export const PLAYER_PLAY = "play";
+export const PLAYER_RESIZED = "resized";
 
 export const CONTENT_BUFFER = "bufferChanged";
 export const CONTENT_TIME = "time";

@@ -27,9 +27,12 @@ export const separateLive = function(extendedElement) {
 };
 
 export const errorTrigger = function(error, provider){
-    provider.setState(STATE_ERROR);
-    provider.pause();
-    provider.trigger(ERROR, error );
+    if(provider){
+        provider.setState(STATE_ERROR);
+        provider.pause();
+        provider.trigger(ERROR, error );
+    }
+
 };
 
 export const pickCurrentSource = (sources, currentSource, playerConfig) => {
