@@ -74,8 +74,8 @@ const Controller = function(){
     };
 
 
-    that.loadProviders = (playlist) =>{
-        const supportedProviderNames = supportChacker.findProviderNamesByPlaylist(playlist);
+    that.loadProviders = (playlistItem) =>{
+        const supportedProviderNames = supportChacker.findProviderNamesByPlaylist(playlistItem);
         OvenPlayerConsole.log("ProviderController loadProviders() ", supportedProviderNames);
         return Promise.all(
             supportedProviderNames.filter(function(providerName){

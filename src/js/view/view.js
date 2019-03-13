@@ -10,6 +10,7 @@ import LA$ from 'utils/likeA$';
 import {
     READY,
     DESTROY,
+    PLAYER_RESIZED,
     STATE_IDLE,
     STATE_PLAYING,
     STATE_STALLED,
@@ -21,6 +22,7 @@ import {
     PLAYER_STATE,
     ERROR
 } from "api/constants";
+import ResizeSensor from "resize-sensor";
 
 require('../../css/ovenplayer.less');
 
@@ -28,6 +30,8 @@ const View = function($container){
     let viewTemplate = "", controls = "", helper = "", $playerRoot, contextPanel = "", api = "", autoHideTimer = "", playerState = STATE_IDLE;
     let isShiftPressed = false;
     let panelManager = PanelManager();
+
+    let currentPlayerSize = "";
 
     let setHide = function (hide, autoHide) {
 
@@ -101,6 +105,33 @@ const View = function($container){
     const onRendered = function($current, template){
         $playerRoot = $current;
         viewTemplate = template;
+
+        new ResizeSensor($playerRoot.get(), function() {
+            let newSize = "";
+            $playerRoot.removeClass("large");
+            $playerRoot.removeClass("medium");
+            $playerRoot.removeClass("small");
+            $playerRoot.removeClass("xsmall");
+            let playerWidth = $playerRoot.width();
+            if(playerWidth < 576){
+                newSize = "xsmall";
+                $playerRoot.addClass("xsmall");
+            }else if(playerWidth < 768){
+                newSize = "small";
+                $playerRoot.addClass("small");
+            }else if(playerWidth < 992){
+                newSize = "medium";
+                $playerRoot.addClass("medium");
+            }else{
+                newSize = "large";
+                $playerRoot.addClass("large");
+            }
+            if(newSize != currentPlayerSize){
+                currentPlayerSize = newSize;
+                api.trigger(PLAYER_RESIZED, currentPlayerSize);
+            }
+        });
+
     };
     const onDestroyed = function(){
         if(helper){

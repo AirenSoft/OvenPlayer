@@ -6,6 +6,7 @@ import PlayButton from "view/components/controls/playButton";
 import FrameButtons from "view/components/controls/frameButtons";
 import VolumeButton from "view/components/controls/volumeButton";
 import ProgressBar from "view/components/controls/progressBar";
+import PlaylistPanel from "view/components/controls/playlistPanel";
 import LA$ from 'utils/likeA$';
 import TimeDisplay from "view/components/controls/timeDisplay";
 import FullScreenButton from "view/components/controls/fullScreenButton";
@@ -17,12 +18,13 @@ import {
     PROVIDER_RTMP,
     ERROR
 } from "api/constants";
-import ResizeSensor from "resize-sensor";
-
 const Controls = function($container, api){
-    let volumeButton = "", playButton= "", progressBar = "", timeDisplay = "", fullScreenButton = "", frameButtons = "";
+    let volumeButton = "", playButton= "", progressBar = "", timeDisplay = "", fullScreenButton = "", frameButtons = "", hasPlaylist = false;
     let panelManager = PanelManager();
     const $root = LA$("#"+api.getContainerId());
+
+    hasPlaylist = api.getPlaylist().length > 1 ? true : false;
+    let playlistPanel = "";
     let setPanelMaxHeight = function(){
         if($root.find(".ovp-setting-panel")){
             $root.find(".ovp-setting-panel").css("max-height",  $root.height() - $root.find(".ovp-bottom-panel").height() + "px");
@@ -54,9 +56,10 @@ const Controls = function($container, api){
         volumeButton = VolumeButton($current.find(".ovp-left-controls"), api);
         fullScreenButton = FullScreenButton($current.find(".ovp-right-controls"), api);
 
-        new ResizeSensor($root.get(), function() {
+
+        api.on("resize", function(size){
             setPanelMaxHeight();
-        });
+        },template);
 
         api.on(CONTENT_META, function(data){
             initTimeDisplay(data);
@@ -98,6 +101,9 @@ const Controls = function($container, api){
         if(volumeButton){
             volumeButton.destroy();
         }
+
+        api.off("resize", null, template);
+
     };
     const events = {
         "mouseleave .ovp-controls" : function(event, $current, template){
@@ -113,10 +119,14 @@ const Controls = function($container, api){
                 let panelData = generateMainData(api);
                 panelManager.add(Panels($current, api, panelData));
             }
+        },
+        "click .ovp-playlist-button" : function(event, $current, template){
+            event.preventDefault();
+            playlistPanel = PlaylistPanel($current, api);
         }
     };
 
-    return OvenTemplate($container, "Controls",  null , events, onRendered, onDestroyed);
+    return OvenTemplate($container, "Controls",  hasPlaylist , events, onRendered, onDestroyed);
 };
 
 export default Controls;

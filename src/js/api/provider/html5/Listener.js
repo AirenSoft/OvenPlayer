@@ -61,7 +61,7 @@ const Listener = function(extendedElement, provider){
     lowLevelEvents.ended = () => {
         OvenPlayerConsole.log("EventListener : on ended");
         if(provider.getState() != STATE_IDLE && provider.getState() != STATE_COMPLETE){
-            provider.trigger(CONTENT_COMPLETE);
+            //provider.trigger(CONTENT_COMPLETE);
             provider.setState(STATE_COMPLETE);
         }
     };

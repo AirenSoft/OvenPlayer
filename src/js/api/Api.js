@@ -23,13 +23,27 @@ const Api = function(container){
     OvenPlayerConsole.log("[[OvenPlayer]] v."+ version);
     OvenPlayerConsole.log("API loaded.");
 
-    let playlistManager = PlaylistManager();
+    let playlistManager = PlaylistManager(that);
     let providerController = ProviderController();
     let currentProvider = "";
     let playerConfig = "";
     let lazyQueue = "";
     let captionManager = "";
 
+
+    const runNextPlaylist = function(index){
+        let nextPlaylistIndex = index; // || playlistManager.getCurrentPlaylistIndex() + 1;
+        let playlist = playlistManager.getPlaylist();
+        let hasNextPlaylist = playlist[nextPlaylistIndex]? true : false;
+        console.log( playlist[nextPlaylistIndex]);
+        if(hasNextPlaylist){
+            lazyQueue = LazyCommandExecutor(that, ['play','seek','stop']);
+            //that.setCurrentPlaylist(nextPlaylistIndex);
+            playlistManager.setCurrentPlaylist(nextPlaylistIndex);
+            initProvider();
+            that.play();
+        }
+    };
     const initProvider = function(lastPlayPosition){
         const pickQualityFromSource = (sources) =>{
             var quality = 0;
@@ -46,7 +60,7 @@ const Api = function(container){
             return quality;
         };
 
-        return providerController.loadProviders(playlistManager.getPlaylist()).then(Providers => {
+        return providerController.loadProviders(playlistManager.getCurrentPlayList()).then(Providers => {
             if(Providers.length < 1){
                 throw ERRORS[INIT_UNSUPPORT_ERROR];
             }
@@ -73,6 +87,11 @@ const Api = function(container){
             currentProvider.on("all", function(name, data){
 
                 that.trigger(name, data);
+
+                if(name === "complete"){
+                    console.log("complete : ", playlistManager.getCurrentPlaylistIndex());
+                    runNextPlaylist(playlistManager.getCurrentPlaylistIndex() + 1);
+                }
 
                 //Auto switching next source when player load failed by amiss source.
                 //data.code === PLAYER_FILE_ERROR
@@ -141,7 +160,8 @@ const Api = function(container){
         OvenPlayerConsole.log("API : init()");
         OvenPlayerConsole.log("API : init() config : ", playerConfig);
 
-        playlistManager.setPlaylist(playerConfig.getPlaylist());
+        //playerConfig.getPlaylist() :
+        playlistManager.initPlaylist(playerConfig.getPlaylist());
         OvenPlayerConsole.log("API : init() sources : " , playlistManager.getCurrentSources());
 
 
@@ -215,7 +235,7 @@ const Api = function(container){
             if(currentProvider){
                 currentProvider.setCurrentQuality(0);
             }
-            playlistManager.setPlaylist(playlist);
+            playlistManager.initPlaylist(playlist);
         }
         return initProvider();
 
@@ -251,6 +271,19 @@ const Api = function(container){
         return currentProvider.getPlaybackRate();
     };
 
+    that.getPlaylist = () => {
+        OvenPlayerConsole.log("API : getPlaylist() ", playlistManager.getPlaylist());
+        return playlistManager.getPlaylist();
+    };
+    that.getCurrentPlaylist = () => {
+        OvenPlayerConsole.log("API : getCurrentPlaylist() ", playlistManager.getCurrentPlaylistIndex());
+        return playlistManager.getCurrentPlaylistIndex();
+    };
+    that.setCurrentPlaylist = (index) => {
+        OvenPlayerConsole.log("API : setCurrentPlaylist() ", index);
+        runNextPlaylist(index);
+    };
+
     that.getSources = () => {
         if(!currentProvider){return null;}
 
@@ -263,18 +296,18 @@ const Api = function(container){
         OvenPlayerConsole.log("API : getCurrentSource() ", currentProvider.getCurrentSource());
         return currentProvider.getCurrentSource();
     };
-    that.setCurrentSource = (sourceIndex) =>{
+    that.setCurrentSource = (index) =>{
         if(!currentProvider){return null;}
 
-        OvenPlayerConsole.log("API : setCurrentSource() ", sourceIndex);
+        OvenPlayerConsole.log("API : setCurrentSource() ", index);
 
         let sources = currentProvider.getSources();
         let currentSource = sources[currentProvider.getCurrentSource()];
-        let newSource = sources[sourceIndex];
+        let newSource = sources[index];
         let lastPlayPosition = currentProvider.getPosition();
         let isSameProvider = providerController.isSameProvider(currentSource, newSource);
         // provider.serCurrentQuality -> playerConfig setting -> load
-        let resultSourceIndex = currentProvider.setCurrentSource(sourceIndex, isSameProvider);
+        let resultSourceIndex = currentProvider.setCurrentSource(index, isSameProvider);
 
         if(!newSource){
             return null;

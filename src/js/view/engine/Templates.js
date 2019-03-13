@@ -10,6 +10,7 @@ import SpinnerTemplate from 'view/components/helpers/spinnerTemplate';
 import ContextPanelTemplate from 'view/components/helpers/contextPanelTemplate';
 import CaptionViewerTemplate from 'view/components/helpers/captionViewerTemplate';
 
+
 import ControlsTemplate from 'view/components/controls/mainTemplate';
 import VolumeButtonTemplate from 'view/components/controls/volumeButtonTemplate';
 import ProgressBarTemplate from 'view/components/controls/progressBarTemplate';
@@ -23,6 +24,7 @@ import SourcePanelTemplate from 'view/components/controls/settingPanel/mainTempl
 import QualityPanelTemplate from 'view/components/controls/settingPanel/mainTemplate';
 import CaptionPanelTemplate from 'view/components/controls/settingPanel/mainTemplate';
 import TimeDisplayPanelTemplate from 'view/components/controls/settingPanel/mainTemplate';
+import PlaylistPanelTemplate from 'view/components/controls/playlistPanelTemplate';
 
 const Templates = {
     TextViewTemplate,
@@ -46,7 +48,8 @@ const Templates = {
     SourcePanelTemplate,
     QualityPanelTemplate,
     CaptionPanelTemplate,
-    TimeDisplayPanelTemplate
+    TimeDisplayPanelTemplate,
+    PlaylistPanelTemplate
 };
 
 export default Templates;
