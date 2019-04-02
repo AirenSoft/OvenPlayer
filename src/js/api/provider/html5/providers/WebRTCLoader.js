@@ -13,7 +13,7 @@ import {
 } from "api/constants";
 
 
-const WebRTCLoader = function (provider, webSocketUrl, errorTrigger) {
+const WebRTCLoader = function (provider, webSocketUrl, resetCallback, loadCallback, errorTrigger) {
 
     const peerConnectionConfig = {
         'iceServers': [{
@@ -35,10 +35,10 @@ const WebRTCLoader = function (provider, webSocketUrl, errorTrigger) {
 
     let statisticsTimer = null;
 
-    (function() {
+    (function () {
         let existingHandler = window.onbeforeunload;
-        window.onbeforeunload = function(event) {
-            if (existingHandler){
+        window.onbeforeunload = function (event) {
+            if (existingHandler) {
                 existingHandler(event);
             }
             OvenPlayerConsole.log("This calls auto when browser closed.");
@@ -48,12 +48,15 @@ const WebRTCLoader = function (provider, webSocketUrl, errorTrigger) {
 
     function getPeerConnectionById(id) {
 
-        if (mainPeerConnectionInfo && id === mainPeerConnectionInfo.id) {
-            return mainPeerConnectionInfo.peerConnection;
-        } else if (clientPeerConnections[id]) {
+        let peerConnection = null;
 
-            return clientPeerConnections[id].peerConnection;
+        if (mainPeerConnectionInfo && id === mainPeerConnectionInfo.id) {
+            peerConnection = mainPeerConnectionInfo.peerConnection;
+        } else if (clientPeerConnections[id]) {
+            peerConnection = clientPeerConnections[id].peerConnection;
         }
+
+        return peerConnection;
     }
 
     function extractLossPacketsOnNetworkStatus(peerConnectionInfo) {
@@ -117,25 +120,73 @@ const WebRTCLoader = function (provider, webSocketUrl, errorTrigger) {
 
     }
 
-    function createMainPeerConnection(id, resolve) {
+    function createMainPeerConnection(id, peerId, sdp, candidates, resolve) {
 
         let peerConnection = new RTCPeerConnection(peerConnectionConfig);
 
         mainPeerConnectionInfo = {
             id: id,
-            peer_id: peerId,
+            peerId: peerId,
             peerConnection: peerConnection
         };
+
+        //Set remote description when I received sdp from server.
+        peerConnection.setRemoteDescription(new RTCSessionDescription(sdp))
+            .then(function () {
+
+                peerConnection.createAnswer()
+                    .then(function (desc) {
+
+                        OvenPlayerConsole.log("create Host Answer : success");
+
+                        peerConnection.setLocalDescription(desc).then(function () {
+                            // my SDP created.
+                            let localSDP = peerConnection.localDescription;
+                            OvenPlayerConsole.log('Local SDP', localSDP);
+
+                            sendMessage(ws, {
+                                id: id,
+                                peer_id: peerId,
+                                command: 'answer',
+                                sdp: localSDP
+                            });
+
+                        }).catch(function (error) {
+
+                            let tempError = ERRORS[PLAYER_WEBRTC_SET_LOCAL_DESC_ERROR];
+                            tempError.error = error;
+                            closePeer(tempError);
+                        });
+                    })
+                    .catch(function (error) {
+                        let tempError = ERRORS[PLAYER_WEBRTC_CREATE_ANSWER_ERROR];
+                        tempError.error = error;
+                        closePeer(tempError);
+                    });
+            })
+            .catch(function (error) {
+                let tempError = ERRORS[PLAYER_WEBRTC_SET_REMOTE_DESC_ERROR];
+                tempError.error = error;
+                closePeer(tempError);
+            });
+
+        if (candidates) {
+            addIceCandidate(peerConnection, candidates);
+        }
 
         peerConnection.onicecandidate = function (e) {
             if (e.candidate) {
                 OvenPlayerConsole.log("WebRTCLoader send candidate to server : " + e.candidate);
-                ws.send(JSON.stringify({
-                    id: mainPeerConnectionInfo.id,
-                    peer_id: mainPeerConnectionInfo.peer_id,
+
+                // console.log('Main Peer Connection candidate', e.candidate);
+
+                sendMessage(ws, {
+                    id: id,
+                    peer_id: peerId,
                     command: "candidate",
                     candidates: [e.candidate]
-                }));
+                });
+
             }
         };
 
@@ -145,53 +196,86 @@ const WebRTCLoader = function (provider, webSocketUrl, errorTrigger) {
 
             extractLossPacketsOnNetworkStatus(mainPeerConnectionInfo);
             mainStream = e.streams[0];
-            resolve(e.streams[0]);
+            loadCallback(e.streams[0]);
         };
     }
 
-    function createClientPeerConnection(id) {
+    function createClientPeerConnection(hostId, clientId) {
+
+        if (!mainStream) {
+
+            setTimeout(function () {
+
+                createClientPeerConnection(hostId, clientId);
+            }, 100);
+
+            return;
+        }
 
         let peerConnection = new RTCPeerConnection(peerConnectionConfig);
 
-        clientPeerConnections[id] = {
-            id: id,
+        clientPeerConnections[clientId] = {
+            id: clientId,
+            peerId: hostId,
             peerConnection: peerConnection
         };
 
         peerConnection.addStream(mainStream);
 
-        let offerOption = {
-            offerToReceiveAudio: 1,
-            offerToReceiveVideo: 1
-        };
+        // let offerOption = {
+        //     offerToReceiveAudio: 1,
+        //     offerToReceiveVideo: 1
+        // };
 
         peerConnection.createOffer(setLocalAndSendMessage, handleCreateOfferError, {});
 
         function setLocalAndSendMessage(sessionDescription) {
             peerConnection.setLocalDescription(sessionDescription);
-            ws.send(JSON.stringify({
-                id: id,
-                peerId: mainPeerConnectionInfo.id,
+
+            sendMessage(ws, {
+                id: hostId,
+                peer_id: clientId,
                 sdp: sessionDescription,
                 command: 'offer_p2p'
-            }));
+            });
         }
 
         function handleCreateOfferError(event) {
-            console.log('createOffer() error: ', event);
+            // console.log('createOffer() error: ', event);
         }
 
         peerConnection.onicecandidate = function (e) {
             if (e.candidate) {
                 OvenPlayerConsole.log("WebRTCLoader send candidate to server : " + e.candidate);
-                ws.send(JSON.stringify({
-                    id: mainPeerConnectionInfo.id,
-                    peer_id: id,
+
+
+                // console.log('Client Peer Connection candidate', e.candidate);
+
+                sendMessage(ws, {
+                    id: hostId,
+                    peer_id: clientId,
                     command: "candidate_p2p",
                     candidates: [e.candidate]
-                }));
+                });
+
             }
         };
+    }
+
+    function addIceCandidate(peerConnection, candidates) {
+
+        for (let i = 0; i < candidates.length; i++) {
+            if (candidates[i] && candidates[i].candidate) {
+
+                peerConnection.addIceCandidate(new RTCIceCandidate(candidates[i])).then(function () {
+                    OvenPlayerConsole.log("addIceCandidate : success");
+                }).catch(function (error) {
+                    let tempError = ERRORS[PLAYER_WEBRTC_ADD_ICECANDIDATE_ERROR];
+                    tempError.error = error;
+                    closePeer(tempError);
+                });
+            }
+        }
     }
 
     function initWebSocket(resolve, reject) {
@@ -202,12 +286,18 @@ const WebRTCLoader = function (provider, webSocketUrl, errorTrigger) {
 
             ws.onopen = function () {
 
-                ws.send(JSON.stringify({command: "request_offer"}));
+                // console.log('웹소켓 열림');
+
+                sendMessage(ws, {
+                    command: "request_offer"
+                });
             };
 
             ws.onmessage = function (e) {
 
                 const message = JSON.parse(e.data);
+
+                // console.log('Receive message', message);
 
                 if (message.error) {
                     let tempError = ERRORS[PLAYER_WEBRTC_WS_ERROR];
@@ -222,67 +312,21 @@ const WebRTCLoader = function (provider, webSocketUrl, errorTrigger) {
                     return;
                 }
 
-                if (!mainPeerConnectionInfo) {
-                    createMainPeerConnection(message.id, message.peer_id, resolve, reject);
-                }
+                if (message.command === 'offer') {
 
-                let peerConnection = getPeerConnectionById(message.id);
-
-                if (message.sdp === 'offer') {
-
-                    mainPeerConnectionInfo.peer_id = message.peer_id;
-
-                    //Set remote description when I received sdp from server.
-                    peerConnection.setRemoteDescription(new RTCSessionDescription(message.sdp))
-                        .then(function () {
-                            if (peerConnection.remoteDescription.type === 'offer') { // Will be always offer
-                                // This creates answer when I received offer from publisher.
-                                peerConnection.createAnswer()
-                                    .then(function (desc) {
-
-                                        OvenPlayerConsole.log("create Host Answer : success");
-
-                                        peerConnection.setLocalDescription(desc).then(function () {
-                                            // my SDP created.
-                                            let localSDP = peerConnection.localDescription;
-                                            OvenPlayerConsole.log('Local SDP', localSDP);
-
-                                            // my sdp send to server.
-                                            ws.send(JSON.stringify({
-                                                id: mainPeerConnectionInfo.id,
-                                                peer_id: mainPeerConnectionInfo.peer_id,
-                                                command: 'answer',
-                                                sdp: localSDP
-                                            }));
-                                        }).catch(function (error) {
-
-                                            let tempError = ERRORS[PLAYER_WEBRTC_SET_LOCAL_DESC_ERROR];
-                                            tempError.error = error;
-                                            closePeer(tempError);
-                                        });
-                                    })
-                                    .catch(function (error) {
-                                        let tempError = ERRORS[PLAYER_WEBRTC_CREATE_ANSWER_ERROR];
-                                        tempError.error = error;
-                                        closePeer(tempError);
-                                    });
-                            }
-                        })
-                        .catch(function (error) {
-                            let tempError = ERRORS[PLAYER_WEBRTC_SET_REMOTE_DESC_ERROR];
-                            tempError.error = error;
-                            closePeer(tempError);
-                        });
+                    createMainPeerConnection(message.id, message.peer_id, message.sdp, message.candidates, resolve);
                 }
 
                 if (message.command === 'request_offer_p2p') {
 
-                    let clientId = message.id;
-                    createClientPeerConnection(clientId);
+                    createClientPeerConnection(message.id, message.peer_id);
                 }
 
                 if (message.command === 'answer_p2p') {
-                    peerConnection.setRemoteDescription(new RTCSessionDescription(message.sdp))
+
+                    let peerConnection1 = getPeerConnectionById(message.peer_id);
+
+                    peerConnection1.setRemoteDescription(new RTCSessionDescription(message.sdp))
                         .then(function (desc) {
 
                         })
@@ -293,35 +337,44 @@ const WebRTCLoader = function (provider, webSocketUrl, errorTrigger) {
                         });
                 }
 
-                if (message.candidates) {
-                    // This receives ICE Candidate from server.
-                    for (let i = 0; i < message.candidates.length; i++) {
-                        if (message.candidates[i] && message.candidates[i].candidate) {
+                if (message.command === 'candidate') {
 
-                            peerConnection.addIceCandidate(new RTCIceCandidate(message.candidates[i])).then(function () {
-                                OvenPlayerConsole.log("addIceCandidate : success");
-                            }).catch(function (error) {
-                                console.log(error);
-                                let tempError = ERRORS[PLAYER_WEBRTC_ADD_ICECANDIDATE_ERROR];
-                                tempError.error = error;
-                                closePeer(tempError);
-                            });
-                        }
-                    }
+                    // Candidates for new client peer
+                    let peerConnection2 = getPeerConnectionById(message.id);
+
+                    addIceCandidate(peerConnection2, message.candidates);
                 }
 
-                if (message.command === 'close') {
+                if (message.command === 'candidate_p2p') {
 
-                    if (message.peer_id === mainPeerConnectionInfo.peer_id) {
+                    // Candidates for new client peer
+                    let peerConnection3 = getPeerConnectionById(message.peer_id);
 
-                        // close connection with host
+                    addIceCandidate(peerConnection3, message.candidates);
+                }
+
+                if (message.command === 'stop') {
+
+                    if (mainPeerConnectionInfo.peerId === message.peer_id) {
+
+                        // close connection with host and retry
+                        // console.log('close connection with host');
+
+                        mainStream = null;
                         mainPeerConnectionInfo.peerConnection.close();
                         mainPeerConnectionInfo = null;
-                        ws.send(JSON.stringify({command: 'request_offer'}));
+
+                        resetCallback();
+
+                        sendMessage(ws, {
+                            command: 'request_offer'
+                        });
+
                     } else {
 
                         // close connection with client
                         if (clientPeerConnections[message.peer_id]) {
+                            // console.log('close connection with client: ', message.peer_id);
                             clientPeerConnections[message.peer_id].peerConnection.close();
                             delete clientPeerConnections[message.peer_id];
                         }
@@ -330,6 +383,7 @@ const WebRTCLoader = function (provider, webSocketUrl, errorTrigger) {
             };
 
             ws.onerror = function (error) {
+                // console.log('웹소켓 onerror');
                 let tempError = ERRORS[PLAYER_WEBRTC_WS_ERROR];
                 tempError.error = error;
                 closePeer(tempError);
@@ -356,6 +410,7 @@ const WebRTCLoader = function (provider, webSocketUrl, errorTrigger) {
     }
 
     function closePeer(error) {
+
         OvenPlayerConsole.log('WebRTC Loader closePeear()');
         if (ws) {
             OvenPlayerConsole.log('Closing websocket connection...');
@@ -367,16 +422,23 @@ const WebRTCLoader = function (provider, webSocketUrl, errorTrigger) {
             3 (CLOSED)
             */
             if (ws.readyState === 1) {
-                ws.send(JSON.stringify({
-                    command: 'stop',
-                    id: mainPeerConnectionInfo.id,
-                    peer_id: mainPeerConnectionInfo.peer_id
-                }));
+
+                if (mainPeerConnectionInfo) {
+                    sendMessage(ws, {
+                        command: 'stop',
+                        id: mainPeerConnectionInfo.id
+                    });
+                }
+
                 ws.close();
+                // console.log('웹소켓 닫힘');
             }
             ws = null;
         }
         if (mainPeerConnectionInfo) {
+
+            mainStream = null;
+
             OvenPlayerConsole.log('Closing main peer connection...');
             if (statisticsTimer) {
                 clearTimeout(statisticsTimer);
@@ -404,12 +466,18 @@ const WebRTCLoader = function (provider, webSocketUrl, errorTrigger) {
         }
     }
 
+    function sendMessage(ws, message) {
+
+        // console.log('Send Message', message);
+        ws.send(JSON.stringify(message));
+    }
+
     that.connect = () => {
         return initialize();
     };
 
     that.destroy = () => {
-        mainPeerConnectionInfo.log("WEBRTC LOADER destroy");
+        // console.log("WEBRTC LOADER destroy");
         closePeer();
     };
 
