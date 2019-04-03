@@ -15,12 +15,14 @@ import PanelManager from "view/global/PanelManager";
 import {
     READY,
     CONTENT_META, CONTENT_LEVEL_CHANGED, CONTENT_TIME_MODE_CHANGED,
+    OME_P2P_MODE,
     PROVIDER_RTMP,
     ERROR
 } from "api/constants";
 const Controls = function($container, api){
     let volumeButton = "", playButton= "", progressBar = "", timeDisplay = "", fullScreenButton = "", frameButtons = "", hasPlaylist = false;
     let panelManager = PanelManager();
+    let webrtc_is_p2p_mode = false;
     const $root = LA$("#"+api.getContainerId());
 
     hasPlaylist = api.getPlaylist().length > 1 ? true : false;
@@ -61,7 +63,12 @@ const Controls = function($container, api){
             setPanelMaxHeight();
         },template);
 
+        api.on(OME_P2P_MODE, function(isP2P){
+            webrtc_is_p2p_mode = isP2P;
+        });
+
         api.on(CONTENT_META, function(data){
+            data.isP2P = webrtc_is_p2p_mode;
             initTimeDisplay(data);
 
             if(api.getFramerate() > 0){

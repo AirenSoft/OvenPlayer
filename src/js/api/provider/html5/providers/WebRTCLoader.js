@@ -9,7 +9,8 @@ import {
     PLAYER_WEBRTC_CREATE_ANSWER_ERROR,
     PLAYER_WEBRTC_SET_LOCAL_DESC_ERROR,
     PLAYER_WEBRTC_NETWORK_SLOW,
-    NETWORK_UNSTABLED
+    NETWORK_UNSTABLED,
+    OME_P2P_MODE
 } from "api/constants";
 
 
@@ -315,6 +316,11 @@ const WebRTCLoader = function (provider, webSocketUrl, resetCallback, loadCallba
                 if (message.command === 'offer') {
 
                     createMainPeerConnection(message.id, message.peer_id, message.sdp, message.candidates, resolve);
+                    if(message.peer_id === 0){
+                        provider.trigger(OME_P2P_MODE, false);
+                    }else{
+                        provider.trigger(OME_P2P_MODE, true);
+                    }
                 }
 
                 if (message.command === 'request_offer_p2p') {
@@ -381,9 +387,12 @@ const WebRTCLoader = function (provider, webSocketUrl, resetCallback, loadCallba
                     }
                 }
             };
+            ws.onclose = function () {
+                let tempError = ERRORS[PLAYER_WEBRTC_WS_ERROR];
+                closePeer(tempError);
+            };
 
             ws.onerror = function (error) {
-                // console.log('웹소켓 onerror');
                 let tempError = ERRORS[PLAYER_WEBRTC_WS_ERROR];
                 tempError.error = error;
                 closePeer(tempError);
