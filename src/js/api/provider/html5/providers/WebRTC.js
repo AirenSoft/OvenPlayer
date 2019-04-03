@@ -45,11 +45,24 @@ const WebRTC = function(container, playerConfig){
                 webrtcLoader.destroy();
                 webrtcLoader = null;
             }
-            webrtcLoader = WebRTCLoader(that, source.file, errorTrigger);
-            webrtcLoader.connect().then(function(stream){
+
+            let loadCallback = function(stream){
+
+                if (element.srcObject) {
+                    element.srcObject = null;
+                }
+
                 element.srcObject = stream;
                 that.play();
-            }).catch(function(error){
+            };
+
+            let resetCallback = function () {
+                that.pause();
+            };
+
+            webrtcLoader = WebRTCLoader(that, source.file, resetCallback, loadCallback, errorTrigger);
+
+            webrtcLoader.connect().catch(function(error){
                 //that.destroy();
                 //Do nothing
             });
