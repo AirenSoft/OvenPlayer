@@ -6,7 +6,9 @@ export default (data) => {
                     '<span class="ovp-live-badge" disabled="disabled">' +
                         (data.type ==='webrtc'
                         ?
-                        '<span class="ovp-live-badge-lowlatency">low latency live</span>'
+                            (data.isP2P ?
+                                    '<span class="ovp-live-badge-lowlatency">low latency <strong>P2P</strong></span>' : '<span class="ovp-live-badge-lowlatency">low latency live</span>'
+                            )
                         :
                         '<span>live</span>') +
                     '</span>'

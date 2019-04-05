@@ -50,6 +50,7 @@ export const PLAYBACK_RATE_CHANGED = "playbackRateChanged";
 export const CONTENT_CAPTION_CUE_CHANGED = "cueChanged";
 export const CONTENT_CAPTION_CHANGED = "captionChanged";
 export const CONTENT_TIME_MODE_CHANGED = "timeDisplayModeChanged";
+export const OME_P2P_MODE = "p2pMode";
 
 
 export const INIT_UNKNWON_ERROR = 100;
@@ -67,6 +68,7 @@ export const PLAYER_WEBRTC_SET_REMOTE_DESC_ERROR = 503;
 export const PLAYER_WEBRTC_CREATE_ANSWER_ERROR = 504;
 export const PLAYER_WEBRTC_SET_LOCAL_DESC_ERROR = 505;
 export const PLAYER_WEBRTC_NETWORK_SLOW = 510;
+
 
 export const ERRORS = {
     100 : {code : 100 , message : "Can not load due to unknown reasons.", reason :"Can not load due to unknown reasons."},

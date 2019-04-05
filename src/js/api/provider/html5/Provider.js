@@ -272,7 +272,7 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
         if(sourceIndex > -1){
             if(spec.sources && spec.sources.length > sourceIndex){
                 //that.pause();
-                that.setState(STATE_IDLE);
+                //that.setState(STATE_IDLE);
                 OvenPlayerConsole.log("source changed : " + sourceIndex);
                 spec.currentSource = sourceIndex;
 
@@ -282,9 +282,10 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
                 playerConfig.setSourceLabel(spec.sources[sourceIndex].label);
                 //spec.currentQuality = sourceIndex;
                 if(needProviderChange){
-
                     _load(elVideo.currentTime || 0);
                 }
+                that.pause();
+                that.setState(STATE_IDLE);
                 return spec.currentSource;
             }
         }
