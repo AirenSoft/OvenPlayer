@@ -80,6 +80,7 @@ export const ERRORS = {
     100 : {code : 100 , message : "Can not load due to unknown reasons.", reason :"Can not load due to unknown reasons."},
     101 : {code : 101 , message : "Can not load due to unsupported media.", reason :"Can not load due to unsupported media."},
     102 : {code : 102 , message : "Flash fetching process aborted.", reason :"It looks like not found swf or your environment is localhost."},
+    103 : {code : 103 , message : "Can not load due to dashjs. Please check the lastest version.", reason :"dash.js version is old. Please check the lastest."},
     300 : {code : 300 , message : "Can not play due to unknown reasons.", reason :"Can not play due to unknown reasons."},
     301 : {code : 301 , message : "Fetching process aborted by user.", reason :"Fetching process aborted by user."},
     302 : {code : 302 , message : "Some of the media could not be downloaded due to a network error.", reason :"Error occurred when downloading."},
