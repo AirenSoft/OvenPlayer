@@ -33,7 +33,7 @@ const QualityPanel = function($container, api, data){
                     if(newQuality === parseInt($panel.attr("ovp-data-value"))){
                         $panel.find(".ovp-setting-item-checked").addClass("ovp-show");
                     }
-                    if(data.isAuto && $panel.attr("ovp-data-value") === "auto"){
+                    if(data.isAuto && $panel.attr("ovp-data-value") === "AUTO"){
                         $panel.find(".ovp-setting-item-checked").addClass("ovp-show");
                     }
                 });
@@ -47,7 +47,7 @@ const QualityPanel = function($container, api, data){
         "click .ovp-setting-item": function (event, $current, template) {
             event.preventDefault();
             let value = LA$(event.currentTarget).attr("ovp-data-value");
-            if(value === "auto"){
+            if(value === "AUTO"){
                 api.setAutoQuality(true);
             }else{
                 api.setCurrentQuality(parseInt(value));
