@@ -1,7 +1,6 @@
 /**
  * Created by hoho on 2018. 8. 24..
  */
-import MediaManager from "api/media/Manager";
 import Provider from "api/provider/html5/Provider";
 import {errorTrigger} from "api/provider/utils";
 import {PROVIDER_HTML5, STATE_IDLE} from "api/constants";
@@ -12,10 +11,7 @@ import {PROVIDER_HTML5, STATE_IDLE} from "api/constants";
  * @param   playerConfig    config.
  * */
 
-const Html5 = function(container, playerConfig){
-
-    let mediaManager = MediaManager(container, PROVIDER_HTML5, playerConfig.isLoop());
-    let element = mediaManager.create();
+const Html5 = function(element, playerConfig, adTag){
 
     let spec = {
         name : PROVIDER_HTML5,
@@ -30,7 +26,8 @@ const Html5 = function(container, playerConfig){
         currentQuality : -1,
         currentSource : -1,
         qualityLevels : [],
-        sources : []
+        sources : [],
+        adTagUrl : adTag
     };
 
     let that = Provider(spec, playerConfig, null);
@@ -39,9 +36,6 @@ const Html5 = function(container, playerConfig){
     OvenPlayerConsole.log("HTML5 PROVIDER LOADED.");
 
     that.destroy = () =>{
-        mediaManager.destroy();
-        mediaManager = null;
-        element = null;
         OvenPlayerConsole.log("HTML5 : PROVIDER DESTROYED.");
 
         superDestroy_func();

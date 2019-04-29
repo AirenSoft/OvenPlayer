@@ -86,9 +86,9 @@ const La$ = function(selectorOrElement){
         $element.style.display = 'none';
     };
 
-    that.append = (htmlCode) =>{
+    /*that.append = (htmlCode) =>{
         $element.innerHTML += htmlCode;
-    };
+    };*/
 
     that.text = (text) => { //IE8+
         if(text === undefined){
@@ -142,13 +142,23 @@ const La$ = function(selectorOrElement){
     };
 
     that.remove = () => {
-        $element.remove();
+        if($element.length > 1){
+            $element.parentElement.removeChild($element);
+        }else{
+            $element.remove();
+        }
+
     };
 
-    that.removeChild = () => {
-        while ($element.hasChildNodes()) {
-            $element.removeChild($element.firstChild);
+    that.removeChild = (element) => {
+        if(element){
+            $element.removeChild(element);
+        }else{
+            while ($element.hasChildNodes()) {
+                $element.removeChild($element.firstChild);
+            }
         }
+
     };
 
     that.get = () => {

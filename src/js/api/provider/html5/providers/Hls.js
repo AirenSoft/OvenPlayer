@@ -1,7 +1,6 @@
 /**
  * Created by hoho on 2018. 6. 7..
  */
-import MediaManager from "api/media/Manager";
 import Provider from "api/provider/html5/Provider";
 import {errorTrigger} from "api/provider/utils";
 import {PROVIDER_HLS, STATE_IDLE} from "api/constants";
@@ -13,13 +12,10 @@ import {PROVIDER_HLS, STATE_IDLE} from "api/constants";
  * */
 
 
-const Hls = function(container, playerConfig){
+const Hls = function(element, playerConfig, adTagUrl){
     let that = {};
     let hls = null;
     let superDestroy_func = null;
-
-    let mediaManager = MediaManager(container, PROVIDER_HLS, playerConfig.isLoop());
-    let element = mediaManager.create();
 
     try {
         hls = new Hls({debug: false});
@@ -38,7 +34,8 @@ const Hls = function(container, playerConfig){
             currentQuality : -1,
             currentSource : -1,
             qualityLevels : [],
-            sources : []
+            sources : [],
+            adTagUrl : adTagUrl
         };
         that = Provider(spec, playerConfig, function(source, lastPlayPosition){
             OvenPlayerConsole.log("HLS : onExtendedLoad : ", source, "lastPlayPosition : "+ lastPlayPosition);
@@ -55,9 +52,6 @@ const Hls = function(container, playerConfig){
         that.destroy = () =>{
             hls.destroy();
             hls = null;
-            mediaManager.destroy();
-            mediaManager = null;
-            element = null;
             OvenPlayerConsole.log("HLS : PROVIDER DESTROUYED.");
 
             superDestroy_func();

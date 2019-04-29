@@ -2,12 +2,14 @@ import CaptionManager from "api/caption/Manager";
 import Configurator from "api/Configurator";
 import EventEmitter from "api/EventEmitter";
 import LazyCommandExecutor from "api/LazyCommandExecutor";
+import MediaManager from "api/media/Manager";
 import PlaylistManager from "api/playlist/Manager";
 import ProviderController from "api/provider/Controller";
 import {READY, ERRORS, ERROR, CONTENT_TIME_MODE_CHANGED, INIT_UNKNWON_ERROR, INIT_UNSUPPORT_ERROR, DESTROY, NETWORK_UNSTABLED,
     PLAYER_FILE_ERROR, PROVIDER_DASH, PROVIDER_HLS, PROVIDER_WEBRTC, PROVIDER_HTML5, PROVIDER_RTMP} from "api/constants";
 import {version} from 'version';
 import {ApiRtmpExpansion} from 'api/ApiExpansions';
+import {analUserAgent} from "utils/browser";
 
 /**
  * @brief   This object connects UI to the provider.
@@ -25,6 +27,8 @@ const Api = function(container){
 
     let playlistManager = PlaylistManager(that);
     let providerController = ProviderController();
+    let userAgentObject = analUserAgent();
+    let mediaManager = MediaManager(container, userAgentObject);
     let currentProvider = "";
     let playerConfig = "";
     let lazyQueue = "";
@@ -32,13 +36,14 @@ const Api = function(container){
 
 
     const runNextPlaylist = function(index){
+        OvenPlayerConsole.log("runNextPlaylist");
         let nextPlaylistIndex = index; // || playlistManager.getCurrentPlaylistIndex() + 1;
         let playlist = playlistManager.getPlaylist();
         let hasNextPlaylist = playlist[nextPlaylistIndex]? true : false;
-        console.log( playlist[nextPlaylistIndex]);
+
         if(hasNextPlaylist){
+            //that.pause();
             lazyQueue = LazyCommandExecutor(that, ['play','seek','stop']);
-            //that.setCurrentPlaylist(nextPlaylistIndex);
             playlistManager.setCurrentPlaylist(nextPlaylistIndex);
             initProvider();
             that.play();
@@ -69,16 +74,26 @@ const Api = function(container){
                 currentProvider.destroy();
                 currentProvider = null;
             }
-
+            if(captionManager){
+                captionManager.destroy();
+                captionManager = null;
+            }
+            captionManager = CaptionManager(that, playlistManager.getCurrentPlaylistIndex());
+            OvenPlayerConsole.log("API : init() captions");
 
             let currentSourceIndex = pickQualityFromSource(playlistManager.getCurrentSources());
-            OvenPlayerConsole.log( "current source index : "+ currentSourceIndex);
+            let providerName = Providers[currentSourceIndex].name.toLowerCase();
 
-            //Call Provider.
-            currentProvider = Providers[currentSourceIndex](container, playerConfig);
+            OvenPlayerConsole.log( "currentProvider : ", providerName,"current source index : "+ currentSourceIndex);
+
+            let videoElement = mediaManager.createMedia(providerName, playerConfig.isLoop());
+            //mediaManager = MediaManager(container, providerName, false); //mediaManager.createMedia(providerName, playerConfig.isLoop());
+
+            //Init Provider.
+            currentProvider =  Providers[currentSourceIndex](videoElement, playerConfig, playlistManager.getCurrentAdTag());
 
 
-            if(currentProvider.getName() === PROVIDER_RTMP){
+            if(providerName === PROVIDER_RTMP){
                 //If provider type is RTMP, we accepts RtmpExpansion.
                 Object.assign(that, ApiRtmpExpansion(currentProvider));
             }
@@ -89,7 +104,6 @@ const Api = function(container){
                 that.trigger(name, data);
 
                 if(name === "complete"){
-                    console.log("complete : ", playlistManager.getCurrentPlaylistIndex());
                     runNextPlaylist(playlistManager.getCurrentPlaylistIndex() + 1);
                 }
 
@@ -109,13 +123,15 @@ const Api = function(container){
         }).then(()=>{
 
             //provider's preload() have to made Promise. Cuz it overcomes 'flash loading timing problem'.
-            currentProvider.preload(playlistManager.getCurrentSources(), lastPlayPosition ).then(function(){
+            currentProvider.preload(playlistManager.getCurrentSources(), lastPlayPosition).then(function(){
+                that.trigger(READY);
+
                 lazyQueue.flush();
                 //This is no reason to exist anymore.
                 lazyQueue.destroy();
 
-                that.trigger(READY);
             }).catch((error) => {
+                lazyQueue.off();
                 if(error && error.code && ERRORS[error.code]){
                     that.trigger(ERROR, ERRORS[error.code]);
                 }else {
@@ -156,23 +172,24 @@ const Api = function(container){
             'load','play','pause','seek','stop', 'getDuration', 'getPosition', 'getVolume'
             , 'getMute', 'getBuffer', 'getState' , 'getQualityLevels'
         ]);
+        options.mediaContainer = container;
+        options.browser = userAgentObject;
         playerConfig = Configurator(options, that);
         OvenPlayerConsole.log("API : init()");
         OvenPlayerConsole.log("API : init() config : ", playerConfig);
 
-        //playerConfig.getPlaylist() :
         playlistManager.initPlaylist(playerConfig.getPlaylist());
         OvenPlayerConsole.log("API : init() sources : " , playlistManager.getCurrentSources());
-
-
-        captionManager = CaptionManager(that);
-        OvenPlayerConsole.log("API : init() captions");
 
         initProvider();
     };
     that.getConfig = () => {
         OvenPlayerConsole.log("API : getConfig()", playerConfig.getConfig());
         return playerConfig.getConfig();
+    };
+    that.getBrowser = () => {
+
+        return playerConfig.getBrowser();
     };
     that.setTimecodeMode = (isShow) =>{
         OvenPlayerConsole.log("API : setTimecodeMode()", isShow);
@@ -358,22 +375,27 @@ const Api = function(container){
     }
 
     that.getCaptionList = () => {
+        if(!captionManager){return null;}
         OvenPlayerConsole.log("API : getCaptionList() ", captionManager.getCaptionList());
         return captionManager.getCaptionList();
     }
     that.getCurrentCaption = () => {
+        if(!captionManager){return null;}
         OvenPlayerConsole.log("API : getCurrentCaption() ", captionManager.getCurrentCaption());
         return captionManager.getCurrentCaption();
     }
     that.setCurrentCaption = (index) => {
+        if(!captionManager){return null;}
         OvenPlayerConsole.log("API : setCurrentCaption() ", index);
         captionManager.setCurrentCaption(index);
     }
     that.addCaption = (track) => {
+        if(!captionManager){return null;}
         OvenPlayerConsole.log("API : addCaption() ")
         return captionManager.addCaption(track);
     }
     that.removeCaption = (index) => {
+        if(!captionManager){return null;}
         OvenPlayerConsole.log("API : removeCaption() ", index)
         return captionManager.removeCaption(index);
     }
@@ -409,6 +431,10 @@ const Api = function(container){
             currentProvider = null;
         }
 
+        if(mediaManager){
+            mediaManager.destroy();
+            mediaManager = null;
+        }
         providerController = null;
         playlistManager = null;
         playerConfig = null;
@@ -420,7 +446,7 @@ const Api = function(container){
         OvenPlayerConsole.log("API : remove() - lazyQueue, currentProvider, providerController, playlistManager, playerConfig, api event destroed. ");
         OvenPlayerSDK.removePlayer(that.getContainerId());
         if(OvenPlayerSDK.getPlayerList().length  === 0){
-            console.log("OvenPlayerSDK.playerList",  OvenPlayerSDK.getPlayerList());
+            OvenPlayerSDK.log("OvenPlayerSDK.playerList",  OvenPlayerSDK.getPlayerList());
         }
     };
 

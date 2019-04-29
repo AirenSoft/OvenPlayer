@@ -11,7 +11,11 @@ import {
     STATE_COMPLETE,
     STATE_PAUSED,
     STATE_ERROR,
-    PLAYER_STATE
+    PLAYER_STATE,
+    STATE_AD_LOADED,
+    STATE_AD_PLAYING,
+    STATE_AD_PAUSED,
+    STATE_AD_COMPLETE,
 } from "api/constants";
 
 const PlayButton = function ($container, api) {
@@ -24,10 +28,9 @@ const PlayButton = function ($container, api) {
         $iconPlay.hide();
         $iconPause.hide();
         $iconReplay.hide();
-
-        if(state === STATE_PLAYING){
+        if(state === STATE_PLAYING || state === STATE_AD_PLAYING){
             $iconPause.show();
-        }else if(state === STATE_PAUSED){
+        }else if(state === STATE_PAUSED || state === STATE_AD_PAUSED){
             $iconPlay.show();
         }else if(state === STATE_COMPLETE){
             $iconPlay.show();
@@ -59,9 +62,9 @@ const PlayButton = function ($container, api) {
             const currentState = api.getState();
             if (currentState === STATE_IDLE) {
                 api.play();
-            } else if (currentState === STATE_PLAYING) {
+            } else if (currentState === STATE_PLAYING || currentState === STATE_AD_PLAYING) {
                 api.pause();
-            } else if (currentState === STATE_PAUSED) {
+            } else if (currentState === STATE_PAUSED || currentState === STATE_AD_PAUSED) {
                 api.play();
             } else if (currentState === STATE_COMPLETE) {
                 api.play();

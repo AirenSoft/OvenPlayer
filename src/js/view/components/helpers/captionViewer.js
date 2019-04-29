@@ -20,8 +20,6 @@ const CaptionViewer = function($container, api, playerState){
         let isDisable = false;
         let deleteTimer = 0;
 
-
-
         api.on(CONTENT_CAPTION_CHANGED, function(index) {
             if(index > -1){
                 isDisable = false;
@@ -30,6 +28,7 @@ const CaptionViewer = function($container, api, playerState){
                 $container.find(".ovp-caption-text").text("");
             }
         }, template);
+
         api.on(CONTENT_CAPTION_CUE_CHANGED, function(data) {
             if(!isDisable && data && data.text){
                 let hideGap = data.endTime - data.startTime;
@@ -42,7 +41,7 @@ const CaptionViewer = function($container, api, playerState){
 
                 if(hideGap){
                     deleteTimer = setTimeout(function(){
-                        //$container.find(".ovp-caption-text").text("");
+                        $container.find(".ovp-caption-text").text("");
                     },hideGap * 1000);
                 }
 

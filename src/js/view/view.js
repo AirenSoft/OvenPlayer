@@ -24,7 +24,7 @@ import {
 } from "api/constants";
 import ResizeSensor from "resize-sensor";
 
-require('../../css/ovenplayer.less');
+require('../../stylesheet/ovenplayer.less');
 
 const View = function($container){
     let viewTemplate = "", controls = "", helper = "", $playerRoot, contextPanel = "", api = "", autoHideTimer = "", playerState = STATE_IDLE;
@@ -162,7 +162,6 @@ const View = function($container){
         },
         "mouseenter .ovenplayer" : function(event, $current, template){
             event.preventDefault();
-
             if (playerState === STATE_PLAYING) {
                 setHide(false, true);
             } else {
@@ -234,6 +233,7 @@ const View = function($container){
         },
         "contextmenu .ovenplayer" : function(event, $current, template){
             event.stopPropagation();
+            return false;
             if(!LA$(event.currentTarget).find("object")){
                 event.preventDefault();
                 createContextPanel(event.pageX, event.pageY);
@@ -263,11 +263,14 @@ const View = function($container){
             });
 
             api.on(ERROR, function(error) {
-                let sources = api.getSources()||[];
-                if(controls && (sources.length <= 1)){
-                    controls.destroy();
-                    controls = null;
+                if(api){
+                    let sources = api.getSources()||[];
+                    if(controls && (sources.length <= 1)){
+                        controls.destroy();
+                        controls = null;
+                    }
                 }
+
             });
 
             api.on(DESTROY, function(data) {

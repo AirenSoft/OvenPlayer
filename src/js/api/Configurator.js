@@ -1,4 +1,5 @@
 import _ from "utils/underscore";
+
 import {
     CONTENT_TIME_MODE_CHANGED
 } from "api/constants";
@@ -14,6 +15,7 @@ const Configurator = function(options, provider){
 
     const composeSourceOptions = function(options){
         const Defaults = {
+            mediaContainer : "",
             playbackRates: [2, 1.5, 1, 0.5, 0.25],
             playbackRate: 1,
             mute: false,
@@ -22,7 +24,8 @@ const Configurator = function(options, provider){
             controls : true,
             autoStart : false,
             timecode : true,
-            sourceLabel : ""
+            sourceLabel : "",
+            browser : ""
         };
         const serialize = function (val) {
             if (val === undefined) {
@@ -82,7 +85,8 @@ const Configurator = function(options, provider){
                 'tracks',
                 'host',
                 'application',
-                'stream'
+                'stream',
+                'adTagUrl'
             ]);
 
             config.playlist = [ obj ];
@@ -104,6 +108,10 @@ const Configurator = function(options, provider){
     };
     that.setConfig = (config, value) => {
         spec[config] = value;
+    };
+
+    that.getContainer = () => {
+        return spec.mediaContainer;
     };
 
     that.getPlaybackRate =()=>{
@@ -156,6 +164,9 @@ const Configurator = function(options, provider){
 
     that.getPlaybackRates =()=>{
         return spec.playbackRates;
+    };
+    that.getBrowser = () => {
+        return spec.browser;
     };
 
     that.getPlaylist =()=>{

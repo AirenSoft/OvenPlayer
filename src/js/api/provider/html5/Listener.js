@@ -35,7 +35,7 @@ import {extractVideoElement, separateLive, errorTrigger} from "api/provider/util
  * */
 
 
-const Listener = function(extendedElement, provider){
+const Listener = function(extendedElement, provider, videoEndedCallback){
     const lowLevelEvents = {};
 
     OvenPlayerConsole.log("EventListener loaded.",extendedElement ,provider );
@@ -60,9 +60,15 @@ const Listener = function(extendedElement, provider){
     //Fires when the current playlist is ended
     lowLevelEvents.ended = () => {
         OvenPlayerConsole.log("EventListener : on ended");
+
         if(provider.getState() != STATE_IDLE && provider.getState() != STATE_COMPLETE){
-            //provider.trigger(CONTENT_COMPLETE);
-            provider.setState(STATE_COMPLETE);
+            if(videoEndedCallback){
+                videoEndedCallback(function(){
+                    provider.setState(STATE_COMPLETE);
+                });
+            }else{
+                provider.setState(STATE_COMPLETE);
+            }
         }
     };
     //Fires when the browser has loaded the current frame of the audio/video
@@ -93,7 +99,7 @@ const Listener = function(extendedElement, provider){
     };
     //Fires when the audio/video has been paused
     lowLevelEvents.pause = () => {
-        if(provider.getState() === STATE_COMPLETE ||provider.getState() === STATE_ERROR){
+        if(provider.getState() === STATE_COMPLETE || provider.getState() === STATE_ERROR){
             return false;
         }
         if(elVideo.ended){

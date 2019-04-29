@@ -1,13 +1,14 @@
 /**
  * Created by hoho on 2018. 8. 23..
  */
+import Ads from "api/provider/ads/Ads";
 import EventEmitter from "api/EventEmitter";
 import EventsListener from "api/provider/flash/Listener";
 import {extractVideoElement, separateLive, pickCurrentSource} from "api/provider/utils";
 import {
     ERRORS, INIT_RTMP_SETUP_ERROR,
     STATE_IDLE, STATE_PLAYING, STATE_PAUSED, STATE_COMPLETE,
-    PLAYER_STATE, PLAYER_COMPLETE, PLAYER_PAUSE, PLAYER_PLAY,
+    PLAYER_STATE, PLAYER_COMPLETE, PLAYER_PAUSE, PLAYER_PLAY, STATE_AD_PLAYING,
     CONTENT_SOURCE_CHANGED, CONTENT_LEVEL_CHANGED, CONTENT_TIME, CONTENT_CAPTION_CUE_CHANGED,
     PLAYBACK_RATE_CHANGED, CONTENT_MUTE, PROVIDER_HTML5, PROVIDER_WEBRTC, PROVIDER_DASH, PROVIDER_HLS
 } from "api/constants";
@@ -25,8 +26,18 @@ const Provider = function(spec, playerConfig){
     let that = {};
     EventEmitter(that);
 
-    let listener = EventsListener(spec.extendedElement, that);
     let elFlash = extractVideoElement(spec.extendedElement);
+    let ads = null, listener = null, videoEndedCallback = null;
+
+    //It means to support ad for flash. Set the same specifications like a Video Tag.
+    Object.defineProperty(elFlash, 'currentTime',
+        {value :0, writable : true}
+    );
+
+    if(spec.adTag){
+        ads = Ads(elFlash, that, playerConfig, spec.adTag);
+    }
+    listener = EventsListener(spec.extendedElement, that, ads ? ads.videoEndedCallback : null);
 
     const _load = (lastPlayPosition) =>{
         const source =  spec.sources[spec.currentSource];
@@ -71,7 +82,29 @@ const Provider = function(spec, playerConfig){
     };
 
     that.setState = (newState) => {
-        spec.state = newState;
+        if(spec.state !== newState){
+            let prevState = spec.state;
+            switch(newState){
+                case STATE_COMPLETE :
+                    that.trigger(PLAYER_COMPLETE);
+                    break;
+                case STATE_PAUSED :
+                    that.trigger(PLAYER_PAUSE, {
+                        prevState: spec.state
+                    });
+                    break;
+                case STATE_PLAYING :
+                    that.trigger(PLAYER_PLAY, {
+                        prevState: spec.state
+                    });
+                    break;
+            }
+            spec.state = newState;
+            that.trigger(PLAYER_STATE, {
+                prevstate : prevState,
+                newstate: spec.state
+            });
+        }
     };
     that.getState = () =>{
         return spec.state;
@@ -80,24 +113,45 @@ const Provider = function(spec, playerConfig){
 
     };
     that.getBuffer = () => {
+        if(!elFlash){
+            return ;
+        }
         return elFlash.getBuffer ? elFlash.getBuffer() : null;
     };
     that.getDuration = () => {
+        if(!elFlash){
+            return ;
+        }
         return elFlash.getDuration ? elFlash.getDuration() : 0;
     };
     that.getPosition = () => {
+        if(!elFlash){
+            return ;
+        }
         return elFlash.getPosition ? elFlash.getPosition() : 0;
     };
     that.setVolume = (volume) => {
+        if(!elFlash){
+            return ;
+        }
         return elFlash.setVolume ? elFlash.setVolume(volume) : 0;
     };
     that.getVolume = () => {
+        if(!elFlash){
+            return ;
+        }
         return elFlash.setVolume ? elFlash.getVolume() : 0;
     };
     that.setMute = () =>{
+        if(!elFlash){
+            return ;
+        }
         elFlash.setMute();
     };
     that.getMute = () =>{
+        if(!elFlash){
+            return ;
+        }
         return elFlash.getMute ? elFlash.getMute() : false;
     };
 
@@ -109,24 +163,44 @@ const Provider = function(spec, playerConfig){
         spec.currentSource = pickCurrentSource(sources, spec.currentSource, playerConfig);
 
         return new Promise(function (resolve, reject) {
+            //First : checkSwfIsReady -> It checks swf loading complete by polling.
+            //Second : checkFileLoaded -> It checks src loading complete by polling too.
+            //Why complex is it? -> It againsts flash timing issue.
             (function checkSwfIsReady(){
                 retryCount ++;
-
                 if(elFlash.isFlashReady && elFlash.isFlashReady()){
+                    Object.defineProperty(elFlash, 'duration',
+                        {value :elFlash.getDuration()}
+                    );
                     _load(lastPlayPosition || 0);
 
-                    if(playerConfig.isAutoStart()){
-                        that.play();
-                    }
+                    retryCount = 0;
 
-                    if(playerConfig.isMute()){
-                        that.setMute(true);
-                    }
-                    if(playerConfig.getVolume()){
-                        that.setVolume(playerConfig.getVolume());
-                    }
+                    return (function checkFileLoaded(){
+                        retryCount ++;
+                        if(elFlash.isFileLoaded()){
 
-                    return resolve();
+                            if(playerConfig.isAutoStart()){
+                                that.play();
+                            }
+
+                            if(playerConfig.isMute()){
+                                that.setMute(true);
+                            }
+                            if(playerConfig.getVolume() && playerConfig.getVolume() < 100){
+                                that.setVolume(playerConfig.getVolume());
+                            }
+
+                            return resolve();
+                        }else{
+                            if(retryCount < 100){
+                                setTimeout(checkFileLoaded, 100);
+                            }else{
+                                return reject(ERRORS[INIT_RTMP_SETUP_ERROR]);
+                            }
+                        }
+                    })();
+
                 }else{
                     if(retryCount < 100){
                         setTimeout(checkSwfIsReady, 100);
@@ -145,14 +219,29 @@ const Provider = function(spec, playerConfig){
     };
 
     that.play = () =>{
-        if(elFlash.play){
-            elFlash.play();
+        if(!elFlash){
+            return false;
+        }
+
+        if(that.getState() !== STATE_PLAYING){
+            if ( (ads && ads.isActive()) || (ads && !ads.started())) {
+                ads.play();
+            }else{
+                elFlash.play();
+            }
+
         }
     }
     that.pause = () =>{
-        if(elFlash.pause){
-            elFlash.pause();
+        if(!elFlash){
+            return false;
         }
+        if (that.getState() === STATE_PLAYING) {
+            elFlash.pause();
+        }else if(that.getState() === STATE_AD_PLAYING){
+            ads.pause();
+        }
+
     };
     that.seek = (position) =>{
         elFlash.seek(position);
@@ -252,6 +341,11 @@ const Provider = function(spec, playerConfig){
         OvenPlayerConsole.log("CORE : destroy() player stop, listener, event destroied");
 
         elFlash.remove();
+
+        if(ads){
+            ads.destroy();
+        }
+        that.off();
     };
 
     //XXX : I hope using es6 classes. but I think to occur problem from Old IE. Then I choice function inherit. Finally using super function is so difficult.

@@ -91,7 +91,8 @@ const Manager = function(provider){
             }
             let playlistItem = Object.assign({},{
                 sources: [],
-                tracks: []
+                tracks: [],
+                title : ""
             }, item );
 
             if((playlistItem.sources === Object(playlistItem.sources)) && !_.isArray(playlistItem.sources)) {
@@ -136,6 +137,10 @@ const Manager = function(provider){
 
             playlistItem.sources = playlistItem.sources.filter(source => !!source);
 
+            if(!playlistItem.title){
+                playlistItem.title = playlistItem.sources[0].label;
+            }
+
             // default 가 없을때 webrtc가 있다면 webrtc default : true로 자동 설정
             /*let haveDefault = _.find(playlistItem.sources, function(source){return source.default == true;});
             let webrtcSource = [];
@@ -167,7 +172,7 @@ const Manager = function(provider){
             }).filter(track => !!track);
 
             return playlistItem;
-        });
+        }).filter(function(item){return item.sources && item.sources.length > 0;});
         spec.playlist = prettiedPlaylist;
         return prettiedPlaylist;
     };
@@ -196,6 +201,9 @@ const Manager = function(provider){
         //We do not support "PLAYLIST" not yet. So this returns playlist of 0.
         OvenPlayerConsole.log("PlaylistManager getCurrentSources() ", spec.playlist[spec.currentIndex].sources);
         return spec.playlist[spec.currentIndex].sources;
+    };
+    that.getCurrentAdTag = () => {
+        return spec.playlist[spec.currentIndex].adTagUrl || "";
     };
 
     return that;

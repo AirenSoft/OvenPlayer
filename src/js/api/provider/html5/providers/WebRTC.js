@@ -1,7 +1,6 @@
 /**
  * Created by hoho on 2018. 6. 11..
  */
-import MediaManager from "api/media/Manager";
 import Provider from "api/provider/html5/Provider";
 import WebRTCLoader from "api/provider/html5/providers/WebRTCLoader";
 import {isWebRTC} from "utils/validator";
@@ -14,13 +13,10 @@ import {PROVIDER_WEBRTC, STATE_IDLE} from "api/constants";
  * @param   playerConfig    config.
  * */
 
-const WebRTC = function(container, playerConfig){
+const WebRTC = function(element, playerConfig, adTagUrl){
     let that = {};
     let webrtcLoader = null;
     let superDestroy_func  = null;
-
-    let mediaManager = MediaManager(container, PROVIDER_WEBRTC);
-    let element = mediaManager.create();
 
     let spec = {
         name : PROVIDER_WEBRTC,
@@ -35,7 +31,8 @@ const WebRTC = function(container, playerConfig){
         currentQuality : -1,
         currentSource : -1,
         qualityLevels : [],
-        sources : []
+        sources : [],
+        adTagUrl : adTagUrl
     };
 
     that = Provider(spec, playerConfig, function(source){
@@ -78,9 +75,6 @@ const WebRTC = function(container, playerConfig){
             webrtcLoader.destroy();
             webrtcLoader = null;
         }
-        mediaManager.destroy();
-        mediaManager = null;
-        element = null;
         OvenPlayerConsole.log("WEBRTC :  PROVIDER DESTROYED.");
 
         superDestroy_func();

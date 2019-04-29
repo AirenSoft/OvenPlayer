@@ -1,7 +1,7 @@
 /**
  * Created by hoho on 2018. 7. 20..
  */
-import TextViewTemplate from 'view/example/mainTemplate';
+import TextViewTemplate from 'view/example/textviewTemplate';
 import ViewTemplate from 'view/viewTemplate';
 import HelpersTemplate from 'view/components/helpers/mainTemplate';
 import BigButtonTemplate from 'view/components/helpers/bigButtonTemplate';

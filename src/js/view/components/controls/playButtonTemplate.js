@@ -1,9 +1,9 @@
 export default () => {
     return (
-        '<button class="ovp-button ovp-play-button" type="button">' +
-            '<i class="ovp-play-button-playicon"></i>' +
-            '<i class="ovp-play-button-pauseicon"></i>' +
-            '<i class="ovp-play-button-replayicon"></i>' +
-        '</button>'
+        `<button class="ovp-button ovp-play-button" type="button">` +
+            `<i class="ovp-play-button-playicon"></i>` +
+            `<i class="ovp-play-button-pauseicon"></i>` +
+            `<i class="ovp-play-button-replayicon"></i>` +
+        `</button>`
     );
 };

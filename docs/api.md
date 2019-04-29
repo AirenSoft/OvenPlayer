@@ -26,7 +26,8 @@ player = OvenPlayer.create("player", {
                         kind : "captions", 
                         file :  "https://path.to/your_caption.vtt", 
                         label : "KO vtt"
-                    }]
+                    }],
+                adTag : "https://pubads.g.doubleclick.net/..."    
         }
     ]
 ... or simple 
@@ -36,7 +37,8 @@ player = OvenPlayer.create("player", {
                               file :  "https://path.to/your_video.mpd", 
                               framerate : 30,
                               label: "360P DASH"
-                          }]
+                          }],
+      adTag : "https://pubads.g.doubleclick.net/..." 
 });
 ```
 
@@ -165,7 +167,8 @@ Enter the URLs of the diverse sources to play.
                         kind : "captions", 
                         file :  "https://path.to/your_caption.vtt", 
                         label : "KO vtt"
-                    }]
+                    }],
+                adTag : "https://pubads.g.doubleclick.net/..." 
         },
         {
                         title : "02",
@@ -199,7 +202,8 @@ Enter the URLs of the diverse sources to play.
                                 kind : "captions", 
                                 file :  "https://path.to/your_caption2.vtt", 
                                 label : "KO vtt"
-                            }]
+                            }],
+                        adTag : "https://pubads.g.doubleclick.net/..." 
                 }
  ]
 ```
@@ -750,7 +754,7 @@ Occurs when the state of a player changes.
 
 Attribute|Type|Memo
 ------|------|-------
-`newstate`|String| idle, complete, paused, playing, error, loading
+`newstate`|String| idle, complete, paused, playing, error, loading, adPlaying, adPaused, adComplete
 
 
 #### player.on('resized')
@@ -873,6 +877,37 @@ Fired when timecode mode is changed.
 Attribute|Type|Memo
 ------|------|-------
 `isTimecodeDisplaying`|boolean| changed displaying mode
+
+
+#### player.on('adChanged')
+
+Fired when Ad is changed.
+
+Attribute|Type|Memo
+------|------|-------
+`isLinear`|Boolean| True if the ad is linear, false otherwise.
+`duration`|Number| Returns the duration of the selected creative, or -1 for non-linear creatives.
+`skipTimeOffset`|Number| The number of seconds of playback before the ad becomes skippable.
+
+#### player.on('adTime')
+
+Fired when Ad is playing.
+
+Attribute|Type|Memo
+------|------|-------
+`isLinear`|Boolean| True if the ad is linear, false otherwise.
+`duration`|Number| Returns the duration of the selected creative, or -1 for non-linear creatives.
+`skipTimeOffset`|Number| The number of seconds of playback before the ad becomes skippable.
+`remaining`|Number| Get the remaining time of the current ad that is playing. 
+`position`|Number| Playback position in seconds.
+
+
+#### player.on('adComplete')
+
+Fired when Ad is complete.
+
+Attribute|Type|Memo
+------|------|-------
 
 
 
