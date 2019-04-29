@@ -1,4 +1,4 @@
-/*! OvenPlayerv0.9.4 | (c)2019 AirenSoft Co., Ltd. | MIT license (https://github.com/AirenSoft/OvenPlayerPrivate/blob/master/LICENSE) | Github : https://github.com/AirenSoft/OvenPlayer */
+/*! OvenPlayerv0.9.41 | (c)2019 AirenSoft Co., Ltd. | MIT license (https://github.com/AirenSoft/OvenPlayerPrivate/blob/master/LICENSE) | Github : https://github.com/AirenSoft/OvenPlayer */
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([["vttparser"],{
 
 /***/ "./src/js/api/caption/parser/VttParser.js":
