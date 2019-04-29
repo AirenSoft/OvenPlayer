@@ -1,7 +1,6 @@
 /**
  * Created by hoho on 2018. 6. 14..
  */
-import MediaManager from "api/media/Manager";
 import Provider from "api/provider/html5/Provider";
 import {errorTrigger} from "api/provider/utils";
 import sizeHumanizer from "utils/sizeHumanizer";
@@ -16,15 +15,12 @@ const DASHERROR = {
     DOWNLOAD : "download",
     MANIFESTERROR : "manifestError"
 };
-const Dash = function(container, playerConfig){
+const Dash = function(element, playerConfig, adTagUrl){
     let that = {};
     let dash = null;
     let superDestroy_func = null;
     let seekPosition_sec = 0;
     let isFirstError = false;
-
-    let mediaManager = MediaManager(container, PROVIDER_DASH, playerConfig.isLoop());
-    let element =  mediaManager.create();
 
     try {
         dash = dashjs.MediaPlayer().create();
@@ -43,7 +39,8 @@ const Dash = function(container, playerConfig){
             currentQuality : -1,
             currentSource : -1,
             qualityLevels : [],
-            sources : []
+            sources : [],
+            adTagUrl : adTagUrl
         };
 
         that = Provider(spec, playerConfig, function(source, lastPlayPosition){
@@ -128,11 +125,7 @@ const Dash = function(container, playerConfig){
         };
         that.destroy = () =>{
             dash.reset();
-            mediaManager.destroy();
-            mediaManager = null;
-            element = null;
             OvenPlayerConsole.log("DASH : PROVIDER DESTROYED.");
-
             superDestroy_func();
         };
     }catch(error){

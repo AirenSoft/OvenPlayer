@@ -11,6 +11,8 @@
 <glyph glyph-name="ic-player-left-expand" unicode="&#xe801;" d="M670 743c17-3 19-7 24-13 12-13 10-35-2-48l-332-332 334-334c46-60-30-69-53-48l-357 357c-13 14-13 36 0 50l357 357c12 11 12 12 29 11z" horiz-adv-x="1000" />
 
 <glyph glyph-name="ic-player-right-expand" unicode="&#xe802;" d="M337 743c13-2 13-3 22-11l357-357c13-14 13-36 0-50l-357-357c-13-12-18-11-26-11-28 0-47 36-25 61l332 332-334 334c-6 8-7 11-8 17-4 21 15 43 39 42z" horiz-adv-x="1000" />
+
+<glyph glyph-name="ic-player-non-thumb" unicode="&#xe804;" d="M1143 850c39 0 71-32 71-71l0-270 357 198 0-714-357 198 0-270c0-39-32-71-71-71l-1072 0c-39 0-71 32-71 71l0 858c0 39 32 71 71 71l1072 0z" horiz-adv-x="1571" />
 </font>
 </defs>
 </svg>

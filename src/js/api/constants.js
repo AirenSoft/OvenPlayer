@@ -8,6 +8,10 @@ export const STATE_ERROR = "error";
 export const STATE_LOADING = "loading";
 export const STATE_STALLED = "stalled";
 
+export const STATE_AD_LOADED = "adLoaded";
+export const STATE_AD_PLAYING = "adPlaying";
+export const STATE_AD_PAUSED = "adPaused";
+export const STATE_AD_COMPLETE = "adComplete";
 
 // PROVIDER
 export const PROVIDER_HTML5 = "html5";
@@ -38,6 +42,8 @@ export const PLAYER_PAUSE = "pause";
 export const PLAYER_PLAY = "play";
 export const PLAYER_RESIZED = "resized";
 
+export const AD_CHANGED = "adChanged";
+export const AD_TIME = "adTime";
 export const CONTENT_BUFFER = "bufferChanged";
 export const CONTENT_TIME = "time";
 export const CONTENT_RATE_CHANGE = "ratechange";

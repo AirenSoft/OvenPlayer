@@ -30,22 +30,36 @@ import {
     PROVIDER_HLS
 } from "api/constants";
 
-const Listener = function(elFlash, provider){
+const Listener = function(elFlash, provider, videoEndedCallback){
     let that = {};
 
     that.isJSReady = () =>{
         return true;
     };
-    that.time = (data) =>{
+    that.timeupdate = (data) =>{
+
+        elFlash.currentTime = data.position;
         provider.trigger(CONTENT_TIME, data);
         provider.trigger(CONTENT_BUFFER, data);
+
+        if(data.position >= data.duration){
+            if(provider.getState() !== STATE_IDLE && provider.getState() !== STATE_COMPLETE){
+                if(videoEndedCallback){
+                    videoEndedCallback(function(){
+                        provider.setState(STATE_COMPLETE);
+                    });
+                }else{
+                    provider.setState(STATE_COMPLETE);
+                }
+
+            }
+        }
     };
     that.volumeChanged = (data) =>{
         provider.trigger(CONTENT_VOLUME, data);
     };
     that.stateChanged = (data) =>{
         provider.setState(data.newstate);
-        provider.trigger(PLAYER_STATE, data);
     };
     that.metaChanged = (data) =>{
         provider.trigger(CONTENT_META, data);

@@ -15,15 +15,24 @@ import PanelManager from "view/global/PanelManager";
 import {
     READY,
     CONTENT_META, CONTENT_LEVEL_CHANGED, CONTENT_TIME_MODE_CHANGED,
+    STATE_AD_LOADED,
+    AD_CHANGED,
+    STATE_AD_PLAYING,
+    STATE_AD_PAUSED,
+    STATE_AD_COMPLETE,
     OME_P2P_MODE,
     PROVIDER_RTMP,
     ERROR
 } from "api/constants";
 const Controls = function($container, api){
     let volumeButton = "", playButton= "", progressBar = "", timeDisplay = "", fullScreenButton = "", frameButtons = "", hasPlaylist = false;
-    let panelManager = PanelManager();
+
     let webrtc_is_p2p_mode = false;
+    let isLiveMode = false;
+
+    let panelManager = PanelManager();
     const $root = LA$("#"+api.getContainerId());
+    let lastContentMeta = {};
 
     hasPlaylist = api.getPlaylist().length > 1 ? true : false;
     let playlistPanel = "";
@@ -41,11 +50,11 @@ const Controls = function($container, api){
             }
             timeDisplay = TimeDisplay($current.find(".ovp-left-controls"), api, data);
         };
-        let initProgressBar = function(){
+        let initProgressBar = function(isAd){
             if(progressBar){
                 progressBar.destroy();
             }
-            progressBar = ProgressBar($current.find(".ovp-progressbar-container"), api);
+            progressBar = ProgressBar($current.find(".ovp-progressbar-container"), api, isAd);
         };
         let initFrameJumpButtons = function(){
             if(frameButtons){
@@ -59,18 +68,10 @@ const Controls = function($container, api){
         fullScreenButton = FullScreenButton($current.find(".ovp-right-controls"), api);
 
 
-        api.on("resize", function(size){
-            setPanelMaxHeight();
-        },template);
-
-        api.on(OME_P2P_MODE, function(isP2P){
-            webrtc_is_p2p_mode = isP2P;
-        });
-
         api.on(CONTENT_META, function(data){
             data.isP2P = webrtc_is_p2p_mode;
+            lastContentMeta = data;
             initTimeDisplay(data);
-
             if(api.getFramerate() > 0){
                 //initFrameJumpButtons();
             }else{
@@ -80,19 +81,65 @@ const Controls = function($container, api){
             }
 
             if(data.duration === Infinity){
+                isLiveMode = true;
                 //live
                 if(progressBar){
                     progressBar.destroy();
                 }
             }else{
                 //vod
-                initProgressBar();
+                initProgressBar(false);
+            }
+
+        }, template);
+
+        api.on("resize", function(size){
+            setPanelMaxHeight();
+        },template);
+
+        api.on(OME_P2P_MODE, function(isP2P){
+            webrtc_is_p2p_mode = isP2P;
+        }, template);
+
+
+
+        api.on(AD_CHANGED, function(ad){
+            if(ad.isLinear){
+                if(progressBar){
+                    progressBar.destroy();
+                }
+                initProgressBar(true);
+                if(timeDisplay){
+                    timeDisplay.destroy();
+                }
+                $root.addClass("linear-ad");
+            }else{
+                $root.removeClass("linear-ad");
             }
         }, template);
+
+        api.on(STATE_AD_COMPLETE, function(){
+            initTimeDisplay(lastContentMeta);
+            if(progressBar){
+                progressBar.destroy();
+            }
+            $root.removeClass("linear-ad");
+            if(isLiveMode){
+
+            }else{
+                initProgressBar(false);
+            }
+
+        }, template);
+
+
 
     };
     const onDestroyed = function(template){
         api.off(CONTENT_META, null, template);
+        api.off(STATE_AD_COMPLETE, null, template);
+        api.off(AD_CHANGED, null, template);
+        api.off(OME_P2P_MODE, null, template);
         if(timeDisplay){
             timeDisplay.destroy();
         }

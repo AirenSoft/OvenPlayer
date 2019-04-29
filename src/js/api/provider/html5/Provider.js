@@ -1,12 +1,13 @@
 /**
  * Created by hoho on 2018. 6. 27..
  */
+import Ads from "api/provider/ads/Ads";
 import EventEmitter from "api/EventEmitter";
 import EventsListener from "api/provider/html5/Listener";
 import {extractVideoElement, separateLive, pickCurrentSource} from "api/provider/utils";
 import {
     STATE_IDLE, STATE_PLAYING, STATE_PAUSED, STATE_COMPLETE,
-    PLAYER_STATE, PLAYER_COMPLETE, PLAYER_PAUSE, PLAYER_PLAY,
+    PLAYER_STATE, PLAYER_COMPLETE, PLAYER_PAUSE, PLAYER_PLAY, STATE_AD_PLAYING,
     CONTENT_TIME, CONTENT_CAPTION_CUE_CHANGED, CONTENT_SOURCE_CHANGED,
     PLAYBACK_RATE_CHANGED, CONTENT_MUTE, PROVIDER_HTML5, PROVIDER_WEBRTC, PROVIDER_DASH, PROVIDER_HLS
 } from "api/constants";
@@ -23,11 +24,15 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
     let that ={};
     EventEmitter(that);
 
-    let listener = EventsListener(spec.extendedElement, that);
     let elVideo = extractVideoElement(spec.extendedElement);
+    let ads = null, listener = null, videoEndedCallback = null;
     let posterImage = playerConfig.getConfig().image||"";
-    elVideo.playbackRate = elVideo.defaultPlaybackRate = playerConfig.getPlaybackRate();
 
+    if(spec.adTagUrl){
+        ads = Ads(elVideo, that, playerConfig, spec.adTagUrl);
+    }
+    listener = EventsListener(spec.extendedElement, that, ads ? ads.videoEndedCallback : null);
+    elVideo.playbackRate = elVideo.defaultPlaybackRate = playerConfig.getPlaybackRate();
 
     const _load = (lastPlayPosition) =>{
         const source =  spec.sources[spec.currentSource];
@@ -46,7 +51,8 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
             sourceElement.src = source.file;
             const sourceChanged = (sourceElement.src !== previousSource);
             if (sourceChanged) {
-                elVideo.src = spec.sources[spec.currentSource].file;
+                //elVideo.src = spec.sources[spec.currentSource].file;
+                elVideo.append(sourceElement);
                 // Do not call load if src was not set. load() will cancel any active play promise.
                 if (previousSource) {
                     elVideo.load();
@@ -54,6 +60,8 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
             }else if(lastPlayPosition === 0 && elVideo.currentTime > 0){
                 that.seek(lastPlayPosition);
             }
+
+
             if(lastPlayPosition > 0){
                 that.seek(lastPlayPosition);
                 that.play();
@@ -67,7 +75,9 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
                 //elVideo.style.background = "transparent url('"+posterImage+"') no-repeat 0 0";
                 //elVideo.poster = posterImage;
             }
+
         }
+
     };
 
     that.getName = () => {
@@ -173,6 +183,7 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
 
     that.preload = (sources, lastPlayPosition) =>{
         spec.sources = sources;
+
         spec.currentSource = pickCurrentSource(sources, spec.currentSource, playerConfig);
         _load(lastPlayPosition || 0);
 
@@ -203,28 +214,38 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
         }
 
         if(that.getState() !== STATE_PLAYING){
-            let promise = elVideo.play();
-            if (promise !== undefined) {
-                promise.then(_ => {
-                    // Autoplay started!
-                }).catch(error => {
-                    //Can't play because User doesn't any interactions.
-                    //Wait for User Interactions. (like click)
-                    setTimeout(function(){
-                        that.play();
-                    }, 1000);
+            if ( (ads && ads.isActive()) || (ads && !ads.started())) {
+                ads.play();
+            }else{
+                elVideo.play();
+                let promise = elVideo.play();
+                if (promise !== undefined) {
+                    promise.then(_ => {
+                        // Autoplay started!
+                    }).catch(error => {
+                        //Can't play because User doesn't any interactions.
+                        //Wait for User Interactions. (like click)
+                        setTimeout(function () {
+                            that.play();
+                        }, 1000);
 
-                });
+                    });
+
+                }
             }
 
         }
+
     }
     that.pause = () =>{
         if(!elVideo){
             return false;
         }
-        if(that.getState() === STATE_PLAYING){
+
+        if (that.getState() === STATE_PLAYING) {
             elVideo.pause();
+        }else if(that.getState() === STATE_AD_PLAYING){
+            ads.pause();
         }
     };
     that.seek = (position) =>{
@@ -351,6 +372,10 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
         that.stop();
         listener.destroy();
         //elVideo.remove();
+
+        if(ads){
+            ads.destroy();
+        }
         that.off();
         OvenPlayerConsole.log("CORE : destroy() player stop, listener, event destroied");
     };

@@ -15,6 +15,11 @@ import {
     STATE_LOADING,
     STATE_COMPLETE,
     STATE_PAUSED,
+    STATE_AD_LOADED,
+    STATE_AD_PLAYING,
+    STATE_AD_PAUSED,
+    STATE_AD_COMPLETE,
+    PLAYLIST_CHANGED,
     STATE_ERROR,
     PLAYER_STATE,
     CONTENT_LEVEL_CHANGED,
@@ -37,15 +42,24 @@ const Helpers = function($container, api){
             }
             messageBox = MessageBox($current, api, message, withTimer);
         };
+
         spinner = Spinner($current, api);
+
+        /*if(api.getCaptionList() && api.getCaptionList().length > 0){
+            captionViewer = CaptionViewer($current, api);
+        }*/
+
         captionViewer = CaptionViewer($current, api);
 
         api.on(READY, function() {
             createBigButton(STATE_PAUSED);
+
         }, template);
+
         api.on(PLAYER_STATE, function(data){
             if(data && data.newstate){
-                if(data.newstate === STATE_PLAYING){
+
+                if(data.newstate === STATE_PLAYING ||  data.newstate === STATE_AD_PLAYING){
                     bigButton.destroy();
                     if(!qualityLevelChanging){
                         spinner.show(false);
@@ -105,8 +119,8 @@ const Helpers = function($container, api){
             if(api.getCurrentSource()+1 ===  api.getQualityLevels().length){
                 message = "Network connection is unstable. Check the network connection.";
             }
-
-            createMessage(message, 5000);
+            OvenPlayerConsole.log(message);
+            //createMessage(message, 5000);
         }, template);
 
     };
@@ -115,6 +129,7 @@ const Helpers = function($container, api){
         api.off(PLAYER_STATE, null, template);
         api.off(ERROR, null, template);
         api.off(NETWORK_UNSTABLED, null, template);
+        api.off(PLAYLIST_CHANGED, null, template);
     };
     const events = {
 

@@ -7,18 +7,21 @@ import {naturalHms} from "utils/strings"
 import LA$ from "utils/likeA$";
 import {
     CONTENT_TIME,
-    CONTENT_BUFFER
+    CONTENT_BUFFER,
+    AD_TIME
 } from "api/constants";
 //import ResizeSensor from "resize-sensor";
 
-const ProgressBar = function($container, api){
+const ProgressBar = function($container, api, isAd){
     const $root = LA$("#"+api.getContainerId());
+
     let currentPlayingPosition = 0;
     let currentPlayingPercentage = 0;
     let currentLoadedPercentage = 0;
 
     let mouseInside = false, mouseDown = false;
     let panelManager = PanelManager();
+    let adDuration = 0;
 
     let $progressBar = "",
         $progressLoad = "",
@@ -83,6 +86,7 @@ const ProgressBar = function($container, api){
            return ;
        }
 
+        //const duration = isAd ? adDuration : api.getDuration();
         const duration = api.getDuration();
         const second = duration * percentage;
 
@@ -132,31 +136,46 @@ const ProgressBar = function($container, api){
             drawLoadProgress(currentLoadedPercentage);
         });*/
 
-        api.on(CONTENT_TIME, function(data) {
-            if(data && data.duration && data.position){
-                positionElements(data.position / data.duration);
-            }
-        },template);
+        if(isAd){
+            api.on(AD_TIME, function(data) {
+                if(data && data.duration && data.position){
+                    positionElements(data.position / data.duration);
+                    adDuration = data.duration;
+                }
+            },template);
+        }else{
+            api.on(CONTENT_TIME, function(data) {
+                if(data && data.duration && data.position){
+                    positionElements(data.position / data.duration);
+                }
+            },template);
 
-        api.on(CONTENT_BUFFER, function(data) {
-            if(data && data.bufferPercent){
-                drawLoadProgress(data.bufferPercent / 100);
-            }
-        },template);
+            api.on(CONTENT_BUFFER, function(data) {
+                if(data && data.bufferPercent){
+                    drawLoadProgress(data.bufferPercent / 100);
+                }
+            },template);
+        }
+
+
 
     };
     const onDestroyed = function(template){
-        api.off(CONTENT_TIME, null, template);
-        api.off(CONTENT_BUFFER, null, template);
+        if(isAd){
+            api.off(AD_TIME, null, template);
+        }else{
+            api.off(CONTENT_TIME, null, template);
+            api.off(CONTENT_BUFFER, null, template);
+        }
     };
     const events = {
         "mouseenter .ovp-progressbar" : function(event, $current, template){
             event.preventDefault();
-
-            mouseInside = true;
-            $time.show();
+            if(!isAd){
+                mouseInside = true;
+                $time.show();
+            }
             $root.addClass("ovp-progressbar-hover");
-
         },
         "mouseleave .ovp-progressbar" : function(event, $current, template){
             event.preventDefault();
@@ -170,6 +189,9 @@ const ProgressBar = function($container, api){
         },
         "mousedown .ovp-progressbar" : function(event, $current, template){
             event.preventDefault();
+            if(isAd){
+                return false;
+            }
             mouseDown = true;
             const percentage = calculatePercentage(event);
             positionElements(percentage);
@@ -179,7 +201,7 @@ const ProgressBar = function($container, api){
         "mousemove .ovp-progressbar" : function(event, $current, template){
             event.preventDefault();
 
-            if (!mouseDown) {
+            if (!mouseDown && !isAd) {
                 const percentage = calculatePercentage(event);
                 drawHoverProgress(percentage);
                 drawTimeIndicator(percentage, event);
@@ -187,6 +209,7 @@ const ProgressBar = function($container, api){
         },
         "mousemove document" : function(event, $current, template){
             event.preventDefault();
+
             if (mouseDown) {
                 const percentage = calculatePercentage(event);
                 positionElements(percentage);

@@ -9,7 +9,7 @@ const isSupport = function(kind){
     return kind === 'subtitles' || kind === 'captions';
 };
 
-const Manager = function(api){
+const Manager = function(api, playlistIndex){
 
     const that = {};
     let captionList = [];
@@ -20,7 +20,7 @@ const Manager = function(api){
     let isShowing = false;
 
 
-    OvenPlayerConsole.log("Caption Manager >> ");
+    OvenPlayerConsole.log("Caption Manager >> ", playlistIndex);
 
 
     let bindTrack = function(track, vttCues){
@@ -52,10 +52,12 @@ const Manager = function(api){
         api.trigger(CONTENT_CAPTION_CHANGED, currentCaptionIndex);
     };
     if(api.getConfig().playlist && api.getConfig().playlist.length > 0){
-        let playlist = api.getConfig().playlist[0];
+        let playlist = api.getConfig().playlist[playlistIndex];
+
         if(playlist && playlist.tracks && playlist.tracks.length > 0){
             for(let i = 0; i < playlist.tracks.length; i ++){
                 const track = playlist.tracks[i];
+
                 if(isSupport(track.kind) && ! _.findWhere(track, {file : track.file})){
                     //that.flushCaptionList(currentCaptionIndex);
                     captionLoader.load(track, track.lang, function(vttCues){
@@ -126,6 +128,7 @@ const Manager = function(api){
     };
     that.destroy = () => {
         captionList = [];
+        captionLoader = null;
         api.off(CONTENT_TIME, null, that);
     };
 

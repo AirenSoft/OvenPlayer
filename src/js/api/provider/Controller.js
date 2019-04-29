@@ -81,8 +81,7 @@ const Controller = function(){
             supportedProviderNames.filter(function(providerName){
                 return !!ProviderLoader[providerName];
             }).map(function(providerName){
-                const provider = ProviderLoader[providerName]();
-                return provider;
+                return ProviderLoader[providerName]();
             })
         );
     };

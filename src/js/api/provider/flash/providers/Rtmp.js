@@ -1,7 +1,6 @@
 /**
  * Created by hoho on 2018. 8. 23..
  */
-import MediaManager from "api/media/Manager";
 import {STATE_IDLE, PROVIDER_RTMP} from "api/constants";
 import Provider from "api/provider/flash/Provider";
 /**
@@ -11,11 +10,9 @@ import Provider from "api/provider/flash/Provider";
  * */
 
 
-const Rtmp = function(container, playerConfig){
+const Rtmp = function(element, playerConfig, adTagUrl){
     let that = {};
     let superDestroy_func = null;
-    let mediaManager = MediaManager(container, PROVIDER_RTMP, playerConfig.isLoop());
-    let element = mediaManager.create();
 
     let spec = {
         name : PROVIDER_RTMP,
@@ -30,7 +27,8 @@ const Rtmp = function(container, playerConfig){
         currentQuality : -1,
         currentSource : -1,
         qualityLevels : [],
-        sources : []
+        sources : [],
+        adTagUrl : adTagUrl
     };
 
     that = Provider(spec, playerConfig, null);
@@ -39,10 +37,6 @@ const Rtmp = function(container, playerConfig){
     OvenPlayerConsole.log("RTMP PROVIDER LOADED.");
 
     that.destroy = () =>{
-        mediaManager.destroy();
-        mediaManager = null;
-        element = null;
-
         OvenPlayerConsole.log("RTMP : PROVIDER DESTROYED.");
         superDestroy_func();
     };
