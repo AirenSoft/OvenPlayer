@@ -145,7 +145,7 @@ player = OvenPlayer.create("player", {
 
 
     <script>
-        var player = "", preSources = "", errorOccured = false;
+        var player = "", preSources = "", errorOccured = false, isSSL = window.location.protocol === "https:";
         var getParameterByName = function (name, url) {
             if (!url) url = window.location.href;
             name = name.replace(/[\[\]]/g, '\\$&');
@@ -242,7 +242,8 @@ player = OvenPlayer.create("player", {
                     this.choicedProtocol = protocol;
                 },
                 addSource : function(){
-                    var type = "", data = {};
+                    let type = "", data = {}, isMixedContentProblem = false;
+
                     if(this.choicedProtocol == "Protocol"){
                         this.errorMessage = "Please enter a protocol.";
                         return;
@@ -257,6 +258,20 @@ player = OvenPlayer.create("player", {
                         this.errorMessage = "Please enter a correct OME URL. ex)ws://dev2.airensoft.com:3333/app/stream_o";
                         return;
                     }
+                    if(isSSL){
+                        if(this.choicedProtocol === "webrtc" && this.url.indexOf('wss:') < 0){
+                            isMixedContentProblem = true;
+                        }else if((this.choicedProtocol === "http" || this.choicedProtocol === "hls" || this.choicedProtocol === "dash") && this.url.indexOf('https:') < 0){
+                            isMixedContentProblem = true;
+                        }
+                        if(isMixedContentProblem){
+                            this.errorMessage = "Please check the protocol. Mixed content error! HTTP sources on HTTPS.";
+                            isMixedContentProblem = false;
+                            return;
+                        }
+                    }
+
+
 
                     this.sources.push({
                         id : this.sourceId ++,
