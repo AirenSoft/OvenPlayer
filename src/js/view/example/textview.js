@@ -3,9 +3,7 @@
  */
 import OvenTemplate from 'view/engine/OvenTemplate';
 
-const TextView = function($container, api){
-    let data = {};
-
+const TextView = function($container, api, text){
     const onRendered = function($current, template){
 
     };
@@ -13,10 +11,13 @@ const TextView = function($container, api){
         //Do nothing.
     };
     const events = {
-
+        "click .btn" : function(event, $current, template){
+            event.preventDefault();
+            alert("Hi!");
+        }
     };
 
-    return OvenTemplate($container, "TextView", data, events, onRendered, onDestroyed );
+    return OvenTemplate($container, "TextView", text, events, onRendered, onDestroyed );
 
 };
 
