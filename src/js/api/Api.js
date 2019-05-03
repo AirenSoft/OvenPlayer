@@ -22,7 +22,7 @@ const Api = function(container){
     EventEmitter(that);
 
 
-    OvenPlayerConsole.log("[[OvenPlayer]] v."+ version);
+    console.log("[[OvenPlayer]] v."+ version);
     OvenPlayerConsole.log("API loaded.");
 
     let playlistManager = PlaylistManager(that);
