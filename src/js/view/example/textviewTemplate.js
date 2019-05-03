@@ -3,10 +3,10 @@
  */
 
 const TextViewTemplate = function(text){
-    return '<div class="textView" style="padding : 5px; background: red">' +
-                '<h3>'+text+'</h3>' +
-                '<button type="button" class="btn">닫기</button>' +
-            '</div>';
+    return `<div class="textView" style="padding : 5px; background: red; position : absolute; top: 0;">` +
+                `<h3>${text}</h3>` +
+                `<button type="button" class="btn">button</button>` +
+            `</div>`;
 };
 
 export default TextViewTemplate;
