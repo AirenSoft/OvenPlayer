@@ -446,7 +446,7 @@ const Api = function(container){
         OvenPlayerConsole.log("API : remove() - lazyQueue, currentProvider, providerController, playlistManager, playerConfig, api event destroed. ");
         OvenPlayerSDK.removePlayer(that.getContainerId());
         if(OvenPlayerSDK.getPlayerList().length  === 0){
-            OvenPlayerSDK.log("OvenPlayerSDK.playerList",  OvenPlayerSDK.getPlayerList());
+            OvenPlayerConsole.log("OvenPlayerSDK.playerList",  OvenPlayerSDK.getPlayerList());
         }
     };
 
