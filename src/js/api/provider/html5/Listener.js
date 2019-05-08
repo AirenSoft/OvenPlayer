@@ -46,6 +46,12 @@ const Listener = function(extendedElement, provider, videoEndedCallback){
     const between = function (num, min, max) {
         return Math.max(Math.min(num, max), min);
     }
+    const compareStalledTime = function(stalled, position){
+        //Original Code is stalled !== position
+        //Because Dashjs is very meticulous. Then always diffrence stalled and position.
+        //That is why when I use toFixed(2).
+        return stalled.toFixed(2) === position.toFixed(2);
+    };
 
     lowLevelEvents.canplay = () => {
         //Fires when the browser can start playing the audio/video
@@ -163,9 +169,8 @@ const Listener = function(extendedElement, provider, videoEndedCallback){
         if (isNaN(duration)) {
             return;
         }
-
         if(!provider.isSeeking() && !elVideo.paused && (provider.getState() === STATE_STALLED || provider.getState() === STATE_LOADING) &&
-            stalled !== position){
+            !compareStalledTime(stalled, position) ){
             stalled = -1;
             provider.setState(STATE_PLAYING);
         }
