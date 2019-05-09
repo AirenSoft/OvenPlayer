@@ -24,14 +24,14 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
     let that ={};
     EventEmitter(that);
 
-    let elVideo = extractVideoElement(spec.extendedElement);
+    let elVideo = spec.element;
     let ads = null, listener = null, videoEndedCallback = null;
     let posterImage = playerConfig.getConfig().image||"";
 
     if(spec.adTagUrl){
         ads = Ads(elVideo, that, playerConfig, spec.adTagUrl);
     }
-    listener = EventsListener(spec.extendedElement, that, ads ? ads.videoEndedCallback : null);
+    listener = EventsListener(elVideo, spec.mse, that, ads ? ads.videoEndedCallback : null);
     elVideo.playbackRate = elVideo.defaultPlaybackRate = playerConfig.getPlaybackRate();
 
     const _load = (lastPlayPosition) =>{
@@ -131,7 +131,7 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
         return spec.buffer;
     };
     that.getDuration = () => {
-        let isLive = (elVideo.duration === Infinity) ? true : separateLive(spec.extendedElement);
+        let isLive = (elVideo.duration === Infinity) ? true : separateLive(spec.elementOrMse);
         return isLive ?  Infinity : elVideo.duration;
     };
     that.getPosition = () => {
@@ -217,6 +217,11 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
             if ( (ads && ads.isActive()) || (ads && !ads.started())) {
                 ads.play();
             }else{
+                if(that.getName() === PROVIDER_DASH && ads){
+                    //Ad steals dash's video element. Put in right place.
+                    spec.mse.attachView(elVideo);
+                }
+
                 elVideo.play();
                 let promise = elVideo.play();
                 if (promise !== undefined) {

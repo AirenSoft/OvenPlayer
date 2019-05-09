@@ -4,23 +4,23 @@
 import {ERROR, STATE_ERROR} from "api/constants";
 import _ from "utils/underscore";
 
-export const extractVideoElement = function(extendedElement) {
-    if(_.isElement(extendedElement)){
-        return extendedElement;
+export const extractVideoElement = function(elementOrMse) {
+    if(_.isElement(elementOrMse)){
+        return elementOrMse;
     }
-    if(extendedElement.getVideoElement){
-        return extendedElement.getVideoElement();
-    }else if(extendedElement.media){
-        return extendedElement.media;
+    if(elementOrMse.getVideoElement){
+        return elementOrMse.getVideoElement();
+    }else if(elementOrMse.media){
+        return elementOrMse.media;
     }
     return null;
 };
 
-export const separateLive = function(extendedElement) {
+export const separateLive = function(mse) {
     //ToDo : You consider hlsjs. But not now because we don't support hlsjs.
 
-    if(extendedElement.isDynamic){
-        return extendedElement.isDynamic();
+    if(mse && mse.isDynamic){
+        return mse.isDynamic();
     }else{
         return false;
     }

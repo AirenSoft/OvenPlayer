@@ -45,9 +45,11 @@ const Dash = function(element, playerConfig, adTagUrl){
         }
         dash.getDebug().setLogToBrowserConsole(false);
         dash.initialize(element, null, false);
+
         let spec = {
             name : PROVIDER_DASH,
-            extendedElement : dash,
+            element : element,
+            mse : dash,
             listener : null,
             canSeek : false,
             isLive : false,

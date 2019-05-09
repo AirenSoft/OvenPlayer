@@ -16,7 +16,8 @@ const Rtmp = function(element, playerConfig, adTagUrl){
 
     let spec = {
         name : PROVIDER_RTMP,
-        extendedElement : element,
+        element : element,
+        mse : null,
         listener : null,
         canSeek : false,
         isLive : false,

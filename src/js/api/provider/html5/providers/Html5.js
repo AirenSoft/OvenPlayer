@@ -11,11 +11,12 @@ import {PROVIDER_HTML5, STATE_IDLE} from "api/constants";
  * @param   playerConfig    config.
  * */
 
-const Html5 = function(element, playerConfig, adTag){
+const Html5 = function(element, playerConfig, adTagUrl){
 
     let spec = {
         name : PROVIDER_HTML5,
-        extendedElement : element,
+        element : element,
+        mse : null,
         listener : null,
         canSeek : false,
         isLive : false,
@@ -27,7 +28,7 @@ const Html5 = function(element, playerConfig, adTag){
         currentSource : -1,
         qualityLevels : [],
         sources : [],
-        adTagUrl : adTag
+        adTagUrl : adTagUrl
     };
 
     let that = Provider(spec, playerConfig, null);

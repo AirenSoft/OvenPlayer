@@ -35,14 +35,14 @@ import {extractVideoElement, separateLive, errorTrigger} from "api/provider/util
  * */
 
 
-const Listener = function(extendedElement, provider, videoEndedCallback){
+const Listener = function(element, mse, provider, videoEndedCallback){
     const lowLevelEvents = {};
 
-    OvenPlayerConsole.log("EventListener loaded.",extendedElement ,provider );
+    OvenPlayerConsole.log("EventListener loaded.",element ,provider );
     const that = {};
 
     let stalled = -1;
-    let elVideo = extractVideoElement(extendedElement);
+    let elVideo =  element;
     const between = function (num, min, max) {
         return Math.max(Math.min(num, max), min);
     }
@@ -50,6 +50,7 @@ const Listener = function(extendedElement, provider, videoEndedCallback){
         //Original Code is stalled !== position
         //Because Dashjs is very meticulous. Then always diffrence stalled and position.
         //That is why when I use toFixed(2).
+        console.log(stalled.toFixed(2), position.toFixed(2));
         return stalled.toFixed(2) === position.toFixed(2);
     };
 
@@ -95,7 +96,7 @@ const Listener = function(extendedElement, provider, videoEndedCallback){
 
     lowLevelEvents.loadedmetadata = () => {
         //Fires when the browser has loaded meta data for the audio/video
-        let isLive = (elVideo.duration === Infinity) ? true : separateLive(extendedElement);
+        let isLive = (elVideo.duration === Infinity) ? true : separateLive(mse);
         let sources = provider.getSources();
         let sourceIndex = provider.getCurrentSource();
         let type = sourceIndex > -1 ? sources[sourceIndex].type : "";
