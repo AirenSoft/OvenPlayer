@@ -222,7 +222,6 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
                     spec.mse.attachView(elVideo);
                 }
 
-                elVideo.play();
                 let promise = elVideo.play();
                 if (promise !== undefined) {
                     promise.then(_ => {
