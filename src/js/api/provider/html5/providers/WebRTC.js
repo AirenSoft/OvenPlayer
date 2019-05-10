@@ -20,7 +20,8 @@ const WebRTC = function(element, playerConfig, adTagUrl){
 
     let spec = {
         name : PROVIDER_WEBRTC,
-        extendedElement : element,
+        element : element,
+        mse : null,
         listener : null,
         canSeek : false,
         isLive : false,

@@ -23,7 +23,8 @@ const Hls = function(element, playerConfig, adTagUrl){
 
         let spec = {
             name : PROVIDER_HLS,
-            extendedElement : hls,
+            element : element,
+            mse : hls,
             listener : null,
             canSeek : false,
             isLive : false,

@@ -26,7 +26,7 @@ const Provider = function(spec, playerConfig){
     let that = {};
     EventEmitter(that);
 
-    let elFlash = extractVideoElement(spec.extendedElement);
+    let elFlash = spec.element;
     let ads = null, listener = null, videoEndedCallback = null;
 
     //It means to support ad for flash. Set the same specifications like a Video Tag.
@@ -37,7 +37,7 @@ const Provider = function(spec, playerConfig){
     if(spec.adTag){
         ads = Ads(elFlash, that, playerConfig, spec.adTag);
     }
-    listener = EventsListener(spec.extendedElement, that, ads ? ads.videoEndedCallback : null);
+    listener = EventsListener(elFlash, that, ads ? ads.videoEndedCallback : null);
 
     const _load = (lastPlayPosition) =>{
         const source =  spec.sources[spec.currentSource];

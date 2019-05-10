@@ -34,6 +34,9 @@ const WebRTCLoader = function (provider, webSocketUrl, resetCallback, loadCallba
     // used for send media stream to client peer.
     let clientPeerConnections = {};
 
+    //closed websocket by ome or client.
+    let wsClosedByPlayer = false;
+
     let statisticsTimer = null;
 
     (function () {
@@ -388,8 +391,10 @@ const WebRTCLoader = function (provider, webSocketUrl, resetCallback, loadCallba
                 }
             };
             ws.onclose = function () {
-                let tempError = ERRORS[PLAYER_WEBRTC_WS_ERROR];
-                closePeer(tempError);
+                if(!wsClosedByPlayer){
+                    let tempError = ERRORS[PLAYER_WEBRTC_WS_ERROR];
+                    closePeer(tempError);
+                }
             };
 
             ws.onerror = function (error) {
@@ -438,11 +443,12 @@ const WebRTCLoader = function (provider, webSocketUrl, resetCallback, loadCallba
                         id: mainPeerConnectionInfo.id
                     });
                 }
-
+                wsClosedByPlayer = true;
                 ws.close();
-                // console.log('웹소켓 닫힘');
             }
             ws = null;
+        }else{
+            wsClosedByPlayer = false;
         }
         if (mainPeerConnectionInfo) {
 
