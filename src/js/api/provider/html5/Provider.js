@@ -309,7 +309,7 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
                 if(needProviderChange){
                     _load(elVideo.currentTime || 0);
                 }
-                that.pause();
+                //that.pause();
                 that.setState(STATE_IDLE);
                 return spec.currentSource;
             }

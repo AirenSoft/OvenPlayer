@@ -14,7 +14,7 @@ import {
 } from "api/constants";
 
 
-const WebRTCLoader = function (provider, webSocketUrl, resetCallback, loadCallback, errorTrigger) {
+const WebRTCLoader = function (provider, webSocketUrl, loadCallback, errorTrigger) {
 
     const peerConnectionConfig = {
         'iceServers': [{
@@ -373,7 +373,8 @@ const WebRTCLoader = function (provider, webSocketUrl, resetCallback, loadCallba
                         mainPeerConnectionInfo.peerConnection.close();
                         mainPeerConnectionInfo = null;
 
-                        resetCallback();
+                        //resetCallback();
+                        provider.pause();
 
                         sendMessage(ws, {
                             command: 'request_offer'
