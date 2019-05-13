@@ -398,10 +398,13 @@ const WebRTCLoader = function (provider, webSocketUrl, resetCallback, loadCallba
             };
 
             ws.onerror = function (error) {
-                let tempError = ERRORS[PLAYER_WEBRTC_WS_ERROR];
-                tempError.error = error;
-                closePeer(tempError);
-                reject(error);
+                //Why Edge Browser calls onerror() when ws.close()?
+                if(!wsClosedByPlayer){
+                    let tempError = ERRORS[PLAYER_WEBRTC_WS_ERROR];
+                    tempError.error = error;
+                    closePeer(tempError);
+                    reject(error);
+                }
             };
 
         } catch (error) {
