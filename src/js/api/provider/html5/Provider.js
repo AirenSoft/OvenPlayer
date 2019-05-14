@@ -24,6 +24,8 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
     let that ={};
     EventEmitter(that);
 
+    let dashAttachedView = false;
+
     let elVideo = spec.element;
     let ads = null, listener = null, videoEndedCallback = null;
     let posterImage = playerConfig.getConfig().image||"";
@@ -217,9 +219,10 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
             if ( (ads && ads.isActive()) || (ads && !ads.started())) {
                 ads.play();
             }else{
-                if(that.getName() === PROVIDER_DASH && ads){
+                if(that.getName() === PROVIDER_DASH && ads && !dashAttachedView){
                     //Ad steals dash's video element. Put in right place.
                     spec.mse.attachView(elVideo);
+                    dashAttachedView = true;
                 }
 
                 let promise = elVideo.play();

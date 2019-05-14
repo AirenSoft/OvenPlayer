@@ -85,6 +85,7 @@ const Manager = function(provider){
 
     that.initPlaylist =(playlist) =>{
         OvenPlayerConsole.log("PlaylistManager setPlaylist() ", playlist);
+        console.log("PlaylistManager setPlaylist() ", playlist);
         const prettiedPlaylist = (_.isArray(playlist) ? playlist : [playlist]).map(function(item){
             if(!_.isArray(item.tracks)) {
                 delete item.tracks;
@@ -97,6 +98,10 @@ const Manager = function(provider){
 
             if((playlistItem.sources === Object(playlistItem.sources)) && !_.isArray(playlistItem.sources)) {
                 playlistItem.sources = [makePrettySource(playlistItem.sources)];
+            }
+
+            if (!_.isArray(playlistItem.sources) || playlistItem.sources.length === 0) {
+                playlistItem.sources = [makePrettySource(playlistItem)];
             }
 
             if(!_.isArray(playlistItem.sources) || playlistItem.sources.length === 0) {
@@ -137,7 +142,7 @@ const Manager = function(provider){
 
             playlistItem.sources = playlistItem.sources.filter(source => !!source);
 
-            if(!playlistItem.title){
+            if(!playlistItem.title &&  playlistItem.sources[0] && playlistItem.sources[0].label){
                 playlistItem.title = playlistItem.sources[0].label;
             }
 
@@ -174,6 +179,7 @@ const Manager = function(provider){
             return playlistItem;
         }).filter(function(item){return item.sources && item.sources.length > 0;});
         spec.playlist = prettiedPlaylist;
+        console.log(prettiedPlaylist);
         return prettiedPlaylist;
     };
     that.getPlaylist = () => {
