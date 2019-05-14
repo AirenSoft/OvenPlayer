@@ -40,6 +40,16 @@ const Ads = function(elVideo, provider, playerConfig, adTagUrl){
 
         return adContainer;
     };
+    const OnAdError = function(adErrorEvent){
+        //Do not triggering ERROR. becuase It just AD!
+        console.error(adErrorEvent.getError().getVastErrorCode(), adErrorEvent.getError().getMessage(), adErrorEvent.getError().getInnerError(), );
+        if (adsManager) {
+            adsManager.destroy();
+        }
+        spec.active = false;
+        spec.started = true;
+        provider.play();
+    };
     const OnManagerLoaded = function(adsManagerLoadedEvent){
         let adsRenderingSettings = new google.ima.AdsRenderingSettings();
         adsRenderingSettings.restoreCustomPlaybackStateOnAdBreakComplete = true;
@@ -47,7 +57,7 @@ const Ads = function(elVideo, provider, playerConfig, adTagUrl){
         adsManager = adsManagerLoadedEvent.getAdsManager(elVideo, adsRenderingSettings);
         adsManager.init("100%", "100%", google.ima.ViewMode.NORMAL);
 
-        listener = AdsEventsListener(adsManager, provider, spec);
+        listener = AdsEventsListener(adsManager, provider, spec, OnAdError);
 
         provider.on(CONTENT_VOLUME, function(data) {
             adsManager.setVolume(data.volume/100);
@@ -56,19 +66,7 @@ const Ads = function(elVideo, provider, playerConfig, adTagUrl){
         adsManagerLoaded = true;
 
     };
-    const OnAdError = function(adErrorEvent){
-        errorTrigger({
-            message : adErrorEvent.getError().getMessage() + " ["+adErrorEvent.getError().getVastErrorCode()+"]",
-            code : adErrorEvent.getError().getVastErrorCode(),
-            reason : adErrorEvent.getError().getMessage()
-        }, provider);
-        if (adsManager) {
-            adsManager.destroy();
-        }
-        spec.active = false;
-        spec.started = true;
-        provider.play();
-    };
+
 
     adDisplayContainer = new google.ima.AdDisplayContainer(createAdContainer(), elVideo);
     adsLoader = new google.ima.AdsLoader(adDisplayContainer);

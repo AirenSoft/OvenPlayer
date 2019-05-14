@@ -37,7 +37,7 @@ import {
     PROVIDER_HLS
 } from "api/constants";
 
-const Listener = function(adsManager, provider, adsSpec){
+const Listener = function(adsManager, provider, adsSpec, OnAdError){
     let that = {};
     let lowLevelEvents = {};
 
@@ -46,7 +46,7 @@ const Listener = function(adsManager, provider, adsSpec){
     const AD_BUFFERING = google.ima.AdEvent.Type.AD_BUFFERING;
     const CONTENT_PAUSE_REQUESTED = google.ima.AdEvent.Type.CONTENT_PAUSE_REQUESTED;
     const CONTENT_RESUME_REQUESTED = google.ima.AdEvent.Type.CONTENT_RESUME_REQUESTED;
-    const AD_ERROR = google.ima.AdEvent.Type.AD_ERROR;
+    const AD_ERROR = google.ima.AdErrorEvent.Type.AD_ERROR;
     const ALL_ADS_COMPLETED = google.ima.AdEvent.Type.ALL_ADS_COMPLETED;
     const CLICK = google.ima.AdEvent.Type.CLICK;
     const SKIPPED = google.ima.AdEvent.Type.SKIPPED;
@@ -81,10 +81,7 @@ const Listener = function(adsManager, provider, adsSpec){
         }
 
     };
-    lowLevelEvents[AD_ERROR] = (adEvent) => {
-        OvenPlayerConsole.log(adEvent.type);
-
-    };
+    lowLevelEvents[AD_ERROR] = OnAdError;
 
     lowLevelEvents[ALL_ADS_COMPLETED] = (adEvent) => {
         OvenPlayerConsole.log(adEvent.type);
