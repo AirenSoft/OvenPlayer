@@ -64,19 +64,21 @@ const Listener = function(adsManager, provider, adsSpec, OnAdError){
     let adCompleteCallback = null;
     let currentAd = null;
 
-    //광고를 재생하기 위해 컨텐츠를 일시 중지
-    lowLevelEvents[CONTENT_PAUSE_REQUESTED] = (adEvent) => {
+     lowLevelEvents[CONTENT_PAUSE_REQUESTED] = (adEvent) => {
         OvenPlayerConsole.log(adEvent.type);
+
+        //This callls when player is playing contents for ad.
         adsSpec.active = true;
         provider.pause();
     };
 
-    //컨텐츠를 재생
     lowLevelEvents[CONTENT_RESUME_REQUESTED] = (adEvent) => {
         OvenPlayerConsole.log(adEvent.type);
-        //alert(adEvent.type);
+
+        //This calls when one ad ended.
+        //And this is signal what play the contents.
         adsSpec.active = false;
-        if(!adsSpec.isVideoEnded){
+        if(adsSpec.started && !adsSpec.isVideoEnded){
             provider.play();
         }
 
