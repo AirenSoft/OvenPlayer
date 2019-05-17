@@ -15,6 +15,7 @@ import ControlsTemplate from 'view/components/controls/mainTemplate';
 import VolumeButtonTemplate from 'view/components/controls/volumeButtonTemplate';
 import ProgressBarTemplate from 'view/components/controls/progressBarTemplate';
 import PlayButtonTemplate from 'view/components/controls/playButtonTemplate';
+import SettingButtonTemplate from 'view/components/controls/settingButtonTemplate';
 import FrameButtonsTemplate from 'view/components/controls/frameButtonsTemplate';
 import TimeDisplayTemplate from 'view/components/controls/timeDisplayTemplate';
 import FullScreenButtonTemplate from 'view/components/controls/fullScreenButtonTemplate';
@@ -40,6 +41,7 @@ const Templates = {
     VolumeButtonTemplate,
     ProgressBarTemplate,
     PlayButtonTemplate,
+    SettingButtonTemplate,
     FrameButtonsTemplate,
     TimeDisplayTemplate,
     FullScreenButtonTemplate,
