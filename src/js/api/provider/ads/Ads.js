@@ -24,12 +24,12 @@ const Ads = function(elVideo, provider, playerConfig, adTagUrl){
         active : false,
         isVideoEnded : false
     };
-    let autoplayAllowed, autoplayRequiresMuted;
+    let autoplayAllowed = false, autoplayRequiresMuted = false;
 
 
     google.ima.settings.setLocale("ko");
     google.ima.settings.setDisableCustomPlaybackForIOS10Plus(true);
-    google.ima.settings.setAutoPlayAdBreaks(false);
+    //google.ima.settings.setAutoPlayAdBreaks(false);
     //google.ima.settings.setVpaidMode(google.ima.ImaSdkSettings.VpaidMode.ENABLED);
 
     //google.ima.settings.setLocale('ko');
@@ -109,6 +109,7 @@ const Ads = function(elVideo, provider, playerConfig, adTagUrl){
     }
 
     function checkAutoplaySupport() {
+
         var playPromise = elVideo.play();
         if (playPromise !== undefined) {
             playPromise.then(function(){
@@ -173,7 +174,7 @@ const Ads = function(elVideo, provider, playerConfig, adTagUrl){
                     if(adsManagerLoaded){
                         //elVideo.load();
 
-                        if(!autoplayAllowed){
+                        if(!autoplayAllowed && playerConfig.isAutoStart()){
                             autoplayAllowed = true;
                             return reject(new Error(AUTOPLAY_NOT_ALLOWED));
                         }else{
