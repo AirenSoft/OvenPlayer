@@ -8,6 +8,7 @@ import {PROVIDER_DASH, PROVIDER_HLS, PROVIDER_WEBRTC, PROVIDER_HTML5, PROVIDER_R
 import LA$ from "utils/likeA$.js";
 import {getScriptPath} from 'utils/webpack';
 
+//ToDo : Restructuring
 
 const Manager = function(container, browserInfo){
     const that = {};

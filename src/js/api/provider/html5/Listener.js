@@ -50,7 +50,6 @@ const Listener = function(element, mse, provider, videoEndedCallback){
         //Original Code is stalled !== position
         //Because Dashjs is very meticulous. Then always diffrence stalled and position.
         //That is why when I use toFixed(2).
-        console.log(stalled.toFixed(2), position.toFixed(2));
         return stalled.toFixed(2) === position.toFixed(2);
     };
 
@@ -136,6 +135,7 @@ const Listener = function(element, mse, provider, videoEndedCallback){
     };
 
     lowLevelEvents.playing = () => {
+        console.log("EventListener : 순수 playing");
         //Fires when the audio/video is playing after having been paused or stopped for buffering
         OvenPlayerConsole.log("EventListener : on playing");
         if(stalled < 0){
@@ -174,6 +174,7 @@ const Listener = function(element, mse, provider, videoEndedCallback){
             !compareStalledTime(stalled, position) ){
             stalled = -1;
             provider.setState(STATE_PLAYING);
+            console.log("EventListener : 만들어진 playing");
         }
 
         if (provider.getState() === STATE_PLAYING || provider.isSeeking()) {
@@ -201,8 +202,12 @@ const Listener = function(element, mse, provider, videoEndedCallback){
         provider.trigger(CONTENT_SEEKED);
     };
 
+    lowLevelEvents.stalled = () => {
+        console.log("EventListener : on stalled");
+    };
 
     lowLevelEvents.waiting = () => {
+        console.log("EventListener : on waiting");
         //Fires when the video stops because it needs to buffer the next frame
         OvenPlayerConsole.log("EventListener : on waiting", provider.getState());
         if(provider.isSeeking()){

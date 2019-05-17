@@ -133,7 +133,7 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
         return spec.buffer;
     };
     that.getDuration = () => {
-        let isLive = (elVideo.duration === Infinity) ? true : separateLive(spec.elementOrMse);
+        let isLive = (elVideo.duration === Infinity) ? true : separateLive(spec.mse);
         return isLive ?  Infinity : elVideo.duration;
     };
     that.getPosition = () => {
@@ -216,8 +216,13 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
         }
 
         if(that.getState() !== STATE_PLAYING){
-            if ( (ads && ads.isActive()) || (ads && !ads.started())) {
-                ads.play();
+            if ( ads && (ads.isActive() || !ads.started())  ) {
+                ads.play().then(_ => {
+                    // started!
+                }).catch(error => {
+                    OvenPlayerConsole.log(error);
+                });
+
             }else{
                 if(that.getName() === PROVIDER_DASH && ads && !dashAttachedView){
                     //Ad steals dash's video element. Put in right place.
@@ -228,13 +233,13 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
                 let promise = elVideo.play();
                 if (promise !== undefined) {
                     promise.then(_ => {
-                        // Autoplay started!
+                        // started!
                     }).catch(error => {
                         //Can't play because User doesn't any interactions.
                         //Wait for User Interactions. (like click)
                         setTimeout(function () {
                             that.play();
-                        }, 1000);
+                        }, 500);
 
                     });
 

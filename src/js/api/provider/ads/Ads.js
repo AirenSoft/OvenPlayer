@@ -9,6 +9,11 @@ import {
 } from "api/constants";
 
 const Ads = function(elVideo, provider, playerConfig, adTagUrl){
+    //Todo : move createAdContainer to MediaManager
+
+    const AUTOPLAY_NOT_ALLOWED = "autoplayNotAllowed";
+    const ADMANGER_LOADING_ERROR = "admanagerLoadingTimeout";
+
     const ADS_MANAGER_LOADED = google.ima.AdsManagerLoadedEvent.Type.ADS_MANAGER_LOADED;
     const AD_ERROR = google.ima.AdErrorEvent.Type.AD_ERROR;
 
@@ -19,6 +24,9 @@ const Ads = function(elVideo, provider, playerConfig, adTagUrl){
         active : false,
         isVideoEnded : false
     };
+    let autoplayAllowed, autoplayRequiresMuted;
+
+
     google.ima.settings.setLocale("ko");
     google.ima.settings.setDisableCustomPlaybackForIOS10Plus(true);
     //google.ima.settings.setVpaidMode(google.ima.ImaSdkSettings.VpaidMode.ENABLED);
@@ -41,14 +49,24 @@ const Ads = function(elVideo, provider, playerConfig, adTagUrl){
         return adContainer;
     };
     const OnAdError = function(adErrorEvent){
+        //note : adErrorEvent.getError().getInnerError().getErrorCode() === 1205 & adErrorEvent.getError().getVastErrorCode() === 400 is Browser User Interactive error.
+
         //Do not triggering ERROR. becuase It just AD!
-        console.error(adErrorEvent.getError().getVastErrorCode(), adErrorEvent.getError().getMessage(), adErrorEvent.getError().getInnerError(), );
+
+        console.log(adErrorEvent.getError().getVastErrorCode(), adErrorEvent.getError().getMessage());
+
+        let innerError = adErrorEvent.getError().getInnerError();
+        if(innerError){
+            console.log(innerError.getErrorCode(), innerError.getMessage());
+        }
+
         if (adsManager) {
             adsManager.destroy();
         }
         spec.active = false;
         spec.started = true;
         provider.play();
+
     };
     const OnManagerLoaded = function(adsManagerLoadedEvent){
         let adsRenderingSettings = new google.ima.AdsRenderingSettings();
@@ -73,23 +91,65 @@ const Ads = function(elVideo, provider, playerConfig, adTagUrl){
 
     adsLoader.addEventListener(ADS_MANAGER_LOADED, OnManagerLoaded, false);
     adsLoader.addEventListener(AD_ERROR, OnAdError, false);
+    checkAutoplaySupport();
 
-    const initAndStart = function(){
+    function initRequest(){
+
+        OvenPlayerConsole.log("AutoPlay Support : ", "autoplayAllowed",autoplayAllowed, "autoplayRequiresMuted",autoplayRequiresMuted);
+
         adsRequest = new google.ima.AdsRequest();
 
-       /* adsRequest.nonLinearAdSlotWidth = 150;
-        adsRequest.nonLinearAdSlotHeight = 60;*/
-
         adsRequest.forceNonLinearFullSlot = false;
-        adsRequest.setAdWillAutoPlay(false);
-        adsRequest.setAdWillPlayMuted(false);
+        adsRequest.setAdWillAutoPlay(autoplayAllowed);
+        adsRequest.setAdWillPlayMuted(autoplayRequiresMuted);
         adsRequest.adTagUrl = adTagUrl;
 
         adsLoader.requestAds(adsRequest);
-    };
-    initAndStart();
+    }
+
+    function checkAutoplaySupport() {
+        var playPromise = elVideo.play();
+        if (playPromise !== undefined) {
+            playPromise.then(function(){
+                // If we make it here, unmuted autoplay works.
+                elVideo.pause();
+
+                autoplayAllowed = true;
+                autoplayRequiresMuted = false;
+
+                initRequest();
+
+            }).catch(function(){
+                elVideo.pause();
+                autoplayAllowed = false;
+                autoplayRequiresMuted = false;
+                initRequest();
 
 
+                /*
+                //check muted auto start.
+                //I don't need for this version.
+                elVideo.muted = true;
+                var playPromise = elVideo.play();
+                if (playPromise !== undefined) {
+                    playPromise.then(function () {
+                        // If we make it here, muted autoplay works but unmuted autoplay does not.
+                        elVideo.pause();
+                        autoplayAllowed = true;
+                        autoplayRequiresMuted = true;
+                        initRequest();
+                    }).catch(function () {
+                        // Both muted and unmuted autoplay failed. Fall back to click to play.
+                        elVideo.muted = false;
+                        autoplayAllowed = false;
+                        autoplayRequiresMuted = false;
+                        initRequest();
+                    });
+                }*/
+
+            });
+        }
+    }
 
     that.isActive = () => {
         return spec.active;
@@ -98,7 +158,9 @@ const Ads = function(elVideo, provider, playerConfig, adTagUrl){
         return spec.started;
     };
     that.play = () => {
-        provider.setState(STATE_LOADING);
+        //provider.setState(STATE_LOADING);
+
+
         if(spec.started){
             adsManager.resume();
         }else{
@@ -108,16 +170,25 @@ const Ads = function(elVideo, provider, playerConfig, adTagUrl){
                 (function checkAdsManagerIsReady(){
                     retryCount ++;
                     if(adsManagerLoaded){
-                        elVideo.load();
-                        adDisplayContainer.initialize();
-                        adsManager.start();
-                        spec.started = true;
-                        return resolve();
+                        //elVideo.load();
+
+                        if(!autoplayAllowed){
+                            autoplayAllowed = true;
+                            return reject(new Error(AUTOPLAY_NOT_ALLOWED));
+                        }else{
+                            adDisplayContainer.initialize();
+                            adsManager.start();
+                            spec.started = true;
+
+                            return resolve();
+                        }
+
+
                     }else{
                         if(retryCount < 100){
                             setTimeout(checkAdsManagerIsReady, 100);
                         }else{
-                            return reject();
+                            return reject(new Error(ADMANGER_LOADING_ERROR));
                         }
                     }
 
@@ -156,7 +227,7 @@ const Ads = function(elVideo, provider, playerConfig, adTagUrl){
             adsLoader.removeEventListener(AD_ERROR, OnAdError);
         }
 
-        let $ads =LA$(playerConfig.getContainer()).find(".ovp-ads");
+        let $ads = LA$(playerConfig.getContainer()).find(".ovp-ads");
         if($ads){
             $ads.remove();
         }
@@ -164,6 +235,8 @@ const Ads = function(elVideo, provider, playerConfig, adTagUrl){
 
 
     };
+
+
     return that;
 };
 

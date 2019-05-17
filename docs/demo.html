@@ -319,7 +319,7 @@ player = OvenPlayer.create("player", {
                                 sources: JSON.parse(JSON.stringify(this.sources))
                             });
                         }else{
-                            player.load(JSON.parse(JSON.stringify(this.sources)));
+                            player.load({sources :JSON.parse(JSON.stringify(this.sources))});
                         }
                         this.errorMessage = "";
                     }else{

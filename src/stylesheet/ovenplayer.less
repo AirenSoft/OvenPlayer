@@ -590,6 +590,7 @@
       height: 50px;
       text-align: left;
       padding: 10px 0;
+      overflow: hidden;
       //z-index: 23;
       .ovp-button {
         min-width: 30px;
@@ -613,13 +614,13 @@
       .ovp-left-controls {
         float: left;
         height: 100%;
-
+        margin : 10px 0;
       }
 
       .ovp-right-controls {
-        display: inline-block;
         float: right;
         height: 100%;
+        margin : 10px 0;
       }
 
       /*maybe not use*/
@@ -1209,6 +1210,12 @@
     .ovp-controls{
       height: 30px;
       padding : 0;
+      .ovp-left-controls{
+        margin : 0;
+      }
+      .ovp-right-controls{
+        margin : 0;
+      }
     }
   }
   .ovp-ads{
