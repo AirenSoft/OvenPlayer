@@ -217,12 +217,7 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
 
         if(that.getState() !== STATE_PLAYING){
             if ( ads && (ads.isActive() || !ads.started())  ) {
-                ads.play().then(_ => {
-                    // started!
-                }).catch(error => {
-                    OvenPlayerConsole.log(error);
-                });
-
+                ads.play();
             }else{
                 if(that.getName() === PROVIDER_DASH && ads && !dashAttachedView){
                     //Ad steals dash's video element. Put in right place.

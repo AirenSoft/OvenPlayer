@@ -70,7 +70,7 @@ const Listener = function(element, mse, provider, videoEndedCallback){
         //Fires when the current playlist is ended
         OvenPlayerConsole.log("EventListener : on ended");
 
-        if(provider.getState() != STATE_IDLE && provider.getState() != STATE_COMPLETE){
+        if(provider.getState() !== STATE_IDLE && provider.getState() !== STATE_COMPLETE){
             if(videoEndedCallback){
                 videoEndedCallback(function(){
                     provider.setState(STATE_COMPLETE);
@@ -135,7 +135,6 @@ const Listener = function(element, mse, provider, videoEndedCallback){
     };
 
     lowLevelEvents.playing = () => {
-        console.log("EventListener : 순수 playing");
         //Fires when the audio/video is playing after having been paused or stopped for buffering
         OvenPlayerConsole.log("EventListener : on playing");
         if(stalled < 0){
@@ -174,7 +173,6 @@ const Listener = function(element, mse, provider, videoEndedCallback){
             !compareStalledTime(stalled, position) ){
             stalled = -1;
             provider.setState(STATE_PLAYING);
-            console.log("EventListener : 만들어진 playing");
         }
 
         if (provider.getState() === STATE_PLAYING || provider.isSeeking()) {
@@ -204,10 +202,10 @@ const Listener = function(element, mse, provider, videoEndedCallback){
 
     lowLevelEvents.stalled = () => {
         console.log("EventListener : on stalled");
+        //This callback does not work on chrome. This calls on Firefox intermittent. Then do not work here. using waiting event.
     };
 
     lowLevelEvents.waiting = () => {
-        console.log("EventListener : on waiting");
         //Fires when the video stops because it needs to buffer the next frame
         OvenPlayerConsole.log("EventListener : on waiting", provider.getState());
         if(provider.isSeeking()){

@@ -29,6 +29,7 @@ const Ads = function(elVideo, provider, playerConfig, adTagUrl){
 
     google.ima.settings.setLocale("ko");
     google.ima.settings.setDisableCustomPlaybackForIOS10Plus(true);
+    google.ima.settings.setAutoPlayAdBreaks(false);
     //google.ima.settings.setVpaidMode(google.ima.ImaSdkSettings.VpaidMode.ENABLED);
 
     //google.ima.settings.setLocale('ko');
