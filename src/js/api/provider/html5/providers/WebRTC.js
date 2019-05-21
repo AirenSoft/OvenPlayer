@@ -51,14 +51,10 @@ const WebRTC = function(element, playerConfig, adTagUrl){
                 }
 
                 element.srcObject = stream;
-                that.play();
+                //that.play();
             };
 
-            let resetCallback = function () {
-                that.pause();
-            };
-
-            webrtcLoader = WebRTCLoader(that, source.file, resetCallback, loadCallback, errorTrigger);
+            webrtcLoader = WebRTCLoader(that, source.file, loadCallback, errorTrigger);
 
             webrtcLoader.connect().catch(function(error){
                 //that.destroy();

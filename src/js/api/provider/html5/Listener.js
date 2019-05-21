@@ -50,7 +50,6 @@ const Listener = function(element, mse, provider, videoEndedCallback){
         //Original Code is stalled !== position
         //Because Dashjs is very meticulous. Then always diffrence stalled and position.
         //That is why when I use toFixed(2).
-        console.log(stalled.toFixed(2), position.toFixed(2));
         return stalled.toFixed(2) === position.toFixed(2);
     };
 
@@ -71,7 +70,7 @@ const Listener = function(element, mse, provider, videoEndedCallback){
         //Fires when the current playlist is ended
         OvenPlayerConsole.log("EventListener : on ended");
 
-        if(provider.getState() != STATE_IDLE && provider.getState() != STATE_COMPLETE){
+        if(provider.getState() !== STATE_IDLE && provider.getState() !== STATE_COMPLETE){
             if(videoEndedCallback){
                 videoEndedCallback(function(){
                     provider.setState(STATE_COMPLETE);
@@ -201,6 +200,10 @@ const Listener = function(element, mse, provider, videoEndedCallback){
         provider.trigger(CONTENT_SEEKED);
     };
 
+    lowLevelEvents.stalled = () => {
+        OvenPlayerConsole.log("EventListener : on stalled");
+        //This callback does not work on chrome. This calls on Firefox intermittent. Then do not work here. using waiting event.
+    };
 
     lowLevelEvents.waiting = () => {
         //Fires when the video stops because it needs to buffer the next frame

@@ -24,6 +24,8 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
     let that ={};
     EventEmitter(that);
 
+    let dashAttachedView = false;
+
     let elVideo = spec.element;
     let ads = null, listener = null, videoEndedCallback = null;
     let posterImage = playerConfig.getConfig().image||"";
@@ -131,7 +133,7 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
         return spec.buffer;
     };
     that.getDuration = () => {
-        let isLive = (elVideo.duration === Infinity) ? true : separateLive(spec.elementOrMse);
+        let isLive = (elVideo.duration === Infinity) ? true : separateLive(spec.mse);
         return isLive ?  Infinity : elVideo.duration;
     };
     that.getPosition = () => {
@@ -214,25 +216,32 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
         }
 
         if(that.getState() !== STATE_PLAYING){
-            if ( (ads && ads.isActive()) || (ads && !ads.started())) {
-                ads.play();
+            //console.log("Provioder Play???", ads.isActive() , ads.started());
+            if (  (ads && ads.isActive()) || (ads && !ads.started()) ) {  // || !ads.started()
+
+                ads.play().then(_ => {
+                    //ads play success
+                }).catch(error => {
+                    //ads play fail maybe cause user interactive less
+                });
+
             }else{
-                if(that.getName() === PROVIDER_DASH && ads){
+                if(that.getName() === PROVIDER_DASH && ads && !dashAttachedView){
                     //Ad steals dash's video element. Put in right place.
                     spec.mse.attachView(elVideo);
+                    dashAttachedView = true;
                 }
 
-                elVideo.play();
                 let promise = elVideo.play();
                 if (promise !== undefined) {
                     promise.then(_ => {
-                        // Autoplay started!
+                        // started!
                     }).catch(error => {
                         //Can't play because User doesn't any interactions.
                         //Wait for User Interactions. (like click)
                         setTimeout(function () {
                             that.play();
-                        }, 1000);
+                        }, 500);
 
                     });
 
@@ -310,7 +319,7 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
                 if(needProviderChange){
                     _load(elVideo.currentTime || 0);
                 }
-                that.pause();
+                //that.pause();
                 that.setState(STATE_IDLE);
                 return spec.currentSource;
             }

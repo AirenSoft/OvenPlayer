@@ -69,7 +69,6 @@ const Dash = function(element, playerConfig, adTagUrl){
             coveredSetAutoSwitchQualityFor(true);
             dash.attachSource(source.file);
             seekPosition_sec = lastPlayPosition;
-
         });
         superDestroy_func = that.super('destroy');
         OvenPlayerConsole.log("DASH PROVIDER LOADED.");
@@ -119,7 +118,7 @@ const Dash = function(element, playerConfig, adTagUrl){
             }
 
             if(dash.isDynamic()){
-                that.play();
+                //that.play();
             }else{
                 if(seekPosition_sec){
                     dash.seek(seekPosition_sec);

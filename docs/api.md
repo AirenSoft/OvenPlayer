@@ -27,7 +27,7 @@ player = OvenPlayer.create("player", {
                         file :  "https://path.to/your_caption.vtt", 
                         label : "KO vtt"
                     }],
-                adTag : "https://pubads.g.doubleclick.net/..."    
+                adTagUrl : "https://pubads.g.doubleclick.net/..."    
         }
     ]
 ... or simple 
@@ -38,7 +38,7 @@ player = OvenPlayer.create("player", {
                               framerate : 30,
                               label: "360P DASH"
                           }],
-      adTag : "https://pubads.g.doubleclick.net/..." 
+      adTagUrl : "https://pubads.g.doubleclick.net/..." 
 });
 ```
 
@@ -168,7 +168,7 @@ Enter the URLs of the diverse sources to play.
                         file :  "https://path.to/your_caption.vtt", 
                         label : "KO vtt"
                     }],
-                adTag : "https://pubads.g.doubleclick.net/..." 
+                adTagUrl : "https://pubads.g.doubleclick.net/..." 
         },
         {
                         title : "02",
@@ -203,7 +203,7 @@ Enter the URLs of the diverse sources to play.
                                 file :  "https://path.to/your_caption2.vtt", 
                                 label : "KO vtt"
                             }],
-                        adTag : "https://pubads.g.doubleclick.net/..." 
+                        adTagUrl : "https://pubads.g.doubleclick.net/..." 
                 }
  ]
 ```

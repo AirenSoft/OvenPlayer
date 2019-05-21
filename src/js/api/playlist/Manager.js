@@ -99,6 +99,10 @@ const Manager = function(provider){
                 playlistItem.sources = [makePrettySource(playlistItem.sources)];
             }
 
+            if (!_.isArray(playlistItem.sources) || playlistItem.sources.length === 0) {
+                playlistItem.sources = [makePrettySource(playlistItem)];
+            }
+
             if(!_.isArray(playlistItem.sources) || playlistItem.sources.length === 0) {
                 if (item.levels) {
                     playlistItem.sources = item.levels;
@@ -137,7 +141,7 @@ const Manager = function(provider){
 
             playlistItem.sources = playlistItem.sources.filter(source => !!source);
 
-            if(!playlistItem.title){
+            if(!playlistItem.title &&  playlistItem.sources[0] && playlistItem.sources[0].label){
                 playlistItem.title = playlistItem.sources[0].label;
             }
 

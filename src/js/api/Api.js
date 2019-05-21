@@ -259,7 +259,6 @@ const Api = function(container){
     };
     that.play = () => {
         if(!currentProvider){return null;}
-
         OvenPlayerConsole.log("API : play() ");
         currentProvider.play();
     }
@@ -448,6 +447,10 @@ const Api = function(container){
         if(OvenPlayerSDK.getPlayerList().length  === 0){
             OvenPlayerConsole.log("OvenPlayerSDK.playerList",  OvenPlayerSDK.getPlayerList());
         }
+    };
+
+    that.getVersion = () => {
+        return "v."+version;
     };
 
 

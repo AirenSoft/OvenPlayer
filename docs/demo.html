@@ -244,7 +244,25 @@ player = OvenPlayer.create("player", {
                 addSource : function(){
                     let type = "", data = {}, isMixedContentProblem = false;
 
-                    if(this.choicedProtocol == "Protocol"){
+                    const findProtocol = function(url){
+                        let protocol = "Protocol";
+                        if(url.indexOf('rtmp:') === 0){
+                            protocol = "rtmp";
+                        }else if(url.indexOf('ws:') === 0 || url.indexOf('wss:') === 0){
+                            protocol = "webrtc";
+                        }else if(url.indexOf('http:') === 0 || url.indexOf('https:') === 0){
+                            if(url.indexOf('.m3u8') > 0){
+                                protocol = "hls";
+                            }else if(url.indexOf('.mpd') > 0){
+                                protocol = "dash";
+                            }else if(url.indexOf('.mp4') > 0){
+                                protocol = "http";
+                            }
+                        }
+                        return protocol;
+                    };
+                    this.choicedProtocol = findProtocol(this.url);
+                    if(this.choicedProtocol === "Protocol"){
                         this.errorMessage = "Please enter a protocol.";
                         return;
                     }
@@ -301,7 +319,7 @@ player = OvenPlayer.create("player", {
                                 sources: JSON.parse(JSON.stringify(this.sources))
                             });
                         }else{
-                            player.load(JSON.parse(JSON.stringify(this.sources)));
+                            player.load({sources :JSON.parse(JSON.stringify(this.sources))});
                         }
                         this.errorMessage = "";
                     }else{

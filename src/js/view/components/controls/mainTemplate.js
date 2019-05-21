@@ -8,15 +8,17 @@ const Controls = function(hasPlaylist){
                 `<div class="ovp-controls">` +
                     `<div class="ovp-left-controls"></div>` +
                     `<div class="ovp-right-controls">`+
-                        `${hasPlaylist?`<button class="ovp-button ovp-playlist-button"><i class="ovp-setting-button-icon"></i></button>`:``}`+
-                        `<button class="ovp-button ovp-setting-button"><i class="ovp-setting-button-icon"></i></button>` +
+                        `<span class="playlist">`+
+                                `${hasPlaylist?`<button class="ovp-button ovp-playlist-button"><i class="ovp-setting-button-icon"></i></button>`:``}`+
+                        `</span>`+
+                        `<span class="setting"></span>`+
+                        `<span class="fullscreen"></span>`+
                     `</div>` +
                 `</div>` +
             `</div>` +
         `</div>`);
 
 };
-
 
 
 export default Controls;

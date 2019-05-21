@@ -37,7 +37,7 @@ import {
     PROVIDER_HLS
 } from "api/constants";
 
-const Listener = function(adsManager, provider, adsSpec){
+const Listener = function(adsManager, provider, adsSpec, OnAdError){
     let that = {};
     let lowLevelEvents = {};
 
@@ -46,7 +46,7 @@ const Listener = function(adsManager, provider, adsSpec){
     const AD_BUFFERING = google.ima.AdEvent.Type.AD_BUFFERING;
     const CONTENT_PAUSE_REQUESTED = google.ima.AdEvent.Type.CONTENT_PAUSE_REQUESTED;
     const CONTENT_RESUME_REQUESTED = google.ima.AdEvent.Type.CONTENT_RESUME_REQUESTED;
-    const AD_ERROR = google.ima.AdEvent.Type.AD_ERROR;
+    const AD_ERROR = google.ima.AdErrorEvent.Type.AD_ERROR;
     const ALL_ADS_COMPLETED = google.ima.AdEvent.Type.ALL_ADS_COMPLETED;
     const CLICK = google.ima.AdEvent.Type.CLICK;
     const SKIPPED = google.ima.AdEvent.Type.SKIPPED;
@@ -64,27 +64,29 @@ const Listener = function(adsManager, provider, adsSpec){
     let adCompleteCallback = null;
     let currentAd = null;
 
-    //광고를 재생하기 위해 컨텐츠를 일시 중지
-    lowLevelEvents[CONTENT_PAUSE_REQUESTED] = (adEvent) => {
+     lowLevelEvents[CONTENT_PAUSE_REQUESTED] = (adEvent) => {
         OvenPlayerConsole.log(adEvent.type);
-        adsSpec.active = true;
-        provider.pause();
+
+        //This callls when player is playing contents for ad.
+         if(adsSpec.started){
+             adsSpec.active = true;
+             provider.pause();
+         }
+
     };
 
-    //컨텐츠를 재생
     lowLevelEvents[CONTENT_RESUME_REQUESTED] = (adEvent) => {
         OvenPlayerConsole.log(adEvent.type);
-        //alert(adEvent.type);
+        //This calls when one ad ended.
+        //And this is signal what play the contents.
         adsSpec.active = false;
-        if(!adsSpec.isVideoEnded){
+
+        if(adsSpec.started && (provider.getPosition() === 0 || !adsSpec.isVideoEnded)  ){
             provider.play();
         }
 
     };
-    lowLevelEvents[AD_ERROR] = (adEvent) => {
-        OvenPlayerConsole.log(adEvent.type);
-
-    };
+    lowLevelEvents[AD_ERROR] = OnAdError;
 
     lowLevelEvents[ALL_ADS_COMPLETED] = (adEvent) => {
         OvenPlayerConsole.log(adEvent.type);

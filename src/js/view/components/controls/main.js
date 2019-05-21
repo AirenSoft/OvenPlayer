@@ -3,6 +3,7 @@
  */
 import OvenTemplate from "view/engine/OvenTemplate";
 import PlayButton from "view/components/controls/playButton";
+import SettingButton from "view/components/controls/settingButton";
 import FrameButtons from "view/components/controls/frameButtons";
 import VolumeButton from "view/components/controls/volumeButton";
 import ProgressBar from "view/components/controls/progressBar";
@@ -10,11 +11,10 @@ import PlaylistPanel from "view/components/controls/playlistPanel";
 import LA$ from 'utils/likeA$';
 import TimeDisplay from "view/components/controls/timeDisplay";
 import FullScreenButton from "view/components/controls/fullScreenButton";
-import Panels, {generateMainData} from "view/components/controls/settingPanel/main";
-import PanelManager from "view/global/PanelManager";
+
 import {
     READY,
-    CONTENT_META, CONTENT_LEVEL_CHANGED, CONTENT_TIME_MODE_CHANGED,
+    CONTENT_META, CONTENT_LEVEL_CHANGED, CONTENT_TIME_MODE_CHANGED, CONTENT_TIME,
     STATE_AD_LOADED,
     AD_CHANGED,
     STATE_AD_PLAYING,
@@ -25,12 +25,12 @@ import {
     ERROR
 } from "api/constants";
 const Controls = function($container, api){
-    let volumeButton = "", playButton= "", progressBar = "", timeDisplay = "", fullScreenButton = "", frameButtons = "", hasPlaylist = false;
+    let volumeButton = "", playButton = "", settingButton = "", progressBar = "", timeDisplay = "", fullScreenButton = "", frameButtons = "", hasPlaylist = false, initialDuration;
 
     let webrtc_is_p2p_mode = false;
     let isLiveMode = false;
 
-    let panelManager = PanelManager();
+
     const $root = LA$("#"+api.getContainerId());
     let lastContentMeta = {};
 
@@ -63,15 +63,22 @@ const Controls = function($container, api){
             frameButtons = FrameButtons($current.find(".ovp-controls"), api);
         };
 
+        let initSettingButton = function(){
+            if(settingButton){
+                settingButton.destroy();
+            }
+
+            settingButton = SettingButton($current.find(".setting"), api);
+        };
+
         playButton = PlayButton($current.find(".ovp-left-controls"), api);
         volumeButton = VolumeButton($current.find(".ovp-left-controls"), api);
-        fullScreenButton = FullScreenButton($current.find(".ovp-right-controls"), api);
+        fullScreenButton = FullScreenButton($current.find(".fullscreen"), api);
+        initSettingButton();
 
+        let initControlUI = function(metadata){
+            initTimeDisplay(metadata);
 
-        api.on(CONTENT_META, function(data){
-            data.isP2P = webrtc_is_p2p_mode;
-            lastContentMeta = data;
-            initTimeDisplay(data);
             if(api.getFramerate() > 0){
                 //initFrameJumpButtons();
             }else{
@@ -80,7 +87,7 @@ const Controls = function($container, api){
                 }
             }
 
-            if(data.duration === Infinity){
+            if(metadata.duration === Infinity){
                 isLiveMode = true;
                 //live
                 if(progressBar){
@@ -90,8 +97,30 @@ const Controls = function($container, api){
                 //vod
                 initProgressBar(false);
             }
+        };
+
+
+
+
+        api.on(CONTENT_META, function(data){
+            initialDuration = data.duration;
+
+            lastContentMeta = data;
+            data.isP2P = webrtc_is_p2p_mode;
+            initControlUI(data);
 
         }, template);
+
+        //Android HLS native doesn't give duration on CONTENT_META. why?
+        //Fortunately I have CONTENT_TIME.
+        if(api.getConfig().browser.os === "Android"){
+            api.on(CONTENT_TIME, function(metadata_for_when_after_playing){
+                if(!initialDuration && initialDuration !== metadata_for_when_after_playing.duration){
+                    lastContentMeta = metadata_for_when_after_playing;
+                    initControlUI(metadata_for_when_after_playing);
+                }
+            }, template);
+        }
 
         api.on("resize", function(size){
             setPanelMaxHeight();
@@ -113,6 +142,9 @@ const Controls = function($container, api){
                     timeDisplay.destroy();
                 }
                 $root.addClass("linear-ad");
+                if(settingButton){
+                    settingButton.destroy();
+                }
             }else{
                 $root.removeClass("linear-ad");
             }
@@ -124,6 +156,7 @@ const Controls = function($container, api){
                 progressBar.destroy();
             }
             $root.removeClass("linear-ad");
+            initSettingButton();
             if(isLiveMode){
 
             }else{
@@ -137,6 +170,7 @@ const Controls = function($container, api){
     };
     const onDestroyed = function(template){
         api.off(CONTENT_META, null, template);
+        api.off(CONTENT_TIME, null, template);
         api.off(STATE_AD_COMPLETE, null, template);
         api.off(AD_CHANGED, null, template);
         api.off(OME_P2P_MODE, null, template);
@@ -165,15 +199,7 @@ const Controls = function($container, api){
             volumeButton.setMouseDown(false);
             $current.find(".ovp-volume-slider-container").removeClass("active");
         },
-        "click .ovp-setting-button" : function(event, $current, template){
-            event.preventDefault();
-            if(panelManager.size() > 0){
-                panelManager.clear();
-            }else{
-                let panelData = generateMainData(api);
-                panelManager.add(Panels($current, api, panelData));
-            }
-        },
+
         "click .ovp-playlist-button" : function(event, $current, template){
             event.preventDefault();
             playlistPanel = PlaylistPanel($current, api);

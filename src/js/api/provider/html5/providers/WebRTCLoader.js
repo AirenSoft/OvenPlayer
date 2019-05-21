@@ -14,7 +14,7 @@ import {
 } from "api/constants";
 
 
-const WebRTCLoader = function (provider, webSocketUrl, resetCallback, loadCallback, errorTrigger) {
+const WebRTCLoader = function (provider, webSocketUrl, loadCallback, errorTrigger) {
 
     const peerConnectionConfig = {
         'iceServers': [{
@@ -175,11 +175,13 @@ const WebRTCLoader = function (provider, webSocketUrl, resetCallback, loadCallba
             });
 
         if (candidates) {
+            console.log("[Message candidates]", candidates);
             addIceCandidate(peerConnection, candidates);
         }
 
         peerConnection.onicecandidate = function (e) {
             if (e.candidate) {
+                console.log("[onicecandidate]", e.candidate);
                 OvenPlayerConsole.log("WebRTCLoader send candidate to server : " + e.candidate);
 
                 // console.log('Main Peer Connection candidate', e.candidate);
@@ -190,7 +192,6 @@ const WebRTCLoader = function (provider, webSocketUrl, resetCallback, loadCallba
                     command: "candidate",
                     candidates: [e.candidate]
                 });
-
             }
         };
 
@@ -266,18 +267,68 @@ const WebRTCLoader = function (provider, webSocketUrl, resetCallback, loadCallba
         };
     }
 
+    //This is temporary function. we can't build STRUN server.
+    let copyCandidate = function(basicCandidate){
+        let cloneCandidate = _.clone(basicCandidate);
+        function generateDomainFromUrl(url) {
+            let result;
+            let match;
+            if (match = url.match(/^(?:wss?:\/\/)?(?:[^@\n]+@)?(?:www\.)?([^:\/\n\?\=]+)/im)) {
+                result = match[1];
+                /*if (match = result.match(/^[^\.]+\.(.+\..+)$/)) {
+                 result = match[1]
+                 }*/
+            }
+            return result;
+        }
+        function findIp (candidate){
+            let result = "";
+            let match = "";
+            if(match = candidate.match(new RegExp("\\b(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b", 'gi'))){
+                result = match[0];
+            }
+
+            return result;
+        }
+
+        let newDomain = generateDomainFromUrl(webSocketUrl);
+        let ip = findIp(cloneCandidate.candidate);
+        console.log(ip, newDomain);
+        if(ip === newDomain){
+            return null;
+        }
+        //cloneCandidate.candidate.replace(cloneCandidate.address, newDomain);
+        cloneCandidate.candidate = cloneCandidate.candidate.replace(ip, newDomain);
+        //cloneCandidate.candidate = cloneCandidate.candidate.replace(new RegExp("\\b(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b", 'gi'), newDomain)
+
+        return cloneCandidate;
+    };
+
     function addIceCandidate(peerConnection, candidates) {
 
         for (let i = 0; i < candidates.length; i++) {
             if (candidates[i] && candidates[i].candidate) {
+                let basicCandidate = candidates[i];
 
-                peerConnection.addIceCandidate(new RTCIceCandidate(candidates[i])).then(function () {
+                let cloneCandidate = copyCandidate(basicCandidate);
+
+                peerConnection.addIceCandidate(new RTCIceCandidate(basicCandidate)).then(function () {
                     OvenPlayerConsole.log("addIceCandidate : success");
                 }).catch(function (error) {
                     let tempError = ERRORS[PLAYER_WEBRTC_ADD_ICECANDIDATE_ERROR];
                     tempError.error = error;
                     closePeer(tempError);
                 });
+                if(cloneCandidate){
+                    peerConnection.addIceCandidate(new RTCIceCandidate(cloneCandidate)).then(function () {
+                        console.log("cloneCandidate addIceCandidate : success");
+                    }).catch(function (error) {
+                        let tempError = ERRORS[PLAYER_WEBRTC_ADD_ICECANDIDATE_ERROR];
+                        tempError.error = error;
+                        closePeer(tempError);
+                    });
+                }
+
             }
         }
     }
@@ -373,7 +424,8 @@ const WebRTCLoader = function (provider, webSocketUrl, resetCallback, loadCallba
                         mainPeerConnectionInfo.peerConnection.close();
                         mainPeerConnectionInfo = null;
 
-                        resetCallback();
+                        //resetCallback();
+                        provider.pause();
 
                         sendMessage(ws, {
                             command: 'request_offer'
@@ -398,10 +450,13 @@ const WebRTCLoader = function (provider, webSocketUrl, resetCallback, loadCallba
             };
 
             ws.onerror = function (error) {
-                let tempError = ERRORS[PLAYER_WEBRTC_WS_ERROR];
-                tempError.error = error;
-                closePeer(tempError);
-                reject(error);
+                //Why Edge Browser calls onerror() when ws.close()?
+                if(!wsClosedByPlayer){
+                    let tempError = ERRORS[PLAYER_WEBRTC_WS_ERROR];
+                    tempError.error = error;
+                    closePeer(tempError);
+                    reject(error);
+                }
             };
 
         } catch (error) {

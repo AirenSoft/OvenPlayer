@@ -83,9 +83,9 @@ const SupportChecker = function(){
             checkSupport: function (source) {
                 const file = source.file;
 
-                //mpd application/dash+xml
                 const type = source.type;
-                if (isDash(file, type)) {
+
+                if (typeof ( window.MediaSource || window.WebKitMediaSource ) === "function" && isDash(file, type)) {
                     return true;
                 }else{
                     return false;
