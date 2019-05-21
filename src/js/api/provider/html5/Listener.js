@@ -6,6 +6,7 @@ import {
     STATE_STALLED,
     STATE_LOADING,
     STATE_COMPLETE,
+    STATE_AD_PLAYING,
     STATE_PAUSED,
     STATE_ERROR,
     CONTENT_COMPLETE,
@@ -169,7 +170,7 @@ const Listener = function(element, mse, provider, videoEndedCallback){
         if (isNaN(duration)) {
             return;
         }
-        if(!provider.isSeeking() && !elVideo.paused && (provider.getState() === STATE_STALLED || provider.getState() === STATE_LOADING) &&
+        if(!provider.isSeeking() && !elVideo.paused && (provider.getState() === STATE_STALLED || provider.getState() === STATE_LOADING || provider.getState() === STATE_AD_PLAYING) &&
             !compareStalledTime(stalled, position) ){
             stalled = -1;
             provider.setState(STATE_PLAYING);
