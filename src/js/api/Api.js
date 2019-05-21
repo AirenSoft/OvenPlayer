@@ -449,6 +449,10 @@ const Api = function(container){
         }
     };
 
+    that.getVersion = () => {
+        return "v."+version;
+    };
+
 
 
     return that;

@@ -201,7 +201,7 @@ const Listener = function(element, mse, provider, videoEndedCallback){
     };
 
     lowLevelEvents.stalled = () => {
-        console.log("EventListener : on stalled");
+        OvenPlayerConsole.log("EventListener : on stalled");
         //This callback does not work on chrome. This calls on Firefox intermittent. Then do not work here. using waiting event.
     };
 

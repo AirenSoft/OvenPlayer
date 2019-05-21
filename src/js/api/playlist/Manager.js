@@ -85,7 +85,6 @@ const Manager = function(provider){
 
     that.initPlaylist =(playlist) =>{
         OvenPlayerConsole.log("PlaylistManager setPlaylist() ", playlist);
-        console.log("PlaylistManager setPlaylist() ", playlist);
         const prettiedPlaylist = (_.isArray(playlist) ? playlist : [playlist]).map(function(item){
             if(!_.isArray(item.tracks)) {
                 delete item.tracks;
@@ -179,7 +178,6 @@ const Manager = function(provider){
             return playlistItem;
         }).filter(function(item){return item.sources && item.sources.length > 0;});
         spec.playlist = prettiedPlaylist;
-        console.log(prettiedPlaylist);
         return prettiedPlaylist;
     };
     that.getPlaylist = () => {
