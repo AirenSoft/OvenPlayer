@@ -216,8 +216,15 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
         }
 
         if(that.getState() !== STATE_PLAYING){
-            if ( ads && (ads.isActive() || !ads.started())  ) {
-                ads.play();
+            //console.log("Provioder Play???", ads.isActive() , ads.started());
+            if (  (ads && ads.isActive()) || (ads && !ads.started()) ) {  // || !ads.started()
+
+                ads.play().then(_ => {
+                    //ads play success
+                }).catch(error => {
+                    //ads play fail maybe cause user interactive less
+                });
+
             }else{
                 if(that.getName() === PROVIDER_DASH && ads && !dashAttachedView){
                     //Ad steals dash's video element. Put in right place.

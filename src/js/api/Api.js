@@ -259,7 +259,6 @@ const Api = function(container){
     };
     that.play = () => {
         if(!currentProvider){return null;}
-
         OvenPlayerConsole.log("API : play() ");
         currentProvider.play();
     }

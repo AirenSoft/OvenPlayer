@@ -66,20 +66,22 @@ const Listener = function(adsManager, provider, adsSpec, OnAdError){
 
      lowLevelEvents[CONTENT_PAUSE_REQUESTED] = (adEvent) => {
         OvenPlayerConsole.log(adEvent.type);
-         console.log("CONTENT_PAUSE_REQUESTED");
 
         //This callls when player is playing contents for ad.
-        adsSpec.active = true;
-        provider.pause();
+         if(adsSpec.started){
+             adsSpec.active = true;
+             provider.pause();
+         }
+
     };
 
     lowLevelEvents[CONTENT_RESUME_REQUESTED] = (adEvent) => {
         OvenPlayerConsole.log(adEvent.type);
-        console.log("CONTENT_RESUME_REQUESTED");
         //This calls when one ad ended.
         //And this is signal what play the contents.
         adsSpec.active = false;
-        if(provider.getPosition() === 0 || !adsSpec.isVideoEnded){
+
+        if(adsSpec.started && (provider.getPosition() === 0 || !adsSpec.isVideoEnded)  ){
             provider.play();
         }
 

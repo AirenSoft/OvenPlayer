@@ -20,8 +20,8 @@ const Ads = function(elVideo, provider, playerConfig, adTagUrl){
     let that = {};
     let adsManagerLoaded = false;
     let spec = {
-        started: false,
-        active : false,
+        started: false, //player started
+        active : false, //on Ad
         isVideoEnded : false
     };
     let autoplayAllowed = false, autoplayRequiresMuted = false;
@@ -29,7 +29,9 @@ const Ads = function(elVideo, provider, playerConfig, adTagUrl){
 
     google.ima.settings.setLocale("ko");
     google.ima.settings.setDisableCustomPlaybackForIOS10Plus(true);
-    //google.ima.settings.setAutoPlayAdBreaks(false);
+
+
+   // google.ima.settings.setAutoPlayAdBreaks(false);
     //google.ima.settings.setVpaidMode(google.ima.ImaSdkSettings.VpaidMode.ENABLED);
 
     //google.ima.settings.setLocale('ko');
@@ -60,7 +62,6 @@ const Ads = function(elVideo, provider, playerConfig, adTagUrl){
         if(innerError){
             console.log(innerError.getErrorCode(), innerError.getMessage());
         }
-
         if (adsManager) {
             adsManager.destroy();
         }
@@ -68,13 +69,19 @@ const Ads = function(elVideo, provider, playerConfig, adTagUrl){
         spec.started = true;
         provider.play();
 
+        /*if(innerError && innerError.getErrorCode() === 1205){
+        }else{
+
+        }*/
+
+
     };
     const OnManagerLoaded = function(adsManagerLoadedEvent){
         let adsRenderingSettings = new google.ima.AdsRenderingSettings();
         adsRenderingSettings.restoreCustomPlaybackStateOnAdBreakComplete = true;
         //adsRenderingSettings.useStyledNonLinearAds = true;
         adsManager = adsManagerLoadedEvent.getAdsManager(elVideo, adsRenderingSettings);
-        adsManager.init("100%", "100%", google.ima.ViewMode.NORMAL);
+
 
         listener = AdsEventsListener(adsManager, provider, spec, OnAdError);
 
@@ -92,7 +99,7 @@ const Ads = function(elVideo, provider, playerConfig, adTagUrl){
 
     adsLoader.addEventListener(ADS_MANAGER_LOADED, OnManagerLoaded, false);
     adsLoader.addEventListener(AD_ERROR, OnAdError, false);
-    checkAutoplaySupport();
+
 
     function initRequest(){
 
@@ -101,11 +108,20 @@ const Ads = function(elVideo, provider, playerConfig, adTagUrl){
         adsRequest = new google.ima.AdsRequest();
 
         adsRequest.forceNonLinearFullSlot = false;
+        /*if(playerConfig.getBrowser().browser === "Safari" && playerConfig.getBrowser().os === "iOS" ){
+            autoplayAllowed = false;
+            autoplayRequiresMuted = false;
+        }*/
+
         adsRequest.setAdWillAutoPlay(autoplayAllowed);
         adsRequest.setAdWillPlayMuted(autoplayRequiresMuted);
         adsRequest.adTagUrl = adTagUrl;
 
         adsLoader.requestAds(adsRequest);
+
+        //two way what ad starts.
+        //adsLoader.requestAds(adsRequest); or  adsManager.start();
+        //what? why?? wth??
     }
 
     function checkAutoplaySupport() {
@@ -150,8 +166,15 @@ const Ads = function(elVideo, provider, playerConfig, adTagUrl){
                 }*/
 
             });
+        }else{
+            //Maybe this is IE11....
+            elVideo.pause();
+            autoplayAllowed = false;
+            autoplayRequiresMuted = false;
+            initRequest();
         }
     }
+    checkAutoplaySupport();
 
     that.isActive = () => {
         return spec.active;
@@ -164,30 +187,39 @@ const Ads = function(elVideo, provider, playerConfig, adTagUrl){
 
 
         if(spec.started){
-            adsManager.resume();
+            return new Promise(function (resolve, reject) {
+               try{
+                   adsManager.resume();
+                   return resolve();
+               } catch (error){
+                   return reject(error);
+               }
+            });
+
         }else{
             let retryCount = 0;
-
             return new Promise(function (resolve, reject) {
                 (function checkAdsManagerIsReady(){
                     retryCount ++;
                     if(adsManagerLoaded){
-                        //elVideo.load();
-
-                        if(!autoplayAllowed && playerConfig.isAutoStart()){
+                        if((playerConfig.isAutoStart() && !autoplayAllowed) ){
                             autoplayAllowed = true;
+                            spec.started = false;
                             return reject(new Error(AUTOPLAY_NOT_ALLOWED));
                         }else{
+                            //Don't playing video when player complete playing AD.
+                            //Only iOS Safari First loaded.
+                            if(playerConfig.getBrowser().os  === "iOS" || playerConfig.getBrowser().os  === "Android"){
+                                elVideo.load();
+                            }
                             adDisplayContainer.initialize();
+                            adsManager.init("100%", "100%", google.ima.ViewMode.NORMAL);
                             adsManager.start();
                             spec.started = true;
-
                             return resolve();
                         }
-
-
                     }else{
-                        if(retryCount < 100){
+                        if(retryCount < 50){
                             setTimeout(checkAdsManagerIsReady, 100);
                         }else{
                             return reject(new Error(ADMANGER_LOADING_ERROR));

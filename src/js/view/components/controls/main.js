@@ -14,7 +14,7 @@ import FullScreenButton from "view/components/controls/fullScreenButton";
 
 import {
     READY,
-    CONTENT_META, CONTENT_LEVEL_CHANGED, CONTENT_TIME_MODE_CHANGED,
+    CONTENT_META, CONTENT_LEVEL_CHANGED, CONTENT_TIME_MODE_CHANGED, CONTENT_TIME,
     STATE_AD_LOADED,
     AD_CHANGED,
     STATE_AD_PLAYING,
@@ -25,7 +25,7 @@ import {
     ERROR
 } from "api/constants";
 const Controls = function($container, api){
-    let volumeButton = "", playButton = "", settingButton = "", progressBar = "", timeDisplay = "", fullScreenButton = "", frameButtons = "", hasPlaylist = false;
+    let volumeButton = "", playButton = "", settingButton = "", progressBar = "", timeDisplay = "", fullScreenButton = "", frameButtons = "", hasPlaylist = false, initialDuration;
 
     let webrtc_is_p2p_mode = false;
     let isLiveMode = false;
@@ -76,10 +76,9 @@ const Controls = function($container, api){
         fullScreenButton = FullScreenButton($current.find(".fullscreen"), api);
         initSettingButton();
 
-        api.on(CONTENT_META, function(data){
-            data.isP2P = webrtc_is_p2p_mode;
-            lastContentMeta = data;
-            initTimeDisplay(data);
+        let initControlUI = function(metadata){
+            initTimeDisplay(metadata);
+
             if(api.getFramerate() > 0){
                 //initFrameJumpButtons();
             }else{
@@ -88,7 +87,7 @@ const Controls = function($container, api){
                 }
             }
 
-            if(data.duration === Infinity){
+            if(metadata.duration === Infinity){
                 isLiveMode = true;
                 //live
                 if(progressBar){
@@ -98,8 +97,30 @@ const Controls = function($container, api){
                 //vod
                 initProgressBar(false);
             }
+        };
+
+
+
+
+        api.on(CONTENT_META, function(data){
+            initialDuration = data.duration;
+
+            lastContentMeta = data;
+            data.isP2P = webrtc_is_p2p_mode;
+            initControlUI(data);
 
         }, template);
+
+        //Android HLS native doesn't give duration on CONTENT_META. why?
+        //Fortunately I have CONTENT_TIME.
+        if(api.getConfig().browser.os === "Android"){
+            api.on(CONTENT_TIME, function(metadata_for_when_after_playing){
+                if(!initialDuration && initialDuration !== metadata_for_when_after_playing.duration){
+                    lastContentMeta = metadata_for_when_after_playing;
+                    initControlUI(metadata_for_when_after_playing);
+                }
+            }, template);
+        }
 
         api.on("resize", function(size){
             setPanelMaxHeight();
@@ -149,6 +170,7 @@ const Controls = function($container, api){
     };
     const onDestroyed = function(template){
         api.off(CONTENT_META, null, template);
+        api.off(CONTENT_TIME, null, template);
         api.off(STATE_AD_COMPLETE, null, template);
         api.off(AD_CHANGED, null, template);
         api.off(OME_P2P_MODE, null, template);

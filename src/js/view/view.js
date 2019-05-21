@@ -12,6 +12,7 @@ import {
     DESTROY,
     PLAYER_RESIZED,
     STATE_IDLE,
+    STATE_AD_PLAYING,
     STATE_PLAYING,
     STATE_STALLED,
     STATE_LOADING,
@@ -30,7 +31,7 @@ const View = function($container){
     let viewTemplate = "", controls = "", helper = "", $playerRoot, contextPanel = "", api = "", autoHideTimer = "", playerState = STATE_IDLE;
     let isShiftPressed = false;
     let panelManager = PanelManager();
-
+    let screenSize = "";
     let currentPlayerSize = "";
 
     let setHide = function (hide, autoHide) {
@@ -99,35 +100,37 @@ const View = function($container){
         contextPanel = ContextPanel($playerRoot, api, {pageX : pageX, pageY : pageY});
     };
 
-
+    const calcPlayerWidth = function(){
+        let playerWidth = $playerRoot.width();
+        if(playerWidth < 576){
+            screenSize = "xsmall";
+            $playerRoot.addClass("xsmall");
+        }else if(playerWidth < 768){
+            screenSize = "small";
+            $playerRoot.addClass("small");
+        }else if(playerWidth < 992){
+            screenSize = "medium";
+            $playerRoot.addClass("medium");
+        }else{
+            screenSize = "large";
+            $playerRoot.addClass("large");
+        }
+    };
 
 
     const onRendered = function($current, template){
         $playerRoot = $current;
         viewTemplate = template;
-
+        calcPlayerWidth();
         new ResizeSensor($playerRoot.get(), function() {
-            let newSize = "";
+
             $playerRoot.removeClass("large");
             $playerRoot.removeClass("medium");
             $playerRoot.removeClass("small");
             $playerRoot.removeClass("xsmall");
-            let playerWidth = $playerRoot.width();
-            if(playerWidth < 576){
-                newSize = "xsmall";
-                $playerRoot.addClass("xsmall");
-            }else if(playerWidth < 768){
-                newSize = "small";
-                $playerRoot.addClass("small");
-            }else if(playerWidth < 992){
-                newSize = "medium";
-                $playerRoot.addClass("medium");
-            }else{
-                newSize = "large";
-                $playerRoot.addClass("large");
-            }
-            if(newSize != currentPlayerSize){
-                currentPlayerSize = newSize;
+            calcPlayerWidth();
+            if(screenSize !== currentPlayerSize){
+                currentPlayerSize = screenSize;
                 api.trigger(PLAYER_RESIZED, currentPlayerSize);
             }
         });
@@ -162,7 +165,9 @@ const View = function($container){
         },
         "mouseenter .ovenplayer" : function(event, $current, template){
             event.preventDefault();
-            if (playerState === STATE_PLAYING) {
+
+            //small screen with STATE_AD_PLAYING setHide too. becuase mobile hide ad ui.
+            if (playerState === STATE_PLAYING || (playerState === STATE_AD_PLAYING && screenSize === "xsmall")) {
                 setHide(false, true);
             } else {
                 setHide(false);
@@ -171,7 +176,7 @@ const View = function($container){
         "mousemove .ovenplayer" : function(event, $current, template){
             event.preventDefault();
 
-            if (playerState === STATE_PLAYING) {
+            if (playerState === STATE_PLAYING || (playerState === STATE_AD_PLAYING && screenSize === "xsmall")) {
                 setHide(false, true);
             } else {
                 setHide(false);
@@ -180,7 +185,7 @@ const View = function($container){
         "mouseleave .ovenplayer" : function(event, $current, template){
             event.preventDefault();
 
-            if(playerState === STATE_PLAYING){
+            if(playerState === STATE_PLAYING  || (playerState === STATE_AD_PLAYING && screenSize === "xsmall")){
                 setHide(true);
             }
         },
@@ -279,7 +284,7 @@ const View = function($container){
             api.on(PLAYER_STATE, function(data){
                 if(data && data.newstate){
                     playerState = data.newstate;
-                    if(data.newstate === STATE_PLAYING){
+                    if(data.newstate === STATE_PLAYING || (data.newstate === STATE_AD_PLAYING && screenSize === "xsmall")){
                         setHide(false, true);
                     }else{
                         setHide(false);

@@ -51,7 +51,7 @@ const WebRTC = function(element, playerConfig, adTagUrl){
                 }
 
                 element.srcObject = stream;
-                that.play();
+                //that.play();
             };
 
             webrtcLoader = WebRTCLoader(that, source.file, loadCallback, errorTrigger);

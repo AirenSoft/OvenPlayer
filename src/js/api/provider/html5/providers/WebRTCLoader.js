@@ -266,6 +266,8 @@ const WebRTCLoader = function (provider, webSocketUrl, loadCallback, errorTrigge
             }
         };
     }
+
+    //This is temporary function. we can't build STRUN server.
     let copyCandidate = function(basicCandidate){
         let cloneCandidate = _.clone(basicCandidate);
         function generateDomainFromUrl(url) {
@@ -309,8 +311,6 @@ const WebRTCLoader = function (provider, webSocketUrl, loadCallback, errorTrigge
                 let basicCandidate = candidates[i];
 
                 let cloneCandidate = copyCandidate(basicCandidate);
-
-                console.log(basicCandidate, cloneCandidate);
 
                 peerConnection.addIceCandidate(new RTCIceCandidate(basicCandidate)).then(function () {
                     OvenPlayerConsole.log("addIceCandidate : success");
