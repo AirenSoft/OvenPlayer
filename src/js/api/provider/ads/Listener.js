@@ -105,7 +105,6 @@ const Listener = function(adsManager, provider, adsSpec, OnAdError){
     lowLevelEvents[AD_BUFFERING] = (adEvent) => {
         OvenPlayerConsole.log("AD_BUFFERING",adEvent.type);
         provider.setState(STATE_LOADING);
-        console.log("AD BUFFERING");
     };
     lowLevelEvents[LOADED] = (adEvent) => {
         OvenPlayerConsole.log(adEvent.type);
@@ -115,8 +114,6 @@ const Listener = function(adsManager, provider, adsSpec, OnAdError){
             duration: remainingTime,
             type :"ad"
         };*/
-        console.log("AD LOADED");
-        provider.setState(STATE_PAUSED);
         provider.trigger(STATE_AD_LOADED, {remaining : remainingTime, isLinear : ad.isLinear() });
 
     };
