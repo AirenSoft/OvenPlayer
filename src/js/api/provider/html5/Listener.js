@@ -199,7 +199,7 @@ const Listener = function(element, mse, provider, videoEndedCallback){
         OvenPlayerConsole.log("EventListener : on seeked");
         provider.setSeeking(false);
         provider.trigger(CONTENT_SEEKED);
-        provider.setState(STATE_PAUSED);
+        provider.setState(STATE_IDLE);
     };
 
     lowLevelEvents.stalled = () => {

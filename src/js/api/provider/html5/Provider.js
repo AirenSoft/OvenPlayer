@@ -190,7 +190,7 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
         _load(lastPlayPosition || 0);
 
         return new Promise(function (resolve, reject) {
-            resolve();
+
 
             if(playerConfig.isAutoStart()){
                 that.play();
@@ -201,6 +201,8 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
             if(playerConfig.getVolume()){
                 that.setVolume(playerConfig.getVolume());
             }
+
+            resolve();
         });
 
     };
@@ -216,9 +218,7 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
         }
 
         if(that.getState() !== STATE_PLAYING){
-            //console.log("Provioder Play???", ads.isActive() , ads.started());
-            if (  (ads && ads.isActive()) || (ads && !ads.started()) ) {  // || !ads.started()
-
+            if (  (ads && ads.isActive()) || (ads && !ads.started()) ) {
                 ads.play().then(_ => {
                     //ads play success
                 }).catch(error => {
@@ -226,26 +226,49 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
                 });
 
             }else{
-                if(that.getName() === PROVIDER_DASH && ads && !dashAttachedView){
-                    //Ad steals dash's video element. Put in right place.
-                    spec.mse.attachView(elVideo);
-                    dashAttachedView = true;
+                if(that.getName() === PROVIDER_DASH){
+                    if(ads && !dashAttachedView){
+                        //Ad steals dash's video element. Put in right place.
+                        spec.mse.attachView(elVideo);
+                        dashAttachedView = true;
+                    }
+
+                    //I was starting the stream by calling play(). (Autoplay was turned off)
+                    //the video freeze for live. like this https://github.com/Dash-Industry-Forum/dash.js/issues/2184
+                    //My guess is user interective...
+                    //This is temporary until i will find perfect solution.
+                    setTimeout(function(){
+                        let promise = elVideo.play();
+                        if (promise !== undefined) {
+                            promise.then(_ => {
+                                // started!
+                            }).catch(error => {
+                                //Can't play because User doesn't any interactions.
+                                //Wait for User Interactions. (like click)
+                                setTimeout(function () {
+                                    that.play();
+                                }, 100);
+
+                            });
+
+                        }
+                    },500);
+                }else{
+                    let promise = elVideo.play();
+                    if (promise !== undefined) {
+                        promise.then(_ => {
+                            // started!
+                        }).catch(error => {
+                            //Can't play because User doesn't any interactions.
+                            //Wait for User Interactions. (like click)
+                            setTimeout(function () {
+                                that.play();
+                            }, 100);
+
+                        });
+                    }
                 }
 
-                let promise = elVideo.play();
-                if (promise !== undefined) {
-                    promise.then(_ => {
-                        // started!
-                    }).catch(error => {
-                        //Can't play because User doesn't any interactions.
-                        //Wait for User Interactions. (like click)
-                        setTimeout(function () {
-                            that.play();
-                        }, 500);
-
-                    });
-
-                }
             }
 
         }
