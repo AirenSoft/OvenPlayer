@@ -7,7 +7,8 @@ import {
     AD_CHANGED,
     STATE_AD_LOADED,
     STATE_AD_PLAYING,
-    STATE_AD_PAUSED
+    STATE_AD_PAUSED,
+    PLAYER_FULLSCREEN_CHANGED
 } from "api/constants";
 
 
@@ -41,6 +42,9 @@ const FullScreenButton = function($container, api){
             $iconExpand.show();
             $iconCompress.hide();
         }
+
+
+        api.trigger(PLAYER_FULLSCREEN_CHANGED, isFullScreen);
     };
 
     let requestFullScreen = function () {

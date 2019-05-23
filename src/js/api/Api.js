@@ -10,6 +10,7 @@ import {READY, ERRORS, ERROR, CONTENT_TIME_MODE_CHANGED, INIT_UNKNWON_ERROR, INI
 import {version} from 'version';
 import {ApiRtmpExpansion} from 'api/ApiExpansions';
 import {analUserAgent} from "utils/browser";
+import LA$ from 'utils/likeA$';
 
 /**
  * @brief   This object connects UI to the provider.
@@ -22,7 +23,7 @@ const Api = function(container){
     EventEmitter(that);
 
 
-    console.log("[[OvenPlayer]] v."+ version);
+    console.log("[[OvenPlayer]] v."+ version, container);
     OvenPlayerConsole.log("API loaded.");
 
     let playlistManager = PlaylistManager(that);
@@ -452,8 +453,6 @@ const Api = function(container){
     that.getVersion = () => {
         return "v."+version;
     };
-
-
 
     return that;
 };

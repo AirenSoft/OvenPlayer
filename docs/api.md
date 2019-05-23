@@ -695,6 +695,8 @@ Jump to the specified position within the currently playing item.
 
 
 
+
+
 ## Events
 
 ```javascript
@@ -909,6 +911,14 @@ Fired when Ad is complete.
 Attribute|Type|Memo
 ------|------|-------
 
+
+#### player.on('fullscreenChanged')
+
+Fired when screen mode is changed.
+
+Type|Memo
+------|-------
+Boolean| True if the screen is full, false otherwise.
 
 
 #### player.on('destroy')
