@@ -212,6 +212,7 @@ const Ads = function(elVideo, provider, playerConfig, adTagUrl){
                             if(playerConfig.getBrowser().os  === "iOS" || playerConfig.getBrowser().os  === "Android"){
                                 elVideo.load();
                             }
+
                             adDisplayContainer.initialize();
                             adsManager.init("100%", "100%", google.ima.ViewMode.NORMAL);
                             adsManager.start();

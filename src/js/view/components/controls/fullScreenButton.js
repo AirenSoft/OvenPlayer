@@ -18,6 +18,7 @@ const FullScreenButton = function($container, api){
     let $iconExpand = "", $iconCompress = "", isFullScreen = false;
     let browserInfo = api.getBrowser();
     let isIos = browserInfo.os === "iOS"; // && browserInfo.browser === "Safari";
+    let isAndroid = browserInfo.os === "Android";
 
     let fullScreenEventTypes = {
         onfullscreenchange : "fullscreenchange",
@@ -25,6 +26,7 @@ const FullScreenButton = function($container, api){
         onwebkitfullscreenchange : "webkitfullscreenchange",
         MSFullscreenChange : "MSFullscreenChange"
     };
+
 
     let fullScreenChangedCallback = function(event){
         let checkFullScreen = function(){
@@ -47,40 +49,70 @@ const FullScreenButton = function($container, api){
         api.trigger(PLAYER_FULLSCREEN_CHANGED, isFullScreen);
     };
 
+
+
     let requestFullScreen = function () {
-        if(isIos && $root.find("video").get().length > 1){
-            //광고 중인 상태에서 전체 화면 -> 광고 video fullscreen
+        let promise = "";
+        let rootElement =  $root.get();
+        let videoElement = $root.find("video") ? $root.find("video").get() : rootElement;
+
+        if(isIos && videoElement.length > 1){
+            //IOS ad makes two video elements. one is original video other is ad.
             if(OvenPlayer.getPlayerByIndex(0).getState() === STATE_AD_LOADED || OvenPlayer.getPlayerByIndex(0).getState() === STATE_AD_PLAYING || OvenPlayer.getPlayerByIndex(0).getState() === STATE_AD_PAUSED){
-                if ($root.find("video").get()[1].webkitEnterFullScreen){
-                    $root.find("video").get()[1].webkitEnterFullScreen();
+                if (videoElement[1].webkitEnterFullScreen){
+                    promise = videoElement[1].webkitEnterFullScreen();
                     isFullScreen = true;
                 }
             }else{
-                if ($root.find("video").get()[0].webkitEnterFullScreen){
-                    $root.find("video").get()[0].webkitEnterFullScreen();
+                if (videoElement[0].webkitEnterFullScreen){
+                    promise = videoElement[0].webkitEnterFullScreen();
                     isFullScreen = true;
                 }
             }
         }else{
-            if ($root.get().requestFullscreen) {
-                $root.get().requestFullscreen();
-            } else if ($root.get().webkitRequestFullScreen) {
-                $root.get().webkitRequestFullScreen();
-            }  else if ($root.get().mozRequestFullScreen) {
-                $root.get().mozRequestFullScreen();
-            } else if ($root.get().msRequestFullscreen) {
-                $root.get().msRequestFullscreen();
-            }  else if ($root.find("video").get().webkitEnterFullScreen){
-                $root.find("video").get().webkitEnterFullScreen();
-            } else if ($root.find("video").get().length > 1 && $root.find("video").get()[0].webkitEnterFullScreen){
-                $root.find("video").get()[0].webkitEnterFullScreen();
-                //getState
+
+            //ToDo : Why occured this error?
+            //TypeError: Failed to execute 'requestFullscreen' on 'Element': Illegal invocation
+            /*
+            let sumOfRequestFullscreen = rootElement.requestFullscreen || rootElement.webkitRequestFullScreen ||
+                rootElement.mozRequestFullScreen || rootElement.msRequestFullscreen || videoElement.webkitEnterFullScreen;
+            if(sumOfRequestFullscreen){
+                promise = sumOfRequestFullscreen();
+            }
+            */
+
+
+            if (rootElement.requestFullscreen) {
+                promise = rootElement.requestFullscreen();
+            } else if (rootElement.webkitRequestFullScreen) {
+                promise = rootElement.webkitRequestFullScreen();
+            }  else if (rootElement.mozRequestFullScreen) {
+                promise = rootElement.mozRequestFullScreen();
+            } else if (rootElement.msRequestFullscreen) {
+                promise = rootElement.msRequestFullscreen();
+            }  else if (videoElement.webkitEnterFullScreen){
+                promise = videoElement.webkitEnterFullScreen();
+            } else if (videoElement.length > 1 && videoElement[0].webkitEnterFullScreen){
+                promise = videoElement[0].webkitEnterFullScreen();
             } else {
                 // TODO(rock): warn not supported
             }
         }
 
+        if(promise){
+            promise.then().catch(function(error){
 
+                //wait for User Interaction. It runs Chrome only.
+                //Because "fullscreen error" occures Chrome.
+                //Firefox can't runs this routine because "Element.requestFullscreen()이 짧게 실행되는 사용자 생성 이벤트 핸들러의 내부로부터 호출되지 않았기 때문에 전체화면 요청이 거부되었습니다.".
+
+                if(error.message === "fullscreen error"){
+                    setTimeout(function(){
+                        requestFullScreen();
+                    },500);
+                }
+            });
+        }
     };
     let exitFullScreen = function () {
         if (document.exitFullscreen) {
@@ -105,9 +137,13 @@ const FullScreenButton = function($container, api){
         }
     };
 
+
     const onRendered = function($current, template){
         $iconExpand = $current.find(".ovp-fullscreen-button-expandicon");
         $iconCompress = $current.find(".ovp-fullscreen-button-compressicon");
+
+
+
 
         api.on(AD_CHANGED, function(ad){
             //force close for ios midroll
@@ -141,7 +177,10 @@ const FullScreenButton = function($container, api){
     const events = {
         "click .ovp-fullscreen-button" : function(event, $current, template){
             event.preventDefault();
-            toggleFullScreen();
+
+                toggleFullScreen();
+
+
         }
     };
 
