@@ -107,16 +107,22 @@ const Controls = function($container, api){
             initControlUI(data);
         }, template);
 
-        //Android HLS native doesn't give duration on CONTENT_META. why?
-        //Fortunately I have CONTENT_TIME.
-        if(api.getConfig().browser.os === "Android"){
-            api.on(CONTENT_TIME, function(metadata_for_when_after_playing){
+        api.on(CONTENT_TIME, function(metadata_for_when_after_playing){
+
+            //Android HLS native doesn't give duration on CONTENT_META. why?
+            //Fortunately I have CONTENT_TIME.
+
+            //RTMP too.
+            if(api.getConfig().browser.os === "Android" || (api && api.getProviderName && api.getProviderName() === "rtmp") ){
                 if(!initialDuration && initialDuration !== metadata_for_when_after_playing.duration){
                     lastContentMeta = metadata_for_when_after_playing;
                     initControlUI(metadata_for_when_after_playing);
                 }
-            }, template);
-        }
+            }
+
+        }, template);
+
+
 
         api.on("resize", function(size){
             setPanelMaxHeight();

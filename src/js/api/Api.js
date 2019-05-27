@@ -184,6 +184,14 @@ const Api = function(container){
 
         initProvider();
     };
+    that.getProviderName = () => {
+        if(currentProvider){
+            return currentProvider.getName();
+        }else{
+            return null;
+        }
+
+    }
     that.getConfig = () => {
         OvenPlayerConsole.log("API : getConfig()", playerConfig.getConfig());
         return playerConfig.getConfig();

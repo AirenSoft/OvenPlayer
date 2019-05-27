@@ -40,7 +40,7 @@ const Listener = function(elFlash, provider, videoEndedCallback){
 
         elFlash.currentTime = data.position;
         provider.trigger(CONTENT_TIME, data);
-        provider.trigger(CONTENT_BUFFER, data);
+        //provider.trigger(CONTENT_BUFFER, data);
 
         if(data.position >= data.duration){
             if(provider.getState() !== STATE_IDLE && provider.getState() !== STATE_COMPLETE){
@@ -62,6 +62,7 @@ const Listener = function(elFlash, provider, videoEndedCallback){
         provider.setState(data.newstate);
     };
     that.metaChanged = (data) =>{
+        console.log("MetaChanged", data);
         provider.trigger(CONTENT_META, data);
     };
     that.error = (error) =>{
