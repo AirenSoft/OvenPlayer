@@ -125,7 +125,12 @@ const Ads = function(elVideo, provider, playerConfig, adTagUrl){
     }
 
     function checkAutoplaySupport() {
-
+        if(!elVideo.play){
+            autoplayAllowed = false;
+            autoplayRequiresMuted = false;
+            initRequest();
+            return false;
+        }
         var playPromise = elVideo.play();
         if (playPromise !== undefined) {
             playPromise.then(function(){

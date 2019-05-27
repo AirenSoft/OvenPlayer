@@ -78,8 +78,7 @@ const Controls = function($container, api){
 
         let initControlUI = function(metadata){
             initTimeDisplay(metadata);
-
-            if(api.getFramerate() > 0){
+            if(api.getFramerate && api.getFramerate() > 0){
                 //initFrameJumpButtons();
             }else{
                 if(frameButtons){
@@ -99,16 +98,13 @@ const Controls = function($container, api){
             }
         };
 
-
-
-
         api.on(CONTENT_META, function(data){
             initialDuration = data.duration;
-
+            OvenPlayerConsole.log("CONTENT_META", data);
             lastContentMeta = data;
             data.isP2P = webrtc_is_p2p_mode;
-            initControlUI(data);
 
+            initControlUI(data);
         }, template);
 
         //Android HLS native doesn't give duration on CONTENT_META. why?

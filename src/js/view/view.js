@@ -131,7 +131,10 @@ const View = function($container){
             calcPlayerWidth();
             if(screenSize !== currentPlayerSize){
                 currentPlayerSize = screenSize;
-                api.trigger(PLAYER_RESIZED, currentPlayerSize);
+                if(api){
+                    api.trigger(PLAYER_RESIZED, currentPlayerSize);
+                }
+
             }
         });
 

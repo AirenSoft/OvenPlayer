@@ -32,7 +32,7 @@ const Manager = function(container, browserInfo){
         return videoElement;
     };
     const createFlashVideo = function(isLoop){
-        let movie, flashvars, allowscriptaccess, allowfullscreen, quality, name, menu, qual, bgcolor, loop;
+        let movie, flashvars, allowscriptaccess, allowfullscreen, quality, name, menu, qual, bgcolor, loop, wmode ;
 
         movie = document.createElement('param');
         movie.setAttribute('name', 'movie');
@@ -71,6 +71,10 @@ const Manager = function(container, browserInfo){
         bgcolor.setAttribute('name', 'bgcolor');
         bgcolor.setAttribute('value', '#000000');
 
+        bgcolor = document.createElement('param');
+        bgcolor.setAttribute('name', 'wmode');
+        bgcolor.setAttribute('value', 'transparent');
+
         if(isLoop){
             loop = document.createElement('param');
             loop.setAttribute('name', 'loop');
@@ -83,6 +87,7 @@ const Manager = function(container, browserInfo){
         videoElement.setAttribute('width', '100%');
         videoElement.setAttribute('height', '100%');
         videoElement.setAttribute('scale', 'default');
+        videoElement.setAttribute('wmode', 'transparent');
 
         if(browserInfo.browser === "Microsoft Internet Explorer" && browserInfo.browserMajorVersion <= 9 ){
             videoElement.setAttribute('classid', 'clsid:D27CDB6E-AE6D-11cf-96B8-444553540000');
@@ -94,6 +99,7 @@ const Manager = function(container, browserInfo){
         if(isLoop){
             videoElement.appendChild(loop);
         }
+
         videoElement.appendChild(bgcolor);
         videoElement.appendChild(qual);
         videoElement.appendChild(allowfullscreen);

@@ -151,17 +151,21 @@ const SupportChecker = function(){
         }*/
         const item = playlistItem;
         let source = "";
-        for(let j = 0; j < item.sources.length; j ++){
-            source = item.sources[j];
-            if (source) {
-                const supported = that.findProviderNameBySource(source);
-                if (supported) {
-                    supportNames.push(supported);
+        if(item && item.sources){
+            for(let j = 0; j < item.sources.length; j ++){
+                source = item.sources[j];
+                if (source) {
+                    const supported = that.findProviderNameBySource(source);
+                    if (supported) {
+                        supportNames.push(supported);
+                    }
                 }
             }
-        }
 
-        return supportNames;
+            return supportNames;
+        }
+        return null;
+
     };
     return that;
 };

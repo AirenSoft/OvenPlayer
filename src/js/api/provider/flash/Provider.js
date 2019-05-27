@@ -34,8 +34,8 @@ const Provider = function(spec, playerConfig){
         {value :0, writable : true}
     );
 
-    if(spec.adTag){
-        ads = Ads(elFlash, that, playerConfig, spec.adTag);
+    if(spec.adTagUrl){
+        ads = Ads(elFlash, that, playerConfig, spec.adTagUrl);
     }
     listener = EventsListener(elFlash, that, ads ? ads.videoEndedCallback : null);
 
@@ -173,12 +173,11 @@ const Provider = function(spec, playerConfig){
                         {value :elFlash.getDuration()}
                     );
                     _load(lastPlayPosition || 0);
-
                     retryCount = 0;
 
                     return (function checkFileLoaded(){
                         retryCount ++;
-                        if(elFlash.isFileLoaded()){
+                        if(elFlash.isFileLoaded && elFlash.isFileLoaded()){
 
                             if(playerConfig.isAutoStart()){
                                 that.play();
@@ -193,7 +192,8 @@ const Provider = function(spec, playerConfig){
 
                             return resolve();
                         }else{
-                            if(retryCount < 100){
+
+                            if(retryCount < 600){
                                 setTimeout(checkFileLoaded, 100);
                             }else{
                                 return reject(ERRORS[INIT_RTMP_SETUP_ERROR]);
@@ -202,7 +202,7 @@ const Provider = function(spec, playerConfig){
                     })();
 
                 }else{
-                    if(retryCount < 100){
+                    if(retryCount < 300){
                         setTimeout(checkSwfIsReady, 100);
                     }else{
                         return reject(ERRORS[INIT_RTMP_SETUP_ERROR]);

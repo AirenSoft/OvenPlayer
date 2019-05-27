@@ -1,5 +1,8 @@
 import SupportChecker from "api/SupportChecker";
 import {ApiRtmpExpansion} from 'api/ApiExpansions';
+import {
+    ERRORS, INIT_UNSUPPORT_ERROR
+} from "api/constants";
 
 /**
  * @brief   This manages provider.
@@ -77,13 +80,18 @@ const Controller = function(){
     that.loadProviders = (playlistItem) =>{
         const supportedProviderNames = supportChacker.findProviderNamesByPlaylist(playlistItem);
         OvenPlayerConsole.log("ProviderController loadProviders() ", supportedProviderNames);
-        return Promise.all(
-            supportedProviderNames.filter(function(providerName){
-                return !!ProviderLoader[providerName];
-            }).map(function(providerName){
-                return ProviderLoader[providerName]();
-            })
-        );
+        if(!supportedProviderNames){
+            return Promise.reject(ERRORS[INIT_UNSUPPORT_ERROR]);
+        }else{
+            return Promise.all(
+                supportedProviderNames.filter(function(providerName){
+                    return !!ProviderLoader[providerName];
+                }).map(function(providerName){
+                    return ProviderLoader[providerName]();
+                })
+            );
+        }
+
     };
 
     that.findByName = (name) => {
@@ -100,7 +108,6 @@ const Controller = function(){
     that.isSameProvider = (currentSource, newSource) => {
         OvenPlayerConsole.log("ProviderController isSameProvider() ", supportChacker.findProviderNameBySource(currentSource) , supportChacker.findProviderNameBySource(newSource) );
         return supportChacker.findProviderNameBySource(currentSource) === supportChacker.findProviderNameBySource(newSource);
-
     };
 
     return that;

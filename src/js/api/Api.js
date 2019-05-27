@@ -201,7 +201,7 @@ const Api = function(container){
         return playerConfig.isTimecodeMode();
     };
     that.getFramerate = () => {
-        OvenPlayerConsole.log("API : getFramerate()", currentProvider.getFramerate());
+        OvenPlayerConsole.log("API : getFramerate()");
         return currentProvider.getFramerate();
     };
     that.seekFrame = (frameCount) => {
