@@ -29,7 +29,7 @@ const Controls = function($container, api){
 
     let webrtc_is_p2p_mode = false;
     let isLiveMode = false;
-
+    let isAndroid = api.getConfig().browser.os === "Android";
 
     const $root = LA$("#"+api.getContainerId());
     let lastContentMeta = {};
@@ -87,6 +87,7 @@ const Controls = function($container, api){
             }
 
             if(metadata.duration === Infinity){
+                OvenPlayerConsole.log("[[[[LIVE MODE]]]]");
                 isLiveMode = true;
                 //live
                 if(progressBar){
@@ -100,7 +101,7 @@ const Controls = function($container, api){
 
         api.on(CONTENT_META, function(data){
             initialDuration = data.duration;
-            OvenPlayerConsole.log("CONTENT_META", data);
+
             lastContentMeta = data;
             data.isP2P = webrtc_is_p2p_mode;
 
@@ -113,8 +114,8 @@ const Controls = function($container, api){
             //Fortunately I have CONTENT_TIME.
 
             //RTMP too.
-            if(api.getConfig().browser.os === "Android" || (api && api.getProviderName && api.getProviderName() === "rtmp") ){
-                if(!initialDuration && initialDuration !== metadata_for_when_after_playing.duration){
+            if( isAndroid || (api && api.getProviderName && api.getProviderName() === "rtmp") ){
+                if(!initialDuration || (initialDuration && (initialDuration !== metadata_for_when_after_playing.duration))){
                     lastContentMeta = metadata_for_when_after_playing;
                     initControlUI(metadata_for_when_after_playing);
                 }
@@ -135,6 +136,7 @@ const Controls = function($container, api){
 
 
         api.on(AD_CHANGED, function(ad){
+
             if(ad.isLinear){
                 if(progressBar){
                     progressBar.destroy();
