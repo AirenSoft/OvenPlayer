@@ -11,6 +11,7 @@ player = OvenPlayer.create("player", {
     mute : false,
     volume : 100,
     controls : true,
+    image : "https://path.to/your_video_thumbnail.jpeg",
     playlist : [
         {
                 title : "01. I drive slow.",
@@ -83,6 +84,13 @@ type|default
 number|100
 
 Sets the default volume when playing.
+
+#### image 
+type|default
+------|------
+String| ""
+
+Sets the default thumbnail image.
 
 #### controls 
 type|default

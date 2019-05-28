@@ -41,8 +41,8 @@ const Listener = function(elFlash, provider, videoEndedCallback){
         elFlash.currentTime = data.position;
         provider.trigger(CONTENT_TIME, data);
         //provider.trigger(CONTENT_BUFFER, data);
-
-        if(data.position >= data.duration){
+        //data.duration-1 : this is trick. because sometimes rtmp's position < duration when video ended.
+        if(data.position >= (data.duration-1)){
             if(provider.getState() !== STATE_IDLE && provider.getState() !== STATE_COMPLETE){
                 if(videoEndedCallback){
                     videoEndedCallback(function(){
@@ -62,7 +62,6 @@ const Listener = function(elFlash, provider, videoEndedCallback){
         provider.setState(data.newstate);
     };
     that.metaChanged = (data) =>{
-        console.log("MetaChanged", data);
         provider.trigger(CONTENT_META, data);
     };
     that.error = (error) =>{

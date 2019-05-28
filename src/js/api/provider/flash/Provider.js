@@ -51,6 +51,7 @@ const Provider = function(spec, playerConfig){
             that.seek(lastPlayPosition);
         }
         if(lastPlayPosition > 0){
+
             that.seek(lastPlayPosition);
             that.play();
         }
@@ -179,6 +180,7 @@ const Provider = function(spec, playerConfig){
                         retryCount ++;
                         if(elFlash.isFileLoaded && elFlash.isFileLoaded()){
 
+
                             if(playerConfig.isAutoStart()){
                                 that.play();
                             }
@@ -193,7 +195,7 @@ const Provider = function(spec, playerConfig){
                             return resolve();
                         }else{
 
-                            if(retryCount < 600){
+                            if(retryCount < 300){
                                 setTimeout(checkFileLoaded, 100);
                             }else{
                                 return reject(ERRORS[INIT_RTMP_SETUP_ERROR]);
@@ -202,7 +204,7 @@ const Provider = function(spec, playerConfig){
                     })();
 
                 }else{
-                    if(retryCount < 300){
+                    if(retryCount < 100){
                         setTimeout(checkSwfIsReady, 100);
                     }else{
                         return reject(ERRORS[INIT_RTMP_SETUP_ERROR]);

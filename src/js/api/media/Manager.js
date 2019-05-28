@@ -33,7 +33,7 @@ const Manager = function(container, browserInfo){
     };
     const createFlashVideo = function(isLoop){
         let movie, flashvars, allowscriptaccess, allowfullscreen, quality, name, menu, qual, bgcolor, loop, wmode ;
-
+        let message = "";
         movie = document.createElement('param');
         movie.setAttribute('name', 'movie');
         movie.setAttribute('value', SWFPath);
@@ -75,6 +75,10 @@ const Manager = function(container, browserInfo){
         bgcolor.setAttribute('name', 'wmode');
         bgcolor.setAttribute('value', 'transparent');
 
+        /*let allowButton = `<a href="http://www.adobe.com/go/getflashplayer"><img src="http://www.adobe.com/images/shared/download_buttons/get_flash_player.gif" alt="Get Adobe Flash player"></a>`;
+        message = document.createElement("div");
+        message.innerHTML = allowButton;*/
+
         if(isLoop){
             loop = document.createElement('param');
             loop.setAttribute('name', 'loop');
@@ -105,6 +109,7 @@ const Manager = function(container, browserInfo){
         videoElement.appendChild(allowfullscreen);
         videoElement.appendChild(allowscriptaccess);
         videoElement.appendChild(flashvars);
+        //videoElement.appendChild(message);
 
         $container.append(videoElement);
 

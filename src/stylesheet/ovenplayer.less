@@ -454,17 +454,18 @@
  * */
 
 .ovp-bigbutton-container {
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-top: -40px;
+  margin-left: -40px;
+  text-align: center;
+
   .ovp-bigbutton {
-    cursor: pointer;
-    position: absolute;
-    top: 50%;
-    left: 50%;
     width: 80px;
     height: 80px;
-    margin-top: -40px;
-    margin-left: -40px;
-    text-align: center;
-
+    display : block;
     &.ovp-bigbutton-play {
       background: url('../assets/images/ic-player-play-large.svg');
       background-size: 100%;
@@ -482,6 +483,21 @@
   }
 }
 
+/**
+ * @brief   Thumbnail
+ * */
+
+.ovp-thumbnail-container{
+  position: absolute;
+  top: 0;
+  width: 100%;
+  left: 0;
+  height: 100%;
+  img{
+    width: 100%;
+    height: 100%;
+  }
+}
 
 /**
  * @brief   Setting panel
@@ -564,13 +580,13 @@
  * */
 
 .ovp-controls-container{
+
   .ovp-bottom-panel {
     position: absolute;
     left: 0px;
     right: 0px;
     bottom: 0px;
     height: 54px;
-    //z-index: 60;
 
     .ovp-gradient-bottom {
       position: absolute;

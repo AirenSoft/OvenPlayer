@@ -66,7 +66,6 @@ const Listener = function(adsManager, provider, adsSpec, OnAdError){
 
      lowLevelEvents[CONTENT_PAUSE_REQUESTED] = (adEvent) => {
         OvenPlayerConsole.log(adEvent.type);
-
         //This callls when player is playing contents for ad.
          if(adsSpec.started){
              adsSpec.active = true;
@@ -104,7 +103,7 @@ const Listener = function(adsManager, provider, adsSpec, OnAdError){
     //
     lowLevelEvents[AD_BUFFERING] = (adEvent) => {
         OvenPlayerConsole.log("AD_BUFFERING",adEvent.type);
-        provider.setState(STATE_LOADING);
+        //provider.setState(STATE_LOADING);
     };
     lowLevelEvents[LOADED] = (adEvent) => {
         OvenPlayerConsole.log(adEvent.type);
@@ -169,7 +168,6 @@ const Listener = function(adsManager, provider, adsSpec, OnAdError){
     };
     lowLevelEvents[COMPLETE] = (adEvent) => {
         OvenPlayerConsole.log(adEvent.type);
-
         let ad = adEvent.getAd();
         if (ad.isLinear()) {
             clearInterval(intervalTimer);
@@ -188,7 +186,6 @@ const Listener = function(adsManager, provider, adsSpec, OnAdError){
     };
     lowLevelEvents[USER_CLOSE] = (adEvent) => {
         OvenPlayerConsole.log(adEvent.type);
-
         let ad = adEvent.getAd();
         if (ad.isLinear()) {
             clearInterval(intervalTimer);

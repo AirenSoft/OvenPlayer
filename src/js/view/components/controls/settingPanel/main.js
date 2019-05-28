@@ -134,8 +134,8 @@ const Panels = function($container, api, data){
 
         api.on(CONTENT_LEVEL_CHANGED, function(data){
             let newQuality = data.currentQuality;
-            if(data.type === "render"){
-                _.forEach( $root.find("#"+template.data.id).find(".ovp-setting-item").get(), function(panel){
+            if(data.type === "render" && $root.find("#"+template.data.id).find(".ovp-setting-item")){
+                _.forEach( $root.find("#"+template.data.id).find(".ovp-setting-item").get() ||[], function(panel){
                     let $panel = LA$(panel);
 
                     if($panel.attr("ovp-panel-type") === "quality"){

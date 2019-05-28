@@ -22,7 +22,8 @@ const Ads = function(elVideo, provider, playerConfig, adTagUrl){
     let spec = {
         started: false, //player started
         active : false, //on Ad
-        isVideoEnded : false
+        isVideoEnded : false,
+        checkAutoplayStart : true
     };
     let autoplayAllowed = false, autoplayRequiresMuted = false;
 
@@ -86,7 +87,12 @@ const Ads = function(elVideo, provider, playerConfig, adTagUrl){
         listener = AdsEventsListener(adsManager, provider, spec, OnAdError);
 
         provider.on(CONTENT_VOLUME, function(data) {
-            adsManager.setVolume(data.volume/100);
+            if(data.mute){
+                adsManager.setVolume(0);
+            }else{
+                adsManager.setVolume(data.volume/100);
+            }
+
         }, that);
 
         adsManagerLoaded = true;
@@ -126,12 +132,14 @@ const Ads = function(elVideo, provider, playerConfig, adTagUrl){
 
     function checkAutoplaySupport() {
         if(!elVideo.play){
-            autoplayAllowed = false;
+            autoplayAllowed = true;
             autoplayRequiresMuted = false;
+            spec.checkAutoplayStart = false;
             initRequest();
             return false;
         }
-        var playPromise = elVideo.play();
+
+        let playPromise = elVideo.play();
         if (playPromise !== undefined) {
             playPromise.then(function(){
                 // If we make it here, unmuted autoplay works.
@@ -139,13 +147,14 @@ const Ads = function(elVideo, provider, playerConfig, adTagUrl){
 
                 autoplayAllowed = true;
                 autoplayRequiresMuted = false;
-
+                spec.checkAutoplayStart = false;
                 initRequest();
 
             }).catch(function(){
                 elVideo.pause();
                 autoplayAllowed = false;
                 autoplayRequiresMuted = false;
+                spec.checkAutoplayStart = false;
                 initRequest();
 
 
@@ -174,8 +183,9 @@ const Ads = function(elVideo, provider, playerConfig, adTagUrl){
         }else{
             //Maybe this is IE11....
             elVideo.pause();
-            autoplayAllowed = false;
+            autoplayAllowed = true;
             autoplayRequiresMuted = false;
+            spec.checkAutoplayStart = false;
             initRequest();
         }
     }
@@ -251,9 +261,17 @@ const Ads = function(elVideo, provider, playerConfig, adTagUrl){
             adsLoader.contentComplete();
         }
     };
-
+    that.isAutoPlaySupportCheckTime = () => {
+        return spec.checkAutoplayStart;
+    }
     that.destroy = () => {
+        if(adsLoader){
+            adsLoader.removeEventListener(ADS_MANAGER_LOADED, OnManagerLoaded);
+            adsLoader.removeEventListener(AD_ERROR, OnAdError);
+        }
+
         if(adsManager){
+
             adsManager.destroy();
         }
         if(adDisplayContainer){
@@ -262,10 +280,7 @@ const Ads = function(elVideo, provider, playerConfig, adTagUrl){
         if(listener){
             listener.destroy();
         }
-        if(adsLoader){
-            adsLoader.removeEventListener(ADS_MANAGER_LOADED, OnManagerLoaded);
-            adsLoader.removeEventListener(AD_ERROR, OnAdError);
-        }
+
 
         let $ads = LA$(playerConfig.getContainer()).find(".ovp-ads");
         if($ads){

@@ -151,17 +151,18 @@ const View = function($container){
     };
     const events = {
         "click .ovenplayer" : function(event, $current, template){
-            event.preventDefault();
             if(contextPanel){
+                event.preventDefault();
                 contextPanel.destroy();
                 contextPanel = null;
-                return false;
+                //return false;
             }
 
             if(!(LA$(event.target).closest(".ovp-controls-container") || LA$(event.target).closest(".ovp-setting-panel") )){
                 if(panelManager.size() > 0){
+                    event.preventDefault();
                     panelManager.clear();
-                    return false;
+                    //return false;
                 }
                 //togglePlayPause();
             }
@@ -241,6 +242,7 @@ const View = function($container){
         },
         "contextmenu .ovenplayer" : function(event, $current, template){
             event.stopPropagation();
+            return false;
             if(!LA$(event.currentTarget).find("object")){
                 event.preventDefault();
                 createContextPanel(event.pageX, event.pageY);

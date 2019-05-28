@@ -5,6 +5,7 @@ import OvenTemplate from "view/engine/OvenTemplate";
 import BigButton from "view/components/helpers/bigButton";
 import MessageBox from "view/components/helpers/messageBox";
 import CaptionViewer from "view/components/helpers/captionViewer";
+import Thumbnail from "view/components/helpers/thumbnail";
 import Spinner from "view/components/helpers/spinner";
 import {
     READY,
@@ -22,12 +23,14 @@ import {
     PLAYLIST_CHANGED,
     STATE_ERROR,
     PLAYER_STATE,
+    ALL_PLAYLIST_ENDED,
     CONTENT_LEVEL_CHANGED,
     NETWORK_UNSTABLED
 } from "api/constants";
 
 const Helpers = function($container, api){
-    let bigButton = "", messageBox = "",  captionViewer = "", spinner = "";
+    let bigButton = "", messageBox = "",  captionViewer = "", spinner = "", thumbnail;
+    let hasThumbnail = api.getConfig().image;
     const onRendered = function($current, template){
         let qualityLevelChanging = false, newQualityLevel = -1;
         let createBigButton = function(state){
@@ -42,6 +45,12 @@ const Helpers = function($container, api){
             }
             messageBox = MessageBox($current, api, message, withTimer);
         };
+        let createThumbnail = function(){
+            if(thumbnail){
+                thumbnail.destroy();
+            }
+            thumbnail = Thumbnail($current, api, api.getConfig().image);
+        };
 
         spinner = Spinner($current, api);
 
@@ -52,8 +61,11 @@ const Helpers = function($container, api){
         captionViewer = CaptionViewer($current, api);
 
         api.on(READY, function() {
-            createBigButton(STATE_PAUSED);
+            if(hasThumbnail){
+                createThumbnail();  //shows when playlist changed.
+            }
 
+            createBigButton(STATE_PAUSED);
         }, template);
 
         api.on(PLAYER_STATE, function(data){
@@ -61,6 +73,10 @@ const Helpers = function($container, api){
 
                 if(data.newstate === STATE_PLAYING ||  data.newstate === STATE_AD_PLAYING){
                     bigButton.destroy();
+                    if(thumbnail){
+                        thumbnail.destroy();
+                    }
+
                     if(!qualityLevelChanging){
                         spinner.show(false);
                     }
@@ -123,12 +139,18 @@ const Helpers = function($container, api){
             //createMessage(message, 5000);
         }, template);
 
+        api.on(ALL_PLAYLIST_ENDED, function(){
+            if(hasThumbnail){
+                createThumbnail();
+            }
+        }, template);
     };
     const onDestroyed = function(template){
         api.off(READY, null, template);
         api.off(PLAYER_STATE, null, template);
         api.off(ERROR, null, template);
         api.off(NETWORK_UNSTABLED, null, template);
+        api.off(ALL_PLAYLIST_ENDED, null, template);
         api.off(PLAYLIST_CHANGED, null, template);
     };
     const events = {

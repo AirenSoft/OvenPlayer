@@ -5,6 +5,7 @@ import TextViewTemplate from 'view/example/textviewTemplate';
 import ViewTemplate from 'view/viewTemplate';
 import HelpersTemplate from 'view/components/helpers/mainTemplate';
 import BigButtonTemplate from 'view/components/helpers/bigButtonTemplate';
+import ThumbnailTemplate from 'view/components/helpers/thumbnailTemplate';
 import MessageBoxTemplate from 'view/components/helpers/messageBoxTemplate';
 import SpinnerTemplate from 'view/components/helpers/spinnerTemplate';
 import ContextPanelTemplate from 'view/components/helpers/contextPanelTemplate';
@@ -32,6 +33,7 @@ const Templates = {
     ViewTemplate,
     HelpersTemplate,
     BigButtonTemplate,
+    ThumbnailTemplate,
     MessageBoxTemplate,
     SpinnerTemplate,
     ContextPanelTemplate,

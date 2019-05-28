@@ -71,13 +71,6 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
             /*that.trigger(CONTENT_SOURCE_CHANGED, {
                 currentSource: spec.currentSource
             });*/
-
-            if(posterImage){
-                //There is no way to verify the posterImage URL. This will be blnak until have a good idea.
-                //elVideo.style.background = "transparent url('"+posterImage+"') no-repeat 0 0";
-                //elVideo.poster = posterImage;
-            }
-
         }
 
     };
@@ -114,13 +107,22 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
                     that.trigger(PLAYER_PLAY, {
                         prevState: spec.state
                     });
+
                     break;
             }
             spec.state = newState;
-            that.trigger(PLAYER_STATE, {
-                prevstate : prevState,
-                newstate: spec.state
-            });
+
+            if(ads && ads.isAutoPlaySupportCheckTime()){
+                //Ads checks checkAutoplaySupport().
+                //It calls real play() and pause().
+                //And then this triggers "playing" and "pause".
+                //I prevent these process.
+            }else{
+                that.trigger(PLAYER_STATE, {
+                    prevstate : prevState,
+                    newstate: spec.state
+                });
+            }
         }
     };
     that.getState = () =>{

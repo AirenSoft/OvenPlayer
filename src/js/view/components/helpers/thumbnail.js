@@ -9,7 +9,7 @@ import {
     STATE_PAUSED
 } from "api/constants";
 
-const BigButton = function($container, api, playerState){
+const Thumbnail = function($container, api, playerState){
 
     const onRendered = function($container, $current, template){
         //Do nothing!
@@ -22,20 +22,13 @@ const BigButton = function($container, api, playerState){
             event.preventDefault();
 
             const currentState = api.getState();
-            let playlist = api.getPlaylist();
-            let currentPlaylistIndex = api.getCurrentPlaylist();
-
-            if (currentState === STATE_IDLE || currentState === STATE_PAUSED) {
+            if (currentState === STATE_IDLE || currentState === STATE_PAUSED || currentState === STATE_COMPLETE) {
                 api.play();
-            }else if(currentState === STATE_COMPLETE){
-                if(playlist.length === (currentPlaylistIndex+1)){
-                    api.setCurrentPlaylist(0);
-                }
             }
         }
     };
 
-    return OvenTemplate($container, "BigButton", playerState, events, onRendered, onDestroyed );
+    return OvenTemplate($container, "Thumbnail", playerState, events, onRendered, onDestroyed );
 };
 
-export default BigButton;
+export default Thumbnail;

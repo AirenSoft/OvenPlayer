@@ -6,7 +6,7 @@ import MediaManager from "api/media/Manager";
 import PlaylistManager from "api/playlist/Manager";
 import ProviderController from "api/provider/Controller";
 import {READY, ERRORS, ERROR, CONTENT_TIME_MODE_CHANGED, INIT_UNKNWON_ERROR, INIT_UNSUPPORT_ERROR, DESTROY, NETWORK_UNSTABLED,
-    PLAYER_FILE_ERROR, PROVIDER_DASH, PROVIDER_HLS, PROVIDER_WEBRTC, PROVIDER_HTML5, PROVIDER_RTMP} from "api/constants";
+    PLAYER_FILE_ERROR, PROVIDER_DASH, PROVIDER_HLS, PROVIDER_WEBRTC, PROVIDER_HTML5, PROVIDER_RTMP, ALL_PLAYLIST_ENDED} from "api/constants";
 import {version} from 'version';
 import {ApiRtmpExpansion} from 'api/ApiExpansions';
 import {analUserAgent} from "utils/browser";
@@ -23,7 +23,7 @@ const Api = function(container){
     EventEmitter(that);
 
 
-    console.log("[[OvenPlayer]] v."+ version, container);
+    console.log("[[OvenPlayer]] v."+ version);
     OvenPlayerConsole.log("API loaded.");
 
     let playlistManager = PlaylistManager(that);
@@ -48,6 +48,9 @@ const Api = function(container){
             playlistManager.setCurrentPlaylist(nextPlaylistIndex);
             initProvider();
             that.play();
+        }else{
+            //All Playlist Ended.
+            that.trigger(ALL_PLAYLIST_ENDED, null);
         }
     };
     const initProvider = function(lastPlayPosition){

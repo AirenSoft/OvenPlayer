@@ -104,13 +104,11 @@ const Listener = function(element, mse, provider, videoEndedCallback){
             duration: isLive ?  Infinity : elVideo.duration,
             type :type
         };
-
         OvenPlayerConsole.log("EventListener : on loadedmetadata", metadata);
         provider.trigger(CONTENT_META, metadata);
     };
 
     lowLevelEvents.pause = () => {
-        console.log("on pause", provider.getState());
         //Fires when the audio/video has been paused
         if(provider.getState() === STATE_COMPLETE || provider.getState() === STATE_ERROR){
             return false;
@@ -211,7 +209,6 @@ const Listener = function(element, mse, provider, videoEndedCallback){
     };
 
     lowLevelEvents.waiting = () => {
-        console.log("on waiting", provider.getState());
         //Fires when the video stops because it needs to buffer the next frame
         OvenPlayerConsole.log("EventListener : on waiting", provider.getState());
         if(provider.isSeeking()){
