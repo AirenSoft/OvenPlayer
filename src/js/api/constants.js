@@ -42,6 +42,7 @@ export const PLAYER_COMPLETE = STATE_COMPLETE;
 export const PLAYER_PAUSE = "pause";
 export const PLAYER_PLAY = "play";
 export const PLAYER_RESIZED = "resized";
+export const PLAYER_FULLSCREEN_REQUEST = "fullscreenRequested";
 export const PLAYER_FULLSCREEN_CHANGED = "fullscreenChanged";
 
 export const AD_CHANGED = "adChanged";

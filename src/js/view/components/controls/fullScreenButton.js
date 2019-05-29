@@ -8,7 +8,8 @@ import {
     STATE_AD_LOADED,
     STATE_AD_PLAYING,
     STATE_AD_PAUSED,
-    PLAYER_FULLSCREEN_CHANGED
+    PLAYER_FULLSCREEN_CHANGED,
+    PLAYER_FULLSCREEN_REQUEST
 } from "api/constants";
 
 
@@ -142,9 +143,6 @@ const FullScreenButton = function($container, api){
         $iconExpand = $current.find(".ovp-fullscreen-button-expandicon");
         $iconCompress = $current.find(".ovp-fullscreen-button-compressicon");
 
-
-
-
         api.on(AD_CHANGED, function(ad){
             //force close for ios midroll
             if(ad.isLinear && isIos && isFullScreen && $root.find("video").get()[0] && $root.find("video").get()[0].webkitExitFullscreen){
@@ -177,7 +175,7 @@ const FullScreenButton = function($container, api){
     const events = {
         "click .ovp-fullscreen-button" : function(event, $current, template){
             event.preventDefault();
-
+                api.trigger(PLAYER_FULLSCREEN_REQUEST, null);
                 toggleFullScreen();
 
 
