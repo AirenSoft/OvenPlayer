@@ -20,7 +20,8 @@ const FullScreenButton = function($container, api){
     let browserInfo = api.getBrowser();
     let isIos = browserInfo.os === "iOS"; // && browserInfo.browser === "Safari";
     let isAndroid = browserInfo.os === "Android";
-    let fullscreenChagedEventName = "";
+    let fullscreenChagedEventName = ""; //For IE11
+    let isForceMode = false;    //This means to look like for fullscreen.
 
     let fullScreenEventTypes = {
         onfullscreenchange : "fullscreenchange",
@@ -30,7 +31,7 @@ const FullScreenButton = function($container, api){
     };
 
 
-    let fullScreenChangedCallback = function(event){
+    const fullScreenChangedCallback = function(){
         let checkFullScreen = function(){
             return document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement;
         };
@@ -41,6 +42,21 @@ const FullScreenButton = function($container, api){
             $iconExpand.hide();
             $iconCompress.show();
         } else {
+            $root.removeClass("ovp-fullscreen");
+            isFullScreen = false;
+            $iconExpand.show();
+            $iconCompress.hide();
+        }
+        api.trigger(PLAYER_FULLSCREEN_CHANGED, isFullScreen);
+    };
+
+    const forcedFakeFullscreenToggle = function(){
+        if(!isFullScreen){
+            $root.addClass("ovp-fullscreen");
+            isFullScreen = true;
+            $iconExpand.hide();
+            $iconCompress.show();
+        }else{
             $root.removeClass("ovp-fullscreen");
             isFullScreen = false;
             $iconExpand.show();
@@ -129,17 +145,23 @@ const FullScreenButton = function($container, api){
         }
 
         if(promise){
-            promise.then().catch(function(error){
+            promise.then(function(){
+                isForceMode = false;
+            }).catch(function(error){
+
+                //This means to look like for fullscreen.
+                isForceMode = true;
+                forcedFakeFullscreenToggle();
+
 
                 //wait for User Interaction. It runs Chrome only.
                 //Because "fullscreen error" occures Chrome.
                 //Firefox can't runs this routine because "Element.requestFullscreen()이 짧게 실행되는 사용자 생성 이벤트 핸들러의 내부로부터 호출되지 않았기 때문에 전체화면 요청이 거부되었습니다.".
-
-                if(error.message === "fullscreen error"){
+                /*if(error.message === "fullscreen error"){
                     setTimeout(function(){
                         requestFullScreen();
                     },500);
-                }
+                }*/
             });
         }
     };
@@ -162,7 +184,11 @@ const FullScreenButton = function($container, api){
         if (!isFullScreen) {
             requestFullScreen();
         } else {
-            exitFullScreen();
+            if(isForceMode){
+                forcedFakeFullscreenToggle();
+            }else{
+                exitFullScreen();
+            }
         }
     };
 
@@ -179,6 +205,7 @@ const FullScreenButton = function($container, api){
                 isFullScreen = false;
             }
         }, template);
+
         document.addEventListener(fullscreenChagedEventName, fullScreenChangedCallback, false);
     };
     const onDestroyed = function(template){
@@ -190,8 +217,6 @@ const FullScreenButton = function($container, api){
             event.preventDefault();
                 api.trigger(PLAYER_FULLSCREEN_REQUEST, null);
                 toggleFullScreen();
-
-
         }
     };
 

@@ -167,6 +167,14 @@ const View = function($container){
                 //togglePlayPause();
             }
         },
+        "touchstart .ovenplayer" : function(event, $current, template){
+            console.log("touchstart event this is");
+            if (playerState === STATE_PLAYING || (playerState === STATE_AD_PLAYING && screenSize === "xsmall")) {
+                setHide(false, true);
+            } else {
+                setHide(false);
+            }
+        },
         "mouseenter .ovenplayer" : function(event, $current, template){
             event.preventDefault();
 

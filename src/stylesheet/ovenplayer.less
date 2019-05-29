@@ -108,7 +108,16 @@
   }
 
   &.ovp-fullscreen {
+    width: 100% !important;
     height: 100% !important;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1000;
+    margin: 0;
+    position: fixed;
+
   }
   &.ovp-autohide{
     cursor: none;
@@ -493,9 +502,16 @@
   width: 100%;
   left: 0;
   height: 100%;
-  img{
-    width: 100%;
-    height: 100%;
+  .ovp-thumbnail-wrapper{
+    position: relative;
+    img{
+      width:100%;
+      max-height:100%;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
   }
 }
 
