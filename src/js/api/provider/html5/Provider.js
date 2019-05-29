@@ -6,7 +6,7 @@ import EventEmitter from "api/EventEmitter";
 import EventsListener from "api/provider/html5/Listener";
 import {extractVideoElement, separateLive, pickCurrentSource} from "api/provider/utils";
 import {
-    STATE_IDLE, STATE_PLAYING, STATE_PAUSED, STATE_COMPLETE,
+    STATE_IDLE, STATE_PLAYING, STATE_PAUSED, STATE_COMPLETE, STATE_ERROR,
     PLAYER_STATE, PLAYER_COMPLETE, PLAYER_PAUSE, PLAYER_PLAY, STATE_AD_PLAYING,
     CONTENT_TIME, CONTENT_CAPTION_CUE_CHANGED, CONTENT_SOURCE_CHANGED,
     PLAYBACK_RATE_CHANGED, CONTENT_MUTE, PROVIDER_HTML5, PROVIDER_WEBRTC, PROVIDER_DASH, PROVIDER_HLS
@@ -94,6 +94,11 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
     that.setState = (newState) => {
         if(spec.state !== newState){
             let prevState = spec.state;
+
+            //ToDo : This is temporary code. avoid background content error.
+            if(prevState === STATE_AD_PLAYING && (newState === STATE_ERROR || newState === STATE_IDLE) ){
+                return false;
+            }
             switch(newState){
                 case STATE_COMPLETE :
                     that.trigger(PLAYER_COMPLETE);

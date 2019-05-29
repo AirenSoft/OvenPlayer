@@ -20,6 +20,7 @@ const FullScreenButton = function($container, api){
     let browserInfo = api.getBrowser();
     let isIos = browserInfo.os === "iOS"; // && browserInfo.browser === "Safari";
     let isAndroid = browserInfo.os === "Android";
+    let fullscreenChagedEventName = "";
 
     let fullScreenEventTypes = {
         onfullscreenchange : "fullscreenchange",
@@ -45,12 +46,40 @@ const FullScreenButton = function($container, api){
             $iconExpand.show();
             $iconCompress.hide();
         }
-
-
         api.trigger(PLAYER_FULLSCREEN_CHANGED, isFullScreen);
     };
 
+    let findFullScreenChangedEventName = function(){
+        let rootElement =  $root.get();
+        let eventName = "";
 
+        if (rootElement.requestFullscreen) {
+            eventName = fullScreenEventTypes.onfullscreenchange;
+        } else if (rootElement.webkitRequestFullScreen) {
+            eventName = fullScreenEventTypes.onwebkitfullscreenchange;
+        } else if (rootElement.mozRequestFullScreen) {
+            eventName = fullScreenEventTypes.onmozfullscreenchange;
+        } else if (rootElement.msRequestFullscreen) {
+            eventName = fullScreenEventTypes.MSFullscreenChange;
+        }else{
+            Object.keys(fullScreenEventTypes).forEach(event => {
+                if(document[event]){
+                    eventName = event;
+                }
+            });
+        }
+        return eventName;
+
+        //This is original Code. IE11 doesn't follow rules. go to hell. IE11 returns "fullscreenchange". :(
+        /*
+         Object.keys(fullScreenEventTypes).forEach(eventName => {
+         if(document[eventName]){
+         console.log(eventName);
+         document.addEventListener(fullScreenEventTypes[eventName], fullScreenChangedCallback, false);
+         }
+         });
+         */
+    };
 
     let requestFullScreen = function () {
         let promise = "";
@@ -81,7 +110,6 @@ const FullScreenButton = function($container, api){
                 promise = sumOfRequestFullscreen();
             }
             */
-
 
             if (rootElement.requestFullscreen) {
                 promise = rootElement.requestFullscreen();
@@ -138,10 +166,11 @@ const FullScreenButton = function($container, api){
         }
     };
 
-
     const onRendered = function($current, template){
         $iconExpand = $current.find(".ovp-fullscreen-button-expandicon");
         $iconCompress = $current.find(".ovp-fullscreen-button-compressicon");
+
+        fullscreenChagedEventName = findFullScreenChangedEventName();
 
         api.on(AD_CHANGED, function(ad){
             //force close for ios midroll
@@ -150,26 +179,10 @@ const FullScreenButton = function($container, api){
                 isFullScreen = false;
             }
         }, template);
-
-        //Bind Global(document) Event
-        Object.keys(fullScreenEventTypes).forEach(eventName => {
-            //Difference between undefined and null.
-            //undefined is not support. null is support but not inited.
-            if(document[eventName] === null){
-                document.addEventListener(fullScreenEventTypes[eventName], fullScreenChangedCallback);
-            }
-
-        });
-
+        document.addEventListener(fullscreenChagedEventName, fullScreenChangedCallback, false);
     };
     const onDestroyed = function(template){
-        //Unbind Global(document) Event
-        Object.keys(fullScreenEventTypes).forEach(eventName => {
-            if(document[eventName] === null){
-                document.removeEventListener(fullScreenEventTypes[eventName], fullScreenChangedCallback);
-            }
-
-        });
+        document.removeEventListener(fullscreenChagedEventName, fullScreenChangedCallback);
         api.off(AD_CHANGED, null, template);
     };
     const events = {
