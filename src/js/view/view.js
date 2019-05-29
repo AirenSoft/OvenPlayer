@@ -167,8 +167,8 @@ const View = function($container){
                 //togglePlayPause();
             }
         },
+        //For iOS safari
         "touchstart .ovenplayer" : function(event, $current, template){
-            console.log("touchstart event this is");
             if (playerState === STATE_PLAYING || (playerState === STATE_AD_PLAYING && screenSize === "xsmall")) {
                 setHide(false, true);
             } else {
