@@ -86,15 +86,15 @@ const Api = function(container){
             OvenPlayerConsole.log("API : init() captions");
 
             let currentSourceIndex = pickQualityFromSource(playlistManager.getCurrentSources());
-            let providerName = Providers[currentSourceIndex].name.toLowerCase();
-
-            OvenPlayerConsole.log( "currentProvider : ", providerName,"current source index : "+ currentSourceIndex);
-
-            let videoElement = mediaManager.createMedia(providerName, playerConfig.isLoop());
-            //mediaManager = MediaManager(container, providerName, false); //mediaManager.createMedia(providerName, playerConfig.isLoop());
+            let providerName = Providers[currentSourceIndex]["name"];
 
             //Init Provider.
-            currentProvider =  Providers[currentSourceIndex](videoElement, playerConfig, playlistManager.getCurrentAdTag());
+            currentProvider =  Providers[currentSourceIndex].provider(
+                mediaManager.createMedia(providerName, playerConfig.isLoop()),
+                playerConfig,
+                playlistManager.getCurrentAdTag()
+            );
+            OvenPlayerConsole.log("API : init() provider", providerName);
 
 
             if(providerName === PROVIDER_RTMP){
