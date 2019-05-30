@@ -11,6 +11,7 @@ player = OvenPlayer.create("player", {
     mute : false,
     volume : 100,
     controls : true,
+    title : "Hi. This is ovenplayer.",
     image : "https://path.to/your_video_thumbnail.jpeg",
     playlist : [
         {
@@ -91,6 +92,14 @@ type|default
 String| ""
 
 Sets the default thumbnail image.
+
+#### title 
+type|default
+------|------
+String| ""
+
+Sets the contents title.
+
 
 #### controls 
 type|default
