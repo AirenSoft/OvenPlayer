@@ -51,8 +51,12 @@ const Provider = function(spec, playerConfig){
             that.seek(lastPlayPosition);
         }
         if(lastPlayPosition > 0){
-
+            if(!playerConfig.isAutoStart()){
+                that.play();
+            }
             that.seek(lastPlayPosition);
+        }
+        if(playerConfig.isAutoStart()){
             that.play();
         }
     };
@@ -224,9 +228,8 @@ const Provider = function(spec, playerConfig){
         if(!elFlash){
             return false;
         }
-
         if(that.getState() !== STATE_PLAYING){
-            if ( (ads && ads.isActive()) || (ads && !ads.started())) {
+            if ( (ads && ads.isActive()) || (ads && !ads.started()) ) {
                 ads.play();
             }else{
                 elFlash.play();

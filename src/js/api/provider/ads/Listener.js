@@ -88,6 +88,8 @@ const Listener = function(adsManager, provider, adsSpec, OnAdError){
     lowLevelEvents[AD_ERROR] = OnAdError;
 
     lowLevelEvents[ALL_ADS_COMPLETED] = (adEvent) => {
+        console.log("ALL_ADS_COMPLETED");
+
         OvenPlayerConsole.log(adEvent.type);
         isAllAdCompelete = true;
         if(adsSpec.isVideoEnded){
@@ -102,10 +104,11 @@ const Listener = function(adsManager, provider, adsSpec, OnAdError){
     };
     //
     lowLevelEvents[AD_BUFFERING] = (adEvent) => {
+        console.log("AD_BUFFERING");
         OvenPlayerConsole.log("AD_BUFFERING",adEvent.type);
-        //provider.setState(STATE_LOADING);
     };
     lowLevelEvents[LOADED] = (adEvent) => {
+        console.log("LOADED");
         OvenPlayerConsole.log(adEvent.type);
         let remainingTime = adsManager.getRemainingTime();
         let ad = adEvent.getAd();
@@ -130,6 +133,7 @@ const Listener = function(adsManager, provider, adsSpec, OnAdError){
 
 
     lowLevelEvents[STARTED] = (adEvent) => {
+        console.log("STARTED");
         OvenPlayerConsole.log(adEvent.type);
         let ad = adEvent.getAd();
         currentAd = ad;

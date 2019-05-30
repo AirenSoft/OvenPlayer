@@ -122,8 +122,13 @@ const Dash = function(element, playerConfig, adTagUrl){
             }else{
                 if(seekPosition_sec){
                     dash.seek(seekPosition_sec);
-                    that.play();
+                    if(!playerConfig.isAutoStart()){
+                        that.play();
+                    }
                 }
+            }
+            if(playerConfig.isAutoStart()){
+                that.play();
             }
         }, that);
         that.setCurrentQuality = (qualityIndex) => {

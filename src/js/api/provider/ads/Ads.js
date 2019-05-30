@@ -227,7 +227,6 @@ const Ads = function(elVideo, provider, playerConfig, adTagUrl){
                             if(playerConfig.getBrowser().os  === "iOS" || playerConfig.getBrowser().os  === "Android"){
                                 elVideo.load();
                             }
-
                             adDisplayContainer.initialize();
                             adsManager.init("100%", "100%", google.ima.ViewMode.NORMAL);
                             adsManager.start();
@@ -235,7 +234,7 @@ const Ads = function(elVideo, provider, playerConfig, adTagUrl){
                             return resolve();
                         }
                     }else{
-                        if(retryCount < 50){
+                        if(retryCount < 300){
                             setTimeout(checkAdsManagerIsReady, 100);
                         }else{
                             return reject(new Error(ADMANGER_LOADING_ERROR));

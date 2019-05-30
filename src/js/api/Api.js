@@ -47,7 +47,12 @@ const Api = function(container){
             lazyQueue = LazyCommandExecutor(that, ['play','seek','stop']);
             playlistManager.setCurrentPlaylist(nextPlaylistIndex);
             initProvider();
-            that.play();
+
+
+            if(!playerConfig.isAutoStart()){
+                //Anyway nextplaylist runs autoStart!.
+                that.play();
+            }
         }else{
             //All Playlist Ended.
             that.trigger(ALL_PLAYLIST_ENDED, null);
@@ -344,7 +349,7 @@ const Api = function(container){
         OvenPlayerConsole.log("API : setCurrentQuality() isSameProvider", isSameProvider);
 
         if(!isSameProvider){
-            lazyQueue = LazyCommandExecutor(that, ['play']);
+            lazyQueue = LazyCommandExecutor(that, ['play','seek']);
             initProvider(lastPlayPosition);
         }
 
