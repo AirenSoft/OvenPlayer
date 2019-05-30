@@ -30,7 +30,7 @@ import {
 
 const Helpers = function($container, api){
     let bigButton = "", messageBox = "",  captionViewer = "", spinner = "", thumbnail;
-    let hasThumbnail = api.getConfig().image;
+    let hasThumbnail = api.getConfig().image || api.getConfig().title
     const onRendered = function($current, template){
         let qualityLevelChanging = false, newQualityLevel = -1;
         let createBigButton = function(state){
@@ -49,7 +49,7 @@ const Helpers = function($container, api){
             if(thumbnail){
                 thumbnail.destroy();
             }
-            thumbnail = Thumbnail($current, api, api.getConfig().image);
+            thumbnail = Thumbnail($current, api, api.getConfig());
         };
 
         spinner = Spinner($current, api);
