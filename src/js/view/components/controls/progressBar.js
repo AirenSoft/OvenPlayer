@@ -32,6 +32,7 @@ const ProgressBar = function($container, api, isAd){
         knobWidth = 0,
         $time = "";
 
+    let isMobile = api.getBrowser().os === "iOS" || api.getBrowser().os === "Android";
 
     let positionElements = function (percentage) {
         const progressBarWidth = $progressBar.width();
@@ -65,7 +66,7 @@ const ProgressBar = function($container, api, isAd){
     let calculatePercentage = function (event) {
         const progressBarWidth = $progressBar.width();
         const progressBarOffsetX = $progressBar.offset().left;
-        const pointerOffsetX = event.pageX;
+        const pointerOffsetX =  (event.pageX || event.touches[0].clientX) ;
 
         const percentage = (pointerOffsetX - progressBarOffsetX) / progressBarWidth;
 
@@ -101,7 +102,7 @@ const ProgressBar = function($container, api, isAd){
         const timeElemWidth = $time.width();
         const progressBarWidth = $progressBar.width();
         const position = progressBarWidth * percentage;
-        const positionOfPixel = event.pageX - $progressBar.offset().left;
+        const positionOfPixel =  (event.pageX || event.touches[0].clientX)  - $progressBar.offset().left;
 
 
         const calculateMagnetic = function(){
@@ -169,13 +170,43 @@ const ProgressBar = function($container, api, isAd){
         }
     };
     const events = {
+        "touchstart .ovp-progressbar" : function(event){
+            if(isAd){
+                return false;
+            }
+            mouseDown = true;
+            const percentage = calculatePercentage(event);
+            positionElements(percentage);
+            drawHoverProgress(0);
+            seek(percentage);
+        },
+        "touchmove .ovp-progressbar" : function(event){
+            if (mouseDown) {
+                const percentage = calculatePercentage(event);
+                positionElements(percentage);
+                drawHoverProgress(0);
+                seek(percentage);
+                drawTimeIndicator(percentage, event);
+            }
+        },
+        "touchend .ovp-progressbar" : function(event){
+            if(mouseDown){
+                mouseDown = false;
+                $root.removeClass("ovp-progressbar-hover");
+            }
+
+        },
+
+
         "mouseenter .ovp-progressbar" : function(event, $current, template){
             event.preventDefault();
-            if(!isAd){
-                mouseInside = true;
-                $time.show();
+            if(!isMobile){
+                if(!isAd){
+                    mouseInside = true;
+                    $time.show();
+                }
+                $root.addClass("ovp-progressbar-hover");
             }
-            $root.addClass("ovp-progressbar-hover");
         },
         "mouseleave .ovp-progressbar" : function(event, $current, template){
             event.preventDefault();

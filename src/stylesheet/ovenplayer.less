@@ -90,7 +90,13 @@
   font-size: 14px;
   font-weight: 100;
   outline: 0;
-  -webkit-overflow-scrolling: touch;
+
+  -webkit-touch-callout: none;
+  user-select: none;
+
+  * {
+    box-sizing: inherit;
+  }
 
   object{
     width:100%; height:100%;
@@ -596,14 +602,12 @@
  * */
 
 .ovp-controls-container{
-
   .ovp-bottom-panel {
     position: absolute;
     left: 0px;
-    right: 0px;
     bottom: 0px;
     height: 54px;
-
+    width : 100%;
     .ovp-gradient-bottom {
       position: absolute;
       width: 100%;
@@ -643,9 +647,10 @@
     .ovp-controls {
       position: relative;
       width: 100%;
-      height: 50px;
+      /*height: 50px;
+      padding: 10px 0;*/
+
       text-align: left;
-      padding: 10px 0;
       overflow: hidden;
       //z-index: 23;
       .ovp-button {
@@ -669,13 +674,14 @@
       }
       .ovp-left-controls {
         float: left;
-        height: 100%;
-        //margin : 10px 0;
+        height: 50px;
+        padding: 10px 0;
       }
 
       .ovp-right-controls {
         float: right;
-        height: 100%;
+        height: 50px;
+        padding: 10px 0;
         display: inline-flex;
         //margin : 10px 0;
       }
@@ -1265,14 +1271,14 @@
   .ovp-bottom-panel{
     height : 34px;
     .ovp-controls{
-      height: 30px;
-      padding : 0;
-      /*.ovp-left-controls{
-        margin : 0;
+      .ovp-left-controls{
+        height: 30px;
+        padding : 0;
       }
       .ovp-right-controls{
-        margin : 0;
-      }*/
+        height: 30px;
+        padding : 0;
+      }
     }
   }
   .ovp-ads{
