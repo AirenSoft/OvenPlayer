@@ -51,10 +51,11 @@ const Provider = function(spec, playerConfig){
             that.seek(lastPlayPosition);
         }
         if(lastPlayPosition > 0){
+
+            that.seek(lastPlayPosition);
             if(!playerConfig.isAutoStart()){
                 that.play();
             }
-            that.seek(lastPlayPosition);
         }
         if(playerConfig.isAutoStart()){
             that.play();
@@ -183,11 +184,6 @@ const Provider = function(spec, playerConfig){
                     return (function checkFileLoaded(){
                         retryCount ++;
                         if(elFlash.isFileLoaded && elFlash.isFileLoaded()){
-
-
-                            if(playerConfig.isAutoStart()){
-                                that.play();
-                            }
 
                             if(playerConfig.isMute()){
                                 that.setMute(true);

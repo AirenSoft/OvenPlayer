@@ -118,13 +118,12 @@ const Dash = function(element, playerConfig, adTagUrl){
             }
 
             if(dash.isDynamic()){
-                //that.play();
-            }else{
-                if(seekPosition_sec){
-                    dash.seek(seekPosition_sec);
-                    if(!playerConfig.isAutoStart()){
-                        that.play();
-                    }
+                //islive
+            }
+            if(seekPosition_sec){
+                dash.seek(seekPosition_sec);
+                if(!playerConfig.isAutoStart()){
+                    that.play();
                 }
             }
             if(playerConfig.isAutoStart()){
