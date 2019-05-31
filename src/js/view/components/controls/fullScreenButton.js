@@ -29,13 +29,11 @@ const FullScreenButton = function($container, api){
         onwebkitfullscreenchange : "webkitfullscreenchange",
         MSFullscreenChange : "MSFullscreenChange"
     };
-
+    const checkFullScreen = function(){
+        return document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement;
+    };
 
     const fullScreenChangedCallback = function(){
-        let checkFullScreen = function(){
-            return document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement;
-        };
-
         if (checkFullScreen()) {
             $root.addClass("ovp-fullscreen");
             isFullScreen = true;
@@ -68,6 +66,8 @@ const FullScreenButton = function($container, api){
     let findFullScreenChangedEventName = function(){
         let rootElement =  $root.get();
         let eventName = "";
+        //ios don;t have a fullscreenchage event. go to hell.
+        //ios will checkFullScreen();
 
         if (rootElement.requestFullscreen) {
             eventName = fullScreenEventTypes.onfullscreenchange;
@@ -80,7 +80,7 @@ const FullScreenButton = function($container, api){
         }else{
             Object.keys(fullScreenEventTypes).forEach(event => {
                 if(document[event]){
-                    eventName = event;
+                    eventName = fullScreenEventTypes[event];
                 }
             });
         }
@@ -89,10 +89,10 @@ const FullScreenButton = function($container, api){
         //This is original Code. IE11 doesn't follow rules. go to hell. IE11 returns "fullscreenchange". :(
         /*
          Object.keys(fullScreenEventTypes).forEach(eventName => {
-         if(document[eventName]){
-         console.log(eventName);
-         document.addEventListener(fullScreenEventTypes[eventName], fullScreenChangedCallback, false);
-         }
+            if(document[eventName]){
+                console.log(eventName);
+                document.addEventListener(fullScreenEventTypes[eventName], fullScreenChangedCallback, false);
+            }
          });
          */
     };
@@ -100,33 +100,34 @@ const FullScreenButton = function($container, api){
     let requestFullScreen = function () {
         let promise = "";
         let rootElement =  $root.get();
-        let videoElement = $root.find("video") ? $root.find("video").get() : rootElement;
-
-        if(isIos && videoElement.length > 1){
-            //IOS ad makes two video elements. one is original video other is ad.
-            if(OvenPlayer.getPlayerByIndex(0).getState() === STATE_AD_LOADED || OvenPlayer.getPlayerByIndex(0).getState() === STATE_AD_PLAYING || OvenPlayer.getPlayerByIndex(0).getState() === STATE_AD_PAUSED){
-                if (videoElement[1].webkitEnterFullScreen){
-                    promise = videoElement[1].webkitEnterFullScreen();
+        let videoElements = $root.find("video") ? $root.find("video").get() : rootElement;
+        let videoElement, adVideoElement = null;
+        if(isIos){
+            //IOS ad makes two video elements. one is original video other is ad. i need kick ass to ios.
+            if(videoElements.length > 1){
+                for(let i = 0; i < videoElements.length; i ++){
+                    let videoTitle = videoElements[i].getAttribute("title");
+                    if(videoTitle && videoTitle === "Advertisement"){
+                        adVideoElement = videoElements[i];
+                    }else{
+                        videoElement = videoElements[i];
+                    }
+                }
+            }else{
+                videoElement = videoElements;
+            }
+            if(adVideoElement && api.getState() === STATE_AD_LOADED || api.getState() === STATE_AD_PLAYING || api.getState() === STATE_AD_PAUSED){
+                if (adVideoElement.webkitEnterFullScreen){
+                    promise = adVideoElement.webkitEnterFullScreen();
                     isFullScreen = true;
                 }
             }else{
-                if (videoElement[0].webkitEnterFullScreen){
-                    promise = videoElement[0].webkitEnterFullScreen();
+                if (videoElement.webkitEnterFullScreen){
+                    promise = videoElement.webkitEnterFullScreen();
                     isFullScreen = true;
                 }
             }
         }else{
-
-            //ToDo : Why occured this error?
-            //TypeError: Failed to execute 'requestFullscreen' on 'Element': Illegal invocation
-            /*
-            let sumOfRequestFullscreen = rootElement.requestFullscreen || rootElement.webkitRequestFullScreen ||
-                rootElement.mozRequestFullScreen || rootElement.msRequestFullscreen || videoElement.webkitEnterFullScreen;
-            if(sumOfRequestFullscreen){
-                promise = sumOfRequestFullscreen();
-            }
-            */
-
             if (rootElement.requestFullscreen) {
                 promise = rootElement.requestFullscreen();
             } else if (rootElement.webkitRequestFullScreen) {
@@ -135,20 +136,26 @@ const FullScreenButton = function($container, api){
                 promise = rootElement.mozRequestFullScreen();
             } else if (rootElement.msRequestFullscreen) {
                 promise = rootElement.msRequestFullscreen();
-            }  else if (videoElement.webkitEnterFullScreen){
-                promise = videoElement.webkitEnterFullScreen();
-            } else if (videoElement.length > 1 && videoElement[0].webkitEnterFullScreen){
-                promise = videoElement[0].webkitEnterFullScreen();
-            } else {
+            }else {
                 // TODO(rock): warn not supported
             }
+
+            //ToDo : Why occured this error?
+            //TypeError: Failed to execute 'requestFullscreen' on 'Element': Illegal invocation
+            /*
+             let sumOfRequestFullscreen = rootElement.requestFullscreen || rootElement.webkitRequestFullScreen ||
+             rootElement.mozRequestFullScreen || rootElement.msRequestFullscreen || videoElement.webkitEnterFullScreen;
+             if(sumOfRequestFullscreen){
+             promise = sumOfRequestFullscreen();
+             }
+             */
         }
 
         if(promise){
             promise.then(function(){
                 isForceMode = false;
             }).catch(function(error){
-
+                console.log(error);
                 //This means to look like for fullscreen.
                 isForceMode = true;
                 forcedFakeFullscreenToggle();
@@ -181,7 +188,8 @@ const FullScreenButton = function($container, api){
         }
     }
     let toggleFullScreen = function () {
-        if (!isFullScreen) {
+
+        if (!isFullScreen || (isIos && !checkFullScreen())) {
             requestFullScreen();
         } else {
             if(isForceMode){
@@ -197,19 +205,42 @@ const FullScreenButton = function($container, api){
         $iconCompress = $current.find(".ovp-fullscreen-button-compressicon");
 
         fullscreenChagedEventName = findFullScreenChangedEventName();
+        if(fullscreenChagedEventName){
+            document.addEventListener(fullscreenChagedEventName, fullScreenChangedCallback, false);
+        }
 
         api.on(AD_CHANGED, function(ad){
             //force close for ios midroll
-            if(ad.isLinear && isIos && isFullScreen && $root.find("video").get()[0] && $root.find("video").get()[0].webkitExitFullscreen){
-                $root.find("video").get()[0].webkitExitFullscreen();
-                isFullScreen = false;
+            let videoElements = $root.find("video") ? $root.find("video").get() : rootElement;
+            let videoElement, adVideoElement = null;
+
+            if(ad.isLinear && isIos && isFullScreen ){
+                if(videoElements.length > 1){
+                    for(let i = 0; i < videoElements.length; i ++){
+                        let videoTitle = videoElements[i].getAttribute("title");
+                        if(videoTitle && videoTitle === "Advertisement"){
+                            adVideoElement = videoElements[i];
+                        }else{
+                            videoElement = videoElements[i];
+                        }
+                    }
+                }else{
+                    videoElement = videoElements;
+                }
+                if(videoElement && videoElement.webkitExitFullscreen){
+                    videoElement.webkitExitFullscreen();
+                    isFullScreen = false;
+                }
             }
         }, template);
 
-        document.addEventListener(fullscreenChagedEventName, fullScreenChangedCallback, false);
+
     };
     const onDestroyed = function(template){
-        document.removeEventListener(fullscreenChagedEventName, fullScreenChangedCallback);
+        if(fullscreenChagedEventName){
+            document.removeEventListener(fullscreenChagedEventName, fullScreenChangedCallback);
+        }
+
         api.off(AD_CHANGED, null, template);
     };
     const events = {
@@ -217,6 +248,7 @@ const FullScreenButton = function($container, api){
             event.preventDefault();
                 api.trigger(PLAYER_FULLSCREEN_REQUEST, null);
                 toggleFullScreen();
+
         }
     };
 

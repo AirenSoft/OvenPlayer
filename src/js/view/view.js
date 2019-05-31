@@ -11,6 +11,7 @@ import {
     READY,
     DESTROY,
     PLAYER_RESIZED,
+    PLAYER_PLAY,
     STATE_IDLE,
     STATE_AD_PLAYING,
     STATE_PLAYING,
@@ -35,7 +36,6 @@ const View = function($container){
     let currentPlayerSize = "";
 
     let setHide = function (hide, autoHide) {
-
         if (autoHideTimer) {
             clearTimeout(autoHideTimer);
             autoHideTimer = null;

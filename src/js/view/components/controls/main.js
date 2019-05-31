@@ -14,7 +14,7 @@ import FullScreenButton from "view/components/controls/fullScreenButton";
 
 import {
     READY,
-    CONTENT_META, CONTENT_LEVEL_CHANGED, CONTENT_TIME_MODE_CHANGED, CONTENT_TIME,
+    CONTENT_META, CONTENT_LEVEL_CHANGED, CONTENT_TIME_MODE_CHANGED, CONTENT_TIME, PLAYER_PLAY,
     STATE_AD_LOADED,
     AD_CHANGED,
     STATE_AD_PLAYING,
@@ -34,7 +34,9 @@ const Controls = function($container, api){
     const $root = LA$("#"+api.getContainerId());
     let lastContentMeta = {};
 
-    hasPlaylist = api.getPlaylist().length > 1 ? true : false;
+    let hidePlaylistIcon = api.getConfig().hidePlaylistIcon;
+    hasPlaylist = api.getPlaylist().length > 1 ? (!hidePlaylistIcon ? true : false) : false;
+    console.log(hasPlaylist);
     let playlistPanel = "";
     let setPanelMaxHeight = function(){
         if($root.find(".ovp-setting-panel")){
@@ -71,10 +73,26 @@ const Controls = function($container, api){
             settingButton = SettingButton($current.find(".setting"), api);
         };
 
+        let initFullscreenButton = function(){
+            if(fullScreenButton){
+                fullScreenButton.destroy();
+            }
+            fullScreenButton = FullScreenButton($current.find(".fullscreen"), api);
+        };
+
         playButton = PlayButton($current.find(".ovp-left-controls"), api);
         volumeButton = VolumeButton($current.find(".ovp-left-controls"), api);
-        fullScreenButton = FullScreenButton($current.find(".fullscreen"), api);
-        initSettingButton();
+
+        initFullscreenButton();
+
+        let playlist = api.getPlaylist();
+        let currentPlaylistIndex = api.getCurrentPlaylist();
+
+        if(playlist && playlist[currentPlaylistIndex].adTagUrl){
+
+        }else{
+            initSettingButton();
+        }
 
         let initControlUI = function(metadata){
             initTimeDisplay(metadata);
@@ -133,7 +151,9 @@ const Controls = function($container, api){
             webrtc_is_p2p_mode = isP2P;
         }, template);
 
-
+        api.on(PLAYER_PLAY, function(){
+            $current.css("display", "block");
+        }, template);
 
         api.on(AD_CHANGED, function(ad){
 

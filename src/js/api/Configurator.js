@@ -25,7 +25,8 @@ const Configurator = function(options, provider){
             autoStart : false,
             timecode : true,
             sourceLabel : "",
-            browser : ""
+            browser : "",
+            hidePlaylistIcon : false
         };
         const serialize = function (val) {
             if (val === undefined) {
