@@ -155,7 +155,6 @@ const FullScreenButton = function($container, api){
             promise.then(function(){
                 isForceMode = false;
             }).catch(function(error){
-                console.log(error);
                 //This means to look like for fullscreen.
                 isForceMode = true;
                 forcedFakeFullscreenToggle();

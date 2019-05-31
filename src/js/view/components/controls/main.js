@@ -36,7 +36,7 @@ const Controls = function($container, api){
 
     let hidePlaylistIcon = api.getConfig().hidePlaylistIcon;
     hasPlaylist = api.getPlaylist().length > 1 ? (!hidePlaylistIcon ? true : false) : false;
-    console.log(hasPlaylist);
+
     let playlistPanel = "";
     let setPanelMaxHeight = function(){
         if($root.find(".ovp-setting-panel")){
