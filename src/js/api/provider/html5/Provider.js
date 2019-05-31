@@ -243,6 +243,7 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
             return false;
         }
         isPlayingProcess = true;
+        console.log("Request Provider play()! ");
         if(that.getState() !== STATE_PLAYING){
             if (  (ads && ads.isActive()) || (ads && !ads.started()) ) {
                 ads.play().then(_ => {
@@ -269,10 +270,12 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
                     setTimeout(function(){
                         let promise = elVideo.play();
                         if (promise !== undefined) {
-                            promise.then(_ => {
-                                // started!
+                            promise.then(function(){
                                 isPlayingProcess = false;
                             }).catch(error => {
+                                if(playerConfig.getBrowser().os  === "iOS" || playerConfig.getBrowser().os  === "Android"){
+                                    elVideo.muted = true;
+                                }
                                 //Can't play because User doesn't any interactions.
                                 //Wait for User Interactions. (like click)
                                 setTimeout(function () {
@@ -287,10 +290,12 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
                 }else{
                     let promise = elVideo.play();
                     if (promise !== undefined) {
-                        promise.then(_ => {
-                            // started!
+                        promise.then(function(){
                             isPlayingProcess = false;
                         }).catch(error => {
+                            if(playerConfig.getBrowser().os  === "iOS" || playerConfig.getBrowser().os  === "Android"){
+                                elVideo.muted = true;
+                            }
                             //Can't play because User doesn't any interactions.
                             //Wait for User Interactions. (like click)
                             setTimeout(function () {

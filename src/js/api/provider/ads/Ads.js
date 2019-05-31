@@ -151,34 +151,37 @@ const Ads = function(elVideo, provider, playerConfig, adTagUrl){
                 initRequest();
 
             }).catch(function(){
-                elVideo.pause();
-                autoplayAllowed = false;
-                autoplayRequiresMuted = false;
-                spec.checkAutoplayStart = false;
-                initRequest();
-
-
-                /*
-                //check muted auto start.
-                //I don't need for this version.
-                elVideo.muted = true;
-                var playPromise = elVideo.play();
-                if (playPromise !== undefined) {
-                    playPromise.then(function () {
-                        // If we make it here, muted autoplay works but unmuted autoplay does not.
-                        elVideo.pause();
-                        autoplayAllowed = true;
-                        autoplayRequiresMuted = true;
-                        initRequest();
-                    }).catch(function () {
-                        // Both muted and unmuted autoplay failed. Fall back to click to play.
-                        elVideo.muted = false;
-                        autoplayAllowed = false;
-                        autoplayRequiresMuted = false;
-                        initRequest();
-                    });
-                }*/
-
+                if(playerConfig.getBrowser().os  === "iOS" || playerConfig.getBrowser().os  === "Android"){
+                    /*
+                     //check muted auto start.
+                     //I don't need for this version.
+                     */
+                    elVideo.muted = true;
+                    var playPromise = elVideo.play();
+                    if (playPromise !== undefined) {
+                        playPromise.then(function () {
+                            // If we make it here, muted autoplay works but unmuted autoplay does not.
+                            elVideo.pause();
+                            autoplayAllowed = true;
+                            autoplayRequiresMuted = true;
+                            spec.checkAutoplayStart = false;
+                            initRequest();
+                        }).catch(function () {
+                            // Both muted and unmuted autoplay failed. Fall back to click to play.
+                            elVideo.muted = false;
+                            autoplayAllowed = false;
+                            autoplayRequiresMuted = false;
+                            spec.checkAutoplayStart = false;
+                            initRequest();
+                        });
+                    }
+                }else{
+                    elVideo.pause();
+                    autoplayAllowed = false;
+                    autoplayRequiresMuted = false;
+                    spec.checkAutoplayStart = false;
+                    initRequest();
+                }
             });
         }else{
             //Maybe this is IE11....
@@ -205,9 +208,9 @@ const Ads = function(elVideo, provider, playerConfig, adTagUrl){
             return new Promise(function (resolve, reject) {
                try{
                    adsManager.resume();
-                   return resolve();
+                   resolve();
                } catch (error){
-                   return reject(error);
+                   reject(error);
                }
             });
 
@@ -220,7 +223,7 @@ const Ads = function(elVideo, provider, playerConfig, adTagUrl){
                         if((playerConfig.isAutoStart() && !autoplayAllowed) ){
                             autoplayAllowed = true;
                             spec.started = false;
-                            return reject(new Error(AUTOPLAY_NOT_ALLOWED));
+                            reject(new Error(AUTOPLAY_NOT_ALLOWED));
                         }else{
                             //Don't playing video when player complete playing AD.
                             //Only iOS Safari First loaded.
@@ -231,13 +234,13 @@ const Ads = function(elVideo, provider, playerConfig, adTagUrl){
                             adsManager.init("100%", "100%", google.ima.ViewMode.NORMAL);
                             adsManager.start();
                             spec.started = true;
-                            return resolve();
+                            resolve();
                         }
                     }else{
                         if(retryCount < 300){
                             setTimeout(checkAdsManagerIsReady, 100);
                         }else{
-                            return reject(new Error(ADMANGER_LOADING_ERROR));
+                            reject(new Error(ADMANGER_LOADING_ERROR));
                         }
                     }
 
