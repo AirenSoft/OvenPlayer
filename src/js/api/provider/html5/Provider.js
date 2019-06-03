@@ -58,7 +58,7 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
             const sourceChanged = (sourceElement.src !== previousSource);
             if (sourceChanged) {
 
-                elVideo.src = spec.sources[spec.currentSource].file;
+                elVideo.src = source.file;
 
                 //Don't use this. https://stackoverflow.com/questions/30637784/detect-an-error-on-html5-video
                 //elVideo.append(sourceElement);
@@ -246,6 +246,7 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
         if(!elVideo){
             return false;
         }
+        console.log(isPlayingProcess);
         if(isPlayingProcess){
             return false;
         }
@@ -302,6 +303,7 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
                             if(playerConfig.getBrowser().browser  === "Safari" || playerConfig.getBrowser().os  === "iOS" || playerConfig.getBrowser().os  === "Android"){
                                 elVideo.muted = true;
                             }
+                            console.log(error);
                             //Can't play because User doesn't any interactions.
                             //Wait for User Interactions. (like click)
                             setTimeout(function () {
@@ -383,11 +385,12 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
                 });
                 playerConfig.setSourceLabel(spec.sources[sourceIndex].label);
                 //spec.currentQuality = sourceIndex;
+                that.pause();
+                that.setState(STATE_IDLE);
                 if(needProviderChange){
                     _load(elVideo.currentTime || 0);
                 }
-                //that.pause();
-                that.setState(STATE_IDLE);
+                //
                 return spec.currentSource;
             }
         }
