@@ -250,7 +250,6 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
             return false;
         }
         isPlayingProcess = true;
-        console.log("Request Provider play()! ", ads);
         if(that.getState() !== STATE_PLAYING){
             if (  (ads && ads.isActive()) || (ads && !ads.started()) ) {
                 ads.play().then(_ => {
