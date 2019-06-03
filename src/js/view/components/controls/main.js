@@ -88,7 +88,7 @@ const Controls = function($container, api){
         let playlist = api.getPlaylist();
         let currentPlaylistIndex = api.getCurrentPlaylist();
 
-        if(playlist && playlist[currentPlaylistIndex].adTagUrl){
+        if(playlist && playlist[currentPlaylistIndex] && playlist[currentPlaylistIndex].adTagUrl){
 
         }else{
             initSettingButton();

@@ -33,6 +33,9 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
 
     if(spec.adTagUrl){
         ads = Ads(elVideo, that, playerConfig, spec.adTagUrl);
+        if(!ads){
+            console.log("Can not load due to google ima for Ads.");
+        }
     }
     listener = EventsListener(elVideo, spec.mse, that, ads ? ads.videoEndedCallback : null);
     elVideo.playbackRate = elVideo.defaultPlaybackRate = playerConfig.getPlaybackRate();
@@ -54,8 +57,12 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
             sourceElement.src = source.file;
             const sourceChanged = (sourceElement.src !== previousSource);
             if (sourceChanged) {
-                //elVideo.src = spec.sources[spec.currentSource].file;
-                elVideo.append(sourceElement);
+
+                elVideo.src = spec.sources[spec.currentSource].file;
+
+                //Don't use this. https://stackoverflow.com/questions/30637784/detect-an-error-on-html5-video
+                //elVideo.append(sourceElement);
+
                 // Do not call load if src was not set. load() will cancel any active play promise.
                 if (previousSource) {
                     elVideo.load();
@@ -243,7 +250,7 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
             return false;
         }
         isPlayingProcess = true;
-        console.log("Request Provider play()! ");
+        console.log("Request Provider play()! ", ads);
         if(that.getState() !== STATE_PLAYING){
             if (  (ads && ads.isActive()) || (ads && !ads.started()) ) {
                 ads.play().then(_ => {
@@ -273,7 +280,7 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
                             promise.then(function(){
                                 isPlayingProcess = false;
                             }).catch(error => {
-                                if(playerConfig.getBrowser().os  === "iOS" || playerConfig.getBrowser().os  === "Android"){
+                                if(playerConfig.getBrowser().browser  === "Safari" || playerConfig.getBrowser().os  === "iOS" || playerConfig.getBrowser().os  === "Android"){
                                     elVideo.muted = true;
                                 }
                                 //Can't play because User doesn't any interactions.
@@ -293,7 +300,7 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
                         promise.then(function(){
                             isPlayingProcess = false;
                         }).catch(error => {
-                            if(playerConfig.getBrowser().os  === "iOS" || playerConfig.getBrowser().os  === "Android"){
+                            if(playerConfig.getBrowser().browser  === "Safari" || playerConfig.getBrowser().os  === "iOS" || playerConfig.getBrowser().os  === "Android"){
                                 elVideo.muted = true;
                             }
                             //Can't play because User doesn't any interactions.

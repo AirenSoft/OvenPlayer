@@ -36,6 +36,9 @@ const Provider = function(spec, playerConfig){
 
     if(spec.adTagUrl){
         ads = Ads(elFlash, that, playerConfig, spec.adTagUrl);
+        if(!ads){
+            console.log("Can not load due to google ima for Ads.");
+        }
     }
     listener = EventsListener(elFlash, that, ads ? ads.videoEndedCallback : null);
 
