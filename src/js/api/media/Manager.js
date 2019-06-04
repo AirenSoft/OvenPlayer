@@ -31,9 +31,9 @@ const Manager = function(container, browserInfo){
 
         return videoElement;
     };
-    const createFlashVideo = function(isLoop){
+    const createFlashVideo = function(isLoop, bufferTime, bufferTimeMax){
         let movie, flashvars, allowscriptaccess, allowfullscreen, quality, name, menu, qual, bgcolor, loop, wmode ;
-        let message = "";
+        OvenPlayerConsole.log("MediaManager Flash buffer setting : ", bufferTime, bufferTimeMax);
         movie = document.createElement('param');
         movie.setAttribute('name', 'movie');
         movie.setAttribute('value', SWFPath);
@@ -41,7 +41,7 @@ const Manager = function(container, browserInfo){
         flashvars = document.createElement('param');
         flashvars.setAttribute('name', 'flashvars');
         //playerId is to use SWF for ExternalInterface.call().
-        flashvars.setAttribute('value', 'playerId='+rootId);
+        flashvars.setAttribute('value', `playerId=${rootId}&bufferTime=${bufferTime}&bufferMaxTime=${bufferTimeMax}`);
 
         allowscriptaccess = document.createElement('param');
         allowscriptaccess.setAttribute('name', 'allowscriptaccess');
@@ -71,9 +71,9 @@ const Manager = function(container, browserInfo){
         bgcolor.setAttribute('name', 'bgcolor');
         bgcolor.setAttribute('value', '#000000');
 
-        bgcolor = document.createElement('param');
-        bgcolor.setAttribute('name', 'wmode');
-        bgcolor.setAttribute('value', 'transparent');
+        wmode = document.createElement('param');
+        wmode.setAttribute('name', 'wmode');
+        wmode.setAttribute('value', 'opaque');
 
         /*let allowButton = `<a href="http://www.adobe.com/go/getflashplayer"><img src="http://www.adobe.com/images/shared/download_buttons/get_flash_player.gif" alt="Get Adobe Flash player"></a>`;
         message = document.createElement("div");
@@ -91,7 +91,7 @@ const Manager = function(container, browserInfo){
         videoElement.setAttribute('width', '100%');
         videoElement.setAttribute('height', '100%');
         videoElement.setAttribute('scale', 'default');
-        videoElement.setAttribute('wmode', 'transparent');
+        videoElement.setAttribute('wmode', 'opaque');
 
         if(browserInfo.browser === "Microsoft Internet Explorer" && browserInfo.browserMajorVersion <= 9 ){
             videoElement.setAttribute('classid', 'clsid:D27CDB6E-AE6D-11cf-96B8-444553540000');
@@ -104,6 +104,7 @@ const Manager = function(container, browserInfo){
             videoElement.appendChild(loop);
         }
 
+        videoElement.appendChild(wmode);
         videoElement.appendChild(bgcolor);
         videoElement.appendChild(qual);
         videoElement.appendChild(allowfullscreen);
@@ -116,12 +117,13 @@ const Manager = function(container, browserInfo){
         return videoElement;
     };
 
-    that.createMedia = (providerName , isLoop)  => {
+    that.createMedia = (providerName , playerConfig)  => {
         if(videoElement){
             that.empty();
         }
 
-        return providerName === PROVIDER_RTMP ? createFlashVideo(isLoop) : createHtmlVideo(isLoop);
+        return providerName === PROVIDER_RTMP ? createFlashVideo(playerConfig.isLoop(), playerConfig.getRtmpBufferTime(), playerConfig.getRtmpBufferTimeMax())
+            : createHtmlVideo(playerConfig.isLoop());
     }
 
     that.createAdContainer = () => {

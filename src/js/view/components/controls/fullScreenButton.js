@@ -210,7 +210,7 @@ const FullScreenButton = function($container, api){
 
         api.on(AD_CHANGED, function(ad){
             //force close for ios midroll
-            let videoElements = $root.find("video") ? $root.find("video").get() : rootElement;
+            let videoElements = $root.find("video") ? $root.find("video").get() : $root.get();
             let videoElement, adVideoElement = null;
 
             if(ad.isLinear && isIos && isFullScreen ){

@@ -119,13 +119,15 @@ const Controls = function($container, api){
 
         api.on(CONTENT_META, function(data){
             initialDuration = data.duration;
-
             lastContentMeta = data;
             data.isP2P = webrtc_is_p2p_mode;
 
             initControlUI(data);
         }, template);
 
+
+        /*
+        * I think do not nessessary this code anymore. Because muted play solves everything. 2019-06-04
         api.on(CONTENT_TIME, function(metadata_for_when_after_playing){
 
             //Android HLS native doesn't give duration on CONTENT_META. why?
@@ -133,6 +135,7 @@ const Controls = function($container, api){
 
             //RTMP too.
             if( isAndroid || (api && api.getProviderName && api.getProviderName() === "rtmp") ){
+                console.log("metadata_for_when_after_playing", metadata_for_when_after_playing.duration);
                 if(!initialDuration || (initialDuration && (initialDuration !== metadata_for_when_after_playing.duration))){
                     lastContentMeta = metadata_for_when_after_playing;
                     initControlUI(metadata_for_when_after_playing);
@@ -140,7 +143,7 @@ const Controls = function($container, api){
             }
 
         }, template);
-
+        */
 
 
         api.on("resize", function(size){

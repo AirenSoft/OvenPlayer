@@ -231,11 +231,13 @@ const Ads = function(elVideo, provider, playerConfig, adTagUrl, errorCallback){
                                 spec.started = false;
                                 reject(new Error(AUTOPLAY_NOT_ALLOWED));
                             }else{
-                                //Don't playing video when player complete playing AD.
-                                //Only iOS Safari First loaded.
-                                if(playerConfig.getBrowser().os  === "iOS" || playerConfig.getBrowser().os  === "Android"){
+                                //I think do not nessessary this code anymore. Because muted play solves everything. 2019-06-04
+                                /*if(playerConfig.getBrowser().os  === "iOS" || playerConfig.getBrowser().os  === "Android"){
+                                 //Don't playing video when player complete playing AD.
+                                 //Only iOS Safari First loaded.
                                     elVideo.load();
-                                }
+                                }*/
+
                                 adDisplayContainer.initialize();
                                 adsManager.init("100%", "100%", google.ima.ViewMode.NORMAL);
                                 adsManager.start();

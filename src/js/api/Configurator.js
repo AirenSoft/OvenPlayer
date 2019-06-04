@@ -26,7 +26,9 @@ const Configurator = function(options, provider){
             timecode : true,
             sourceLabel : "",
             browser : "",
-            hidePlaylistIcon : false
+            hidePlaylistIcon : false,
+            rtmpBufferTime : 1,
+            rtmpBufferTimeMax : 3,
         };
         const serialize = function (val) {
             if (val === undefined) {
@@ -68,6 +70,9 @@ const Configurator = function(options, provider){
         playbackRates.sort();
 
         config.playbackRates = playbackRates;
+
+        config.rtmpBufferTime = config.rtmpBufferTime > 10 ? 10 : config.rtmpBufferTime;
+        config.rtmpBufferTimeMax = config.rtmpBufferTimeMax > 50 ? 50 : config.rtmpBufferTimeMax;
 
 
         if (config.playbackRates.indexOf(config.playbackRate) < 0) {
@@ -145,6 +150,12 @@ const Configurator = function(options, provider){
     };
     that.isTimecodeMode = () => {
         return spec.timecode;
+    };
+    that.getRtmpBufferTime = () => {
+        return spec.rtmpBufferTime;
+    };
+    that.getRtmpBufferTimeMax = () => {
+        return spec.rtmpBufferTimeMax;
     };
 
     that.isMute = () =>{

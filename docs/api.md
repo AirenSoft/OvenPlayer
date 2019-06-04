@@ -11,6 +11,8 @@ player = OvenPlayer.create("player", {
     mute : false,
     volume : 100,
     controls : true,
+    rtmpBufferTime : 1, 
+    rtmpBufferTimeMax : 3,
     title : "Hi. This is ovenplayer.",
     image : "https://path.to/your_video_thumbnail.jpeg",
     
@@ -259,6 +261,23 @@ Enter the URLs of the various caption types to display.
     }
 ] 
 ```
+
+#### rtmpBufferTime 
+type|default
+------|------
+Number| 1
+
+Specifies how long to buffer messages before starting to display the stream.
+(*optional when using rtmp protocol.)
+
+#### rtmpBufferTimeMax 
+type|default
+------|------
+Number| 3
+
+Specifies a maximum buffer length for live streaming content, in seconds.
+(*optional when using rtmp protocol.)
+
 
 ## Static Methods
 

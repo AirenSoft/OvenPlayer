@@ -47,22 +47,27 @@ const Provider = function(spec, playerConfig){
         OvenPlayerConsole.log("source loaded : ", source, "lastPlayPosition : "+ lastPlayPosition);
         const previousSource = elFlash.getCurrentSource();
         const sourceChanged = (source.file !== previousSource);
-
         if (sourceChanged) {
             elFlash.load(source.file);
         }else if(lastPlayPosition === 0 && that.getPosition() > 0){
             that.seek(lastPlayPosition);
         }
-        if(lastPlayPosition > 0){
 
-            that.seek(lastPlayPosition);
+    };
+    //Flash has two init states. FlashLoaded and FileLoaded.
+    //_load calls after FlashLoaded. _afterLoad calls after FileLoaded.
+    const _afterLoad = function(lastPlayPosition){
+        if(lastPlayPosition > 0){
             if(!playerConfig.isAutoStart()){
                 that.play();
             }
+            that.seek(lastPlayPosition);
         }
         if(playerConfig.isAutoStart()){
+
             that.play();
         }
+
     };
 
     //This is why. Flash does not self trig to ads,lmalm,
@@ -187,7 +192,7 @@ const Provider = function(spec, playerConfig){
                     return (function checkFileLoaded(){
                         retryCount ++;
                         if(elFlash.isFileLoaded && elFlash.isFileLoaded()){
-
+                            _afterLoad(lastPlayPosition);
                             if(playerConfig.isMute()){
                                 that.setMute(true);
                             }
@@ -220,7 +225,8 @@ const Provider = function(spec, playerConfig){
     that.load = (sources) =>{
         spec.sources = sources;
         spec.currentSource = pickCurrentSource(sources, spec.currentSource, playerConfig);
-        _load(spec.sources_.starttime || 0);
+        _load(0);   //spec.sources_.starttime ||
+        _afterLoad(0);
     };
 
     that.play = () =>{
@@ -280,7 +286,7 @@ const Provider = function(spec, playerConfig){
 
         if(sourceIndex > -1){
             if(spec.sources && spec.sources.length > sourceIndex){
-                //that.pause();
+                that.pause();
                 that.setState(STATE_IDLE);
                 OvenPlayerConsole.log("source changed : " + sourceIndex);
                 spec.currentSource = sourceIndex;
@@ -291,8 +297,24 @@ const Provider = function(spec, playerConfig){
 
                 playerConfig.setSourceLabel(spec.sources[sourceIndex].label);
                 if(needProviderChange){
+                    let lastPlayPosition = elFlash.getCurrentTime()|| 0;
+                    let retryCount = 0;
+                    _load(lastPlayPosition);
 
-                    _load(elFlash.getCurrentTime() || 0);
+                    (function checkFileLoaded(){
+                        retryCount ++;
+                        if(elFlash.isFileLoaded && elFlash.isFileLoaded()){
+                            _afterLoad(lastPlayPosition);
+                        }else{
+
+                            if(retryCount < 300){
+                                setTimeout(checkFileLoaded, 100);
+                            }else{
+                                console.log("FileLoad Faiul");
+                            }
+                        }
+                    })();
+
                 }
                 return spec.currentSource;
             }
@@ -343,8 +365,14 @@ const Provider = function(spec, playerConfig){
 
     that.destroy = () =>{
         OvenPlayerConsole.log("CORE : destroy() player stop, listener, event destroied");
+        that.stop();
 
-        elFlash.remove();
+        /*try{
+            elFlash.remove();
+        }catch(error){
+            console.log(error);
+        }*/
+
 
         if(ads){
             ads.destroy();

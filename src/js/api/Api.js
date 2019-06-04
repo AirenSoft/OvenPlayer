@@ -95,7 +95,7 @@ const Api = function(container){
 
             //Init Provider.
             currentProvider =  Providers[currentSourceIndex].provider(
-                mediaManager.createMedia(providerName, playerConfig.isLoop()),
+                mediaManager.createMedia(providerName, playerConfig),
                 playerConfig,
                 playlistManager.getCurrentAdTag()
             );

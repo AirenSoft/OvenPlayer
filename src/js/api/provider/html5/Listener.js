@@ -166,11 +166,14 @@ const Listener = function(element, mse, provider, videoEndedCallback){
 
     lowLevelEvents.timeupdate = () => {
         //Fires when the current playback position has changed
-        const position = elVideo.currentTime;
-        const duration = elVideo.duration;
+        let position = elVideo.currentTime;
+        let duration = elVideo.duration;
         if (isNaN(duration)) {
             return;
         }
+        /*if(duration > 9000000000000000){    //9007199254740991
+            duration = Infinity;
+        }*/
 
         if(!provider.isSeeking() && !elVideo.paused && (provider.getState() === STATE_STALLED || provider.getState() === STATE_LOADING || provider.getState() === STATE_AD_PLAYING) &&
             !compareStalledTime(stalled, position) ){
