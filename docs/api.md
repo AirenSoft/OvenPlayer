@@ -13,11 +13,13 @@ player = OvenPlayer.create("player", {
     controls : true,
     title : "Hi. This is ovenplayer.",
     image : "https://path.to/your_video_thumbnail.jpeg",
+    
     playlist : [
         {
                 title : "01. I drive slow.",
                 image : "https://path.to/your_video_thumbnail.jpeg",
                 duration : 7343,
+                hidePlaylistIcon : true,
                 sources: [{
                         type : "mpd", 
                         file :  "https://path.to/your_video.mpd", 
@@ -224,6 +226,13 @@ Enter the URLs of the diverse sources to play.
                 }
  ]
 ```
+
+#### hidePlaylistIcon 
+type|default
+------|------
+boolean|false
+
+Sets whether to show or hide the playlist button when playlist initialized.
 
 #### tracks 
 type|default
