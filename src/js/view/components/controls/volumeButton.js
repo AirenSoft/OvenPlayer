@@ -75,9 +75,9 @@ const VolumeButton = function($container, api){
         $sliderHandle = $current.find(".ovp-volume-slider-handle");
         $sliderValue = $current.find(".ovp-volume-slider-value");
 
-        $volumeIconBig = $current.find( ".ovp-volume-button-bigicon");
-        $volumeIconSmall = $current.find(".ovp-volume-button-smallicon");
-        $volumeIconMute = $current.find(".ovp-volume-button-muteicon");
+        $volumeIconBig = $current.find( ".volume-max");
+        $volumeIconSmall = $current.find(".volume-small");
+        $volumeIconMute = $current.find(".volume-mute");
 
         //sliderWidth = $sliderContainer.width();
         handleWidth = $sliderHandle.width();

@@ -3,11 +3,11 @@
  */
 export default () => {
     return (
-        `<div class="ovp-volume-controller">`+
+        `<div class="ovp-navigators ovp-volume-controller">`+
             `<button class="ovp-button ovp-volume-button">` +
-                `<i class="ovp-volume-button-bigicon"></i>` +
-                `<i class="ovp-volume-button-smallicon"></i>` +
-                `<i class="ovp-volume-button-muteicon"></i>` +
+                `<i class="ovp-con volume-max"></i>` +
+                `<i class="ovp-con volume-small"></i>` +
+                `<i class="ovp-con volume-mute"></i>` +
             `</button>` +
             `<div class="ovp-volume-slider-container">` +
                 `<div class="ovp-volume-silder">` +

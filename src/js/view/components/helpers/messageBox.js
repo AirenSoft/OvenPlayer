@@ -9,9 +9,14 @@ import {
     STATE_PAUSED
 } from "api/constants";
 
-const MessageBox = function($container, api, message, withTimer){
+const MessageBox = function($container, api, message, withTimer, iconClass, clickCallback){
 
     let autoDestroyTimer = "";
+    let data = {
+        message : message,
+        iconClass : iconClass
+    };
+
 
     const onRendered = function($current, template){
         if(withTimer){
@@ -23,17 +28,31 @@ const MessageBox = function($container, api, message, withTimer){
     const onDestroyed = function(){
     };
     const events = {
-        "click .ovp-message-button" : function(event, $current, template){
+        "click .ovp-message-text" : function(event, $current, template){
             event.preventDefault();
 
             if(autoDestroyTimer){
                 clearTimeout(autoDestroyTimer);
             }
+            if(clickCallback){
+                clickCallback();
+            }
+            template.destroy();
+        },
+        "click .ovp-con" : function(event, $current, template){
+            event.preventDefault();
+            if(autoDestroyTimer){
+                clearTimeout(autoDestroyTimer);
+            }
+
+            if(clickCallback){
+                clickCallback();
+            }
             template.destroy();
         }
     };
 
-    return OvenTemplate($container, "MessageBox", message, events, onRendered, onDestroyed );
+    return OvenTemplate($container, "MessageBox", data, events, onRendered, onDestroyed );
 };
 
 

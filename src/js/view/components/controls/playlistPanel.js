@@ -34,8 +34,8 @@ const PlaylistPanel = function($container, api){
         pagedList = playlist.slice(page*pageSize, (page*pageSize)+pageSize);
 
         $playlistPanel.find(".ovp-playlist-body-row").removeChild();
-        $playlistPanel.find(".ovp-icon-button.btn-left").removeClass("disable");
-        $playlistPanel.find(".ovp-icon-button.btn-right").removeClass("disable");
+        $playlistPanel.find(".arrow-left").removeClass("disable");
+        $playlistPanel.find(".arrow-right").removeClass("disable");
 
         for(let i = 0; i < pagedList.length; i ++){
             let originalItemIndex = (page * pageSize) + i;
@@ -46,10 +46,10 @@ const PlaylistPanel = function($container, api){
         }
 
         if(page === 0){
-            $playlistPanel.find(".ovp-icon-button.btn-left").addClass("disable");
+            $playlistPanel.find(".arrow-left").addClass("disable");
         }
         if(page+1 === totalPageCount){
-            $playlistPanel.find(".ovp-icon-button.btn-right").addClass("disable");
+            $playlistPanel.find(".arrow-right").addClass("disable");
         }
     };
     const findCurrentPage = function(){
@@ -108,14 +108,14 @@ const PlaylistPanel = function($container, api){
             template.destroy();
 
         },
-        "click .btn-left" : function(event, $current, template){
+        "click .arrow-left" : function(event, $current, template){
             event.preventDefault();
             if( !LA$(event.target).hasClass("disable") ){
                 page--;
                 pagenate(page);
             }
         },
-        "click .btn-right" : function(event, $current, template){
+        "click .arrow-right" : function(event, $current, template){
             event.preventDefault();
             if( !LA$(event.target).hasClass("disable") ){
                 page++;

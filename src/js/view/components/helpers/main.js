@@ -21,6 +21,8 @@ import {
     STATE_AD_PAUSED,
     STATE_AD_COMPLETE,
     PLAYLIST_CHANGED,
+    PLAYER_WARNING,
+    CONTENT_MUTE,
     STATE_ERROR,
     PLAYER_STATE,
     ALL_PLAYLIST_ENDED,
@@ -30,7 +32,9 @@ import {
 
 const Helpers = function($container, api){
     let bigButton = "", messageBox = "",  captionViewer = "", spinner = "", thumbnail;
-    let hasThumbnail = api.getConfig().image || api.getConfig().title
+    let mutedMessage = null;
+    let hasThumbnail = api.getConfig().image || api.getConfig().title;
+
     const onRendered = function($current, template){
         let qualityLevelChanging = false, newQualityLevel = -1;
         let createBigButton = function(state){
@@ -39,11 +43,11 @@ const Helpers = function($container, api){
             }
             bigButton = BigButton($current, api, state);
         };
-        let createMessage = function(message, withTimer){
+        let createMessage = function(message, withTimer, iconClass, clickCallback){
             if(messageBox){
                 messageBox.destroy();
             }
-            messageBox = MessageBox($current, api, message, withTimer);
+            messageBox = MessageBox($current, api, message, withTimer, iconClass, clickCallback);
         };
         let createThumbnail = function(){
             if(thumbnail){
@@ -64,8 +68,29 @@ const Helpers = function($container, api){
             if(hasThumbnail){
                 createThumbnail();  //shows when playlist changed.
             }
-
             createBigButton(STATE_PAUSED);
+        }, template);
+
+        //So far warning muted play is all!!
+        api.on(PLAYER_WARNING, function(data) {
+            if(data.message){
+
+                if(bigButton){
+                    bigButton.destroy();
+                }
+
+                if(messageBox){
+                    messageBox.destroy();
+                }
+                mutedMessage = MessageBox($current, api, data.message, data.timer, data.iconClass, data.onClickCallback);
+
+                //When the volume is turned on by an external something.
+                api.once(CONTENT_MUTE, function(data){
+                    if(!data.mute && mutedMessage){
+                        mutedMessage.destroy();
+                    }
+                }, template);
+            }
         }, template);
 
         api.on(PLAYER_STATE, function(data){
@@ -148,6 +173,7 @@ const Helpers = function($container, api){
     const onDestroyed = function(template){
         api.off(READY, null, template);
         api.off(PLAYER_STATE, null, template);
+        api.off(PLAYER_WARNING, null, template);
         api.off(ERROR, null, template);
         api.off(NETWORK_UNSTABLED, null, template);
         api.off(ALL_PLAYLIST_ENDED, null, template);

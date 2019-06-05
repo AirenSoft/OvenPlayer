@@ -100,6 +100,7 @@
 
   object{
     width:100%; height:100%;
+    position: absolute;
   }
 
   &:before, &:after {
@@ -205,7 +206,7 @@
   position: absolute;
   height: 100%;
   width: 100%;
-  padding-bottom : 60px;
+  padding-bottom : 34px;
   top:0;
   &>div{
     position: absolute !important;
@@ -227,27 +228,25 @@
   text-align: inherit;
   overflow: hidden;
   font-weight: 100;
+  font-size : 30px;
 
   &:focus, & {
     outline: 0;
   }
-  & > i {
-    display: inline-block;
-    width: 100%;
-    height: 100%;
-    background-size: 100%;
-  }
 }
 
-.ovp-icon-button{
+i.ovp-con{
   font-family: "ovp-icons";
   font-style: normal;
   font-weight: normal;
   speak: none;
 
+  font-size: inherit;
+  width: 30px;
+  line-height: 30px;
+
   display: inline-block;
   text-decoration: inherit;
-  width: 1em;
   text-align: center;
 
   /* For safety - reset parent styles, that can break glyph codes*/
@@ -263,6 +262,23 @@
   &.disable {
     color : #4f4f4f;
   }
+  &.close-icon{&::before{content: "\e900";}}
+  &.pause-big{&::before{content: "\e911";}}
+  &.fullscreen-compress{&::before{content: "\e901";}}
+  &.fullscreen-expand{&::before{content: "\e902";}}
+  &.arrow-left{&::before{content: "\e903";}}
+  &.arrow-right{&::before{content: "\e909";}}
+  &.empty-video{&::before{content: "\e904";}}
+  &.play{&::before{content: "\e906";}}
+  &.playlist{&::before{content: "\e907";}}
+  &.replay-big{&::before{content: "\e908";}}
+  &.setting{&::before{content: "\e90A";}}
+  &.pause{&::before{content: "\e90C";}}
+  &.volume-small{&::before{content: "\e90D";}}
+  &.volume-mute{&::before{content: "\e90E";}}
+  &.volume-max{&::before{content: "\e90F";}}
+  &.play-big{&::before{content: "\e910";}}
+  &.warning{&::before{content: "\e912";}}
 }
 .ovp-badge{
   display: inline-block;
@@ -307,7 +323,7 @@
       content: '';
       clear: both;
     }
-    .btn-close{
+    .ovp-con.close-icon{
       float : right;
     }
   }
@@ -332,7 +348,6 @@
       margin-right : auto;
       margin-left : auto;
       max-width : 992px;
-
       .ovp-playlist-body-center{
         margin: 0;
         position: absolute;
@@ -400,7 +415,7 @@
               left: 50%;
               transform: translate(-50%, -50%);
               color : #fff !important;
-              font-size : 1.6em;
+              font-size : 1.6em !important;
             }
           }
           &::before {
@@ -438,28 +453,43 @@
 
   .ovp-message-container {
     position: absolute;
-    top: 40%;
+    top: 45%;
     margin-top : -35px;
     width: 100%;
     padding: 0 12px;
     text-align: center;
     color: #fff;
-    text-shadow: 0 0 2px rgba(0,0,0,.5);
+
 
     .ovp-message-text {
       display: inline-block;
-      background-color: rgba(28,28,28,.4);
-      padding: 1em 3em;
+      background-color: rgba(18,18,28,.3);
+      padding: 0.8em 1.2em;
       word-wrap: break-word;
-      max-width : 90%;
+      max-width : 80%;
+      border-radius: 4px;
+      cursor: pointer;
     }
-    .ovp-message-button{
+
+    .ovp-message-icon{
+      display: inline-block;
+      margin-top : 12px;
+      width: 100%;
+      .ovp-con{
+        cursor: pointer;
+        font-size: 80px;
+        width : 80px;
+        height : 80px;
+        line-height : 80px;
+      }
+    }
+    /*.ovp-message-button{
       display: inline-block;
       padding : 1em;
       margin-left : 0.4em;
       background-color: rgba(28,28,28,.4);
       cursor : pointer;
-    }
+    }*/
   }
 }
 
@@ -480,21 +510,9 @@
   .ovp-bigbutton {
     width: 80px;
     height: 80px;
-    display : block;
-    &.ovp-bigbutton-play {
-      background: url('../assets/images/ic-player-play-large.svg');
-      background-size: 100%;
-    }
-
-    &.ovp-bigbutton-pause {
-      background: url('../assets/images/ic-player-stop-large.svg');
-      background-size: 100%;
-    }
-
-    &.ovp-bigbutton-replay {
-      background: url('../assets/images/ic-player-re-large.svg');
-      background-size: 100%;
-    }
+    display: block;
+    font-size: 80px;
+    line-height: 80px;
   }
 }
 
@@ -666,43 +684,46 @@
     .ovp-controls {
       position: relative;
       width: 100%;
-      /*height: 50px;
-      padding: 10px 0;*/
-
       text-align: left;
       overflow: hidden;
-      //z-index: 23;
-      .ovp-button {
-        min-width: 30px;
-        height: 30px;
-        cursor: pointer;
+
+      &:after{
+        content: '';
+        clear: both;
       }
       .ovp-setting-button {
         position: relative;
         margin-right: 12px;
-        & > i{
-          background: url('../assets/images/ic-player-setting.svg');
-        }
       }
       .ovp-playlist-button {
         position: relative;
         margin-right: 12px;
-        & > i{
-          background: url('../assets/images/ic-player-playlist.svg');
-        }
+      }
+
+      .ovp-navigators{
+        float : left;
+        height: 30px;
+        line-height: 30px;
       }
       .ovp-left-controls {
         float: left;
         height: 50px;
         padding: 10px 0;
+        &:after{
+          content: '';
+          clear: both;
+        }
       }
-
       .ovp-right-controls {
         float: right;
         height: 50px;
         padding: 10px 0;
-        display: inline-flex;
+       // display: inline-flex;
         //margin : 10px 0;
+        &:after{
+          content: '';
+          clear: both;
+        }
       }
 
       /*maybe not use*/
@@ -909,27 +930,24 @@
   display: inline-block;
   position: relative;
   margin-left: 12px;
-  height: 30px;
 
+  &:after{
+    content: '';
+    clear: both;
+  }
   .ovp-volume-button {
-    .ovp-volume-button-bigicon {
-      background: url('../assets/images/ic-player-volume.svg');
-    }
-    .ovp-volume-button-smallicon {
-      background: url('../assets/images/ic-player-volume-2.svg');
-    }
-    .ovp-volume-button-muteicon {
-      background: url('../assets/images/ic-player-volume-mute.svg');
-    }
+    float : left;
   }
 
   .ovp-volume-slider-container {
-    display: inline-block;
+    /*display: inline-block;*/
+    float : left;
     visibility: hidden;
     position: relative;
     width: 0px;
     margin-right: 0;
-    height: 100%;
+    line-height: 30px;
+    height: 30px;
     cursor: pointer;
     user-select: none;
     outline: none;
@@ -1009,12 +1027,12 @@
  * */
 
 .ovp-time-display {
-  display: inline-block;
+  float : left;
   position: relative;
   margin-left: 14px;
   height: 30px;
-  white-space: nowrap;
   line-height: 30px;
+  white-space: nowrap;
   vertical-align: top;
   font-size: 14px;
   user-select: none; /*흠 이부분 어떻게 처리하지*/
@@ -1065,7 +1083,7 @@
   padding: 6px 0;
   background: rgba(28,28,28,0.9);
   text-shadow: 0 0 2px rgba(0,0,0,.5);
-  z-index: 23;
+  //z-index: 23;
   font-family: Roboto,Arial,Helvetica,sans-serif;
   font-weight : lighter;
   user-select: none;
@@ -1113,12 +1131,7 @@
 .ovp-fullscreen-button {
   position: relative;
   margin-right: 15px;
-  .ovp-fullscreen-button-expandicon {
-    background: url('../assets/images/ic-player-fullscreen-expand.svg');
-  }
-  .ovp-fullscreen-button-compressicon {
-    background: url('../assets/images/ic-player-fullscreen-compress.svg');
-  }
+  .fullscreen-compress{display:none;}
 }
 
 /**
@@ -1132,7 +1145,7 @@
   left: 50%;
   margin-left: -32px;
   margin-top: -32px;
-  z-index: 1000;
+  z-index: 30;
   display : none;
 
   .ovp-ellipsis {
@@ -1270,6 +1283,18 @@
 }
 .ovp-wrapper.ovenplayer.xsmall{
   font-size : 8px;
+  .ovp-bigbutton-container {
+    margin-top: -20px;
+    margin-left: -20px;
+
+    .ovp-bigbutton {
+      width: 40px;
+      height: 40px;
+      font-size: 40px;
+      line-height: 40px;
+    }
+  }
+
   .ovp-caption-text{
     font-size : 1.4em;
     line-height : 1.4em;
@@ -1281,6 +1306,21 @@
       flex: 0 0 100%;
       max-width: 100%;
       padding : 0 40px;
+    }
+  }
+  .ovp-message-box{
+    .ovp-message-container{
+      top : 50%;
+      font-weight : bold;
+      .ovp-message-icon{
+        margin-top: 0;
+        .ovp-con{
+          font-size: 40px;
+          width : 40px;
+          height : 40px;
+          line-height : 40px;
+        }
+      }
     }
   }
 
@@ -1305,50 +1345,15 @@
     top: 0;
     bottom : 0;
   }
-  .ovp-setting-button{
-    & > i{
-      background: url('../assets/images/small/ic-player-setting.svg');
-    }
-  }
-  .ovp-playlist-button{
-    & > i{
-      background: url('../assets/images/small/ic-player-playlist.svg');
-    }
-  }
-  .ovp-play-button{
-    .ovp-play-button-playicon {
-      background: url('../assets/images/small/ic-player-play.svg');
-    }
-    .ovp-play-button-pauseicon {
-      background: url('../assets/images/small/ic-player-stop.svg');
-    }
-  }
-  .ovp-volume-button{
-    .ovp-volume-button-bigicon {
-      background: url('../assets/images/small/ic-player-volume.svg');
-    }
-    .ovp-volume-button-smallicon {
-      background: url('../assets/images/small/ic-player-volume-2.svg');
-    }
-    .ovp-volume-button-muteicon {
-      background: url('../assets/images/small/ic-player-volume-mute.svg');
-    }
-  }
-  .ovp-fullscreen-button{
-    .ovp-fullscreen-button-expandicon {
-      background: url('../assets/images/small/ic-player-fullscreen-expand.svg');
-    }
-    .ovp-fullscreen-button-compressicon {
-      background: url('../assets/images/small/ic-player-fullscreen-compress.svg');
+
+  .ovp-button{
+    i.ovp-con{
+      width: 24px;
+      height: 24px;
+      font-size: 24px;
     }
   }
 }
-
-
-
-
-
-
 /**
  * @brief   Animation
  * */
@@ -1362,61 +1367,6 @@
     55% { opacity: 1; }
     75% { opacity: 1; }
     to { opacity: 0.3; }
-  }
-
-  @-webkit-keyframes shake {
-    from,
-    to {
-      -webkit-transform: translate3d(0, 0, 0);
-      transform: translate3d(0, 0, 0);
-    }
-
-    10%,
-    30%,
-    50%,
-    70%,
-    90% {
-      -webkit-transform: translate3d(-10px, 0, 0);
-      transform: translate3d(-10px, 0, 0);
-    }
-
-    20%,
-    40%,
-    60%,
-    80% {
-      -webkit-transform: translate3d(10px, 0, 0);
-      transform: translate3d(10px, 0, 0);
-    }
-  }
-
-  @keyframes shake {
-    from,
-    to {
-      -webkit-transform: translate3d(0, 0, 0);
-      transform: translate3d(0, 0, 0);
-    }
-
-    10%,
-    30%,
-    50%,
-    70%,
-    90% {
-      -webkit-transform: translate3d(-10px, 0, 0);
-      transform: translate3d(-10px, 0, 0);
-    }
-
-    20%,
-    40%,
-    60%,
-    80% {
-      -webkit-transform: translate3d(10px, 0, 0);
-      transform: translate3d(10px, 0, 0);
-    }
-  }
-
-  .shake {
-    -webkit-animation-name: shake;
-    animation-name: shake;
   }
 
   @-webkit-keyframes bounceIn {

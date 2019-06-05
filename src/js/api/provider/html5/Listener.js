@@ -171,9 +171,11 @@ const Listener = function(element, mse, provider, videoEndedCallback){
         if (isNaN(duration)) {
             return;
         }
-        /*if(duration > 9000000000000000){    //9007199254740991
+
+        //Sometimes dash live gave to me crazy duration. (9007199254740991...) why???
+        if(duration > 9000000000000000){    //9007199254740991
             duration = Infinity;
-        }*/
+        }
 
         if(!provider.isSeeking() && !elVideo.paused && (provider.getState() === STATE_STALLED || provider.getState() === STATE_LOADING || provider.getState() === STATE_AD_PLAYING) &&
             !compareStalledTime(stalled, position) ){

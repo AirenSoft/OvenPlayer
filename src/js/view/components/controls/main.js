@@ -69,15 +69,14 @@ const Controls = function($container, api){
             if(settingButton){
                 settingButton.destroy();
             }
-
-            settingButton = SettingButton($current.find(".setting"), api);
+            settingButton = SettingButton($current.find(".setting-holder"), api);
         };
 
         let initFullscreenButton = function(){
             if(fullScreenButton){
                 fullScreenButton.destroy();
             }
-            fullScreenButton = FullScreenButton($current.find(".fullscreen"), api);
+            fullScreenButton = FullScreenButton($current.find(".fullscreen-holder"), api);
         };
 
         playButton = PlayButton($current.find(".ovp-left-controls"), api);
@@ -88,6 +87,8 @@ const Controls = function($container, api){
         let playlist = api.getPlaylist();
         let currentPlaylistIndex = api.getCurrentPlaylist();
 
+
+        //ToDo : Sometimes ad init failed.
         if(playlist && playlist[currentPlaylistIndex] && playlist[currentPlaylistIndex].adTagUrl){
 
         }else{
@@ -128,6 +129,8 @@ const Controls = function($container, api){
 
         /*
         * I think do not nessessary this code anymore. Because muted play solves everything. 2019-06-04
+
+        */
         api.on(CONTENT_TIME, function(metadata_for_when_after_playing){
 
             //Android HLS native doesn't give duration on CONTENT_META. why?
@@ -135,7 +138,6 @@ const Controls = function($container, api){
 
             //RTMP too.
             if( isAndroid || (api && api.getProviderName && api.getProviderName() === "rtmp") ){
-                console.log("metadata_for_when_after_playing", metadata_for_when_after_playing.duration);
                 if(!initialDuration || (initialDuration && (initialDuration !== metadata_for_when_after_playing.duration))){
                     lastContentMeta = metadata_for_when_after_playing;
                     initControlUI(metadata_for_when_after_playing);
@@ -143,8 +145,6 @@ const Controls = function($container, api){
             }
 
         }, template);
-        */
-
 
         api.on("resize", function(size){
             setPanelMaxHeight();
@@ -154,7 +154,8 @@ const Controls = function($container, api){
             webrtc_is_p2p_mode = isP2P;
         }, template);
 
-        api.on(PLAYER_PLAY, function(){
+        api.on(PLAYER_PLAY, function(data){
+            console.log("PLAYER_PLAY", data);
             $current.css("display", "block");
         }, template);
 

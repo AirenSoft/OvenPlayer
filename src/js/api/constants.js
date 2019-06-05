@@ -34,6 +34,7 @@ export const ALL_PLAYLIST_ENDED = "allPlaylistEnded";
 export const NETWORK_UNSTABLED = "unstableNetwork";
 
 
+
 export const ERROR = "error";
 
 // STATE OF PLAYER
@@ -45,6 +46,7 @@ export const PLAYER_RESIZED = "resized";
 export const PLAYER_LOADING = "loading";
 export const PLAYER_FULLSCREEN_REQUEST = "fullscreenRequested";
 export const PLAYER_FULLSCREEN_CHANGED = "fullscreenChanged";
+export const PLAYER_WARNING = "warning";
 
 export const AD_CHANGED = "adChanged";
 export const AD_TIME = "adTime";
@@ -80,6 +82,7 @@ export const PLAYER_WEBRTC_CREATE_ANSWER_ERROR = 504;
 export const PLAYER_WEBRTC_SET_LOCAL_DESC_ERROR = 505;
 export const PLAYER_WEBRTC_NETWORK_SLOW = 510;
 
+export const WARN_MSG_MUTEDPLAY = "Please touch here to turn on the sound.";
 
 export const ERRORS = {
     100 : {code : 100 , message : "Can not load due to unknown reasons.", reason :"Can not load due to unknown reasons."},
@@ -99,4 +102,8 @@ export const ERRORS = {
     504 : {code : 504 , message : "Connection with low-latency(OME) server failed.", reason :"WebRTC peer createOffer failed."},
     505 : {code : 505 , message : "Connection with low-latency(OME) server failed.", reason :"WebRTC setLocalDescription failed."},
     510 : {code : 510 , message : "Network connection is unstable. Check the network connection.", reason :"Network is slow."}
+};
+
+export const UI_ICONS = {
+    volume_mute : "volume-mute"
 };

@@ -5,7 +5,13 @@ import AdsEventsListener from "api/provider/ads/Listener";
 import LA$ from "utils/likeA$.js";
 import {errorTrigger} from "api/provider/utils";
 import {
-    ERROR, ERRORS, CONTENT_VOLUME, STATE_LOADING, INIT_ADS_ERROR
+    ERROR, ERRORS,
+    CONTENT_VOLUME,
+    STATE_LOADING,
+    INIT_ADS_ERROR,
+    PLAYER_WARNING,
+    WARN_MSG_MUTEDPLAY,
+    UI_ICONS
 } from "api/constants";
 
 const Ads = function(elVideo, provider, playerConfig, adTagUrl, errorCallback){
@@ -40,6 +46,16 @@ const Ads = function(elVideo, provider, playerConfig, adTagUrl, errorCallback){
     //google.ima.settings.setLocale('ko');
     //google.ima.settings.setVpaidMode(google.ima.ImaSdkSettings.VpaidMode.ENABLED);
     //google.ima.settings.setDisableCustomPlaybackForIOS10Plus(true);
+    const sendWarningMessageForMutedPlay = function(){
+        provider.trigger(PLAYER_WARNING, {
+            message : WARN_MSG_MUTEDPLAY,
+            timer : 10 * 1000,
+            iconClass : UI_ICONS.volume_mute,
+            onClickCallback : function(){
+                provider.setMute(false);
+            }
+        });
+    };
 
 
     try{
@@ -128,6 +144,9 @@ const Ads = function(elVideo, provider, playerConfig, adTagUrl, errorCallback){
 
             adsRequest.setAdWillAutoPlay(autoplayAllowed);
             adsRequest.setAdWillPlayMuted(autoplayRequiresMuted);
+            if(autoplayRequiresMuted){
+                sendWarningMessageForMutedPlay();
+            }
             adsRequest.adTagUrl = adTagUrl;
 
             adsLoader.requestAds(adsRequest);
@@ -158,36 +177,24 @@ const Ads = function(elVideo, provider, playerConfig, adTagUrl, errorCallback){
                     initRequest();
 
                 }).catch(function(){
-                    if(playerConfig.getBrowser().browser  === "Safari" || playerConfig.getBrowser().os  === "iOS" || playerConfig.getBrowser().os  === "Android"){
-                        /*
-                         //check muted auto start.
-                         //I don't need for this version.
-                         */
-                        elVideo.muted = true;
-                        var playPromise = elVideo.play();
-                        if (playPromise !== undefined) {
-                            playPromise.then(function () {
-                                // If we make it here, muted autoplay works but unmuted autoplay does not.
-                                elVideo.pause();
-                                autoplayAllowed = true;
-                                autoplayRequiresMuted = true;
-                                spec.checkAutoplayStart = false;
-                                initRequest();
-                            }).catch(function () {
-                                // Both muted and unmuted autoplay failed. Fall back to click to play.
-                                elVideo.muted = false;
-                                autoplayAllowed = false;
-                                autoplayRequiresMuted = false;
-                                spec.checkAutoplayStart = false;
-                                initRequest();
-                            });
-                        }
-                    }else{
-                        elVideo.pause();
-                        autoplayAllowed = false;
-                        autoplayRequiresMuted = false;
-                        spec.checkAutoplayStart = false;
-                        initRequest();
+                    elVideo.muted = true;
+                    var playPromise = elVideo.play();
+                    if (playPromise !== undefined) {
+                        playPromise.then(function () {
+                            // If we make it here, muted autoplay works but unmuted autoplay does not.
+                            elVideo.pause();
+                            autoplayAllowed = true;
+                            autoplayRequiresMuted = true;
+                            spec.checkAutoplayStart = false;
+                            initRequest();
+                        }).catch(function () {
+                            // Both muted and unmuted autoplay failed. Fall back to click to play.
+                            elVideo.muted = false;
+                            autoplayAllowed = false;
+                            autoplayRequiresMuted = false;
+                            spec.checkAutoplayStart = false;
+                            initRequest();
+                        });
                     }
                 });
             }else{

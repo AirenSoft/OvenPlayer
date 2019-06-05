@@ -200,8 +200,8 @@ const FullScreenButton = function($container, api){
     };
 
     const onRendered = function($current, template){
-        $iconExpand = $current.find(".ovp-fullscreen-button-expandicon");
-        $iconCompress = $current.find(".ovp-fullscreen-button-compressicon");
+        $iconExpand = $current.find(".fullscreen-expand");
+        $iconCompress = $current.find(".fullscreen-compress");
 
         fullscreenChagedEventName = findFullScreenChangedEventName();
         if(fullscreenChagedEventName){

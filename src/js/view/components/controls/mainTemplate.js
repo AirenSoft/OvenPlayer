@@ -8,11 +8,9 @@ const Controls = function(hasPlaylist){
                 `<div class="ovp-controls">` +
                     `<div class="ovp-left-controls"></div>` +
                     `<div class="ovp-right-controls">`+
-                        `<span class="playlist">`+
-                                `${hasPlaylist?`<button class="ovp-button ovp-playlist-button"><i class="ovp-setting-button-icon"></i></button>`:``}`+
-                        `</span>`+
-                        `<span class="setting"></span>`+
-                        `<span class="fullscreen"></span>`+
+                        `<div class="playlist-holder ovp-navigators">${hasPlaylist?`<button class="ovp-button ovp-playlist-button"><i class="ovp-con playlist"></i></button>`:``}</div>`+
+                        `<div class="setting-holder ovp-navigators"></div>`+
+                        `<div class="fullscreen-holder ovp-navigators"></div>`+
                     `</div>` +
                 `</div>` +
             `</div>` +
