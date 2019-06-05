@@ -336,7 +336,7 @@ const Provider = function(spec, playerConfig){
                             if(retryCount < 300){
                                 setTimeout(checkFileLoaded, 100);
                             }else{
-                                console.log("FileLoad Faiul");
+                                console.log("FileLoad failed");
                             }
                         }
                     })();

@@ -312,7 +312,6 @@ const Ads = function(elVideo, provider, playerConfig, adTagUrl, errorCallback){
         //let tempError = ERRORS[INIT_ADS_ERROR];
         //tempError.error = error;
         //errorCallback(tempError);
-        console.log();
         return null;
     }
 

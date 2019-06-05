@@ -246,7 +246,6 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
         if(!elVideo){
             return false;
         }
-        console.log(isPlayingProcess);
         if(isPlayingProcess){
             return false;
         }

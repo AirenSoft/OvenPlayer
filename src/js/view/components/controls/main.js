@@ -155,7 +155,6 @@ const Controls = function($container, api){
         }, template);
 
         api.on(PLAYER_PLAY, function(data){
-            console.log("PLAYER_PLAY", data);
             $current.css("display", "block");
         }, template);
 
