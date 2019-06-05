@@ -454,7 +454,7 @@ i.ovp-con{
   left: 0;
   width: 100%;
   height: 100%;
-
+  z-index : 1007;
   .ovp-message-container {
     position: absolute;
     top: 45%;
@@ -510,7 +510,7 @@ i.ovp-con{
   margin-top: -40px;
   margin-left: -40px;
   text-align: center;
-
+  z-index : 1008;
   .ovp-bigbutton {
     width: 80px;
     height: 80px;
@@ -530,7 +530,7 @@ i.ovp-con{
   width: 100%;
   left: 0;
   height: 100%;
-
+  z-index : 1001;
   pointer-events: none;
 
   .ovp-thumbnail-wrapper{
@@ -798,7 +798,6 @@ i.ovp-con{
   left: 0;
   width: 100%;
   height: 100%;
-  //z-index: 31;
   outline: none;
   margin-top : 10px;
 
@@ -810,7 +809,6 @@ i.ovp-con{
     position: relative;
     height: 100%;
     background: rgba(255,255,255,0.2);
-    //z-index: 39;
 
     .ovp-load-progress,
     .ovp-play-progress,
@@ -827,7 +825,6 @@ i.ovp-con{
     }
     .ovp-play-progress {
       width: 0;
-      //z-index: 34;
       -moz-transform-origin: 0 0;
       -ms-transform-origin: 0 0;
       -webkit-transform-origin: 0 0;
@@ -835,7 +832,6 @@ i.ovp-con{
     }
     .ovp-load-progress {
       width: 0;
-      //z-index: 33;
       background-color: rgba(255,255,255,.5);
       -webkit-transition: width 0.5s ease;
       transition: width 0.5s ease;
@@ -843,7 +839,6 @@ i.ovp-con{
     .ovp-hover-progress {
       left: 0;
       width: 0;
-      //z-index: 35;
       background-color: rgba(255,255,255,.6);
     }
 
@@ -853,7 +848,6 @@ i.ovp-con{
     position: absolute;
     top: -5px;
     left: 0px;
-    //z-index: 43;
 
     -moz-transition: -moz-transform .1s cubic-bezier(0.4,0.0,1,1);
     -webkit-transition: -webkit-transform .1s cubic-bezier(0.4,0.0,1,1);
@@ -1010,7 +1004,6 @@ i.ovp-con{
           height: 4px;
           margin-top: -2px;
           width: 80px;
-          //z-index: -1;
         }
         &:before {
           left: -58px;
@@ -1087,7 +1080,6 @@ i.ovp-con{
   padding: 6px 0;
   background: rgba(28,28,28,0.9);
   text-shadow: 0 0 2px rgba(0,0,0,.5);
-  //z-index: 23;
   font-family: Roboto,Arial,Helvetica,sans-serif;
   font-weight : lighter;
   user-select: none;
@@ -1149,7 +1141,7 @@ i.ovp-con{
   left: 50%;
   margin-left: -32px;
   margin-top: -32px;
-  z-index: 30;
+  z-index: 1009;
   display : none;
 
   .ovp-ellipsis {
@@ -1316,6 +1308,8 @@ i.ovp-con{
     .ovp-message-container{
       top : 50%;
       font-weight : bold;
+
+
       .ovp-message-icon{
         margin-top: 0;
         .ovp-con{
