@@ -7,8 +7,8 @@ import EventsListener from "api/provider/flash/Listener";
 import {extractVideoElement, separateLive, pickCurrentSource} from "api/provider/utils";
 import {
     ERRORS, INIT_RTMP_SETUP_ERROR,
-    STATE_IDLE, STATE_PLAYING, STATE_PAUSED, STATE_COMPLETE,
-    PLAYER_STATE, PLAYER_COMPLETE, PLAYER_PAUSE, PLAYER_PLAY, STATE_AD_PLAYING,
+    STATE_IDLE, STATE_PLAYING, STATE_PAUSED, STATE_COMPLETE, STATE_ERROR, STATE_IDLE,
+    PLAYER_STATE, PLAYER_COMPLETE, PLAYER_PAUSE, PLAYER_PLAY, STATE_AD_PLAYING, STATE_AD_PAUSED,
     CONTENT_SOURCE_CHANGED, CONTENT_LEVEL_CHANGED, CONTENT_TIME, CONTENT_CAPTION_CUE_CHANGED,
     PLAYBACK_RATE_CHANGED, CONTENT_MUTE, PROVIDER_HTML5, PROVIDER_WEBRTC, PROVIDER_DASH, PROVIDER_HLS
 } from "api/constants";
@@ -98,26 +98,52 @@ const Provider = function(spec, playerConfig){
     that.setState = (newState) => {
         if(spec.state !== newState){
             let prevState = spec.state;
-            switch(newState){
-                case STATE_COMPLETE :
-                    that.trigger(PLAYER_COMPLETE);
-                    break;
-                case STATE_PAUSED :
-                    that.trigger(PLAYER_PAUSE, {
-                        prevState: spec.state
-                    });
-                    break;
-                case STATE_PLAYING :
-                    that.trigger(PLAYER_PLAY, {
-                        prevState: spec.state
-                    });
-                    break;
+            //ToDo : This is temporary code. avoid background content error.
+            if(prevState === STATE_AD_PLAYING && (newState === STATE_ERROR || newState === STATE_IDLE) ){
+                return false;
             }
-            spec.state = newState;
-            that.trigger(PLAYER_STATE, {
-                prevstate : prevState,
-                newstate: spec.state
-            });
+
+
+            if(ads && ads.isAutoPlaySupportCheckTime()){
+                //Ads checks checkAutoplaySupport().
+                //It calls real play() and pause().
+                //And then this triggers "playing" and "pause".
+                //I prevent these process.
+            }else{
+                switch(newState){
+                    case STATE_COMPLETE :
+                        that.trigger(PLAYER_COMPLETE);
+                        break;
+                    case STATE_PAUSED :
+                        that.trigger(PLAYER_PAUSE, {
+                            prevState: spec.state,
+                            newstate: STATE_PAUSED
+                        });
+                        break;
+                    case STATE_AD_PAUSED :
+                        that.trigger(PLAYER_PAUSE, {
+                            prevState: spec.state,
+                            newstate: STATE_AD_PAUSED
+                        });
+                        break;
+                    case STATE_PLAYING :
+                        that.trigger(PLAYER_PLAY, {
+                            prevState: spec.state,
+                            newstate: STATE_PLAYING
+                        });
+                    case STATE_AD_PLAYING :
+                        that.trigger(PLAYER_PLAY, {
+                            prevState: spec.state,
+                            newstate: STATE_AD_PLAYING
+                        });
+                        break;
+                }
+                spec.state = newState;
+                that.trigger(PLAYER_STATE, {
+                    prevstate : prevState,
+                    newstate: spec.state
+                });
+            }
         }
     };
     that.getState = () =>{
