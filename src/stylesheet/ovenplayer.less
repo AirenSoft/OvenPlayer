@@ -207,11 +207,15 @@
   height: 100%;
   width: 100%;
   padding-bottom : 34px;
+  pointer-events: none;
   top:0;
   &>div{
     position: absolute !important;
     width: 100% !important;
     height: 100% !important;
+    iframe{
+      pointer-events :auto;
+    }
   }
 }
 
@@ -527,7 +531,7 @@ i.ovp-con{
   left: 0;
   height: 100%;
 
-
+  pointer-events: none;
 
   .ovp-thumbnail-wrapper{
     position: relative;
