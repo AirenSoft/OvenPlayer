@@ -43,7 +43,7 @@ const Dash = function(element, playerConfig, adTagUrl){
         if(dashjs.Version < "2.6.5"){
             throw ERRORS[103];
         }
-        dash.getDebug().setLogToBrowserConsole(false);
+        dash.getDebug().setLogToBrowserConsole(true);
         dash.initialize(element, null, false);
 
         let spec = {
@@ -74,6 +74,7 @@ const Dash = function(element, playerConfig, adTagUrl){
         OvenPlayerConsole.log("DASH PROVIDER LOADED.");
 
         dash.on(dashjs.MediaPlayer.events.ERROR, function(error){
+            console.log(error);
             if(error && !isFirstError && ( error.error === DASHERROR.DOWNLOAD || error.error === DASHERROR.MANIFESTERROR )){
                 isFirstError = true;
                 let tempError = ERRORS[PLAYER_UNKNWON_NEWWORK_ERROR];
@@ -102,7 +103,8 @@ const Dash = function(element, playerConfig, adTagUrl){
             }
         });
 
-        that.on(CONTENT_META, function(meta){
+
+        dash.on(dashjs.MediaPlayer.events.PLAYBACK_METADATA_LOADED, function(event){
             OvenPlayerConsole.log("GetStreamInfo  : ", dash.getQualityFor("video"), dash.getBitrateInfoListFor('video'), dash.getBitrateInfoListFor('video')[dash.getQualityFor("video")]);
 
             let subQualityList = dash.getBitrateInfoListFor('video');
@@ -129,7 +131,11 @@ const Dash = function(element, playerConfig, adTagUrl){
             if(playerConfig.isAutoStart()){
                 that.play();
             }
-        }, that);
+        });
+
+        /*that.on(CONTENT_META, function(meta){
+        }, that);*/
+
         that.setCurrentQuality = (qualityIndex) => {
             if(that.getState() !== STATE_PLAYING){
                 that.play();

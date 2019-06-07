@@ -262,7 +262,34 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
                 });
 
             }else{
-                if(that.getName() === PROVIDER_DASH){
+                /*
+                * It is not necessary no more. Maybe Google ima updated 3.310.0	or 3.309.0. https://developers.google.com/interactive-media-ads/docs/sdks/html5/v3/history
+                if(ads && !dashAttachedView){
+                    //Ad steals dash's video element. Put in right place.
+                    spec.mse.attachView(elVideo);
+                    dashAttachedView = true;
+                }*/
+                let promise = elVideo.play();
+                if (promise !== undefined) {
+                    promise.then(function(){
+                        isPlayingProcess = false;
+                    }).catch(error => {
+                        if(playerConfig.getBrowser().browser  === "Safari" || playerConfig.getBrowser().os  === "iOS" || playerConfig.getBrowser().os  === "Android"){
+                            elVideo.muted = true;
+                        }
+                        console.log(error);
+                        //Can't play because User doesn't any interactions.
+                        //Wait for User Interactions. (like click)
+                        setTimeout(function () {
+                            isPlayingProcess = false;
+                            that.play();
+                        }, 100);
+
+                    });
+                }
+
+                //No more setTimeout playing.
+                /*if(that.getName() === PROVIDER_DASH){
                     if(ads && !dashAttachedView){
                         //Ad steals dash's video element. Put in right place.
                         spec.mse.attachView(elVideo);
@@ -293,27 +320,7 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
 
                         }
                     },500);
-                }else{
-                    let promise = elVideo.play();
-                    if (promise !== undefined) {
-                        promise.then(function(){
-                            isPlayingProcess = false;
-                        }).catch(error => {
-                            if(playerConfig.getBrowser().browser  === "Safari" || playerConfig.getBrowser().os  === "iOS" || playerConfig.getBrowser().os  === "Android"){
-                                elVideo.muted = true;
-                            }
-                            console.log(error);
-                            //Can't play because User doesn't any interactions.
-                            //Wait for User Interactions. (like click)
-                            setTimeout(function () {
-                                isPlayingProcess = false;
-                                that.play();
-                            }, 100);
-
-                        });
-                    }
-                }
-
+                }*/
             }
 
         }
