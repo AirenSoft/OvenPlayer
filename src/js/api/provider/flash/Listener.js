@@ -42,7 +42,8 @@ const Listener = function(elFlash, provider, videoEndedCallback){
         provider.trigger(CONTENT_TIME, data);
         //provider.trigger(CONTENT_BUFFER, data);
         //data.duration-1 : this is trick. because sometimes rtmp's position < duration when video ended.
-        if(data.position >= (data.duration-1)){
+        //2019-06-07 : Do not use duration-1 trick anymore. I improved SWF player.
+        /*if(data.position >= (data.duration-1)){
             if(provider.getState() !== STATE_IDLE && provider.getState() !== STATE_COMPLETE){
                 if(videoEndedCallback){
                     videoEndedCallback(function(){
@@ -53,7 +54,7 @@ const Listener = function(elFlash, provider, videoEndedCallback){
                 }
 
             }
-        }
+        }*/
     };
     that.volumeChanged = (data) =>{
         provider.trigger(CONTENT_VOLUME, data);

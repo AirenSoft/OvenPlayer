@@ -304,6 +304,7 @@ i.ovp-con{
   top : 0;
   padding: 2.857em;
   background: #000;
+  z-index : 1008;
   .ovp-badge{
     position: absolute;
     top: 0.857em;
@@ -649,6 +650,7 @@ i.ovp-con{
     bottom: 0px;
     height: 54px;
     width : 100%;
+    z-index : 1007;
     .ovp-gradient-bottom {
       position: absolute;
       width: 100%;
@@ -1273,12 +1275,14 @@ i.ovp-con{
   }
   .ovp-playlist{
     padding : 1rem;
-
+    .ovp-playlist-card{
+      margin : 5px 0;
+    }
   }
 
 }
 .ovp-wrapper.ovenplayer.xsmall{
-  font-size : 8px;
+  font-size : 10px;
   .ovp-bigbutton-container {
     margin-top: -20px;
     margin-left: -20px;
@@ -1297,11 +1301,19 @@ i.ovp-con{
   }
   .ovp-playlist{
     padding : 1rem;
+
     .ovp-playlist-card{
+      margin : 5px 0;
       -ms-flex: 0 0 100%;
       flex: 0 0 100%;
       max-width: 100%;
       padding : 0 40px;
+      .ovp-playlist-header{
+        font-size : 2em;
+      }
+      .ovp-playlist-card-title{
+        margin-top : 0;
+      }
     }
   }
   .ovp-message-box{

@@ -29,8 +29,8 @@ const MessageBox = function($container, api, message, withTimer, iconClass, clic
     };
     const events = {
         "click .ovp-message-text" : function(event, $current, template){
-            event.preventDefault();
-
+            //event.preventDefault();
+            event.stopPropagation();
             if(autoDestroyTimer){
                 clearTimeout(autoDestroyTimer);
             }

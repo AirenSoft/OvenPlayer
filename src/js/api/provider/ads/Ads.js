@@ -270,7 +270,7 @@ const Ads = function(elVideo, provider, playerConfig, adTagUrl, errorCallback){
         };
         that.videoEndedCallback = (completeContentCallback) => {
             //listener.isLinearAd : get current ad's status whether linear ad or not.
-            if(listener.isAllAdComplete() || !listener.isLinearAd()){
+            if(listener && (listener.isAllAdComplete() || !listener.isLinearAd())){
                 completeContentCallback();
             }else{
                 //Post - Roll 을 재생하기 위해서는 콘텐츠가 끝났음을 adsLoader에게 알려야 한다
