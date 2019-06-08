@@ -24,7 +24,7 @@ const Configurator = function(options, provider){
             controls : true,
             autoStart : false,
             timecode : true,
-            sourceLabel : "",
+            sourceIndex : 0,
             browser : "",
             hidePlaylistIcon : false,
             rtmpBufferTime : 1,
@@ -135,13 +135,19 @@ const Configurator = function(options, provider){
         spec.qualityLabel = newLabel;
     };
 
-    that.getSourceLabel = () => {
+    /*that.getSourceLabel = () => {
         return spec.sourceLabel;
     };
     that.setSourceLabel = (newLabel) => {
         spec.sourceLabel = newLabel;
-    };
+    };*/
 
+    that.getSourceIndex = () => {
+        return spec.sourceIndex;
+    };
+    that.setSourceIndex = (index) => {
+        spec.sourceIndex = index;
+    };
     that.setTimecodeMode = (timecode) => {
         if(spec.timecode !== timecode){
             spec.timecode = timecode;

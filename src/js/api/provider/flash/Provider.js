@@ -321,7 +321,9 @@ const Provider = function(spec, playerConfig){
                     currentSource: sourceIndex
                 });
 
-                playerConfig.setSourceLabel(spec.sources[sourceIndex].label);
+                playerConfig.setSourceIndex(sourceIndex);
+                //playerConfig.setSourceLabel(spec.sources[sourceIndex].label);
+
                 if(needProviderChange){
                     let lastPlayPosition = elFlash.getCurrentTime()|| 0;
                     let retryCount = 0;

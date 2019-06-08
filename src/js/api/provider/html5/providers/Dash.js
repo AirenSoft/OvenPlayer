@@ -43,7 +43,7 @@ const Dash = function(element, playerConfig, adTagUrl){
         if(dashjs.Version < "2.6.5"){
             throw ERRORS[103];
         }
-        dash.getDebug().setLogToBrowserConsole(true);
+        dash.getDebug().setLogToBrowserConsole(false);
         dash.initialize(element, null, false);
 
         let spec = {

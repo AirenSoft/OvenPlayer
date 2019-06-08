@@ -389,7 +389,8 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
                 that.trigger(CONTENT_SOURCE_CHANGED, {
                     currentSource: sourceIndex
                 });
-                playerConfig.setSourceLabel(spec.sources[sourceIndex].label);
+                playerConfig.setSourceIndex(sourceIndex);
+                //playerConfig.setSourceLabel(spec.sources[sourceIndex].label);
                 //spec.currentQuality = sourceIndex;
                 that.pause();
                 that.setState(STATE_IDLE);

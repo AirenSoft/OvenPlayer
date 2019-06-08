@@ -31,7 +31,6 @@ const Api = function(container){
     let userAgentObject = analUserAgent();
     let mediaManager = MediaManager(container, userAgentObject);
     let currentProvider = "";
-    let lastSourceIndex = 0;    //Temporary Last accessed Source index.
     let playerConfig = "";
     let lazyQueue = "";
     let captionManager = "";
@@ -42,7 +41,8 @@ const Api = function(container){
         let nextPlaylistIndex = index; // || playlistManager.getCurrentPlaylistIndex() + 1;
         let playlist = playlistManager.getPlaylist();
         let hasNextPlaylist = playlist[nextPlaylistIndex]? true : false;
-        lastSourceIndex = 0;
+        //init source index
+        playerConfig.setSourceIndex(0);
         if(hasNextPlaylist){
             //that.pause();
             lazyQueue = LazyCommandExecutor(that, ['play','seek','stop']);
@@ -67,9 +67,12 @@ const Api = function(container){
                     if (sources[i].default) {
                         quality = i;
                     }
-                    if (playerConfig.getSourceLabel() && sources[i].label === playerConfig.getSourceLabel() ) {
+                    if (playerConfig.getSourceIndex() === i ) {
                         return i;
                     }
+                    /*if (playerConfig.getSourceLabel() && sources[i].label === playerConfig.getSourceLabel() ) {
+                        return i;
+                    }*/
                 }
             }
             return quality;
@@ -91,7 +94,7 @@ const Api = function(container){
             captionManager = CaptionManager(that, playlistManager.getCurrentPlaylistIndex());
             OvenPlayerConsole.log("API : init() captions");
 
-            let currentSourceIndex = lastSourceIndex; //pickQualityFromSource(playlistManager.getCurrentSources());
+            let currentSourceIndex = pickQualityFromSource(playlistManager.getCurrentSources());
             let providerName = Providers[currentSourceIndex]["name"];
 
             //Init Provider.
@@ -121,10 +124,10 @@ const Api = function(container){
                 //data.code === PLAYER_FILE_ERROR
                 if( name === ERROR || name === NETWORK_UNSTABLED ){
                     //let currentSourceIndex = that.getCurrentSource();
-                    if(lastSourceIndex+1 < that.getSources().length){
+                    if(playerConfig.getSourceIndex()+1 < that.getSources().length){
                         //this sequential has available source.
                         that.pause();
-                        that.setCurrentSource(lastSourceIndex+1);
+                        that.setCurrentSource(playerConfig.getSourceIndex()+1);
                     }
                 }
             });
@@ -341,7 +344,7 @@ const Api = function(container){
         let isSameProvider = providerController.isSameProvider(currentSource, newSource);
         // provider.serCurrentQuality -> playerConfig setting -> load
         let resultSourceIndex = currentProvider.setCurrentSource(index, isSameProvider);
-        lastSourceIndex = resultSourceIndex;
+
         if(!newSource){
             return null;
         }
