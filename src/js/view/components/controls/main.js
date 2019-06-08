@@ -17,6 +17,7 @@ import {
     CONTENT_META, CONTENT_LEVEL_CHANGED, CONTENT_TIME_MODE_CHANGED, CONTENT_TIME, PLAYER_PLAY,
     STATE_AD_LOADED,
     AD_CHANGED,
+    STATE_AD_ERROR,
     STATE_AD_PLAYING,
     STATE_AD_PAUSED,
     STATE_AD_COMPLETE,
@@ -177,6 +178,7 @@ const Controls = function($container, api){
             }
         }, template);
 
+        //ToDo : Same Code refactor
         api.on(STATE_AD_COMPLETE, function(){
             initTimeDisplay(lastContentMeta);
             if(progressBar){
@@ -192,7 +194,19 @@ const Controls = function($container, api){
 
         }, template);
 
+        api.on(STATE_AD_ERROR , function(){
+            initTimeDisplay(lastContentMeta);
+            if(progressBar){
+                progressBar.destroy();
+            }
+            $root.removeClass("linear-ad");
+            initSettingButton();
+            if(isLiveMode){
 
+            }else{
+                initProgressBar(false);
+            }
+        },template);
 
     };
     const onDestroyed = function(template){
@@ -201,6 +215,7 @@ const Controls = function($container, api){
         api.off(STATE_AD_COMPLETE, null, template);
         api.off(AD_CHANGED, null, template);
         api.off(OME_P2P_MODE, null, template);
+        api.off(STATE_AD_ERROR, null, template);
         if(timeDisplay){
             timeDisplay.destroy();
         }

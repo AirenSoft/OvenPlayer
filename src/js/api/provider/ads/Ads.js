@@ -9,6 +9,7 @@ import {
     CONTENT_VOLUME,
     STATE_LOADING,
     INIT_ADS_ERROR,
+    STATE_AD_ERROR,
     PLAYER_WARNING,
     WARN_MSG_MUTEDPLAY,
     UI_ICONS
@@ -89,6 +90,7 @@ const Ads = function(elVideo, provider, playerConfig, adTagUrl, errorCallback){
             if (adsManager) {
                 adsManager.destroy();
             }
+            provider.trigger(STATE_AD_ERROR, {code : adErrorEvent.getError().getVastErrorCode() , message : adErrorEvent.getError().getMessage()});
             spec.active = false;
             spec.started = true;
             provider.play();

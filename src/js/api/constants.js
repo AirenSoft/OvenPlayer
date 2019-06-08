@@ -12,6 +12,7 @@ export const STATE_AD_LOADED = "adLoaded";
 export const STATE_AD_PLAYING = "adPlaying";
 export const STATE_AD_PAUSED = "adPaused";
 export const STATE_AD_COMPLETE = "adComplete";
+export const STATE_AD_ERROR = "adError";
 
 // PROVIDER
 export const PROVIDER_HTML5 = "html5";
