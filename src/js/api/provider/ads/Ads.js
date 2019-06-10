@@ -178,7 +178,7 @@ const Ads = function(elVideo, provider, playerConfig, adTagUrl, errorCallback){
                     spec.checkAutoplayStart = false;
                     initRequest();
 
-                }).catch(function(){
+                }).catch(function(error){
                     elVideo.muted = true;
                     var playPromise = elVideo.play();
                     if (playPromise !== undefined) {
@@ -189,7 +189,7 @@ const Ads = function(elVideo, provider, playerConfig, adTagUrl, errorCallback){
                             autoplayRequiresMuted = true;
                             spec.checkAutoplayStart = false;
                             initRequest();
-                        }).catch(function () {
+                        }).catch(function (error) {
                             // Both muted and unmuted autoplay failed. Fall back to click to play.
                             elVideo.muted = false;
                             autoplayAllowed = false;
@@ -208,7 +208,7 @@ const Ads = function(elVideo, provider, playerConfig, adTagUrl, errorCallback){
                 initRequest();
             }
         }
-        checkAutoplaySupport();
+
 
         that.isActive = () => {
             return spec.active;
@@ -231,12 +231,13 @@ const Ads = function(elVideo, provider, playerConfig, adTagUrl, errorCallback){
 
             }else{
                 let retryCount = 0;
+                checkAutoplaySupport();
                 return new Promise(function (resolve, reject) {
                     (function checkAdsManagerIsReady(){
                         retryCount ++;
                         if(adsManagerLoaded){
                             if((playerConfig.isAutoStart() && !autoplayAllowed) ){
-                                autoplayAllowed = true;
+                                autoplayAllowed = true; //autoplay fail. set forced autoplayAllowed
                                 spec.started = false;
                                 reject(new Error(AUTOPLAY_NOT_ALLOWED));
                             }else{
