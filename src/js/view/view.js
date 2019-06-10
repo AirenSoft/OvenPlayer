@@ -11,6 +11,7 @@ import {
     READY,
     DESTROY,
     PLAYER_RESIZED,
+    PLAYER_PLAY,
     STATE_IDLE,
     STATE_AD_PLAYING,
     STATE_PLAYING,
@@ -35,7 +36,6 @@ const View = function($container){
     let currentPlayerSize = "";
 
     let setHide = function (hide, autoHide) {
-
         if (autoHideTimer) {
             clearTimeout(autoHideTimer);
             autoHideTimer = null;
@@ -131,7 +131,10 @@ const View = function($container){
             calcPlayerWidth();
             if(screenSize !== currentPlayerSize){
                 currentPlayerSize = screenSize;
-                api.trigger(PLAYER_RESIZED, currentPlayerSize);
+                if(api){
+                    api.trigger(PLAYER_RESIZED, currentPlayerSize);
+                }
+
             }
         });
 
@@ -148,19 +151,28 @@ const View = function($container){
     };
     const events = {
         "click .ovenplayer" : function(event, $current, template){
-            event.preventDefault();
             if(contextPanel){
+                event.preventDefault();
                 contextPanel.destroy();
                 contextPanel = null;
-                return false;
+                //return false;
             }
 
             if(!(LA$(event.target).closest(".ovp-controls-container") || LA$(event.target).closest(".ovp-setting-panel") )){
                 if(panelManager.size() > 0){
+                    event.preventDefault();
                     panelManager.clear();
-                    return false;
+                    //return false;
                 }
                 //togglePlayPause();
+            }
+        },
+        //For iOS safari
+        "touchstart .ovenplayer" : function(event, $current, template){
+            if (playerState === STATE_PLAYING || (playerState === STATE_AD_PLAYING && screenSize === "xsmall")) {
+                setHide(false, true);
+            } else {
+                setHide(false);
             }
         },
         "mouseenter .ovenplayer" : function(event, $current, template){
@@ -238,6 +250,7 @@ const View = function($container){
         },
         "contextmenu .ovenplayer" : function(event, $current, template){
             event.stopPropagation();
+
             if(!LA$(event.currentTarget).find("object")){
                 event.preventDefault();
                 createContextPanel(event.pageX, event.pageY);

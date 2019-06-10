@@ -176,7 +176,7 @@ const Manager = function(provider){
             }).filter(track => !!track);
 
             return playlistItem;
-        }).filter(function(item){return item.sources && item.sources.length > 0;});
+        }).filter(function(item){return item.sources && item.sources.length > 0;})||[];
         spec.playlist = prettiedPlaylist;
         return prettiedPlaylist;
     };
@@ -203,11 +203,18 @@ const Manager = function(provider){
     };
     that.getCurrentSources = () => {
         //We do not support "PLAYLIST" not yet. So this returns playlist of 0.
-        OvenPlayerConsole.log("PlaylistManager getCurrentSources() ", spec.playlist[spec.currentIndex].sources);
-        return spec.playlist[spec.currentIndex].sources;
+        if(spec.playlist[spec.currentIndex]){
+            OvenPlayerConsole.log("PlaylistManager getCurrentSources() ", spec.playlist[spec.currentIndex].sources);
+            return spec.playlist[spec.currentIndex].sources;
+        }else{
+            return null;
+        }
+
     };
     that.getCurrentAdTag = () => {
-        return spec.playlist[spec.currentIndex].adTagUrl || "";
+        if(spec.playlist[spec.currentIndex]){
+            return spec.playlist[spec.currentIndex].adTagUrl || "";
+        }
     };
 
     return that;

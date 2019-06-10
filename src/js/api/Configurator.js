@@ -24,8 +24,11 @@ const Configurator = function(options, provider){
             controls : true,
             autoStart : false,
             timecode : true,
-            sourceLabel : "",
-            browser : ""
+            sourceIndex : 0,
+            browser : "",
+            hidePlaylistIcon : false,
+            rtmpBufferTime : 1,
+            rtmpBufferTimeMax : 3,
         };
         const serialize = function (val) {
             if (val === undefined) {
@@ -67,6 +70,9 @@ const Configurator = function(options, provider){
         playbackRates.sort();
 
         config.playbackRates = playbackRates;
+
+        config.rtmpBufferTime = config.rtmpBufferTime > 10 ? 10 : config.rtmpBufferTime;
+        config.rtmpBufferTimeMax = config.rtmpBufferTimeMax > 50 ? 50 : config.rtmpBufferTimeMax;
 
 
         if (config.playbackRates.indexOf(config.playbackRate) < 0) {
@@ -129,13 +135,19 @@ const Configurator = function(options, provider){
         spec.qualityLabel = newLabel;
     };
 
-    that.getSourceLabel = () => {
+    /*that.getSourceLabel = () => {
         return spec.sourceLabel;
     };
     that.setSourceLabel = (newLabel) => {
         spec.sourceLabel = newLabel;
-    };
+    };*/
 
+    that.getSourceIndex = () => {
+        return spec.sourceIndex;
+    };
+    that.setSourceIndex = (index) => {
+        spec.sourceIndex = index;
+    };
     that.setTimecodeMode = (timecode) => {
         if(spec.timecode !== timecode){
             spec.timecode = timecode;
@@ -144,6 +156,12 @@ const Configurator = function(options, provider){
     };
     that.isTimecodeMode = () => {
         return spec.timecode;
+    };
+    that.getRtmpBufferTime = () => {
+        return spec.rtmpBufferTime;
+    };
+    that.getRtmpBufferTimeMax = () => {
+        return spec.rtmpBufferTimeMax;
     };
 
     that.isMute = () =>{

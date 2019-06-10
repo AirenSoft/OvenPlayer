@@ -6,8 +6,8 @@ import EventEmitter from "api/EventEmitter";
 import EventsListener from "api/provider/html5/Listener";
 import {extractVideoElement, separateLive, pickCurrentSource} from "api/provider/utils";
 import {
-    STATE_IDLE, STATE_PLAYING, STATE_PAUSED, STATE_COMPLETE,
-    PLAYER_STATE, PLAYER_COMPLETE, PLAYER_PAUSE, PLAYER_PLAY, STATE_AD_PLAYING,
+    STATE_IDLE, STATE_PLAYING, STATE_PAUSED, STATE_COMPLETE, STATE_ERROR,
+    PLAYER_STATE, PLAYER_COMPLETE, PLAYER_PAUSE, PLAYER_PLAY, STATE_AD_PLAYING, STATE_AD_PAUSED,
     CONTENT_TIME, CONTENT_CAPTION_CUE_CHANGED, CONTENT_SOURCE_CHANGED,
     PLAYBACK_RATE_CHANGED, CONTENT_MUTE, PROVIDER_HTML5, PROVIDER_WEBRTC, PROVIDER_DASH, PROVIDER_HLS
 } from "api/constants";
@@ -28,10 +28,14 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
 
     let elVideo = spec.element;
     let ads = null, listener = null, videoEndedCallback = null;
-    let posterImage = playerConfig.getConfig().image||"";
+
+    let isPlayingProcessing = false;
 
     if(spec.adTagUrl){
         ads = Ads(elVideo, that, playerConfig, spec.adTagUrl);
+        if(!ads){
+            console.log("Can not load due to google ima for Ads.");
+        }
     }
     listener = EventsListener(elVideo, spec.mse, that, ads ? ads.videoEndedCallback : null);
     elVideo.playbackRate = elVideo.defaultPlaybackRate = playerConfig.getPlaybackRate();
@@ -53,8 +57,12 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
             sourceElement.src = source.file;
             const sourceChanged = (sourceElement.src !== previousSource);
             if (sourceChanged) {
-                //elVideo.src = spec.sources[spec.currentSource].file;
-                elVideo.append(sourceElement);
+
+                elVideo.src = source.file;
+
+                //Don't use this. https://stackoverflow.com/questions/30637784/detect-an-error-on-html5-video
+                //elVideo.append(sourceElement);
+
                 // Do not call load if src was not set. load() will cancel any active play promise.
                 if (previousSource) {
                     elVideo.load();
@@ -66,18 +74,18 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
 
             if(lastPlayPosition > 0){
                 that.seek(lastPlayPosition);
+                if(!playerConfig.isAutoStart()){
+                    that.play();
+                }
+
+            }
+
+            if(playerConfig.isAutoStart()){
                 that.play();
             }
             /*that.trigger(CONTENT_SOURCE_CHANGED, {
                 currentSource: spec.currentSource
             });*/
-
-            if(posterImage){
-                //There is no way to verify the posterImage URL. This will be blnak until have a good idea.
-                //elVideo.style.background = "transparent url('"+posterImage+"') no-repeat 0 0";
-                //elVideo.poster = posterImage;
-            }
-
         }
 
     };
@@ -101,26 +109,53 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
     that.setState = (newState) => {
         if(spec.state !== newState){
             let prevState = spec.state;
-            switch(newState){
-                case STATE_COMPLETE :
-                    that.trigger(PLAYER_COMPLETE);
-                    break;
-                case STATE_PAUSED :
-                    that.trigger(PLAYER_PAUSE, {
-                        prevState: spec.state
-                    });
-                    break;
-                case STATE_PLAYING :
-                    that.trigger(PLAYER_PLAY, {
-                        prevState: spec.state
-                    });
-                    break;
+
+            //ToDo : This is temporary code. avoid background content error.
+            if(prevState === STATE_AD_PLAYING && (newState === STATE_ERROR || newState === STATE_IDLE) ){
+                return false;
             }
-            spec.state = newState;
-            that.trigger(PLAYER_STATE, {
-                prevstate : prevState,
-                newstate: spec.state
-            });
+
+
+            if(ads && ads.isAutoPlaySupportCheckTime()){
+                //Ads checks checkAutoplaySupport().
+                //It calls real play() and pause().
+                //And then this triggers "playing" and "pause".
+                //I prevent these process.
+            }else{
+                switch(newState){
+                    case STATE_COMPLETE :
+                        that.trigger(PLAYER_COMPLETE);
+                        break;
+                    case STATE_PAUSED :
+                        that.trigger(PLAYER_PAUSE, {
+                            prevState: spec.state,
+                            newstate: STATE_PAUSED
+                        });
+                        break;
+                    case STATE_AD_PAUSED :
+                        that.trigger(PLAYER_PAUSE, {
+                            prevState: spec.state,
+                            newstate: STATE_AD_PAUSED
+                        });
+                        break;
+                    case STATE_PLAYING :
+                        that.trigger(PLAYER_PLAY, {
+                            prevState: spec.state,
+                            newstate: STATE_PLAYING
+                        });
+                    case STATE_AD_PLAYING :
+                        that.trigger(PLAYER_PLAY, {
+                            prevState: spec.state,
+                            newstate: STATE_AD_PLAYING
+                        });
+                        break;
+                }
+                spec.state = newState;
+                that.trigger(PLAYER_STATE, {
+                    prevstate : prevState,
+                    newstate: spec.state
+                });
+            }
         }
     };
     that.getState = () =>{
@@ -190,17 +225,14 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
         _load(lastPlayPosition || 0);
 
         return new Promise(function (resolve, reject) {
-            resolve();
-
-            if(playerConfig.isAutoStart()){
-                that.play();
-            }
             if(playerConfig.isMute()){
                 that.setMute(true);
             }
             if(playerConfig.getVolume()){
                 that.setVolume(playerConfig.getVolume());
             }
+
+            resolve();
         });
 
     };
@@ -214,38 +246,43 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
         if(!elVideo){
             return false;
         }
-
+        if(isPlayingProcessing){
+            return false;
+        }
+        isPlayingProcessing = true;
         if(that.getState() !== STATE_PLAYING){
-            //console.log("Provioder Play???", ads.isActive() , ads.started());
-            if (  (ads && ads.isActive()) || (ads && !ads.started()) ) {  // || !ads.started()
-
+            if (  (ads && ads.isActive()) || (ads && !ads.started()) ) {
                 ads.play().then(_ => {
                     //ads play success
+                    isPlayingProcessing = false;
                 }).catch(error => {
                     //ads play fail maybe cause user interactive less
+                    isPlayingProcessing = false;
+                    console.log(error);
                 });
 
             }else{
-                if(that.getName() === PROVIDER_DASH && ads && !dashAttachedView){
-                    //Ad steals dash's video element. Put in right place.
-                    spec.mse.attachView(elVideo);
-                    dashAttachedView = true;
-                }
-
                 let promise = elVideo.play();
                 if (promise !== undefined) {
-                    promise.then(_ => {
-                        // started!
+                    promise.then(function(){
+                        isPlayingProcessing = false;
                     }).catch(error => {
+                        if(playerConfig.getBrowser().browser  === "Safari" || playerConfig.getBrowser().os  === "iOS" || playerConfig.getBrowser().os  === "Android"){
+                            elVideo.muted = true;
+                        }
                         //Can't play because User doesn't any interactions.
                         //Wait for User Interactions. (like click)
                         setTimeout(function () {
+                            isPlayingProcessing = false;
                             that.play();
-                        }, 500);
+                        }, 100);
 
                     });
-
+                }else{
+                    //IE promise is undefinded.
+                    isPlayingProcessing = false;
                 }
+
             }
 
         }
@@ -314,13 +351,15 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
                 that.trigger(CONTENT_SOURCE_CHANGED, {
                     currentSource: sourceIndex
                 });
-                playerConfig.setSourceLabel(spec.sources[sourceIndex].label);
+                playerConfig.setSourceIndex(sourceIndex);
+                //playerConfig.setSourceLabel(spec.sources[sourceIndex].label);
                 //spec.currentQuality = sourceIndex;
+                that.pause();
+                that.setState(STATE_IDLE);
                 if(needProviderChange){
                     _load(elVideo.currentTime || 0);
                 }
-                //that.pause();
-                that.setState(STATE_IDLE);
+                //
                 return spec.currentSource;
             }
         }

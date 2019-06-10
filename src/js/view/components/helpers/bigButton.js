@@ -22,8 +22,15 @@ const BigButton = function($container, api, playerState){
             event.preventDefault();
 
             const currentState = api.getState();
-            if (currentState === STATE_IDLE || currentState === STATE_PAUSED || currentState === STATE_COMPLETE) {
+            let playlist = api.getPlaylist();
+            let currentPlaylistIndex = api.getCurrentPlaylist();
+
+            if (currentState === STATE_IDLE || currentState === STATE_PAUSED) {
                 api.play();
+            }else if(currentState === STATE_COMPLETE){
+                if(playlist.length === (currentPlaylistIndex+1)){
+                    api.setCurrentPlaylist(0);
+                }
             }
         }
     };

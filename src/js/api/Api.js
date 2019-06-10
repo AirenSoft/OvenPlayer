@@ -6,10 +6,11 @@ import MediaManager from "api/media/Manager";
 import PlaylistManager from "api/playlist/Manager";
 import ProviderController from "api/provider/Controller";
 import {READY, ERRORS, ERROR, CONTENT_TIME_MODE_CHANGED, INIT_UNKNWON_ERROR, INIT_UNSUPPORT_ERROR, DESTROY, NETWORK_UNSTABLED,
-    PLAYER_FILE_ERROR, PROVIDER_DASH, PROVIDER_HLS, PROVIDER_WEBRTC, PROVIDER_HTML5, PROVIDER_RTMP} from "api/constants";
+    PLAYER_FILE_ERROR, PROVIDER_DASH, PROVIDER_HLS, PROVIDER_WEBRTC, PROVIDER_HTML5, PROVIDER_RTMP, ALL_PLAYLIST_ENDED} from "api/constants";
 import {version} from 'version';
 import {ApiRtmpExpansion} from 'api/ApiExpansions';
 import {analUserAgent} from "utils/browser";
+import LA$ from 'utils/likeA$';
 
 /**
  * @brief   This object connects UI to the provider.
@@ -40,13 +41,22 @@ const Api = function(container){
         let nextPlaylistIndex = index; // || playlistManager.getCurrentPlaylistIndex() + 1;
         let playlist = playlistManager.getPlaylist();
         let hasNextPlaylist = playlist[nextPlaylistIndex]? true : false;
-
+        //init source index
+        playerConfig.setSourceIndex(0);
         if(hasNextPlaylist){
             //that.pause();
             lazyQueue = LazyCommandExecutor(that, ['play','seek','stop']);
             playlistManager.setCurrentPlaylist(nextPlaylistIndex);
             initProvider();
-            that.play();
+
+
+            if(!playerConfig.isAutoStart()){
+                //Anyway nextplaylist runs autoStart!.
+                that.play();
+            }
+        }else{
+            //All Playlist Ended.
+            that.trigger(ALL_PLAYLIST_ENDED, null);
         }
     };
     const initProvider = function(lastPlayPosition){
@@ -57,9 +67,12 @@ const Api = function(container){
                     if (sources[i].default) {
                         quality = i;
                     }
-                    if (playerConfig.getSourceLabel() && sources[i].label === playerConfig.getSourceLabel() ) {
+                    if (playerConfig.getSourceIndex() === i ) {
                         return i;
                     }
+                    /*if (playerConfig.getSourceLabel() && sources[i].label === playerConfig.getSourceLabel() ) {
+                        return i;
+                    }*/
                 }
             }
             return quality;
@@ -82,15 +95,15 @@ const Api = function(container){
             OvenPlayerConsole.log("API : init() captions");
 
             let currentSourceIndex = pickQualityFromSource(playlistManager.getCurrentSources());
-            let providerName = Providers[currentSourceIndex].name.toLowerCase();
-
-            OvenPlayerConsole.log( "currentProvider : ", providerName,"current source index : "+ currentSourceIndex);
-
-            let videoElement = mediaManager.createMedia(providerName, playerConfig.isLoop());
-            //mediaManager = MediaManager(container, providerName, false); //mediaManager.createMedia(providerName, playerConfig.isLoop());
+            let providerName = Providers[currentSourceIndex]["name"];
 
             //Init Provider.
-            currentProvider =  Providers[currentSourceIndex](videoElement, playerConfig, playlistManager.getCurrentAdTag());
+            currentProvider =  Providers[currentSourceIndex].provider(
+                mediaManager.createMedia(providerName, playerConfig),
+                playerConfig,
+                playlistManager.getCurrentAdTag()
+            );
+            OvenPlayerConsole.log("API : init() provider", providerName);
 
 
             if(providerName === PROVIDER_RTMP){
@@ -110,12 +123,11 @@ const Api = function(container){
                 //Auto switching next source when player load failed by amiss source.
                 //data.code === PLAYER_FILE_ERROR
                 if( name === ERROR || name === NETWORK_UNSTABLED ){
-                    let currentSourceIndex = that.getCurrentSource();
-                    if(currentSourceIndex+1 < that.getSources().length){
+                    //let currentSourceIndex = that.getCurrentSource();
+                    if(playerConfig.getSourceIndex()+1 < that.getSources().length){
                         //this sequential has available source.
                         that.pause();
-
-                        that.setCurrentSource(currentSourceIndex+1);
+                        that.setCurrentSource(playerConfig.getSourceIndex()+1);
                     }
                 }
             });
@@ -183,6 +195,14 @@ const Api = function(container){
 
         initProvider();
     };
+    that.getProviderName = () => {
+        if(currentProvider){
+            return currentProvider.getName();
+        }else{
+            return null;
+        }
+
+    }
     that.getConfig = () => {
         OvenPlayerConsole.log("API : getConfig()", playerConfig.getConfig());
         return playerConfig.getConfig();
@@ -200,7 +220,7 @@ const Api = function(container){
         return playerConfig.isTimecodeMode();
     };
     that.getFramerate = () => {
-        OvenPlayerConsole.log("API : getFramerate()", currentProvider.getFramerate());
+        OvenPlayerConsole.log("API : getFramerate()");
         return currentProvider.getFramerate();
     };
     that.seekFrame = (frameCount) => {
@@ -332,7 +352,7 @@ const Api = function(container){
         OvenPlayerConsole.log("API : setCurrentQuality() isSameProvider", isSameProvider);
 
         if(!isSameProvider){
-            lazyQueue = LazyCommandExecutor(that, ['play']);
+            lazyQueue = LazyCommandExecutor(that, ['play','seek']);
             initProvider(lastPlayPosition);
         }
 
@@ -452,8 +472,6 @@ const Api = function(container){
     that.getVersion = () => {
         return "v."+version;
     };
-
-
 
     return that;
 };

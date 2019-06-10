@@ -43,9 +43,9 @@ const PlayButton = function ($container, api) {
 
 
     const onRendered = function($current, template){
-        $iconPlay = $current.find( ".ovp-play-button-playicon");
-        $iconPause = $current.find(".ovp-play-button-pauseicon");
-        $iconReplay = $current.find(".ovp-play-button-replayicon");
+        $iconPlay = $current.find( ".play");
+        $iconPause = $current.find(".pause");
+        $iconReplay = $current.find(".replay");
 
         api.on(PLAYER_STATE, function(data){
             if(data && data.newstate){
@@ -59,7 +59,10 @@ const PlayButton = function ($container, api) {
     const events = {
         "click .ovp-play-button" : function(event, $current, template){
             event.preventDefault();
-            const currentState = api.getState();
+            let currentState = api.getState();
+            let playlist = api.getPlaylist();
+            let currentPlaylistIndex = api.getCurrentPlaylist();
+
             if (currentState === STATE_IDLE) {
                 api.play();
             } else if (currentState === STATE_PLAYING || currentState === STATE_AD_PLAYING) {
@@ -67,7 +70,9 @@ const PlayButton = function ($container, api) {
             } else if (currentState === STATE_PAUSED || currentState === STATE_AD_PAUSED) {
                 api.play();
             } else if (currentState === STATE_COMPLETE) {
-                api.play();
+                if(playlist.length === (currentPlaylistIndex+1)){
+                    api.setCurrentPlaylist(0);
+                }
             }
         }
     };

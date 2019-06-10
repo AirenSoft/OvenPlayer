@@ -293,7 +293,6 @@ const WebRTCLoader = function (provider, webSocketUrl, loadCallback, errorTrigge
 
         let newDomain = generateDomainFromUrl(webSocketUrl);
         let ip = findIp(cloneCandidate.candidate);
-        console.log(ip, newDomain);
         if(ip === newDomain){
             return null;
         }

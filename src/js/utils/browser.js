@@ -75,6 +75,12 @@ export const analUserAgent = function(){
     else if ((verOffset = nAgt.indexOf('MSIE')) != -1) {
         browser = 'Microsoft Internet Explorer';
         version = nAgt.substring(verOffset + 5);
+
+
+        //win7 IE11 userAgent is ugly....
+        if( (nAgt.indexOf('Trident/') !== -1) && (nAgt.indexOf('rv:') !== -1)  ){
+            version = nAgt.substring(nAgt.indexOf('rv:') + 3);
+        }
     }
     // Chrome
     else if ((verOffset = nAgt.indexOf('Chrome')) != -1) {
@@ -105,7 +111,7 @@ export const analUserAgent = function(){
 
 
     // MSIE 11+
-    else if (nAgt.indexOf('Trident/') != -1) {
+    else if (nAgt.indexOf('Trident/') !== -1) {
         browser = 'Microsoft Internet Explorer';
         version = nAgt.substring(nAgt.indexOf('rv:') + 3);
     }

@@ -1,5 +1,5 @@
 export default (data) => {
-    return`<div class="ovp-time-display">`+
+    return`<div class="ovp-navigators ovp-time-display">`+
             (data.duration === Infinity
                 ?
                 (

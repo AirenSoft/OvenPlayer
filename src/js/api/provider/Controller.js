@@ -1,5 +1,9 @@
 import SupportChecker from "api/SupportChecker";
 import {ApiRtmpExpansion} from 'api/ApiExpansions';
+import {
+    PROVIDER_HTML5, PROVIDER_WEBRTC, PROVIDER_DASH, PROVIDER_HLS, PROVIDER_RTMP,
+    ERRORS, INIT_UNSUPPORT_ERROR
+} from "api/constants";
 
 /**
  * @brief   This manages provider.
@@ -24,8 +28,8 @@ const Controller = function(){
         html5: function() {
             return require.ensure(['api/provider/html5/providers/Html5'], function(require) {
                     const provider = require('api/provider/html5/providers/Html5').default;
-                    registeProvider("html5", provider);
-                    return provider;
+                    registeProvider(PROVIDER_HTML5, provider);
+                return {name : PROVIDER_HTML5, provider : provider};
                 }, function(err){
                     throw new Error('Network error');
                 },'ovenplayer.provider.Html5'
@@ -34,8 +38,8 @@ const Controller = function(){
         webrtc : function(){
             return require.ensure(['api/provider/html5/providers/WebRTC'], function(require) {
                     const provider = require('api/provider/html5/providers/WebRTC').default;
-                    registeProvider("webrtc", provider);
-                    return provider;
+                    registeProvider(PROVIDER_WEBRTC, provider);
+                return {name : PROVIDER_WEBRTC, provider : provider};
                 }, function(err){
                     throw new Error('Network error');
                 },'ovenplayer.provider.WebRTCProvider'
@@ -44,8 +48,8 @@ const Controller = function(){
         dash : function(){
             return require.ensure(['api/provider/html5/providers/Dash'], function(require) {
                     const provider = require('api/provider/html5/providers/Dash').default;
-                    registeProvider("dash", provider);
-                    return provider;
+                    registeProvider(PROVIDER_DASH, provider);
+                return {name : PROVIDER_DASH, provider : provider};
                 }, function(err){
                     throw new Error('Network error');
                 },'ovenplayer.provider.DashProvider'
@@ -54,8 +58,8 @@ const Controller = function(){
         hls : function(){
             return require.ensure(['api/provider/html5/providers/Hls'], function(require) {
                     const provider = require('api/provider/html5/providers/Hls').default;
-                    registeProvider("hls", provider);
-                    return provider;
+                    registeProvider(PROVIDER_HLS, provider);
+                return {name : PROVIDER_HLS, provider : provider};
                 }, function(err){
                     throw new Error('Network error');
                 },'ovenplayer.provider.HlsProvider'
@@ -64,8 +68,8 @@ const Controller = function(){
         rtmp : function(){
             return require.ensure(['api/provider/flash/providers/Rtmp'], function(require) {
                     const provider = require('api/provider/flash/providers/Rtmp').default;
-                    registeProvider("rtmp", provider);
-                    return provider;
+                    registeProvider(PROVIDER_RTMP, provider);
+                    return {name : PROVIDER_RTMP, provider : provider};
                 }, function(err){
                     throw new Error('Network error');
                 },'ovenplayer.provider.RtmpProvider'
@@ -77,13 +81,18 @@ const Controller = function(){
     that.loadProviders = (playlistItem) =>{
         const supportedProviderNames = supportChacker.findProviderNamesByPlaylist(playlistItem);
         OvenPlayerConsole.log("ProviderController loadProviders() ", supportedProviderNames);
-        return Promise.all(
-            supportedProviderNames.filter(function(providerName){
-                return !!ProviderLoader[providerName];
-            }).map(function(providerName){
-                return ProviderLoader[providerName]();
-            })
-        );
+        if(!supportedProviderNames){
+            return Promise.reject(ERRORS[INIT_UNSUPPORT_ERROR]);
+        }else{
+            return Promise.all(
+                supportedProviderNames.filter(function(providerName){
+                    return !!ProviderLoader[providerName];
+                }).map(function(providerName){
+                    return ProviderLoader[providerName]();
+                })
+            );
+        }
+
     };
 
     that.findByName = (name) => {
@@ -100,7 +109,6 @@ const Controller = function(){
     that.isSameProvider = (currentSource, newSource) => {
         OvenPlayerConsole.log("ProviderController isSameProvider() ", supportChacker.findProviderNameBySource(currentSource) , supportChacker.findProviderNameBySource(newSource) );
         return supportChacker.findProviderNameBySource(currentSource) === supportChacker.findProviderNameBySource(newSource);
-
     };
 
     return that;

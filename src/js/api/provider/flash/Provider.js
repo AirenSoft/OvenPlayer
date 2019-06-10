@@ -7,8 +7,8 @@ import EventsListener from "api/provider/flash/Listener";
 import {extractVideoElement, separateLive, pickCurrentSource} from "api/provider/utils";
 import {
     ERRORS, INIT_RTMP_SETUP_ERROR,
-    STATE_IDLE, STATE_PLAYING, STATE_PAUSED, STATE_COMPLETE,
-    PLAYER_STATE, PLAYER_COMPLETE, PLAYER_PAUSE, PLAYER_PLAY, STATE_AD_PLAYING,
+    STATE_IDLE, STATE_PLAYING, STATE_PAUSED, STATE_COMPLETE, STATE_ERROR,
+    PLAYER_STATE, PLAYER_COMPLETE, PLAYER_PAUSE, PLAYER_PLAY, STATE_AD_PLAYING, STATE_AD_PAUSED,
     CONTENT_SOURCE_CHANGED, CONTENT_LEVEL_CHANGED, CONTENT_TIME, CONTENT_CAPTION_CUE_CHANGED,
     PLAYBACK_RATE_CHANGED, CONTENT_MUTE, PROVIDER_HTML5, PROVIDER_WEBRTC, PROVIDER_DASH, PROVIDER_HLS
 } from "api/constants";
@@ -34,8 +34,11 @@ const Provider = function(spec, playerConfig){
         {value :0, writable : true}
     );
 
-    if(spec.adTag){
-        ads = Ads(elFlash, that, playerConfig, spec.adTag);
+    if(spec.adTagUrl){
+        ads = Ads(elFlash, that, playerConfig, spec.adTagUrl);
+        if(!ads){
+            console.log("Can not load due to google ima for Ads.");
+        }
     }
     listener = EventsListener(elFlash, that, ads ? ads.videoEndedCallback : null);
 
@@ -44,16 +47,27 @@ const Provider = function(spec, playerConfig){
         OvenPlayerConsole.log("source loaded : ", source, "lastPlayPosition : "+ lastPlayPosition);
         const previousSource = elFlash.getCurrentSource();
         const sourceChanged = (source.file !== previousSource);
-
         if (sourceChanged) {
             elFlash.load(source.file);
         }else if(lastPlayPosition === 0 && that.getPosition() > 0){
             that.seek(lastPlayPosition);
         }
+
+    };
+    //Flash has two init states. FlashLoaded and FileLoaded.
+    //_load calls after FlashLoaded. _afterLoad calls after FileLoaded.
+    const _afterLoad = function(lastPlayPosition){
         if(lastPlayPosition > 0){
+            if(!playerConfig.isAutoStart()){
+                that.play();
+            }
             that.seek(lastPlayPosition);
+        }
+        if(playerConfig.isAutoStart()){
+
             that.play();
         }
+
     };
 
     //This is why. Flash does not self trig to ads,lmalm,
@@ -84,26 +98,52 @@ const Provider = function(spec, playerConfig){
     that.setState = (newState) => {
         if(spec.state !== newState){
             let prevState = spec.state;
-            switch(newState){
-                case STATE_COMPLETE :
-                    that.trigger(PLAYER_COMPLETE);
-                    break;
-                case STATE_PAUSED :
-                    that.trigger(PLAYER_PAUSE, {
-                        prevState: spec.state
-                    });
-                    break;
-                case STATE_PLAYING :
-                    that.trigger(PLAYER_PLAY, {
-                        prevState: spec.state
-                    });
-                    break;
+            //ToDo : This is temporary code. avoid background content error.
+            if(prevState === STATE_AD_PLAYING && (newState === STATE_ERROR || newState === STATE_IDLE) ){
+                return false;
             }
-            spec.state = newState;
-            that.trigger(PLAYER_STATE, {
-                prevstate : prevState,
-                newstate: spec.state
-            });
+
+
+            if(ads && ads.isAutoPlaySupportCheckTime()){
+                //Ads checks checkAutoplaySupport().
+                //It calls real play() and pause().
+                //And then this triggers "playing" and "pause".
+                //I prevent these process.
+            }else{
+                switch(newState){
+                    case STATE_COMPLETE :
+                        that.trigger(PLAYER_COMPLETE);
+                        break;
+                    case STATE_PAUSED :
+                        that.trigger(PLAYER_PAUSE, {
+                            prevState: spec.state,
+                            newstate: STATE_PAUSED
+                        });
+                        break;
+                    case STATE_AD_PAUSED :
+                        that.trigger(PLAYER_PAUSE, {
+                            prevState: spec.state,
+                            newstate: STATE_AD_PAUSED
+                        });
+                        break;
+                    case STATE_PLAYING :
+                        that.trigger(PLAYER_PLAY, {
+                            prevState: spec.state,
+                            newstate: STATE_PLAYING
+                        });
+                    case STATE_AD_PLAYING :
+                        that.trigger(PLAYER_PLAY, {
+                            prevState: spec.state,
+                            newstate: STATE_AD_PLAYING
+                        });
+                        break;
+                }
+                spec.state = newState;
+                that.trigger(PLAYER_STATE, {
+                    prevstate : prevState,
+                    newstate: spec.state
+                });
+            }
         }
     };
     that.getState = () =>{
@@ -173,17 +213,12 @@ const Provider = function(spec, playerConfig){
                         {value :elFlash.getDuration()}
                     );
                     _load(lastPlayPosition || 0);
-
                     retryCount = 0;
 
                     return (function checkFileLoaded(){
                         retryCount ++;
-                        if(elFlash.isFileLoaded()){
-
-                            if(playerConfig.isAutoStart()){
-                                that.play();
-                            }
-
+                        if(elFlash.isFileLoaded && elFlash.isFileLoaded()){
+                            _afterLoad(lastPlayPosition);
                             if(playerConfig.isMute()){
                                 that.setMute(true);
                             }
@@ -193,7 +228,8 @@ const Provider = function(spec, playerConfig){
 
                             return resolve();
                         }else{
-                            if(retryCount < 100){
+
+                            if(retryCount < 300){
                                 setTimeout(checkFileLoaded, 100);
                             }else{
                                 return reject(ERRORS[INIT_RTMP_SETUP_ERROR]);
@@ -215,16 +251,16 @@ const Provider = function(spec, playerConfig){
     that.load = (sources) =>{
         spec.sources = sources;
         spec.currentSource = pickCurrentSource(sources, spec.currentSource, playerConfig);
-        _load(spec.sources_.starttime || 0);
+        _load(0);   //spec.sources_.starttime ||
+        _afterLoad(0);
     };
 
     that.play = () =>{
         if(!elFlash){
             return false;
         }
-
         if(that.getState() !== STATE_PLAYING){
-            if ( (ads && ads.isActive()) || (ads && !ads.started())) {
+            if ( (ads && ads.isActive()) || (ads && !ads.started()) ) {
                 ads.play();
             }else{
                 elFlash.play();
@@ -276,7 +312,7 @@ const Provider = function(spec, playerConfig){
 
         if(sourceIndex > -1){
             if(spec.sources && spec.sources.length > sourceIndex){
-                //that.pause();
+                that.pause();
                 that.setState(STATE_IDLE);
                 OvenPlayerConsole.log("source changed : " + sourceIndex);
                 spec.currentSource = sourceIndex;
@@ -285,10 +321,28 @@ const Provider = function(spec, playerConfig){
                     currentSource: sourceIndex
                 });
 
-                playerConfig.setSourceLabel(spec.sources[sourceIndex].label);
-                if(needProviderChange){
+                playerConfig.setSourceIndex(sourceIndex);
+                //playerConfig.setSourceLabel(spec.sources[sourceIndex].label);
 
-                    _load(elFlash.getCurrentTime() || 0);
+                if(needProviderChange){
+                    let lastPlayPosition = elFlash.getCurrentTime()|| 0;
+                    let retryCount = 0;
+                    _load(lastPlayPosition);
+
+                    (function checkFileLoaded(){
+                        retryCount ++;
+                        if(elFlash.isFileLoaded && elFlash.isFileLoaded()){
+                            _afterLoad(lastPlayPosition);
+                        }else{
+
+                            if(retryCount < 300){
+                                setTimeout(checkFileLoaded, 100);
+                            }else{
+                                console.log("FileLoad failed");
+                            }
+                        }
+                    })();
+
                 }
                 return spec.currentSource;
             }
@@ -339,8 +393,14 @@ const Provider = function(spec, playerConfig){
 
     that.destroy = () =>{
         OvenPlayerConsole.log("CORE : destroy() player stop, listener, event destroied");
+        that.stop();
 
-        elFlash.remove();
+        /*try{
+            elFlash.remove();
+        }catch(error){
+            console.log(error);
+        }*/
+
 
         if(ads){
             ads.destroy();

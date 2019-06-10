@@ -43,9 +43,12 @@ export const pickCurrentSource = (sources, currentSource, playerConfig) => {
             if (sources[i].default) {
                 sourceIndex = i;
             }
-            if (playerConfig.getSourceLabel() && sources[i].label === playerConfig.getSourceLabel() ) {
+            if (playerConfig.getSourceIndex() === i ) {
                 return i;
             }
+            /*if (playerConfig.getSourceLabel() && sources[i].label === playerConfig.getSourceLabel() ) {
+                return i;
+            }*/
         }
     }
     return sourceIndex;

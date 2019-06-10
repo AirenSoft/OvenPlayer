@@ -4,7 +4,16 @@
 import Provider from "api/provider/html5/Provider";
 import {errorTrigger} from "api/provider/utils";
 import sizeHumanizer from "utils/sizeHumanizer";
-import {STATE_IDLE, ERRORS, PLAYER_UNKNWON_NEWWORK_ERROR, CONTENT_LEVEL_CHANGED,  STATE_PLAYING, PROVIDER_DASH, CONTENT_META} from "api/constants";
+import {
+    STATE_IDLE,
+    STATE_PLAYING,
+    INIT_DASH_UNSUPPORT,
+    INIT_DASH_NOTFOUND,
+    ERRORS,
+    PLAYER_UNKNWON_NEWWORK_ERROR,
+    CONTENT_LEVEL_CHANGED,
+    PROVIDER_DASH, CONTENT_META
+} from "api/constants";
 
 /**
  * @brief   dashjs provider extended core.
@@ -18,10 +27,12 @@ const DASHERROR = {
 const Dash = function(element, playerConfig, adTagUrl){
     let that = {};
     let dash = null;
+    let superPlay_func = null;
     let superDestroy_func = null;
     let seekPosition_sec = 0;
     let isFirstError = false;
-
+    let isDashMetaLoaded = false;
+    let runedAutoStart = false;
     try {
         const coveredSetAutoSwitchQualityFor = function(isAuto){
             if(dashjs.Version > "2.9.0"){
@@ -41,7 +52,7 @@ const Dash = function(element, playerConfig, adTagUrl){
         };
         dash = dashjs.MediaPlayer().create();
         if(dashjs.Version < "2.6.5"){
-            throw ERRORS[103];
+            throw ERRORS[INIT_DASH_UNSUPPORT];
         }
         dash.getDebug().setLogToBrowserConsole(false);
         dash.initialize(element, null, false);
@@ -70,6 +81,7 @@ const Dash = function(element, playerConfig, adTagUrl){
             dash.attachSource(source.file);
             seekPosition_sec = lastPlayPosition;
         });
+        superPlay_func = that.super('play');
         superDestroy_func = that.super('destroy');
         OvenPlayerConsole.log("DASH PROVIDER LOADED.");
 
@@ -101,10 +113,10 @@ const Dash = function(element, playerConfig, adTagUrl){
                 });
             }
         });
-
-        that.on(CONTENT_META, function(meta){
+        dash.on(dashjs.MediaPlayer.events.PLAYBACK_METADATA_LOADED, function(event){
             OvenPlayerConsole.log("GetStreamInfo  : ", dash.getQualityFor("video"), dash.getBitrateInfoListFor('video'), dash.getBitrateInfoListFor('video')[dash.getQualityFor("video")]);
-
+            console.log("PLAYBACK_METADATA_LOADED");
+            isDashMetaLoaded = true;
             let subQualityList = dash.getBitrateInfoListFor('video');
             spec.currentQuality = dash.getQualityFor("video");
             for(let i = 0; i < subQualityList.length; i ++){
@@ -118,14 +130,44 @@ const Dash = function(element, playerConfig, adTagUrl){
             }
 
             if(dash.isDynamic()){
-                //that.play();
-            }else{
-                if(seekPosition_sec){
-                    dash.seek(seekPosition_sec);
+                //islive
+            }
+            if(seekPosition_sec){
+                dash.seek(seekPosition_sec);
+                if(!playerConfig.isAutoStart()){
                     that.play();
                 }
             }
-        }, that);
+            //
+            if(playerConfig.isAutoStart() && !runedAutoStart){
+                that.play();
+                runedAutoStart = true;
+            }
+        });
+
+        //Dash will infinite loading when player is in a paused state for a long time.
+        that.play = () =>{
+            isDashMetaLoaded = false;
+            dash.attachView(element);
+
+            let retryCount = 0;
+
+            (function checkDashMetaLoaded(){
+                retryCount ++;
+                if(isDashMetaLoaded){
+                    superPlay_func();
+                }else{
+
+                    if(retryCount < 300){
+                        setTimeout(checkDashMetaLoaded, 100);
+                    }else{
+                        that.play();
+                    }
+                }
+            })();
+
+        };
+
         that.setCurrentQuality = (qualityIndex) => {
             if(that.getState() !== STATE_PLAYING){
                 that.play();
@@ -149,12 +191,13 @@ const Dash = function(element, playerConfig, adTagUrl){
             superDestroy_func();
         };
     }catch(error){
-        if(error.code && error.message){
+        if(error && error.code && error.code === INIT_DASH_UNSUPPORT){
             throw error;
         }else{
-            throw new Error(error);
+            let tempError =  ERRORS[INIT_DASH_NOTFOUND];
+            tempError.error = error;
+            throw tempError;
         }
-
     }
 
     return that;

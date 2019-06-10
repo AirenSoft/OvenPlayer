@@ -6,6 +6,7 @@ import {
     STATE_STALLED,
     STATE_LOADING,
     STATE_COMPLETE,
+    STATE_AD_PLAYING,
     STATE_PAUSED,
     STATE_ERROR,
     CONTENT_COMPLETE,
@@ -103,7 +104,6 @@ const Listener = function(element, mse, provider, videoEndedCallback){
             duration: isLive ?  Infinity : elVideo.duration,
             type :type
         };
-
         OvenPlayerConsole.log("EventListener : on loadedmetadata", metadata);
         provider.trigger(CONTENT_META, metadata);
     };
@@ -123,10 +123,12 @@ const Listener = function(element, mse, provider, videoEndedCallback){
             return false;
         }
         OvenPlayerConsole.log("EventListener : on pause");
+
         provider.setState(STATE_PAUSED);
     };
 
     lowLevelEvents.play = () => {
+
         //Fires when the audio/video has been started or is no longer paused
         stalled = -1;
         if (!elVideo.paused && provider.getState() !== STATE_PLAYING) {
@@ -164,12 +166,18 @@ const Listener = function(element, mse, provider, videoEndedCallback){
 
     lowLevelEvents.timeupdate = () => {
         //Fires when the current playback position has changed
-        const position = elVideo.currentTime;
-        const duration = elVideo.duration;
+        let position = elVideo.currentTime;
+        let duration = elVideo.duration;
         if (isNaN(duration)) {
             return;
         }
-        if(!provider.isSeeking() && !elVideo.paused && (provider.getState() === STATE_STALLED || provider.getState() === STATE_LOADING) &&
+
+        //Sometimes dash live gave to me crazy duration. (9007199254740991...) why???
+        if(duration > 9000000000000000){    //9007199254740991
+            duration = Infinity;
+        }
+
+        if(!provider.isSeeking() && !elVideo.paused && (provider.getState() === STATE_STALLED || provider.getState() === STATE_LOADING || provider.getState() === STATE_AD_PLAYING) &&
             !compareStalledTime(stalled, position) ){
             stalled = -1;
             provider.setState(STATE_PLAYING);
@@ -235,7 +243,7 @@ const Listener = function(element, mse, provider, videoEndedCallback){
         }[code]||0);
 
         OvenPlayerConsole.log("EventListener : on error", convertedErroCode);
-        errorTrigger(ERRORS[convertedErroCode]);
+        errorTrigger(ERRORS[convertedErroCode], provider);
     };
 
     Object.keys(lowLevelEvents).forEach(eventName => {

@@ -5,6 +5,7 @@ import OvenTemplate from "view/engine/OvenTemplate";
 import BigButton from "view/components/helpers/bigButton";
 import MessageBox from "view/components/helpers/messageBox";
 import CaptionViewer from "view/components/helpers/captionViewer";
+import Thumbnail from "view/components/helpers/thumbnail";
 import Spinner from "view/components/helpers/spinner";
 import {
     READY,
@@ -20,14 +21,20 @@ import {
     STATE_AD_PAUSED,
     STATE_AD_COMPLETE,
     PLAYLIST_CHANGED,
+    PLAYER_WARNING,
+    CONTENT_MUTE,
     STATE_ERROR,
     PLAYER_STATE,
+    ALL_PLAYLIST_ENDED,
     CONTENT_LEVEL_CHANGED,
     NETWORK_UNSTABLED
 } from "api/constants";
 
 const Helpers = function($container, api){
-    let bigButton = "", messageBox = "",  captionViewer = "", spinner = "";
+    let bigButton = "", messageBox = "",  captionViewer = "", spinner = "", thumbnail;
+    let mutedMessage = null;
+    let hasThumbnail = api.getConfig().image || api.getConfig().title;
+
     const onRendered = function($current, template){
         let qualityLevelChanging = false, newQualityLevel = -1;
         let createBigButton = function(state){
@@ -36,11 +43,17 @@ const Helpers = function($container, api){
             }
             bigButton = BigButton($current, api, state);
         };
-        let createMessage = function(message, withTimer){
+        let createMessage = function(message, description ,withTimer){
             if(messageBox){
                 messageBox.destroy();
             }
-            messageBox = MessageBox($current, api, message, withTimer);
+            messageBox = MessageBox($current, api, message, description, withTimer);
+        };
+        let createThumbnail = function(){
+            if(thumbnail){
+                thumbnail.destroy();
+            }
+            thumbnail = Thumbnail($current, api, api.getConfig());
         };
 
         spinner = Spinner($current, api);
@@ -52,8 +65,32 @@ const Helpers = function($container, api){
         captionViewer = CaptionViewer($current, api);
 
         api.on(READY, function() {
+            if(hasThumbnail){
+                createThumbnail();  //shows when playlist changed.
+            }
             createBigButton(STATE_PAUSED);
+        }, template);
 
+        //So far warning muted play is all!!
+        api.on(PLAYER_WARNING, function(data) {
+            if(data.message){
+
+                if(bigButton){
+                    bigButton.destroy();
+                }
+
+                if(messageBox){
+                    messageBox.destroy();
+                }
+                mutedMessage = MessageBox($current, api, data.message, null, data.timer, data.iconClass, data.onClickCallback);
+
+                //When the volume is turned on by an external something.
+                api.once(CONTENT_MUTE, function(data){
+                    if(!data.mute && mutedMessage){
+                        mutedMessage.destroy();
+                    }
+                }, template);
+            }
         }, template);
 
         api.on(PLAYER_STATE, function(data){
@@ -61,6 +98,10 @@ const Helpers = function($container, api){
 
                 if(data.newstate === STATE_PLAYING ||  data.newstate === STATE_AD_PLAYING){
                     bigButton.destroy();
+                    if(thumbnail){
+                        thumbnail.destroy();
+                    }
+
                     if(!qualityLevelChanging){
                         spinner.show(false);
                     }
@@ -99,18 +140,20 @@ const Helpers = function($container, api){
 
          }, template);
         api.on(ERROR, function(error) {
-            let message = "";
+            let message = "", description = "";
             if(bigButton){
                 bigButton.destroy();
             }
             if (error && error.code && error.code >= 100 && error.code < 1000) {
                 message = error.message;
-
+                if(error.code === 100){
+                    description = error.error.toString();
+                }
             }  else {
                 message = "Can not play due to unknown reasons.";
             }
             OvenPlayerConsole.log("error occured : ", error);
-            createMessage(message);
+            createMessage(message, description);
         }, template);
 
         api.on(NETWORK_UNSTABLED, function(event){
@@ -120,15 +163,22 @@ const Helpers = function($container, api){
                 message = "Network connection is unstable. Check the network connection.";
             }
             OvenPlayerConsole.log(message);
-            //createMessage(message, 5000);
+            //createMessage(message, null,5000);
         }, template);
 
+        api.on(ALL_PLAYLIST_ENDED, function(){
+            if(hasThumbnail){
+                createThumbnail();
+            }
+        }, template);
     };
     const onDestroyed = function(template){
         api.off(READY, null, template);
         api.off(PLAYER_STATE, null, template);
+        api.off(PLAYER_WARNING, null, template);
         api.off(ERROR, null, template);
         api.off(NETWORK_UNSTABLED, null, template);
+        api.off(ALL_PLAYLIST_ENDED, null, template);
         api.off(PLAYLIST_CHANGED, null, template);
     };
     const events = {

@@ -14,9 +14,10 @@ import FullScreenButton from "view/components/controls/fullScreenButton";
 
 import {
     READY,
-    CONTENT_META, CONTENT_LEVEL_CHANGED, CONTENT_TIME_MODE_CHANGED, CONTENT_TIME,
+    CONTENT_META, CONTENT_LEVEL_CHANGED, CONTENT_TIME_MODE_CHANGED, CONTENT_TIME, PLAYER_PLAY,
     STATE_AD_LOADED,
     AD_CHANGED,
+    STATE_AD_ERROR,
     STATE_AD_PLAYING,
     STATE_AD_PAUSED,
     STATE_AD_COMPLETE,
@@ -29,12 +30,14 @@ const Controls = function($container, api){
 
     let webrtc_is_p2p_mode = false;
     let isLiveMode = false;
-
+    let isAndroid = api.getConfig().browser.os === "Android";
 
     const $root = LA$("#"+api.getContainerId());
     let lastContentMeta = {};
 
-    hasPlaylist = api.getPlaylist().length > 1 ? true : false;
+    let hidePlaylistIcon = api.getConfig().hidePlaylistIcon;
+    hasPlaylist = api.getPlaylist().length > 1 ? (!hidePlaylistIcon ? true : false) : false;
+
     let playlistPanel = "";
     let setPanelMaxHeight = function(){
         if($root.find(".ovp-setting-panel")){
@@ -67,19 +70,35 @@ const Controls = function($container, api){
             if(settingButton){
                 settingButton.destroy();
             }
+            settingButton = SettingButton($current.find(".setting-holder"), api);
+        };
 
-            settingButton = SettingButton($current.find(".setting"), api);
+        let initFullscreenButton = function(){
+            if(fullScreenButton){
+                fullScreenButton.destroy();
+            }
+            fullScreenButton = FullScreenButton($current.find(".fullscreen-holder"), api);
         };
 
         playButton = PlayButton($current.find(".ovp-left-controls"), api);
         volumeButton = VolumeButton($current.find(".ovp-left-controls"), api);
-        fullScreenButton = FullScreenButton($current.find(".fullscreen"), api);
-        initSettingButton();
+
+        initFullscreenButton();
+
+        let playlist = api.getPlaylist();
+        let currentPlaylistIndex = api.getCurrentPlaylist();
+
+
+        //ToDo : Sometimes ad init failed.
+        if(playlist && playlist[currentPlaylistIndex] && playlist[currentPlaylistIndex].adTagUrl){
+
+        }else{
+            initSettingButton();
+        }
 
         let initControlUI = function(metadata){
             initTimeDisplay(metadata);
-
-            if(api.getFramerate() > 0){
+            if(api.getFramerate && api.getFramerate() > 0){
                 //initFrameJumpButtons();
             }else{
                 if(frameButtons){
@@ -88,6 +107,7 @@ const Controls = function($container, api){
             }
 
             if(metadata.duration === Infinity){
+                OvenPlayerConsole.log("[[[[LIVE MODE]]]]");
                 isLiveMode = true;
                 //live
                 if(progressBar){
@@ -99,28 +119,33 @@ const Controls = function($container, api){
             }
         };
 
-
-
-
         api.on(CONTENT_META, function(data){
             initialDuration = data.duration;
-
             lastContentMeta = data;
             data.isP2P = webrtc_is_p2p_mode;
-            initControlUI(data);
 
+            initControlUI(data);
         }, template);
 
-        //Android HLS native doesn't give duration on CONTENT_META. why?
-        //Fortunately I have CONTENT_TIME.
-        if(api.getConfig().browser.os === "Android"){
-            api.on(CONTENT_TIME, function(metadata_for_when_after_playing){
-                if(!initialDuration && initialDuration !== metadata_for_when_after_playing.duration){
+
+        /*
+        * I think do not nessessary this code anymore. Because muted play solves everything. 2019-06-04
+
+        */
+        api.on(CONTENT_TIME, function(metadata_for_when_after_playing){
+
+            //Android HLS native doesn't give duration on CONTENT_META. why?
+            //Fortunately I have CONTENT_TIME.
+
+            //RTMP too.
+            if( isAndroid || (api && api.getProviderName && api.getProviderName() === "rtmp") ){
+                if(!initialDuration || (initialDuration && (initialDuration !== metadata_for_when_after_playing.duration))){
                     lastContentMeta = metadata_for_when_after_playing;
                     initControlUI(metadata_for_when_after_playing);
                 }
-            }, template);
-        }
+            }
+
+        }, template);
 
         api.on("resize", function(size){
             setPanelMaxHeight();
@@ -130,9 +155,12 @@ const Controls = function($container, api){
             webrtc_is_p2p_mode = isP2P;
         }, template);
 
-
+        api.on(PLAYER_PLAY, function(data){
+            $current.css("display", "block");
+        }, template);
 
         api.on(AD_CHANGED, function(ad){
+
             if(ad.isLinear){
                 if(progressBar){
                     progressBar.destroy();
@@ -150,6 +178,7 @@ const Controls = function($container, api){
             }
         }, template);
 
+        //ToDo : Same Code refactor
         api.on(STATE_AD_COMPLETE, function(){
             initTimeDisplay(lastContentMeta);
             if(progressBar){
@@ -165,7 +194,19 @@ const Controls = function($container, api){
 
         }, template);
 
+        api.on(STATE_AD_ERROR , function(){
+            initTimeDisplay(lastContentMeta);
+            if(progressBar){
+                progressBar.destroy();
+            }
+            $root.removeClass("linear-ad");
+            initSettingButton();
+            if(isLiveMode){
 
+            }else{
+                initProgressBar(false);
+            }
+        },template);
 
     };
     const onDestroyed = function(template){
@@ -174,6 +215,7 @@ const Controls = function($container, api){
         api.off(STATE_AD_COMPLETE, null, template);
         api.off(AD_CHANGED, null, template);
         api.off(OME_P2P_MODE, null, template);
+        api.off(STATE_AD_ERROR, null, template);
         if(timeDisplay){
             timeDisplay.destroy();
         }

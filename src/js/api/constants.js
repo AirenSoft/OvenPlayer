@@ -12,6 +12,7 @@ export const STATE_AD_LOADED = "adLoaded";
 export const STATE_AD_PLAYING = "adPlaying";
 export const STATE_AD_PAUSED = "adPaused";
 export const STATE_AD_COMPLETE = "adComplete";
+export const STATE_AD_ERROR = "adError";
 
 // PROVIDER
 export const PROVIDER_HTML5 = "html5";
@@ -30,7 +31,9 @@ export const DISPLAY_CLICK = "displayClick";
 export const CONTENT_LOADED = "loaded";
 export const PLAYLIST_CHANGED = "playlistChanged";
 export const CONTENT_SEEKED = "seeked";
+export const ALL_PLAYLIST_ENDED = "allPlaylistEnded";
 export const NETWORK_UNSTABLED = "unstableNetwork";
+
 
 
 export const ERROR = "error";
@@ -41,6 +44,10 @@ export const PLAYER_COMPLETE = STATE_COMPLETE;
 export const PLAYER_PAUSE = "pause";
 export const PLAYER_PLAY = "play";
 export const PLAYER_RESIZED = "resized";
+export const PLAYER_LOADING = "loading";
+export const PLAYER_FULLSCREEN_REQUEST = "fullscreenRequested";
+export const PLAYER_FULLSCREEN_CHANGED = "fullscreenChanged";
+export const PLAYER_WARNING = "warning";
 
 export const AD_CHANGED = "adChanged";
 export const AD_TIME = "adTime";
@@ -62,6 +69,9 @@ export const OME_P2P_MODE = "p2pMode";
 export const INIT_UNKNWON_ERROR = 100;
 export const INIT_UNSUPPORT_ERROR = 101;
 export const INIT_RTMP_SETUP_ERROR = 102;
+export const INIT_DASH_UNSUPPORT = 103;
+export const INIT_ADS_ERROR = 104;
+export const INIT_DASH_NOTFOUND = 105;
 export const PLAYER_UNKNWON_ERROR = 300;
 export const PLAYER_UNKNWON_OPERATION_ERROR = 301;
 export const PLAYER_UNKNWON_NEWWORK_ERROR = 302;
@@ -75,12 +85,15 @@ export const PLAYER_WEBRTC_CREATE_ANSWER_ERROR = 504;
 export const PLAYER_WEBRTC_SET_LOCAL_DESC_ERROR = 505;
 export const PLAYER_WEBRTC_NETWORK_SLOW = 510;
 
+export const WARN_MSG_MUTEDPLAY = "Please touch here to turn on the sound.";
 
 export const ERRORS = {
     100 : {code : 100 , message : "Can not load due to unknown reasons.", reason :"Can not load due to unknown reasons."},
     101 : {code : 101 , message : "Can not load due to unsupported media.", reason :"Can not load due to unsupported media."},
-    102 : {code : 102 , message : "Flash fetching process aborted.", reason :"It looks like not found swf or your environment is localhost."},
+    102 : {code : 102 , message : "Flash fetching process aborted. </br><a href='http://www.adobe.com/go/getflashplayer' target='_self'><img src='http://www.adobe.com/images/shared/download_buttons/get_flash_player.gif' alt='Get Adobe Flash player'></a>", reason :"It looks like not found swf or your environment is localhost."},
     103 : {code : 103 , message : "Can not load due to dashjs. Please check the lastest version.", reason :"dash.js version is old. Please check the lastest."},
+    104 : {code : 104 , message : "Can not load due to google ima for Ads. ", reason :"Please check the google ima library."},
+    105 : {code : 105 , message : "Can not find the dashjs. Please check the dashjs.", reason :"Not found dashjs."},
     300 : {code : 300 , message : "Can not play due to unknown reasons.", reason :"Can not play due to unknown reasons."},
     301 : {code : 301 , message : "Fetching process aborted by user.", reason :"Fetching process aborted by user."},
     302 : {code : 302 , message : "Some of the media could not be downloaded due to a network error.", reason :"Error occurred when downloading."},
@@ -93,4 +106,8 @@ export const ERRORS = {
     504 : {code : 504 , message : "Connection with low-latency(OME) server failed.", reason :"WebRTC peer createOffer failed."},
     505 : {code : 505 , message : "Connection with low-latency(OME) server failed.", reason :"WebRTC setLocalDescription failed."},
     510 : {code : 510 , message : "Network connection is unstable. Check the network connection.", reason :"Network is slow."}
+};
+
+export const UI_ICONS = {
+    volume_mute : "volume-mute"
 };

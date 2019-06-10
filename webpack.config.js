@@ -133,7 +133,8 @@ const extendConfig = function (){
             },
             devtool: false,
             output: {
-                filename: '[name].js',
+                filename: `[name].js`,
+                chunkFilename: `[name]-${packageInfo.version}.js`,
                 path: path.resolve(__dirname, 'dist/production/ovenplayer')
             },
             plugins: [
