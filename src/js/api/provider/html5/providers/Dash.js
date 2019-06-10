@@ -4,7 +4,16 @@
 import Provider from "api/provider/html5/Provider";
 import {errorTrigger} from "api/provider/utils";
 import sizeHumanizer from "utils/sizeHumanizer";
-import {STATE_IDLE, ERRORS, PLAYER_UNKNWON_NEWWORK_ERROR, CONTENT_LEVEL_CHANGED,  STATE_PLAYING, PROVIDER_DASH, CONTENT_META} from "api/constants";
+import {
+    STATE_IDLE,
+    STATE_PLAYING,
+    INIT_DASH_UNSUPPORT,
+    INIT_DASH_NOTFOUND,
+    ERRORS,
+    PLAYER_UNKNWON_NEWWORK_ERROR,
+    CONTENT_LEVEL_CHANGED,
+    PROVIDER_DASH, CONTENT_META
+} from "api/constants";
 
 /**
  * @brief   dashjs provider extended core.
@@ -41,7 +50,7 @@ const Dash = function(element, playerConfig, adTagUrl){
         };
         dash = dashjs.MediaPlayer().create();
         if(dashjs.Version < "2.6.5"){
-            throw ERRORS[103];
+            throw ERRORS[INIT_DASH_UNSUPPORT];
         }
         dash.getDebug().setLogToBrowserConsole(false);
         dash.initialize(element, null, false);
@@ -74,7 +83,6 @@ const Dash = function(element, playerConfig, adTagUrl){
         OvenPlayerConsole.log("DASH PROVIDER LOADED.");
 
         dash.on(dashjs.MediaPlayer.events.ERROR, function(error){
-            console.log(error);
             if(error && !isFirstError && ( error.error === DASHERROR.DOWNLOAD || error.error === DASHERROR.MANIFESTERROR )){
                 isFirstError = true;
                 let tempError = ERRORS[PLAYER_UNKNWON_NEWWORK_ERROR];
@@ -159,12 +167,13 @@ const Dash = function(element, playerConfig, adTagUrl){
             superDestroy_func();
         };
     }catch(error){
-        if(error.code && error.message){
+        if(error && error.code && error.code === INIT_DASH_UNSUPPORT){
             throw error;
         }else{
-            throw new Error(error);
+            let tempError =  ERRORS[INIT_DASH_NOTFOUND];
+            tempError.error = error;
+            throw tempError;
         }
-
     }
 
     return that;

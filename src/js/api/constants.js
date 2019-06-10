@@ -69,7 +69,9 @@ export const OME_P2P_MODE = "p2pMode";
 export const INIT_UNKNWON_ERROR = 100;
 export const INIT_UNSUPPORT_ERROR = 101;
 export const INIT_RTMP_SETUP_ERROR = 102;
+export const INIT_DASH_UNSUPPORT = 103;
 export const INIT_ADS_ERROR = 104;
+export const INIT_DASH_NOTFOUND = 105;
 export const PLAYER_UNKNWON_ERROR = 300;
 export const PLAYER_UNKNWON_OPERATION_ERROR = 301;
 export const PLAYER_UNKNWON_NEWWORK_ERROR = 302;
@@ -91,6 +93,7 @@ export const ERRORS = {
     102 : {code : 102 , message : "Flash fetching process aborted. </br><a href='http://www.adobe.com/go/getflashplayer' target='_self'><img src='http://www.adobe.com/images/shared/download_buttons/get_flash_player.gif' alt='Get Adobe Flash player'></a>", reason :"It looks like not found swf or your environment is localhost."},
     103 : {code : 103 , message : "Can not load due to dashjs. Please check the lastest version.", reason :"dash.js version is old. Please check the lastest."},
     104 : {code : 104 , message : "Can not load due to google ima for Ads. ", reason :"Please check the google ima library."},
+    105 : {code : 105 , message : "Can not find the dashjs. Please check the dashjs.", reason :"Not found dashjs."},
     300 : {code : 300 , message : "Can not play due to unknown reasons.", reason :"Can not play due to unknown reasons."},
     301 : {code : 301 , message : "Fetching process aborted by user.", reason :"Fetching process aborted by user."},
     302 : {code : 302 , message : "Some of the media could not be downloaded due to a network error.", reason :"Error occurred when downloading."},
