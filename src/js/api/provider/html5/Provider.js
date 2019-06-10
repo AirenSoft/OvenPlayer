@@ -29,7 +29,7 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
     let elVideo = spec.element;
     let ads = null, listener = null, videoEndedCallback = null;
 
-    let isPlayingProcess = false;
+    let isPlayingProcessing = false;
 
     if(spec.adTagUrl){
         ads = Ads(elVideo, that, playerConfig, spec.adTagUrl);
@@ -243,22 +243,21 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
     };
 
     that.play = () =>{
-        console.log("[Proivder Play]", isPlayingProcess);
         if(!elVideo){
             return false;
         }
-        if(isPlayingProcess){
+        if(isPlayingProcessing){
             return false;
         }
-        isPlayingProcess = true;
+        isPlayingProcessing = true;
         if(that.getState() !== STATE_PLAYING){
             if (  (ads && ads.isActive()) || (ads && !ads.started()) ) {
                 ads.play().then(_ => {
                     //ads play success
-                    isPlayingProcess = false;
+                    isPlayingProcessing = false;
                 }).catch(error => {
                     //ads play fail maybe cause user interactive less
-                    isPlayingProcess = false;
+                    isPlayingProcessing = false;
                     console.log(error);
                 });
 
@@ -266,7 +265,7 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
                 let promise = elVideo.play();
                 if (promise !== undefined) {
                     promise.then(function(){
-                        isPlayingProcess = false;
+                        isPlayingProcessing = false;
                     }).catch(error => {
                         if(playerConfig.getBrowser().browser  === "Safari" || playerConfig.getBrowser().os  === "iOS" || playerConfig.getBrowser().os  === "Android"){
                             elVideo.muted = true;
@@ -274,11 +273,14 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
                         //Can't play because User doesn't any interactions.
                         //Wait for User Interactions. (like click)
                         setTimeout(function () {
-                            isPlayingProcess = false;
+                            isPlayingProcessing = false;
                             that.play();
                         }, 100);
 
                     });
+                }else{
+                    //IE promise is undefinded.
+                    isPlayingProcessing = false;
                 }
 
             }
