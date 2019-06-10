@@ -9,11 +9,12 @@ import {
     STATE_PAUSED
 } from "api/constants";
 
-const MessageBox = function($container, api, message, withTimer, iconClass, clickCallback){
+const MessageBox = function($container, api, message, description, withTimer, iconClass, clickCallback){
 
     let autoDestroyTimer = "";
     let data = {
         message : message,
+        description : description,
         iconClass : iconClass
     };
 

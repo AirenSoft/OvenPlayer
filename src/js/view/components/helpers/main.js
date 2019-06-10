@@ -43,11 +43,11 @@ const Helpers = function($container, api){
             }
             bigButton = BigButton($current, api, state);
         };
-        let createMessage = function(message, withTimer, iconClass, clickCallback){
+        let createMessage = function(message, description ,withTimer){
             if(messageBox){
                 messageBox.destroy();
             }
-            messageBox = MessageBox($current, api, message, withTimer, iconClass, clickCallback);
+            messageBox = MessageBox($current, api, message, description, withTimer);
         };
         let createThumbnail = function(){
             if(thumbnail){
@@ -82,7 +82,7 @@ const Helpers = function($container, api){
                 if(messageBox){
                     messageBox.destroy();
                 }
-                mutedMessage = MessageBox($current, api, data.message, data.timer, data.iconClass, data.onClickCallback);
+                mutedMessage = MessageBox($current, api, data.message, null, data.timer, data.iconClass, data.onClickCallback);
 
                 //When the volume is turned on by an external something.
                 api.once(CONTENT_MUTE, function(data){
@@ -140,18 +140,20 @@ const Helpers = function($container, api){
 
          }, template);
         api.on(ERROR, function(error) {
-            let message = "";
+            let message = "", description = "";
             if(bigButton){
                 bigButton.destroy();
             }
             if (error && error.code && error.code >= 100 && error.code < 1000) {
                 message = error.message;
-
+                if(error.code === 100){
+                    description = error.error.toString();
+                }
             }  else {
                 message = "Can not play due to unknown reasons.";
             }
             OvenPlayerConsole.log("error occured : ", error);
-            createMessage(message);
+            createMessage(message, description);
         }, template);
 
         api.on(NETWORK_UNSTABLED, function(event){
@@ -161,7 +163,7 @@ const Helpers = function($container, api){
                 message = "Network connection is unstable. Check the network connection.";
             }
             OvenPlayerConsole.log(message);
-            //createMessage(message, 5000);
+            //createMessage(message, null,5000);
         }, template);
 
         api.on(ALL_PLAYLIST_ENDED, function(){
