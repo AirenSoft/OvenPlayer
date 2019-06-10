@@ -243,6 +243,7 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
     };
 
     that.play = () =>{
+        console.log("[Proivder Play]", isPlayingProcess);
         if(!elVideo){
             return false;
         }
@@ -262,13 +263,6 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
                 });
 
             }else{
-                /*
-                * It is not necessary no more. Maybe Google ima updated 3.310.0	or 3.309.0. https://developers.google.com/interactive-media-ads/docs/sdks/html5/v3/history
-                if(ads && !dashAttachedView){
-                    //Ad steals dash's video element. Put in right place.
-                    spec.mse.attachView(elVideo);
-                    dashAttachedView = true;
-                }*/
                 let promise = elVideo.play();
                 if (promise !== undefined) {
                     promise.then(function(){
@@ -277,7 +271,6 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
                         if(playerConfig.getBrowser().browser  === "Safari" || playerConfig.getBrowser().os  === "iOS" || playerConfig.getBrowser().os  === "Android"){
                             elVideo.muted = true;
                         }
-                        console.log(error);
                         //Can't play because User doesn't any interactions.
                         //Wait for User Interactions. (like click)
                         setTimeout(function () {
@@ -288,39 +281,6 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
                     });
                 }
 
-                //No more setTimeout playing.
-                /*if(that.getName() === PROVIDER_DASH){
-                    if(ads && !dashAttachedView){
-                        //Ad steals dash's video element. Put in right place.
-                        spec.mse.attachView(elVideo);
-                        dashAttachedView = true;
-                    }
-
-                    //I was starting the stream by calling play(). (Autoplay was turned off)
-                    //the video freeze for live. like this https://github.com/Dash-Industry-Forum/dash.js/issues/2184
-                    //My guess is user interective...
-                    //This is temporary until i will find perfect solution.
-                    setTimeout(function(){
-                        let promise = elVideo.play();
-                        if (promise !== undefined) {
-                            promise.then(function(){
-                                isPlayingProcess = false;
-                            }).catch(error => {
-                                if(playerConfig.getBrowser().browser  === "Safari" || playerConfig.getBrowser().os  === "iOS" || playerConfig.getBrowser().os  === "Android"){
-                                    elVideo.muted = true;
-                                }
-                                //Can't play because User doesn't any interactions.
-                                //Wait for User Interactions. (like click)
-                                setTimeout(function () {
-                                    isPlayingProcess = false;
-                                    that.play();
-                                }, 100);
-
-                            });
-
-                        }
-                    },500);
-                }*/
             }
 
         }

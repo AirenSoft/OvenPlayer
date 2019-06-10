@@ -27,10 +27,12 @@ const DASHERROR = {
 const Dash = function(element, playerConfig, adTagUrl){
     let that = {};
     let dash = null;
+    let superPlay_func = null;
     let superDestroy_func = null;
     let seekPosition_sec = 0;
     let isFirstError = false;
-
+    let isDashMetaLoaded = false;
+    let runedAutoStart = false;
     try {
         const coveredSetAutoSwitchQualityFor = function(isAuto){
             if(dashjs.Version > "2.9.0"){
@@ -79,6 +81,7 @@ const Dash = function(element, playerConfig, adTagUrl){
             dash.attachSource(source.file);
             seekPosition_sec = lastPlayPosition;
         });
+        superPlay_func = that.super('play');
         superDestroy_func = that.super('destroy');
         OvenPlayerConsole.log("DASH PROVIDER LOADED.");
 
@@ -110,11 +113,10 @@ const Dash = function(element, playerConfig, adTagUrl){
                 });
             }
         });
-
-
         dash.on(dashjs.MediaPlayer.events.PLAYBACK_METADATA_LOADED, function(event){
             OvenPlayerConsole.log("GetStreamInfo  : ", dash.getQualityFor("video"), dash.getBitrateInfoListFor('video'), dash.getBitrateInfoListFor('video')[dash.getQualityFor("video")]);
-
+            console.log("PLAYBACK_METADATA_LOADED");
+            isDashMetaLoaded = true;
             let subQualityList = dash.getBitrateInfoListFor('video');
             spec.currentQuality = dash.getQualityFor("video");
             for(let i = 0; i < subQualityList.length; i ++){
@@ -136,13 +138,35 @@ const Dash = function(element, playerConfig, adTagUrl){
                     that.play();
                 }
             }
-            if(playerConfig.isAutoStart()){
+            //
+            if(playerConfig.isAutoStart() && !runedAutoStart){
                 that.play();
+                runedAutoStart = true;
             }
         });
 
-        /*that.on(CONTENT_META, function(meta){
-        }, that);*/
+        //Dash will infinite loading when player is in a paused state for a long time.
+        that.play = () =>{
+            isDashMetaLoaded = false;
+            dash.attachView(element);
+
+            let retryCount = 0;
+
+            (function checkDashMetaLoaded(){
+                retryCount ++;
+                if(isDashMetaLoaded){
+                    superPlay_func();
+                }else{
+
+                    if(retryCount < 300){
+                        setTimeout(checkDashMetaLoaded, 100);
+                    }else{
+                        that.play();
+                    }
+                }
+            })();
+
+        };
 
         that.setCurrentQuality = (qualityIndex) => {
             if(that.getState() !== STATE_PLAYING){
