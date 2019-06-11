@@ -96,7 +96,8 @@ const Listener = function(element, mse, provider, videoEndedCallback){
 
     lowLevelEvents.loadedmetadata = () => {
         //Fires when the browser has loaded meta data for the audio/video
-        let isLive = (elVideo.duration === Infinity) ? true : separateLive(mse);
+        let isLive =  provider.isLive()? provider.isLive() :  (elVideo.duration === Infinity) ? true : separateLive(mse);
+        console.log(isLive);
         let sources = provider.getSources();
         let sourceIndex = provider.getCurrentSource();
         let type = sourceIndex > -1 ? sources[sourceIndex].type : "";

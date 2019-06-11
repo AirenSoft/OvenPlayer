@@ -172,13 +172,21 @@ const Ads = function(elVideo, provider, playerConfig, adTagUrl, errorCallback){
                 playPromise.then(function(){
                     // If we make it here, unmuted autoplay works.
                     elVideo.pause();
-
+                    console.log("AutoplaySupport 1.");
                     autoplayAllowed = true;
                     autoplayRequiresMuted = false;
                     spec.checkAutoplayStart = false;
                     initRequest();
 
                 }).catch(function(error){
+                    console.log("AutoplaySupport 2.", error);
+                    autoplayAllowed = false;
+                    autoplayRequiresMuted = false;
+                    spec.checkAutoplayStart = false;
+                    initRequest();
+
+                    /*
+                    //Disable Muted Play
                     elVideo.muted = true;
                     var playPromise = elVideo.play();
                     if (playPromise !== undefined) {
@@ -197,7 +205,7 @@ const Ads = function(elVideo, provider, playerConfig, adTagUrl, errorCallback){
                             spec.checkAutoplayStart = false;
                             initRequest();
                         });
-                    }
+                    }*/
                 });
             }else{
                 //Maybe this is IE11....
@@ -209,7 +217,7 @@ const Ads = function(elVideo, provider, playerConfig, adTagUrl, errorCallback){
             }
         }
 
-
+        checkAutoplaySupport();
         that.isActive = () => {
             return spec.active;
         };
@@ -231,7 +239,6 @@ const Ads = function(elVideo, provider, playerConfig, adTagUrl, errorCallback){
 
             }else{
                 let retryCount = 0;
-                checkAutoplaySupport();
                 return new Promise(function (resolve, reject) {
                     (function checkAdsManagerIsReady(){
                         retryCount ++;

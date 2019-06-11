@@ -87,17 +87,19 @@ const defaultConfig = {
                 use: [{
                     loader: 'file-loader',
                     options: {
-                        name: '[name].[ext]'
+                        name: '[name].[ext]',
+                        outputPath: path.resolve(__dirname, 'dist/production/ovenplayer')
                     }
                 }]
             }
+
         ]
     }
 };
 
 const extendConfig = function (){
     console.log(env.npm_lifecycle_event );
-    if(env.npm_lifecycle_event =="watch"){
+    if(env.npm_lifecycle_event ==="watch"){
         Object.assign(defaultConfig, {
             mode: 'development',
             devtool: 'inline-source-map',

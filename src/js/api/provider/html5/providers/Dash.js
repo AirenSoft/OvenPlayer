@@ -57,6 +57,7 @@ const Dash = function(element, playerConfig, adTagUrl){
         }
         dash.getDebug().setLogToBrowserConsole(false);
         dash.initialize(element, null, false);
+        dashsetABRStrategy ( "abrThroughput");
 
         let spec = {
             name : PROVIDER_DASH,

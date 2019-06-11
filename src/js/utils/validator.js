@@ -9,6 +9,10 @@ export const isWebRTC = function (file, type) {
     }
     return false;
 };
+export const isHls = function (file, type) {
+    return ( type === 'hls' ||  type === 'm3u8' || type === 'application/vnd.apple.mpegurl' || extractExtension(file) == 'm3u8');
+};
+
 export const isDash = function (file, type) {
     return ( type === 'mpd' ||  type === 'dash' || type === 'application/dash+xml' || extractExtension(file) == 'mpd');
 };

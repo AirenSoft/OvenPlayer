@@ -3,7 +3,10 @@
  */
 import Provider from "api/provider/html5/Provider";
 import {errorTrigger} from "api/provider/utils";
-import {PROVIDER_HLS, STATE_IDLE} from "api/constants";
+import {PROVIDER_HLS, STATE_IDLE,
+    INIT_DASH_UNSUPPORT, ERRORS,
+    INIT_HLSJS_NOTFOUND} from "api/constants";
+import _ from "utils/underscore";
 
 /**
  * @brief   hlsjs provider extended core.
@@ -12,7 +15,7 @@ import {PROVIDER_HLS, STATE_IDLE} from "api/constants";
  * */
 
 
-const Hls = function(element, playerConfig, adTagUrl){
+const HlsProvider = function(element, playerConfig, adTagUrl){
     let that = {};
     let hls = null;
     let superDestroy_func = null;
@@ -42,11 +45,27 @@ const Hls = function(element, playerConfig, adTagUrl){
             OvenPlayerConsole.log("HLS : onExtendedLoad : ", source, "lastPlayPosition : "+ lastPlayPosition);
             hls.loadSource(source.file);
 
-            if(lastPlayPosition > 0){
-                element.seek(lastPlayPosition);
-                that.play();
-            }
+
+            hls.once(Hls.Events.LEVEL_LOADED, function (event, data) {
+                console.log("Hls.Events.LEVEL_LOADED");
+                console.log(data.details.live);
+                if(data.details.live){
+                    spec.isLive = true;
+                }else{
+                    if(lastPlayPosition > 0){
+                        element.seek(lastPlayPosition);
+                        that.play();
+                    }
+                }
+
+                if(playerConfig.isAutoStart()){
+                    that.play();
+                }
+            });
+
         });
+
+
         superDestroy_func = that.super('destroy');
         OvenPlayerConsole.log("HLS PROVIDER LOADED.");
 
@@ -58,11 +77,13 @@ const Hls = function(element, playerConfig, adTagUrl){
             superDestroy_func();
         };
     }catch(error){
-        throw new Error(error);
+        let tempError =  ERRORS[INIT_HLSJS_NOTFOUND];
+        tempError.error = error;
+        throw tempError;
     }
 
     return that;
 };
 
 
-export default Hls;
+export default HlsProvider;

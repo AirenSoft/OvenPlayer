@@ -169,8 +169,12 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
     that.getBuffer = () => {
         return spec.buffer;
     };
+    that.isLive = () => {
+        //HLSJS's only way check the isLive.
+        return spec.isLive;
+    };
     that.getDuration = () => {
-        let isLive = (elVideo.duration === Infinity) ? true : separateLive(spec.mse);
+        let isLive = that.isLive()? that.isLive() :  (elVideo.duration === Infinity) ? true : separateLive(spec.mse);
         return isLive ?  Infinity : elVideo.duration;
     };
     that.getPosition = () => {
@@ -257,9 +261,11 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
                 ads.play().then(_ => {
                     //ads play success
                     isPlayingProcessing = false;
+                    console.log("AdPlay Success");
                 }).catch(error => {
                     //ads play fail maybe cause user interactive less
                     isPlayingProcessing = false;
+                    console.log("AdPlay Error", error);
                 });
 
             }else{
@@ -267,6 +273,8 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
                 if (promise !== undefined) {
                     promise.then(function(){
                         isPlayingProcessing = false;
+                        console.log("Play Success");
+                        /*
                         if(mutedPlay){
                             that.trigger(PLAYER_WARNING, {
                                 message : WARN_MSG_MUTEDPLAY,
@@ -276,14 +284,17 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
                                     that.setMute(false);
                                 }
                             });
-                        }
+                        }*/
                     }).catch(error => {
 
                         isPlayingProcessing = false;
+                        console.log("Play Error", error);
+                        /*
                         if(!mutedPlay){
                             that.setMute(true);
                             that.play(true);
                         }
+                        */
                     });
                 }else{
                     //IE promise is undefinded.
