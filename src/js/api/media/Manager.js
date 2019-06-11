@@ -7,12 +7,12 @@ import {getBrowser} from "utils/browser";
 import {PROVIDER_DASH, PROVIDER_HLS, PROVIDER_WEBRTC, PROVIDER_HTML5, PROVIDER_RTMP} from "api/constants";
 import LA$ from "utils/likeA$.js";
 import {getScriptPath} from 'utils/webpack';
-
+import {version} from 'version';
 //ToDo : Restructuring
 
 const Manager = function(container, browserInfo){
     const that = {};
-    const SWFPath = getScriptPath('ovenplayer.js')+"OvenPlayerFlash.swf";
+    const SWFPath = getScriptPath('ovenplayer.js')+"OvenPlayerFlash.swf?v="+version;
     let rootId = container.getAttribute("data-parent-id");
     let $container = LA$(container);
     let videoElement = "";
