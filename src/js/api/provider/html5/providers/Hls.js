@@ -45,26 +45,22 @@ const HlsProvider = function(element, playerConfig, adTagUrl){
             OvenPlayerConsole.log("HLS : onExtendedLoad : ", source, "lastPlayPosition : "+ lastPlayPosition);
             hls.loadSource(source.file);
 
-
             hls.once(Hls.Events.LEVEL_LOADED, function (event, data) {
-                console.log("Hls.Events.LEVEL_LOADED");
-                console.log(data.details.live);
                 if(data.details.live){
                     spec.isLive = true;
                 }else{
-                    if(lastPlayPosition > 0){
+                    if(lastPlayPosition > 0 ){
                         element.seek(lastPlayPosition);
                         that.play();
                     }
                 }
-
                 if(playerConfig.isAutoStart()){
                     that.play();
                 }
             });
 
-        });
 
+        });
 
         superDestroy_func = that.super('destroy');
         OvenPlayerConsole.log("HLS PROVIDER LOADED.");
@@ -73,7 +69,6 @@ const HlsProvider = function(element, playerConfig, adTagUrl){
             hls.destroy();
             hls = null;
             OvenPlayerConsole.log("HLS : PROVIDER DESTROUYED.");
-
             superDestroy_func();
         };
     }catch(error){

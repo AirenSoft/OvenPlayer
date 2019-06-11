@@ -12,6 +12,7 @@ import {
     STATE_AD_ERROR,
     PLAYER_WARNING,
     WARN_MSG_MUTEDPLAY,
+    STATE_AD_LOADING,
     UI_ICONS
 } from "api/constants";
 
@@ -172,14 +173,12 @@ const Ads = function(elVideo, provider, playerConfig, adTagUrl, errorCallback){
                 playPromise.then(function(){
                     // If we make it here, unmuted autoplay works.
                     elVideo.pause();
-                    console.log("AutoplaySupport 1.");
                     autoplayAllowed = true;
                     autoplayRequiresMuted = false;
                     spec.checkAutoplayStart = false;
                     initRequest();
 
                 }).catch(function(error){
-                    console.log("AutoplaySupport 2.", error);
                     autoplayAllowed = false;
                     autoplayRequiresMuted = false;
                     spec.checkAutoplayStart = false;
@@ -239,6 +238,7 @@ const Ads = function(elVideo, provider, playerConfig, adTagUrl, errorCallback){
 
             }else{
                 let retryCount = 0;
+                //provider.setState(STATE_AD_LOADING);
                 return new Promise(function (resolve, reject) {
                     (function checkAdsManagerIsReady(){
                         retryCount ++;

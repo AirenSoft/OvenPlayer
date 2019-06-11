@@ -8,6 +8,7 @@ export const STATE_ERROR = "error";
 export const STATE_LOADING = "loading";
 export const STATE_STALLED = "stalled";
 
+export const STATE_AD_LOADING = "adLoading";
 export const STATE_AD_LOADED = "adLoaded";
 export const STATE_AD_PLAYING = "adPlaying";
 export const STATE_AD_PAUSED = "adPaused";

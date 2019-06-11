@@ -96,14 +96,14 @@ const Api = function(container){
 
             let currentSourceIndex = pickQualityFromSource(playlistManager.getCurrentSources());
             let providerName = Providers[currentSourceIndex]["name"];
-
+            OvenPlayerConsole.log("API : init() provider", providerName);
             //Init Provider.
             currentProvider =  Providers[currentSourceIndex].provider(
                 mediaManager.createMedia(providerName, playerConfig),
                 playerConfig,
                 playlistManager.getCurrentAdTag()
             );
-            OvenPlayerConsole.log("API : init() provider", providerName);
+
 
 
             if(providerName === PROVIDER_RTMP){

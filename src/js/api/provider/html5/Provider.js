@@ -4,7 +4,7 @@
 import Ads from "api/provider/ads/Ads";
 import EventEmitter from "api/EventEmitter";
 import EventsListener from "api/provider/html5/Listener";
-import {extractVideoElement, separateLive, pickCurrentSource} from "api/provider/utils";
+import {extractVideoElement, pickCurrentSource} from "api/provider/utils";
 import {
     WARN_MSG_MUTEDPLAY,
     UI_ICONS, PLAYER_WARNING,
@@ -39,7 +39,7 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
             console.log("Can not load due to google ima for Ads.");
         }
     }
-    listener = EventsListener(elVideo, spec.mse, that, ads ? ads.videoEndedCallback : null);
+    listener = EventsListener(elVideo, that, ads ? ads.videoEndedCallback : null);
     elVideo.playbackRate = elVideo.defaultPlaybackRate = playerConfig.getPlaybackRate();
 
     const _load = (lastPlayPosition) =>{
@@ -119,9 +119,9 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
 
 
             if(ads && ads.isAutoPlaySupportCheckTime()){
-                //Ads checks checkAutoplaySupport().
-                //It calls real play() and pause().
-                //And then this triggers "playing" and "pause".
+                //silence Area!!!
+                //Ads checks checkAutoplaySupport(). It calls real play() and pause() to video element.
+                //And then that triggers "playing" and "pause".
                 //I prevent these process.
             }else{
                 switch(newState){
@@ -170,12 +170,10 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
         return spec.buffer;
     };
     that.isLive = () => {
-        //HLSJS's only way check the isLive.
-        return spec.isLive;
+        return spec.isLive ? true : (elVideo.duration === Infinity);
     };
     that.getDuration = () => {
-        let isLive = that.isLive()? that.isLive() :  (elVideo.duration === Infinity) ? true : separateLive(spec.mse);
-        return isLive ?  Infinity : elVideo.duration;
+        return that.isLive() ?  Infinity : elVideo.duration;
     };
     that.getPosition = () => {
         if(!elVideo){
@@ -248,7 +246,7 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
         _load(spec.sources.starttime || 0);
     };
 
-    that.play = (mutedPlay) =>{
+    that.play = () =>{
         if(!elVideo){
             return false;
         }
@@ -261,11 +259,9 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
                 ads.play().then(_ => {
                     //ads play success
                     isPlayingProcessing = false;
-                    console.log("AdPlay Success");
                 }).catch(error => {
                     //ads play fail maybe cause user interactive less
                     isPlayingProcessing = false;
-                    console.log("AdPlay Error", error);
                 });
 
             }else{
@@ -273,7 +269,6 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
                 if (promise !== undefined) {
                     promise.then(function(){
                         isPlayingProcessing = false;
-                        console.log("Play Success");
                         /*
                         if(mutedPlay){
                             that.trigger(PLAYER_WARNING, {
@@ -288,7 +283,6 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
                     }).catch(error => {
 
                         isPlayingProcessing = false;
-                        console.log("Play Error", error);
                         /*
                         if(!mutedPlay){
                             that.setMute(true);

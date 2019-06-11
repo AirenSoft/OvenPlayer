@@ -20,6 +20,7 @@ import {
     STATE_AD_PLAYING,
     STATE_AD_PAUSED,
     STATE_AD_COMPLETE,
+    STATE_AD_LOADING,
     PLAYLIST_CHANGED,
     PLAYER_WARNING,
     CONTENT_MUTE,
@@ -107,7 +108,7 @@ const Helpers = function($container, api){
                     }
                 }else{
                     createBigButton(data.newstate);
-                    if(data.newstate === STATE_STALLED || data.newstate === STATE_LOADING ){
+                    if(data.newstate === STATE_STALLED || data.newstate === STATE_LOADING || data.newstate === STATE_AD_LOADING){
                         spinner.show(true);
                     }else{
                         if(!qualityLevelChanging){

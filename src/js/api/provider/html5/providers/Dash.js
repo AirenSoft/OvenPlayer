@@ -134,7 +134,7 @@ const Dash = function(element, playerConfig, adTagUrl){
             }
 
             if(dash.isDynamic()){
-                //islive
+                spec.isLive = true;
             }
             if(seekPosition_sec){
                 dash.seek(seekPosition_sec);
