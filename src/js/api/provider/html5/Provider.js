@@ -119,7 +119,7 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
                 return false;
             }
 
-            OvenPlayerConsole.log("Provider : setState()", newState, "isAdsChecktime :", ads.isAutoPlaySupportCheckTime());
+            OvenPlayerConsole.log("Provider : setState()", newState, "isAdsChecktime :", (ads && ads.isAutoPlaySupportCheckTime()));
             if(ads && ads.isAutoPlaySupportCheckTime()){
                 //silence Area!!!
                 //Ads checks checkAutoplaySupport(). It calls real play() and pause() to video element.
@@ -289,7 +289,7 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
                             });
                         }*/
                     }).catch(error => {
-                        OvenPlayerConsole.log("Provider : video play error");
+                        OvenPlayerConsole.log("Provider : video play error", error.message);
 
                         isPlayingProcessing = false;
                         /*

@@ -164,7 +164,6 @@ const Ads = function(elVideo, provider, playerConfig, adTagUrl, errorCallback){
             OvenPlayerConsole.log("ADS : checkAutoplaySupport() ");
             spec.checkAutoplayPeriod = true;
             //let cloneVideo = elVideo.cloneNode(true);
-            console.log(elVideo);
             if(!elVideo.play){
                 autoplayAllowed = true;
                 autoplayRequiresMuted = false;
@@ -176,7 +175,7 @@ const Ads = function(elVideo, provider, playerConfig, adTagUrl, errorCallback){
             let playPromise = elVideo.play();
             if (playPromise !== undefined) {
                 playPromise.then(function(){
-                    console.log("ADS : CHECK AUTO PLAY success");
+                    OvenPlayerConsole.log("ADS : CHECK AUTO PLAY success");
                     // If we make it here, unmuted autoplay works.
                     elVideo.pause();
                     autoplayAllowed = true;
@@ -185,7 +184,7 @@ const Ads = function(elVideo, provider, playerConfig, adTagUrl, errorCallback){
                     initRequest();
 
                 }).catch(function(error){
-                    console.log("ADS : CHECK AUTO PLAY fail", error.message);
+                    OvenPlayerConsole.log("ADS : CHECK AUTO PLAY fail", error.message);
                     autoplayAllowed = false;
                     autoplayRequiresMuted = false;
                     spec.checkAutoplayPeriod = false;
