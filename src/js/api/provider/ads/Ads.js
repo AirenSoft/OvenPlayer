@@ -11,6 +11,7 @@ import {
     INIT_ADS_ERROR,
     STATE_AD_ERROR,
     PLAYER_WARNING,
+    CONTENT_META,
     WARN_MSG_MUTEDPLAY,
     STATE_AD_LOADING,
     UI_ICONS
@@ -29,7 +30,7 @@ const Ads = function(elVideo, provider, playerConfig, adTagUrl, errorCallback){
         started: false, //player started
         active : false, //on Ad
         isVideoEnded : false,
-        checkAutoplayStart : true
+        checkAutoplayPeriod : true
     };
     let OnAdError = null;
     let OnManagerLoaded = null;
@@ -58,7 +59,7 @@ const Ads = function(elVideo, provider, playerConfig, adTagUrl, errorCallback){
             }
         });
     };
-
+    OvenPlayerConsole.log("ADS : started ", adTagUrl);
 
     try{
         ADS_MANAGER_LOADED = google.ima.AdsManagerLoadedEvent.Type.ADS_MANAGER_LOADED;
@@ -135,7 +136,7 @@ const Ads = function(elVideo, provider, playerConfig, adTagUrl, errorCallback){
 
         function initRequest(){
 
-            OvenPlayerConsole.log("AutoPlay Support : ", "autoplayAllowed",autoplayAllowed, "autoplayRequiresMuted",autoplayRequiresMuted);
+            OvenPlayerConsole.log("ADS : AutoPlay Support : ", "autoplayAllowed",autoplayAllowed, "autoplayRequiresMuted",autoplayRequiresMuted);
 
             adsRequest = new google.ima.AdsRequest();
 
@@ -153,17 +154,21 @@ const Ads = function(elVideo, provider, playerConfig, adTagUrl, errorCallback){
             adsRequest.adTagUrl = adTagUrl;
 
             adsLoader.requestAds(adsRequest);
-
+            OvenPlayerConsole.log("ADS : requestAds Complete");
             //two way what ad starts.
             //adsLoader.requestAds(adsRequest); or  adsManager.start();
             //what? why?? wth??
         }
 
         function checkAutoplaySupport() {
+            OvenPlayerConsole.log("ADS : checkAutoplaySupport() ");
+            spec.checkAutoplayPeriod = true;
+            //let cloneVideo = elVideo.cloneNode(true);
+            console.log(elVideo);
             if(!elVideo.play){
                 autoplayAllowed = true;
                 autoplayRequiresMuted = false;
-                spec.checkAutoplayStart = false;
+                spec.checkAutoplayPeriod = false;
                 initRequest();
                 return false;
             }
@@ -171,17 +176,19 @@ const Ads = function(elVideo, provider, playerConfig, adTagUrl, errorCallback){
             let playPromise = elVideo.play();
             if (playPromise !== undefined) {
                 playPromise.then(function(){
+                    console.log("ADS : CHECK AUTO PLAY success");
                     // If we make it here, unmuted autoplay works.
                     elVideo.pause();
                     autoplayAllowed = true;
                     autoplayRequiresMuted = false;
-                    spec.checkAutoplayStart = false;
+                    spec.checkAutoplayPeriod = false;
                     initRequest();
 
                 }).catch(function(error){
+                    console.log("ADS : CHECK AUTO PLAY fail", error.message);
                     autoplayAllowed = false;
                     autoplayRequiresMuted = false;
-                    spec.checkAutoplayStart = false;
+                    spec.checkAutoplayPeriod = false;
                     initRequest();
 
                     /*
@@ -211,12 +218,13 @@ const Ads = function(elVideo, provider, playerConfig, adTagUrl, errorCallback){
                 elVideo.pause();
                 autoplayAllowed = true;
                 autoplayRequiresMuted = false;
-                spec.checkAutoplayStart = false;
+                spec.checkAutoplayPeriod = false;
                 initRequest();
             }
         }
 
-        checkAutoplaySupport();
+
+
         that.isActive = () => {
             return spec.active;
         };
@@ -239,7 +247,9 @@ const Ads = function(elVideo, provider, playerConfig, adTagUrl, errorCallback){
             }else{
                 let retryCount = 0;
                 //provider.setState(STATE_AD_LOADING);
+
                 return new Promise(function (resolve, reject) {
+                    checkAutoplaySupport();
                     (function checkAdsManagerIsReady(){
                         retryCount ++;
                         if(adsManagerLoaded){
@@ -289,7 +299,7 @@ const Ads = function(elVideo, provider, playerConfig, adTagUrl, errorCallback){
             }
         };
         that.isAutoPlaySupportCheckTime = () => {
-            return spec.checkAutoplayStart;
+            return spec.checkAutoplayPeriod;
         }
         that.destroy = () => {
             if(adsLoader){
