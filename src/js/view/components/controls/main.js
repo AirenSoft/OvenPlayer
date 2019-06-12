@@ -31,6 +31,7 @@ const Controls = function($container, api){
     let webrtc_is_p2p_mode = false;
     let isLiveMode = false;
     let isAndroid = api.getConfig().browser.os === "Android";
+    let checkAfterPlay = false;
 
     const $root = LA$("#"+api.getContainerId());
     let lastContentMeta = {};
@@ -138,11 +139,17 @@ const Controls = function($container, api){
             //Fortunately I have CONTENT_TIME.
 
             //RTMP too.
-            if( isAndroid || (api && api.getProviderName && api.getProviderName() === "rtmp") ){
-                if(!initialDuration || (initialDuration && (initialDuration !== metadata_for_when_after_playing.duration))){
+            if( isAndroid  || (api && api.getProviderName && api.getProviderName() === "rtmp") ){
+                if(!checkAfterPlay){
+                    checkAfterPlay = true;
                     lastContentMeta = metadata_for_when_after_playing;
                     initControlUI(metadata_for_when_after_playing);
                 }
+
+                /*if(!initialDuration || (initialDuration && (initialDuration !== metadata_for_when_after_playing.duration))){
+                    lastContentMeta = metadata_for_when_after_playing;
+                    initControlUI(metadata_for_when_after_playing);
+                }*/
             }
 
         }, template);

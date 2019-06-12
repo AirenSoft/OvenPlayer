@@ -114,52 +114,63 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
         if(spec.state !== newState){
             let prevState = spec.state;
 
+            OvenPlayerConsole.log("Provider : setState()", newState, "isAdsCheckingtime :", (ads && ads.isAutoPlaySupportCheckTime()));
+
             //ToDo : This is temporary code. avoid background content error.
             if(prevState === STATE_AD_PLAYING && (newState === STATE_ERROR || newState === STATE_IDLE) ){
                 return false;
             }
+            if((prevState === STATE_AD_PLAYING || prevState === STATE_AD_PAUSED ) && (newState === STATE_PAUSED || newState === STATE_PLAYING)){
+                return false;
+            }
+            OvenPlayerConsole.log("Provider : triggerSatatus", newState);
 
-            OvenPlayerConsole.log("Provider : setState()", newState, "isAdsChecktime :", (ads && ads.isAutoPlaySupportCheckTime()));
-            if(ads && ads.isAutoPlaySupportCheckTime()){
+            switch(newState){
+                case STATE_COMPLETE :
+                    that.trigger(PLAYER_COMPLETE);
+                    break;
+                case STATE_PAUSED :
+                    that.trigger(PLAYER_PAUSE, {
+                        prevState: spec.state,
+                        newstate: STATE_PAUSED
+                    });
+                    break;
+                case STATE_AD_PAUSED :
+                    that.trigger(PLAYER_PAUSE, {
+                        prevState: spec.state,
+                        newstate: STATE_AD_PAUSED
+                    });
+                    break;
+                case STATE_PLAYING :
+                    that.trigger(PLAYER_PLAY, {
+                        prevState: spec.state,
+                        newstate: STATE_PLAYING
+                    });
+                case STATE_AD_PLAYING :
+                    that.trigger(PLAYER_PLAY, {
+                        prevState: spec.state,
+                        newstate: STATE_AD_PLAYING
+                    });
+                    break;
+            }
+            spec.state = newState;
+            that.trigger(PLAYER_STATE, {
+                prevstate : prevState,
+                newstate: spec.state
+            });
+
+            /*
+            if(newState === STATE_AD_PLAYING || newState === STATE_AD_PAUSED){
+
+            }else if(ads && ads.isAutoPlaySupportCheckTime()){
+                //Do nothing
                 //silence Area!!!
                 //Ads checks checkAutoplaySupport(). It calls real play() and pause() to video element.
                 //And then that triggers "playing" and "pause".
                 //I prevent these process.
             }else{
-                switch(newState){
-                    case STATE_COMPLETE :
-                        that.trigger(PLAYER_COMPLETE);
-                        break;
-                    case STATE_PAUSED :
-                        that.trigger(PLAYER_PAUSE, {
-                            prevState: spec.state,
-                            newstate: STATE_PAUSED
-                        });
-                        break;
-                    case STATE_AD_PAUSED :
-                        that.trigger(PLAYER_PAUSE, {
-                            prevState: spec.state,
-                            newstate: STATE_AD_PAUSED
-                        });
-                        break;
-                    case STATE_PLAYING :
-                        that.trigger(PLAYER_PLAY, {
-                            prevState: spec.state,
-                            newstate: STATE_PLAYING
-                        });
-                    case STATE_AD_PLAYING :
-                        that.trigger(PLAYER_PLAY, {
-                            prevState: spec.state,
-                            newstate: STATE_AD_PLAYING
-                        });
-                        break;
-                }
-                spec.state = newState;
-                that.trigger(PLAYER_STATE, {
-                    prevstate : prevState,
-                    newstate: spec.state
-                });
-            }
+                triggerSatatus();
+            }*/
         }
     };
     that.getState = () =>{
