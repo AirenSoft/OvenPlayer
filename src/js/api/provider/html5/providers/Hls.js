@@ -50,8 +50,8 @@ const HlsProvider = function(element, playerConfig, adTagUrl){
                     spec.isLive = true;
                 }else{
                     if(lastPlayPosition > 0 ){
-                        element.seek(lastPlayPosition);
-                        that.play();
+                        //element.seek(lastPlayPosition);
+                        that.seek(lastPlayPosition);
                     }
                 }
                 if(playerConfig.isAutoStart()){
