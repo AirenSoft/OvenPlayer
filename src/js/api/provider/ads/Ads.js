@@ -26,6 +26,7 @@ const Ads = function(elVideo, provider, playerConfig, adTagUrl, errorCallback){
 
     let that = {};
     let adsManagerLoaded = false;
+    let adsErrorOccurred = false;
     let spec = {
         started: false, //player started
         active : false, //on Ad
@@ -84,7 +85,7 @@ const Ads = function(elVideo, provider, playerConfig, adTagUrl, errorCallback){
             //Do not triggering ERROR. becuase It just AD!
 
             console.log(adErrorEvent.getError().getVastErrorCode(), adErrorEvent.getError().getMessage());
-
+            adsErrorOccurred = true;
             let innerError = adErrorEvent.getError().getInnerError();
             if(innerError){
                 console.log(innerError.getErrorCode(), innerError.getMessage());
@@ -280,11 +281,16 @@ const Ads = function(elVideo, provider, playerConfig, adTagUrl, errorCallback){
                                 resolve();
                             }
                         }else{
-                            if(retryCount < 300){
-                                setTimeout(checkAdsManagerIsReady, 100);
-                            }else{
+                            if(adsErrorOccurred){
                                 reject(new Error(ADMANGER_LOADING_ERROR));
+                            }else{
+                                if(retryCount < 300){
+                                    setTimeout(checkAdsManagerIsReady, 100);
+                                }else{
+                                    reject(new Error(ADMANGER_LOADING_ERROR));
+                                }
                             }
+
                         }
 
                     })();
