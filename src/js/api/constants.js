@@ -14,6 +14,7 @@ export const STATE_AD_PLAYING = "adPlaying";
 export const STATE_AD_PAUSED = "adPaused";
 export const STATE_AD_COMPLETE = "adComplete";
 export const STATE_AD_ERROR = "adError";
+export const PLAYER_AD_CLICK = "adclick";
 
 // PROVIDER
 export const PROVIDER_HTML5 = "html5";
@@ -44,6 +45,8 @@ export const PLAYER_STATE = "stateChanged";
 export const PLAYER_COMPLETE = STATE_COMPLETE;
 export const PLAYER_PAUSE = "pause";
 export const PLAYER_PLAY = "play";
+
+export const PLAYER_CLICKED = "clicked";
 export const PLAYER_RESIZED = "resized";
 export const PLAYER_LOADING = "loading";
 export const PLAYER_FULLSCREEN_REQUEST = "fullscreenRequested";

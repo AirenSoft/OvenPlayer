@@ -22,6 +22,7 @@ import {
     STATE_ERROR,
     CONTENT_META,
     PLAYER_STATE,
+    PLAYER_CLICKED,
     ERROR
 } from "api/constants";
 import ResizeSensor from "resize-sensor";
@@ -151,6 +152,10 @@ const View = function($container){
     };
     const events = {
         "click .ovenplayer" : function(event, $current, template){
+
+            if(api){
+                api.trigger(PLAYER_CLICKED, event);
+            }
             if(contextPanel){
                 event.preventDefault();
                 contextPanel.destroy();
