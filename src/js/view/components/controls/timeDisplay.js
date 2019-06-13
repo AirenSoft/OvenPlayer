@@ -43,7 +43,6 @@ const TimeDisplay = function($container, api, data){
                 }else{
                     $position.text( Math.round (data.position * api.getFramerate()));
                 }
-
             },template);
         }
 

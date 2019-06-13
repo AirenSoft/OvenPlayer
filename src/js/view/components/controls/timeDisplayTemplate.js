@@ -13,7 +13,7 @@ export default (data) => {
                         `<span>live</span>`) +
                     `</span>`
                 )
-                :(`<span class="ovp-time-current">0:00</span><span class="ovp-time-separator"> / </span><span class="ovp-time-duration">0:00</span>`)
+                :(`<span class="ovp-time-current">00:00</span><span class="ovp-time-separator"> / </span><span class="ovp-time-duration">00:00</span>`)
             ) +
         `</div>`;
 };
