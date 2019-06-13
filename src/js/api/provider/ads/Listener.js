@@ -87,7 +87,10 @@ const Listener = function(adsManager, provider, adsSpec, OnAdError){
         }
 
     };
-    lowLevelEvents[AD_ERROR] = OnAdError;
+    lowLevelEvents[AD_ERROR] = (adEvent) => {
+        isAllAdCompelete = true;
+        OnAdError(adEvent);
+    } ;
 
     lowLevelEvents[ALL_ADS_COMPLETED] = (adEvent) => {
         OvenPlayerConsole.log(adEvent.type);

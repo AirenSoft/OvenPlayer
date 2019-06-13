@@ -217,7 +217,6 @@ export const analUserAgent = function(){
         ua : nAgt,
         os: os,
         osVersion: osVersion,
-        cookies: cookieEnabled,
-        webview : isWebview
+        cookies: cookieEnabled
     };
 };
