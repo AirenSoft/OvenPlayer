@@ -140,16 +140,16 @@ const Controls = function($container, api){
 
             //RTMP too.
             if( isAndroid  || (api && api.getProviderName && api.getProviderName() === "rtmp") ){
-                if(!checkAfterPlay){
+                /*if(!checkAfterPlay){
                     checkAfterPlay = true;
                     lastContentMeta = metadata_for_when_after_playing;
                     initControlUI(metadata_for_when_after_playing);
-                }
+                }*/
 
-                /*if(!initialDuration || (initialDuration && (initialDuration !== metadata_for_when_after_playing.duration))){
+                if(!initialDuration || (initialDuration && (initialDuration !== metadata_for_when_after_playing.duration))){
                     lastContentMeta = metadata_for_when_after_playing;
                     initControlUI(metadata_for_when_after_playing);
-                }*/
+                }
             }
 
         }, template);

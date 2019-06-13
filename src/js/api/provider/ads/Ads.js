@@ -105,24 +105,31 @@ const Ads = function(elVideo, provider, playerConfig, adTagUrl, errorCallback){
 
         };
         OnManagerLoaded = function(adsManagerLoadedEvent){
+            OvenPlayerConsole.log("ADS : OnManagerLoaded ");
             let adsRenderingSettings = new google.ima.AdsRenderingSettings();
             adsRenderingSettings.restoreCustomPlaybackStateOnAdBreakComplete = true;
             //adsRenderingSettings.useStyledNonLinearAds = true;
-            adsManager = adsManagerLoadedEvent.getAdsManager(elVideo, adsRenderingSettings);
 
+            //if(!adsManager)
+            {
+                adsManager = adsManagerLoadedEvent.getAdsManager(elVideo, adsRenderingSettings);
 
-            listener = AdsEventsListener(adsManager, provider, spec, OnAdError);
+                listener = AdsEventsListener(adsManager, provider, spec, OnAdError);
 
-            provider.on(CONTENT_VOLUME, function(data) {
-                if(data.mute){
-                    adsManager.setVolume(0);
-                }else{
-                    adsManager.setVolume(data.volume/100);
-                }
+                OvenPlayerConsole.log("ADS : created admanager and listner ");
 
-            }, that);
+                provider.on(CONTENT_VOLUME, function(data) {
+                    if(data.mute){
+                        adsManager.setVolume(0);
+                    }else{
+                        adsManager.setVolume(data.volume/100);
+                    }
 
-            adsManagerLoaded = true;
+                }, that);
+
+                adsManagerLoaded = true;
+            }
+
 
         };
 
@@ -136,8 +143,10 @@ const Ads = function(elVideo, provider, playerConfig, adTagUrl, errorCallback){
 
         function initRequest(){
 
-            OvenPlayerConsole.log("ADS : AutoPlay Support : ", "autoplayAllowed",autoplayAllowed, "autoplayRequiresMuted",autoplayRequiresMuted);
-
+            OvenPlayerConsole.log("ADS : initRequest() AutoPlay Support : ", "autoplayAllowed",autoplayAllowed, "autoplayRequiresMuted",autoplayRequiresMuted);
+            if(adsRequest){
+                return false;
+            }
             adsRequest = new google.ima.AdsRequest();
 
             adsRequest.forceNonLinearFullSlot = false;
@@ -146,7 +155,7 @@ const Ads = function(elVideo, provider, playerConfig, adTagUrl, errorCallback){
              autoplayRequiresMuted = false;
              }*/
 
-            adsRequest.setAdWillAutoPlay(autoplayAllowed);
+            adsRequest.setAdWillAutoPlay(true);
             adsRequest.setAdWillPlayMuted(autoplayRequiresMuted);
             if(autoplayRequiresMuted){
                 sendWarningMessageForMutedPlay();
