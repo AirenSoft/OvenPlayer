@@ -18,7 +18,7 @@ const VolumeButton = function($container, api){
         $volumeIconSmall = "",
         $volumeIconMute = "";
     let mouseDown = false;
-    let sliderWidth = 70,  handleWidth = 0, minRange = 0, maxRange = 0;
+    let sliderWidth = 70,  handleWidth = 12, minRange = 0, maxRange = 0;
 
     let isMobile = api.getBrowser().os === "iOS" || api.getBrowser().os === "Android";
 
@@ -79,9 +79,12 @@ const VolumeButton = function($container, api){
         $volumeIconSmall = $current.find(".volume-small");
         $volumeIconMute = $current.find(".volume-mute");
 
+        //ToDo : Can't read width.
         //sliderWidth = $sliderContainer.width();
-        handleWidth = $sliderHandle.width();
+        //handleWidth = $sliderHandle.width();
+
         maxRange = sliderWidth - (handleWidth/2);
+        console.log("VOLUME MAX_RANGE", maxRange, sliderWidth, handleWidth);
 
         $sliderHandle.css("left", maxRange+ "px");
 
