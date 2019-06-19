@@ -14,8 +14,10 @@ import {
     CONTENT_META,
     WARN_MSG_MUTEDPLAY,
     STATE_AD_LOADING,
+    PROVIDER_DASH,
     UI_ICONS
 } from "api/constants";
+const TEMP_VIDEO_URL = "data:video/mp4;base64, AAAAHGZ0eXBNNFYgAAACAGlzb21pc28yYXZjMQAAAAhmcmVlAAAGF21kYXTeBAAAbGliZmFhYyAxLjI4AABCAJMgBDIARwAAArEGBf//rdxF6b3m2Ui3lizYINkj7u94MjY0IC0gY29yZSAxNDIgcjIgOTU2YzhkOCAtIEguMjY0L01QRUctNCBBVkMgY29kZWMgLSBDb3B5bGVmdCAyMDAzLTIwMTQgLSBodHRwOi8vd3d3LnZpZGVvbGFuLm9yZy94MjY0Lmh0bWwgLSBvcHRpb25zOiBjYWJhYz0wIHJlZj0zIGRlYmxvY2s9MTowOjAgYW5hbHlzZT0weDE6MHgxMTEgbWU9aGV4IHN1Ym1lPTcgcHN5PTEgcHN5X3JkPTEuMDA6MC4wMCBtaXhlZF9yZWY9MSBtZV9yYW5nZT0xNiBjaHJvbWFfbWU9MSB0cmVsbGlzPTEgOHg4ZGN0PTAgY3FtPTAgZGVhZHpvbmU9MjEsMTEgZmFzdF9wc2tpcD0xIGNocm9tYV9xcF9vZmZzZXQ9LTIgdGhyZWFkcz02IGxvb2thaGVhZF90aHJlYWRzPTEgc2xpY2VkX3RocmVhZHM9MCBucj0wIGRlY2ltYXRlPTEgaW50ZXJsYWNlZD0wIGJsdXJheV9jb21wYXQ9MCBjb25zdHJhaW5lZF9pbnRyYT0wIGJmcmFtZXM9MCB3ZWlnaHRwPTAga2V5aW50PTI1MCBrZXlpbnRfbWluPTI1IHNjZW5lY3V0PTQwIGludHJhX3JlZnJlc2g9MCByY19sb29rYWhlYWQ9NDAgcmM9Y3JmIG1idHJlZT0xIGNyZj0yMy4wIHFjb21wPTAuNjAgcXBtaW49MCBxcG1heD02OSBxcHN0ZXA9NCB2YnZfbWF4cmF0ZT03NjggdmJ2X2J1ZnNpemU9MzAwMCBjcmZfbWF4PTAuMCBuYWxfaHJkPW5vbmUgZmlsbGVyPTAgaXBfcmF0aW89MS40MCBhcT0xOjEuMDAAgAAAAFZliIQL8mKAAKvMnJycnJycnJycnXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXiEASZACGQAjgCEASZACGQAjgAAAAAdBmjgX4GSAIQBJkAIZACOAAAAAB0GaVAX4GSAhAEmQAhkAI4AhAEmQAhkAI4AAAAAGQZpgL8DJIQBJkAIZACOAIQBJkAIZACOAAAAABkGagC/AySEASZACGQAjgAAAAAZBmqAvwMkhAEmQAhkAI4AhAEmQAhkAI4AAAAAGQZrAL8DJIQBJkAIZACOAAAAABkGa4C/AySEASZACGQAjgCEASZACGQAjgAAAAAZBmwAvwMkhAEmQAhkAI4AAAAAGQZsgL8DJIQBJkAIZACOAIQBJkAIZACOAAAAABkGbQC/AySEASZACGQAjgCEASZACGQAjgAAAAAZBm2AvwMkhAEmQAhkAI4AAAAAGQZuAL8DJIQBJkAIZACOAIQBJkAIZACOAAAAABkGboC/AySEASZACGQAjgAAAAAZBm8AvwMkhAEmQAhkAI4AhAEmQAhkAI4AAAAAGQZvgL8DJIQBJkAIZACOAAAAABkGaAC/AySEASZACGQAjgCEASZACGQAjgAAAAAZBmiAvwMkhAEmQAhkAI4AhAEmQAhkAI4AAAAAGQZpAL8DJIQBJkAIZACOAAAAABkGaYC/AySEASZACGQAjgCEASZACGQAjgAAAAAZBmoAvwMkhAEmQAhkAI4AAAAAGQZqgL8DJIQBJkAIZACOAIQBJkAIZACOAAAAABkGawC/AySEASZACGQAjgAAAAAZBmuAvwMkhAEmQAhkAI4AhAEmQAhkAI4AAAAAGQZsAL8DJIQBJkAIZACOAAAAABkGbIC/AySEASZACGQAjgCEASZACGQAjgAAAAAZBm0AvwMkhAEmQAhkAI4AhAEmQAhkAI4AAAAAGQZtgL8DJIQBJkAIZACOAAAAABkGbgCvAySEASZACGQAjgCEASZACGQAjgAAAAAZBm6AnwMkhAEmQAhkAI4AhAEmQAhkAI4AhAEmQAhkAI4AhAEmQAhkAI4AAAAhubW9vdgAAAGxtdmhkAAAAAAAAAAAAAAAAAAAD6AAABDcAAQAAAQAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwAAAzB0cmFrAAAAXHRraGQAAAADAAAAAAAAAAAAAAABAAAAAAAAA+kAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAABAAAAAALAAAACQAAAAAAAkZWR0cwAAABxlbHN0AAAAAAAAAAEAAAPpAAAAAAABAAAAAAKobWRpYQAAACBtZGhkAAAAAAAAAAAAAAAAAAB1MAAAdU5VxAAAAAAALWhkbHIAAAAAAAAAAHZpZGUAAAAAAAAAAAAAAABWaWRlb0hhbmRsZXIAAAACU21pbmYAAAAUdm1oZAAAAAEAAAAAAAAAAAAAACRkaW5mAAAAHGRyZWYAAAAAAAAAAQAAAAx1cmwgAAAAAQAAAhNzdGJsAAAAr3N0c2QAAAAAAAAAAQAAAJ9hdmMxAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAALAAkABIAAAASAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGP//AAAALWF2Y0MBQsAN/+EAFWdCwA3ZAsTsBEAAAPpAADqYA8UKkgEABWjLg8sgAAAAHHV1aWRraEDyXyRPxbo5pRvPAyPzAAAAAAAAABhzdHRzAAAAAAAAAAEAAAAeAAAD6QAAABRzdHNzAAAAAAAAAAEAAAABAAAAHHN0c2MAAAAAAAAAAQAAAAEAAAABAAAAAQAAAIxzdHN6AAAAAAAAAAAAAAAeAAADDwAAAAsAAAALAAAACgAAAAoAAAAKAAAACgAAAAoAAAAKAAAACgAAAAoAAAAKAAAACgAAAAoAAAAKAAAACgAAAAoAAAAKAAAACgAAAAoAAAAKAAAACgAAAAoAAAAKAAAACgAAAAoAAAAKAAAACgAAAAoAAAAKAAAAiHN0Y28AAAAAAAAAHgAAAEYAAANnAAADewAAA5gAAAO0AAADxwAAA+MAAAP2AAAEEgAABCUAAARBAAAEXQAABHAAAASMAAAEnwAABLsAAATOAAAE6gAABQYAAAUZAAAFNQAABUgAAAVkAAAFdwAABZMAAAWmAAAFwgAABd4AAAXxAAAGDQAABGh0cmFrAAAAXHRraGQAAAADAAAAAAAAAAAAAAACAAAAAAAABDcAAAAAAAAAAAAAAAEBAAAAAAEAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAkZWR0cwAAABxlbHN0AAAAAAAAAAEAAAQkAAADcAABAAAAAAPgbWRpYQAAACBtZGhkAAAAAAAAAAAAAAAAAAC7gAAAykBVxAAAAAAALWhkbHIAAAAAAAAAAHNvdW4AAAAAAAAAAAAAAABTb3VuZEhhbmRsZXIAAAADi21pbmYAAAAQc21oZAAAAAAAAAAAAAAAJGRpbmYAAAAcZHJlZgAAAAAAAAABAAAADHVybCAAAAABAAADT3N0YmwAAABnc3RzZAAAAAAAAAABAAAAV21wNGEAAAAAAAAAAQAAAAAAAAAAAAIAEAAAAAC7gAAAAAAAM2VzZHMAAAAAA4CAgCIAAgAEgICAFEAVBbjYAAu4AAAADcoFgICAAhGQBoCAgAECAAAAIHN0dHMAAAAAAAAAAgAAADIAAAQAAAAAAQAAAkAAAAFUc3RzYwAAAAAAAAAbAAAAAQAAAAEAAAABAAAAAgAAAAIAAAABAAAAAwAAAAEAAAABAAAABAAAAAIAAAABAAAABgAAAAEAAAABAAAABwAAAAIAAAABAAAACAAAAAEAAAABAAAACQAAAAIAAAABAAAACgAAAAEAAAABAAAACwAAAAIAAAABAAAADQAAAAEAAAABAAAADgAAAAIAAAABAAAADwAAAAEAAAABAAAAEAAAAAIAAAABAAAAEQAAAAEAAAABAAAAEgAAAAIAAAABAAAAFAAAAAEAAAABAAAAFQAAAAIAAAABAAAAFgAAAAEAAAABAAAAFwAAAAIAAAABAAAAGAAAAAEAAAABAAAAGQAAAAIAAAABAAAAGgAAAAEAAAABAAAAGwAAAAIAAAABAAAAHQAAAAEAAAABAAAAHgAAAAIAAAABAAAAHwAAAAQAAAABAAAA4HN0c3oAAAAAAAAAAAAAADMAAAAaAAAACQAAAAkAAAAJAAAACQAAAAkAAAAJAAAACQAAAAkAAAAJAAAACQAAAAkAAAAJAAAACQAAAAkAAAAJAAAACQAAAAkAAAAJAAAACQAAAAkAAAAJAAAACQAAAAkAAAAJAAAACQAAAAkAAAAJAAAACQAAAAkAAAAJAAAACQAAAAkAAAAJAAAACQAAAAkAAAAJAAAACQAAAAkAAAAJAAAACQAAAAkAAAAJAAAACQAAAAkAAAAJAAAACQAAAAkAAAAJAAAACQAAAAkAAACMc3RjbwAAAAAAAAAfAAAALAAAA1UAAANyAAADhgAAA6IAAAO+AAAD0QAAA+0AAAQAAAAEHAAABC8AAARLAAAEZwAABHoAAASWAAAEqQAABMUAAATYAAAE9AAABRAAAAUjAAAFPwAABVIAAAVuAAAFgQAABZ0AAAWwAAAFzAAABegAAAX7AAAGFwAAAGJ1ZHRhAAAAWm1ldGEAAAAAAAAAIWhkbHIAAAAAAAAAAG1kaXJhcHBsAAAAAAAAAAAAAAAALWlsc3QAAAAlqXRvbwAAAB1kYXRhAAAAAQAAAABMYXZmNTUuMzMuMTAw";
 
 const Ads = function(elVideo, provider, playerConfig, adTagUrl, errorCallback){
     //Todo : move createAdContainer to MediaManager
@@ -30,19 +32,22 @@ const Ads = function(elVideo, provider, playerConfig, adTagUrl, errorCallback){
     let spec = {
         started: false, //player started
         active : false, //on Ad
-        isVideoEnded : false,
-        checkAutoplayPeriod : true
+        isVideoEnded : false
     };
     let OnAdError = null;
     let OnManagerLoaded = null;
 
     let adDisplayContainer = null;
+    let adDisplayInitialized = false;
     let adsLoader = null;
     let adsManager = null;
     let listener = null;
     let adsRequest = null;
     let autoplayAllowed = false, autoplayRequiresMuted = false;
+    let browser = playerConfig.getBrowser();
+    let isMobile = browser.os === "Android" || browser.os === "iOS";
 
+    let adDisplayContainerInitialized = false;
 
     // google.ima.settings.setAutoPlayAdBreaks(false);
     //google.ima.settings.setVpaidMode(google.ima.ImaSdkSettings.VpaidMode.ENABLED);
@@ -60,16 +65,13 @@ const Ads = function(elVideo, provider, playerConfig, adTagUrl, errorCallback){
             }
         });
     };
-    OvenPlayerConsole.log("ADS : started ", adTagUrl);
+    OvenPlayerConsole.log("ADS : started ", "isMobile : ", isMobile, adTagUrl);
 
     try{
         ADS_MANAGER_LOADED = google.ima.AdsManagerLoadedEvent.Type.ADS_MANAGER_LOADED;
         AD_ERROR = google.ima.AdErrorEvent.Type.AD_ERROR;
         google.ima.settings.setLocale("ko");
         google.ima.settings.setDisableCustomPlaybackForIOS10Plus(true);
-
-
-
 
         const createAdContainer = () => {
             let adContainer = document.createElement('div');
@@ -90,9 +92,9 @@ const Ads = function(elVideo, provider, playerConfig, adTagUrl, errorCallback){
             if(innerError){
                 console.log(innerError.getErrorCode(), innerError.getMessage());
             }
-            if (adsManager) {
+            /*if (adsManager) {
                 adsManager.destroy();
-            }
+            }*/
             provider.trigger(STATE_AD_ERROR, {code : adErrorEvent.getError().getVastErrorCode() , message : adErrorEvent.getError().getMessage()});
             spec.active = false;
             spec.started = true;
@@ -106,48 +108,67 @@ const Ads = function(elVideo, provider, playerConfig, adTagUrl, errorCallback){
 
         };
         OnManagerLoaded = function(adsManagerLoadedEvent){
+
             OvenPlayerConsole.log("ADS : OnManagerLoaded ");
             let adsRenderingSettings = new google.ima.AdsRenderingSettings();
             adsRenderingSettings.restoreCustomPlaybackStateOnAdBreakComplete = true;
             //adsRenderingSettings.useStyledNonLinearAds = true;
-
-            //if(!adsManager)
-            {
-                adsManager = adsManagerLoadedEvent.getAdsManager(elVideo, adsRenderingSettings);
-
-                listener = AdsEventsListener(adsManager, provider, spec, OnAdError);
-
-                OvenPlayerConsole.log("ADS : created admanager and listner ");
-
-                provider.on(CONTENT_VOLUME, function(data) {
-                    if(data.mute){
-                        adsManager.setVolume(0);
-                    }else{
-                        adsManager.setVolume(data.volume/100);
-                    }
-
-                }, that);
-
-                adsManagerLoaded = true;
+            if(adsManager){
+                OvenPlayerConsole.log("ADS : destroy adsManager----");
+                listener.destroy();
+                listener = null;
+                adsManager.destroy();
+                adsManager = null;
             }
+            adsManager = adsManagerLoadedEvent.getAdsManager(elVideo, adsRenderingSettings);
 
+            listener = AdsEventsListener(adsManager, provider, spec, OnAdError);
 
+            OvenPlayerConsole.log("ADS : created admanager and listner ");
+
+            adsManagerLoaded = true;
         };
 
 
         adDisplayContainer = new google.ima.AdDisplayContainer(createAdContainer(), elVideo);
         adsLoader = new google.ima.AdsLoader(adDisplayContainer);
 
+        /*let videos = document.getElementsByTagName("video");
+        if(videos.length === 3){
+            videos[2].parentElement.remove();
+        }*/
         adsLoader.addEventListener(ADS_MANAGER_LOADED, OnManagerLoaded, false);
         adsLoader.addEventListener(AD_ERROR, OnAdError, false);
 
-
-        function initRequest(){
-
-            OvenPlayerConsole.log("ADS : initRequest() AutoPlay Support : ", "autoplayAllowed",autoplayAllowed, "autoplayRequiresMuted",autoplayRequiresMuted);
-            if(adsRequest){
-                return false;
+        OvenPlayerConsole.log("ADS : adDisplayContainer initialized");
+        provider.on(CONTENT_VOLUME, function(data) {
+            if(adsManager){
+                if(data.mute){
+                    adsManager.setVolume(0);
+                }else{
+                    adsManager.setVolume(data.volume/100);
+                }
             }
+        }, that);
+
+        const setAutoPlayToAdsRequest = function (){
+            if(adsRequest){
+                OvenPlayerConsole.log("ADS : setADWillAutoPlay ", "autoplayAllowed",autoplayAllowed, "autoplayRequiresMuted",autoplayRequiresMuted);
+
+                adsRequest.setAdWillAutoPlay(autoplayAllowed);
+                adsRequest.setAdWillPlayMuted(autoplayRequiresMuted);
+                if(autoplayRequiresMuted){
+                    sendWarningMessageForMutedPlay();
+                }
+            }
+        };
+
+        const initRequest = function(){
+            adsManagerLoaded = false;
+            OvenPlayerConsole.log("ADS : initRequest() AutoPlay Support : ", "autoplayAllowed",autoplayAllowed, "autoplayRequiresMuted",autoplayRequiresMuted);
+            /*if(adsRequest){
+             return false;
+             }*/
             adsRequest = new google.ima.AdsRequest();
 
             adsRequest.forceNonLinearFullSlot = false;
@@ -156,11 +177,7 @@ const Ads = function(elVideo, provider, playerConfig, adTagUrl, errorCallback){
              autoplayRequiresMuted = false;
              }*/
 
-            adsRequest.setAdWillAutoPlay(true);
-            adsRequest.setAdWillPlayMuted(autoplayRequiresMuted);
-            if(autoplayRequiresMuted){
-                sendWarningMessageForMutedPlay();
-            }
+            setAutoPlayToAdsRequest();
             adsRequest.adTagUrl = adTagUrl;
 
             adsLoader.requestAds(adsRequest);
@@ -168,71 +185,69 @@ const Ads = function(elVideo, provider, playerConfig, adTagUrl, errorCallback){
             //two way what ad starts.
             //adsLoader.requestAds(adsRequest); or  adsManager.start();
             //what? why?? wth??
-        }
+        };
 
-        function checkAutoplaySupport() {
+
+        const checkAutoplaySupport = function () {
             OvenPlayerConsole.log("ADS : checkAutoplaySupport() ");
-            spec.checkAutoplayPeriod = true;
-            //let cloneVideo = elVideo.cloneNode(true);
-            if(!elVideo.play){
-                autoplayAllowed = true;
-                autoplayRequiresMuted = false;
-                spec.checkAutoplayPeriod = false;
-                initRequest();
-                return false;
+
+            let temporarySupportCheckVideo = document.createElement('video');
+            temporarySupportCheckVideo.setAttribute('playsinline', 'true');
+            temporarySupportCheckVideo.src = TEMP_VIDEO_URL;
+            temporarySupportCheckVideo.load();
+
+            //Dash has already loaded when triggered provider.play() always.
+            if(isMobile && provider.getName() !== PROVIDER_DASH ){
+                //Main video sets user gesture when temporarySupportCheckVideo triggered checking.
+                elVideo.load();
             }
+            /* The policy that proxy the User Interaction on Mobile. My Guess. 2019-06-19
+            *   (temporarySupportCheckVideo's User Interaction proxy to elVideo.)
+            *   Mobile Chrome WebView :
+            *   You have to run elVideo.load() when temporarySupportCheckVideo issues within 5 seconds of user interaction.
+            *
+            *   Mobile ios safari :
+            *   You have to run elVideo.load() before temporarySupportCheckVideo run play().
+            * */
 
-            let playPromise = elVideo.play();
-            if (playPromise !== undefined) {
-                playPromise.then(function(){
-                    OvenPlayerConsole.log("ADS : CHECK AUTO PLAY success");
-                    // If we make it here, unmuted autoplay works.
-                    elVideo.pause();
-                    autoplayAllowed = true;
-                    autoplayRequiresMuted = false;
-                    spec.checkAutoplayPeriod = false;
-                    initRequest();
+            const clearAndReport = function(_autoplayAllowed, _autoplayRequiresMuted){
+                autoplayAllowed = _autoplayAllowed;
+                autoplayRequiresMuted = _autoplayRequiresMuted;
+                temporarySupportCheckVideo.pause();
+                temporarySupportCheckVideo.remove();
 
-                }).catch(function(error){
-                    OvenPlayerConsole.log("ADS : CHECK AUTO PLAY fail", error.message);
-                    autoplayAllowed = false;
-                    autoplayRequiresMuted = false;
-                    spec.checkAutoplayPeriod = false;
-                    initRequest();
+                setAutoPlayToAdsRequest();
+            };
 
-                    /*
-                    //Disable Muted Play
-                    elVideo.muted = true;
-                    var playPromise = elVideo.play();
+            return new Promise(function(resolve, reject){
+                if(!temporarySupportCheckVideo.play){
+                    //I can't remember this case...
+                    OvenPlayerConsole.log("ADS : !temporarySupportCheckVideo.play");
+                    clearAndReport(true, false);
+                    resolve();
+                }else{
+                    let playPromise = temporarySupportCheckVideo.play();
                     if (playPromise !== undefined) {
-                        playPromise.then(function () {
-                            // If we make it here, muted autoplay works but unmuted autoplay does not.
-                            elVideo.pause();
-                            autoplayAllowed = true;
-                            autoplayRequiresMuted = true;
-                            spec.checkAutoplayStart = false;
-                            initRequest();
-                        }).catch(function (error) {
-                            // Both muted and unmuted autoplay failed. Fall back to click to play.
-                            elVideo.muted = false;
-                            autoplayAllowed = false;
-                            autoplayRequiresMuted = false;
-                            spec.checkAutoplayStart = false;
-                            initRequest();
+                        playPromise.then(function(){
+                            OvenPlayerConsole.log("ADS : auto play allowed.");
+                            // If we make it here, unmuted autoplay works.
+                            clearAndReport(true, false);
+                            resolve();
+
+                        }).catch(function(error){
+                            OvenPlayerConsole.log("ADS : auto play failed", error.message);
+                            clearAndReport(false, false);
+                            resolve();
                         });
-                    }*/
-                });
-            }else{
-                //Maybe this is IE11....
-                elVideo.pause();
-                autoplayAllowed = true;
-                autoplayRequiresMuted = false;
-                spec.checkAutoplayPeriod = false;
-                initRequest();
-            }
+                    }else{
+                        OvenPlayerConsole.log("ADS : promise not support");
+                        //Maybe this is IE11....
+                        clearAndReport(true, false);
+                        resolve();
+                    }
+                }
+            });
         }
-
-
 
         that.isActive = () => {
             return spec.active;
@@ -241,8 +256,6 @@ const Ads = function(elVideo, provider, playerConfig, adTagUrl, errorCallback){
             return spec.started;
         };
         that.play = () => {
-            //provider.setState(STATE_LOADING);
-
             if(spec.started){
                 return new Promise(function (resolve, reject) {
                     try{
@@ -252,39 +265,25 @@ const Ads = function(elVideo, provider, playerConfig, adTagUrl, errorCallback){
                         reject(error);
                     }
                 });
-
             }else{
-                let retryCount = 0;
-                //provider.setState(STATE_AD_LOADING);
+                adDisplayContainer.initialize();
 
                 return new Promise(function (resolve, reject) {
-                    checkAutoplaySupport();
-                    (function checkAdsManagerIsReady(){
+                    let retryCount = 0;
+                    const checkAdsManagerIsReady = function(){
                         retryCount ++;
                         if(adsManagerLoaded){
-                            if((playerConfig.isAutoStart() && !autoplayAllowed) ){
-                                autoplayAllowed = true; //autoplay fail. set forced autoplayAllowed
-                                spec.started = false;
-                                reject(new Error(AUTOPLAY_NOT_ALLOWED));
-                            }else{
-                                //I think do not nessessary this code anymore. Because muted play solves everything. 2019-06-04
-                                /*if(playerConfig.getBrowser().os  === "iOS" || playerConfig.getBrowser().os  === "Android"){
-                                 //Don't playing video when player complete playing AD.
-                                 //Only iOS Safari First loaded.
-                                    elVideo.load();
-                                }*/
+                            OvenPlayerConsole.log("ADS : ad start!");
+                            adsManager.init("100%", "100%", google.ima.ViewMode.NORMAL);
+                            adsManager.start();
+                            spec.started = true;
 
-                                adDisplayContainer.initialize();
-                                adsManager.init("100%", "100%", google.ima.ViewMode.NORMAL);
-                                adsManager.start();
-                                spec.started = true;
-                                resolve();
-                            }
+                            resolve();
                         }else{
                             if(adsErrorOccurred){
                                 reject(new Error(ADMANGER_LOADING_ERROR));
                             }else{
-                                if(retryCount < 300){
+                                if(retryCount < 150){
                                     setTimeout(checkAdsManagerIsReady, 100);
                                 }else{
                                     reject(new Error(ADMANGER_LOADING_ERROR));
@@ -293,7 +292,17 @@ const Ads = function(elVideo, provider, playerConfig, adTagUrl, errorCallback){
 
                         }
 
-                    })();
+                    };
+                    checkAutoplaySupport().then(function () {
+                        if( (playerConfig.isAutoStart() && !autoplayAllowed) ){
+                            OvenPlayerConsole.log("ADS : autoplayAllowed : false");
+                            spec.started = false;
+                            reject(new Error(AUTOPLAY_NOT_ALLOWED));
+                        }else{
+                            initRequest();
+                            checkAdsManagerIsReady();
+                        }
+                    });
                 });
 
 
@@ -309,15 +318,14 @@ const Ads = function(elVideo, provider, playerConfig, adTagUrl, errorCallback){
             }else if(adsErrorOccurred){
                 completeContentCallback();
             }else{
-                //Post - Roll 을 재생하기 위해서는 콘텐츠가 끝났음을 adsLoader에게 알려야 한다
+                //If you need play the post-roll, you have to call to adsLoader when contents was completed.
                 spec.isVideoEnded = true;
                 adsLoader.contentComplete();
             }
         };
-        that.isAutoPlaySupportCheckTime = () => {
-            return spec.checkAutoplayPeriod;
-        }
+
         that.destroy = () => {
+
             if(adsLoader){
                 adsLoader.removeEventListener(ADS_MANAGER_LOADED, OnManagerLoaded);
                 adsLoader.removeEventListener(AD_ERROR, OnAdError);
@@ -342,8 +350,8 @@ const Ads = function(elVideo, provider, playerConfig, adTagUrl, errorCallback){
 
             provider.off(CONTENT_VOLUME, null, that);
         };
-        return that;
 
+        return that;
     }catch (error){
         //let tempError = ERRORS[INIT_ADS_ERROR];
         //tempError.error = error;
@@ -356,3 +364,4 @@ const Ads = function(elVideo, provider, playerConfig, adTagUrl, errorCallback){
 
 
 export default Ads;
+

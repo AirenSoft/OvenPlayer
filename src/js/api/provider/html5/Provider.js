@@ -114,18 +114,31 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
         if(spec.state !== newState){
             let prevState = spec.state;
 
-            OvenPlayerConsole.log("Provider : setState()", newState, "isAdsCheckingtime :", (ads && ads.isAutoPlaySupportCheckTime()));
+            OvenPlayerConsole.log("Provider : setState()", newState);
 
-            //ToDo : This is temporary code. avoid background content error.
+            //ToDo : This is temporary code. If main video occur error, player avoid error message on ad playing.
             if(prevState === STATE_AD_PLAYING && (newState === STATE_ERROR || newState === STATE_IDLE) ){
                 return false;
             }
-            if((prevState === STATE_AD_PLAYING || prevState === STATE_AD_PAUSED ) && (newState === STATE_PAUSED || newState === STATE_PLAYING)){
-                return false;
-            }
+
+            /*
+             * 2019-06-13
+             * No more necessary this codes.
+             * Checking the autoPlay support was using main video element. elVideo.play() -> yes or no??
+             * And then that causes triggering play and pause event.
+             * And that checking waits for elVideo loaded. Dash load completion time is unknown.
+             * Then I changed check method. I make temporary video tag and insert empty video.
+             * */
+            //if ((prevState === STATE_AD_PLAYING || prevState === STATE_AD_PAUSED ) && (newState === STATE_PAUSED || newState === STATE_PLAYING)) {
+            //    return false;
+            //Ads checks checkAutoplaySupport(). It calls real play() and pause() to video element.
+            //And then that triggers "playing" and "pause".
+            //I prevent these process.
+            //}
+
             OvenPlayerConsole.log("Provider : triggerSatatus", newState);
 
-            switch(newState){
+            switch (newState) {
                 case STATE_COMPLETE :
                     that.trigger(PLAYER_COMPLETE);
                     break;
@@ -155,24 +168,14 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
             }
             spec.state = newState;
             that.trigger(PLAYER_STATE, {
-                prevstate : prevState,
+                prevstate: prevState,
                 newstate: spec.state
             });
 
-            /*
-            if(newState === STATE_AD_PLAYING || newState === STATE_AD_PAUSED){
 
-            }else if(ads && ads.isAutoPlaySupportCheckTime()){
-                //Do nothing
-                //silence Area!!!
-                //Ads checks checkAutoplaySupport(). It calls real play() and pause() to video element.
-                //And then that triggers "playing" and "pause".
-                //I prevent these process.
-            }else{
-                triggerSatatus();
-            }*/
         }
     };
+
     that.getState = () =>{
         return spec.state;
     };
@@ -264,6 +267,8 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
         if(!elVideo){
             return false;
         }
+
+        //ToDo : Test it thoroughly and remove isPlayingProcessing. Most of the hazards have been removed. a lot of nonblocking play() way -> blocking play()
         if(isPlayingProcessing){
             return false;
         }

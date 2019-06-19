@@ -102,48 +102,53 @@ const Provider = function(spec, playerConfig){
             if(prevState === STATE_AD_PLAYING && (newState === STATE_ERROR || newState === STATE_IDLE) ){
                 return false;
             }
-
-
-            if(ads && ads.isAutoPlaySupportCheckTime()){
-                //Ads checks checkAutoplaySupport().
-                //It calls real play() and pause().
-                //And then this triggers "playing" and "pause".
-                //I prevent these process.
-            }else{
-                switch(newState){
-                    case STATE_COMPLETE :
-                        that.trigger(PLAYER_COMPLETE);
-                        break;
-                    case STATE_PAUSED :
-                        that.trigger(PLAYER_PAUSE, {
-                            prevState: spec.state,
-                            newstate: STATE_PAUSED
-                        });
-                        break;
-                    case STATE_AD_PAUSED :
-                        that.trigger(PLAYER_PAUSE, {
-                            prevState: spec.state,
-                            newstate: STATE_AD_PAUSED
-                        });
-                        break;
-                    case STATE_PLAYING :
-                        that.trigger(PLAYER_PLAY, {
-                            prevState: spec.state,
-                            newstate: STATE_PLAYING
-                        });
-                    case STATE_AD_PLAYING :
-                        that.trigger(PLAYER_PLAY, {
-                            prevState: spec.state,
-                            newstate: STATE_AD_PLAYING
-                        });
-                        break;
-                }
-                spec.state = newState;
-                that.trigger(PLAYER_STATE, {
-                    prevstate : prevState,
-                    newstate: spec.state
-                });
+            /*
+             * 2019-06-13
+             * No more necessary this codes.
+             * Checking the autoPlay support was using main video element. elVideo.play() -> yes or no??
+             * And then that causes triggering play and pause event.
+             * And that checking waits for elVideo loaded. Dash load completion time is unknown.
+             * Then I changed check method. I make temporary video tag and insert empty video.
+             * */
+            //if ((prevState === STATE_AD_PLAYING || prevState === STATE_AD_PAUSED ) && (newState === STATE_PAUSED || newState === STATE_PLAYING)) {
+            //    return false;
+            //Ads checks checkAutoplaySupport(). It calls real play() and pause() to video element.
+            //And then that triggers "playing" and "pause".
+            //I prevent these process.
+            //}
+            switch(newState){
+                case STATE_COMPLETE :
+                    that.trigger(PLAYER_COMPLETE);
+                    break;
+                case STATE_PAUSED :
+                    that.trigger(PLAYER_PAUSE, {
+                        prevState: spec.state,
+                        newstate: STATE_PAUSED
+                    });
+                    break;
+                case STATE_AD_PAUSED :
+                    that.trigger(PLAYER_PAUSE, {
+                        prevState: spec.state,
+                        newstate: STATE_AD_PAUSED
+                    });
+                    break;
+                case STATE_PLAYING :
+                    that.trigger(PLAYER_PLAY, {
+                        prevState: spec.state,
+                        newstate: STATE_PLAYING
+                    });
+                case STATE_AD_PLAYING :
+                    that.trigger(PLAYER_PLAY, {
+                        prevState: spec.state,
+                        newstate: STATE_AD_PLAYING
+                    });
+                    break;
             }
+            spec.state = newState;
+            that.trigger(PLAYER_STATE, {
+                prevstate : prevState,
+                newstate: spec.state
+            });
         }
     };
     that.getState = () =>{

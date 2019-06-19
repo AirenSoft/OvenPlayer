@@ -84,7 +84,6 @@ const VolumeButton = function($container, api){
         //handleWidth = $sliderHandle.width();
 
         maxRange = sliderWidth - (handleWidth/2);
-        console.log("VOLUME MAX_RANGE", maxRange, sliderWidth, handleWidth);
 
         $sliderHandle.css("left", maxRange+ "px");
 

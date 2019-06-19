@@ -152,7 +152,7 @@ const Dash = function(element, playerConfig, adTagUrl){
             }
 
             if(playerConfig.isAutoStart() && !runedAutoStart){
-                OvenPlayerConsole.log("DASH : AUTOPLAY()!! MOTHER FOGERHJKads");
+                OvenPlayerConsole.log("DASH : AUTOPLAY()!");
                 that.play();
 
                 runedAutoStart = true;

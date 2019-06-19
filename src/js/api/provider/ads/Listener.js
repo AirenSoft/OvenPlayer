@@ -65,10 +65,11 @@ const Listener = function(adsManager, provider, adsSpec, OnAdError){
     let isAllAdCompelete = false;   //Post roll을 위해
     let adCompleteCallback = null;
     let currentAd = null;
-
+    OvenPlayerConsole.log("ADS : Listener Created");
      lowLevelEvents[CONTENT_PAUSE_REQUESTED] = (adEvent) => {
-        OvenPlayerConsole.log(adEvent.type);
-        //This callls when player is playing contents for ad.
+         OvenPlayerConsole.log("ADS LISTENER : ", adEvent.type);
+
+         //This callls when player is playing contents for ad.
          if(adsSpec.started){
              adsSpec.active = true;
              provider.pause();
@@ -77,7 +78,7 @@ const Listener = function(adsManager, provider, adsSpec, OnAdError){
     };
 
     lowLevelEvents[CONTENT_RESUME_REQUESTED] = (adEvent) => {
-        OvenPlayerConsole.log(adEvent.type);
+        OvenPlayerConsole.log("ADS LISTENER : ", adEvent.type);
         //This calls when one ad ended.
         //And this is signal what play the contents.
         adsSpec.active = false;
@@ -93,7 +94,8 @@ const Listener = function(adsManager, provider, adsSpec, OnAdError){
     } ;
 
     lowLevelEvents[ALL_ADS_COMPLETED] = (adEvent) => {
-        OvenPlayerConsole.log(adEvent.type);
+        OvenPlayerConsole.log("ADS LISTENER : ", adEvent.type);
+
         isAllAdCompelete = true;
         if(adsSpec.isVideoEnded){
             provider.setState(STATE_COMPLETE);
@@ -217,7 +219,7 @@ const Listener = function(adsManager, provider, adsSpec, OnAdError){
     };
     that.destroy = () =>{
         OvenPlayerConsole.log("AdsEventListener : destroy()");
-        provider.trigger(STATE_AD_COMPLETE);
+        //provider.trigger(STATE_AD_COMPLETE);
         Object.keys(lowLevelEvents).forEach(eventName => {
             adsManager.removeEventListener(eventName, lowLevelEvents[eventName]);
         });
