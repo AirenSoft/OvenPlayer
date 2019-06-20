@@ -18,7 +18,7 @@ const VolumeButton = function($container, api){
         $volumeIconSmall = "",
         $volumeIconMute = "";
     let mouseDown = false;
-    let sliderWidth = 70,  handleWidth = 0, minRange = 0, maxRange = 0;
+    let sliderWidth = 70,  handleWidth = 12, minRange = 0, maxRange = 0;
 
     let isMobile = api.getBrowser().os === "iOS" || api.getBrowser().os === "Android";
 
@@ -75,12 +75,14 @@ const VolumeButton = function($container, api){
         $sliderHandle = $current.find(".ovp-volume-slider-handle");
         $sliderValue = $current.find(".ovp-volume-slider-value");
 
-        $volumeIconBig = $current.find( ".volume-max");
-        $volumeIconSmall = $current.find(".volume-small");
-        $volumeIconMute = $current.find(".volume-mute");
+        $volumeIconBig = $current.find( ".op-volume-max");
+        $volumeIconSmall = $current.find(".op-volume-small");
+        $volumeIconMute = $current.find(".op-volume-mute");
 
+        //ToDo : Can't read width.
         //sliderWidth = $sliderContainer.width();
-        handleWidth = $sliderHandle.width();
+        //handleWidth = $sliderHandle.width();
+
         maxRange = sliderWidth - (handleWidth/2);
 
         $sliderHandle.css("left", maxRange+ "px");

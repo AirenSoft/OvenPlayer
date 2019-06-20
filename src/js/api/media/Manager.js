@@ -7,12 +7,12 @@ import {getBrowser} from "utils/browser";
 import {PROVIDER_DASH, PROVIDER_HLS, PROVIDER_WEBRTC, PROVIDER_HTML5, PROVIDER_RTMP} from "api/constants";
 import LA$ from "utils/likeA$.js";
 import {getScriptPath} from 'utils/webpack';
-
+import {version} from 'version';
 //ToDo : Restructuring
 
 const Manager = function(container, browserInfo){
     const that = {};
-    const SWFPath = getScriptPath('ovenplayer.js')+"OvenPlayerFlash.swf";
+    const SWFPath = getScriptPath('ovenplayer.js')+"OvenPlayerFlash.swf?v="+version;
     let rootId = container.getAttribute("data-parent-id");
     let $container = LA$(container);
     let videoElement = "";
@@ -118,12 +118,23 @@ const Manager = function(container, browserInfo){
     };
 
     that.createMedia = (providerName , playerConfig)  => {
-        if(videoElement){
-            that.empty();
+        if( providerName === PROVIDER_RTMP ){
+            if(videoElement){
+                that.empty();
+            }
+            return createFlashVideo(playerConfig.isLoop(), playerConfig.getRtmpBufferTime(), playerConfig.getRtmpBufferTimeMax());
+        }else{
+            if(videoElement){
+                //that.empty();
+                //reuse video element.
+                //becuase playlist is auto next playing.
+                //Only same video element does not require User Interaction Error.
+                //ToDo : refactoring
+                return videoElement;
+            }else{
+                return createHtmlVideo(playerConfig.isLoop());
+            }
         }
-
-        return providerName === PROVIDER_RTMP ? createFlashVideo(playerConfig.isLoop(), playerConfig.getRtmpBufferTime(), playerConfig.getRtmpBufferTimeMax())
-            : createHtmlVideo(playerConfig.isLoop());
     }
 
     that.createAdContainer = () => {

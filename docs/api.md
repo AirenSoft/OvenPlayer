@@ -890,6 +890,7 @@ Attribute|Type|Memo
 ``|Number|index of the new playlist index
 
 
+
 #### player.on('sourceChanged')
 
 Fired when the active source(protocol) is changed. Happens in response to e.g. a user clicking an option in the source menu or a script calling `setCurrentSource`.
@@ -964,6 +965,21 @@ Fired when screen mode is changed.
 Type|Memo
 ------|-------
 Boolean| True if the screen is full, false otherwise.
+
+
+#### player.on('click')
+
+Triggered when the player is clicked.
+If ad clicked, this returns {type : "adclick"}. 
+
+Attribute|Type|Memo
+------|------|-------
+`event`|Object| object of event
+
+
+#### player.on('allPlaylistEnded')
+
+Fired when the all playlist is complete. 
 
 
 #### player.on('destroy')

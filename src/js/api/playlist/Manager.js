@@ -202,7 +202,6 @@ const Manager = function(provider){
         return spec.currentIndex;
     };
     that.getCurrentSources = () => {
-        //We do not support "PLAYLIST" not yet. So this returns playlist of 0.
         if(spec.playlist[spec.currentIndex]){
             OvenPlayerConsole.log("PlaylistManager getCurrentSources() ", spec.playlist[spec.currentIndex].sources);
             return spec.playlist[spec.currentIndex].sources;

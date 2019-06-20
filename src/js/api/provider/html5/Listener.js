@@ -27,7 +27,7 @@ import {
     PROVIDER_DASH,
     PROVIDER_HLS
 } from "api/constants";
-import {extractVideoElement, separateLive, errorTrigger} from "api/provider/utils";
+import {extractVideoElement, errorTrigger} from "api/provider/utils";
 
 /**
  * @brief   Trigger on various video events.
@@ -36,7 +36,7 @@ import {extractVideoElement, separateLive, errorTrigger} from "api/provider/util
  * */
 
 
-const Listener = function(element, mse, provider, videoEndedCallback){
+const Listener = function(element, provider, videoEndedCallback){
     const lowLevelEvents = {};
 
     OvenPlayerConsole.log("EventListener loaded.",element ,provider );
@@ -96,12 +96,12 @@ const Listener = function(element, mse, provider, videoEndedCallback){
 
     lowLevelEvents.loadedmetadata = () => {
         //Fires when the browser has loaded meta data for the audio/video
-        let isLive = (elVideo.duration === Infinity) ? true : separateLive(mse);
+
         let sources = provider.getSources();
         let sourceIndex = provider.getCurrentSource();
         let type = sourceIndex > -1 ? sources[sourceIndex].type : "";
         var metadata = {
-            duration: isLive ?  Infinity : elVideo.duration,
+            duration: provider.isLive() ?  Infinity : elVideo.duration,
             type :type
         };
         OvenPlayerConsole.log("EventListener : on loadedmetadata", metadata);

@@ -249,7 +249,7 @@ i.ovp-con{
   width: 30px;
   line-height: 30px;
 
-  display: inline-block;
+  display: block;
   text-decoration: inherit;
   text-align: center;
 
@@ -266,23 +266,23 @@ i.ovp-con{
   &.disable {
     color : #4f4f4f;
   }
-  &.close-icon{&::before{content: "\e900";}}
-  &.pause-big{&::before{content: "\e911";}}
-  &.fullscreen-compress{&::before{content: "\e901";}}
-  &.fullscreen-expand{&::before{content: "\e902";}}
-  &.arrow-left{&::before{content: "\e903";}}
-  &.arrow-right{&::before{content: "\e909";}}
-  &.empty-video{&::before{content: "\e904";}}
-  &.play{&::before{content: "\e906";}}
-  &.playlist{&::before{content: "\e907";}}
-  &.replay-big{&::before{content: "\e908";}}
-  &.setting{&::before{content: "\e90A";}}
-  &.pause{&::before{content: "\e90C";}}
-  &.volume-small{&::before{content: "\e90D";}}
-  &.volume-mute{&::before{content: "\e90E";}}
-  &.volume-max{&::before{content: "\e90F";}}
-  &.play-big{&::before{content: "\e910";}}
-  &.warning{&::before{content: "\e912";}}
+  &.op-close-icon{&::before{content: "\e900";}}
+  &.op-pause-big{&::before{content: "\e911";}}
+  &.op-fullscreen-compress{&::before{content: "\e901";}}
+  &.op-fullscreen-expand{&::before{content: "\e902";}}
+  &.op-arrow-left{&::before{content: "\e903";}}
+  &.op-arrow-right{&::before{content: "\e909";}}
+  &.op-empty-video{&::before{content: "\e904";}}
+  &.op-play{&::before{content: "\e906";}}
+  &.op-playlist{&::before{content: "\e907";}}
+  &.op-replay-big{&::before{content: "\e908";}}
+  &.op-setting{&::before{content: "\e90A";}}
+  &.op-pause{&::before{content: "\e90C";}}
+  &.op-volume-small{&::before{content: "\e90D";}}
+  &.op-volume-mute{&::before{content: "\e90E";}}
+  &.op-volume-max{&::before{content: "\e90F";}}
+  &.op-play-big{&::before{content: "\e910";}}
+  &.op-warning{&::before{content: "\e912";}}
 }
 .ovp-badge{
   display: inline-block;
@@ -328,7 +328,7 @@ i.ovp-con{
       content: '';
       clear: both;
     }
-    .ovp-con.close-icon{
+    .ovp-con.op-close-icon{
       float : right;
     }
   }
@@ -558,6 +558,7 @@ i.ovp-con{
       top : 0;
       font-size: 2.857em;
       font-weight: bold;
+      line-height: 1.4;
       text-shadow: 1px 1px 2px rgba(217,217,217,0.5);
       &:after{
         dispaly: block;
@@ -957,18 +958,19 @@ i.ovp-con{
     cursor: pointer;
     user-select: none;
     outline: none;
+    //display : block;
 
-    -moz-transition: visible .2s cubic-bezier(0.4,0.0,1,1),width .2s cubic-bezier(0.4,0.0,1,1);
-    -webkit-transition: visible .2s cubic-bezier(0.4,0.0,1,1),width .2s cubic-bezier(0.4,0.0,1,1);
-    transition: visible .2s cubic-bezier(0.4,0.0,1,1),width .2s cubic-bezier(0.4,0.0,1,1);
+    //-moz-transition: visible .2s cubic-bezier(0.4,0.0,1,1),width .2s cubic-bezier(0.4,0.0,1,1);
+    //-webkit-transition: visible .2s cubic-bezier(0.4,0.0,1,1),width .2s cubic-bezier(0.4,0.0,1,1);
+    //transition: visible .2s cubic-bezier(0.4,0.0,1,1),width .2s cubic-bezier(0.4,0.0,1,1);
 
     &.active{
       width: 70px;
       margin-left: 8px;
       visibility: visible;
-      -moz-transition: visible .2s cubic-bezier(0.0,0.0,0.2,1),width .2s cubic-bezier(0.0,0.0,0.2,1);
-      -webkit-transition: visible .2s cubic-bezier(0.0,0.0,0.2,1),width .2s cubic-bezier(0.0,0.0,0.2,1);
-      transition: visible .2s cubic-bezier(0.0,0.0,0.2,1),width .2s cubic-bezier(0.0,0.0,0.2,1)
+      //-moz-transition: visible .2s cubic-bezier(0.0,0.0,0.2,1),width .2s cubic-bezier(0.0,0.0,0.2,1);
+      //-webkit-transition: visible .2s cubic-bezier(0.0,0.0,0.2,1),width .2s cubic-bezier(0.0,0.0,0.2,1);
+      //transition: visible .2s cubic-bezier(0.0,0.0,0.2,1),width .2s cubic-bezier(0.0,0.0,0.2,1)
     }
 
     .ovp-volume-silder {
@@ -983,15 +985,14 @@ i.ovp-con{
         margin-top: -2px;
         border-radius: 10px;
       }
-
       .ovp-volume-slider-bg {
         width: 100%;
         background: #fff;
       }
-
       .ovp-volume-slider-value {
         width: 100%;
         background: #50e3c2;
+        border-radius: 10px 0 0 10px;
       }
 
       .ovp-volume-slider-handle {
@@ -1004,7 +1005,7 @@ i.ovp-con{
         margin-top: -6px;
         background: #fff;
 
-        &:before, &:after {
+        /*&:before, &:after {
           content: '';
           position: absolute;
           display: none;
@@ -1020,7 +1021,7 @@ i.ovp-con{
         &:after {
           left: 6px;
           background: #fff;
-        }
+        }*/
       }
     }
   }
@@ -1135,7 +1136,7 @@ i.ovp-con{
 .ovp-fullscreen-button {
   position: relative;
   margin-right: 15px;
-  .fullscreen-compress{display:none;}
+  .op-fullscreen-compress{display:none;}
 }
 
 /**
@@ -1368,6 +1369,11 @@ i.ovp-con{
       font-size: 24px;
     }
   }
+  .ovp-right-controls{
+    .ovp-button{
+      //margin-top: -2px;
+    }
+  }
 }
 /**
  * @brief   Animation
@@ -1519,7 +1525,7 @@ i.ovp-con{
 
 
   /* Pulse Shrink */
-  .ovp-button {
+  /*.ovp-button {
     //display: inline-block;
     //vertical-align: middle;
     transform: translateZ(0);
@@ -1533,6 +1539,6 @@ i.ovp-con{
   .ovp-button:focus,
   .ovp-button:active {
     transform: scale(1.1);
-  }
+  }*/
 }
 

@@ -1,5 +1,5 @@
-import {isRtmp, isWebRTC, isDash} from "utils/validator";
-
+import {isRtmp, isWebRTC, isDash, isHls} from "utils/validator";
+import {analUserAgent} from "utils/browser";
 /**
  * @brief   This finds the provider that matches the input source.
  * @param
@@ -8,6 +8,8 @@ import {isRtmp, isWebRTC, isDash} from "utils/validator";
 const SupportChecker = function(){
     const that = {};
     OvenPlayerConsole.log("SupportChecker loaded.");
+    let userAgentObject = analUserAgent();
+
     const supportList = [
         {
             name: 'html5',
@@ -38,10 +40,17 @@ const SupportChecker = function(){
                     return false;
                 }
 
+
                 const file = source.file;
                 const type = source.type;
+
                 if(!type){return false;}
                 const mimeType = source.mimeType || MimeTypes[type];
+
+                if(isHls(file, type) && userAgentObject.browser === "Microsoft Edge" ){
+                    //Edge supports hls native but that's sucks.
+                    return false;
+                }
 
                 if (isRtmp(file, type)) {
                     return false;
@@ -67,6 +76,9 @@ const SupportChecker = function(){
                 if (!video.canPlayType) {
                     return false;
                 }
+                if (isRtmp(file, type)) {
+                    return false;
+                }
 
                 const file = source.file;
                 const type = source.type;
@@ -84,6 +96,9 @@ const SupportChecker = function(){
                 const file = source.file;
 
                 const type = source.type;
+                if (isRtmp(file, type)) {
+                    return false;
+                }
 
                 if (typeof ( window.MediaSource || window.WebKitMediaSource ) === "function" && isDash(file, type)) {
                     return true;
@@ -98,6 +113,11 @@ const SupportChecker = function(){
                 const video = function(){
                     return document.createElement('video')
                 }();
+                const file = source.file;
+                const type = source.type;
+                if (isRtmp(file, type)) {
+                    return false;
+                }
 
                 //this method from hls.js
                 const isHlsSupport = () =>{
@@ -116,7 +136,8 @@ const SupportChecker = function(){
                     return !!isTypeSupported && !!sourceBufferValidAPI;
                 };
                 //Remove this '!!video.canPlayType('application/vnd.apple.mpegurl')' if you want to use hlsjs.
-                return isHlsSupport() && !!video.canPlayType('application/vnd.apple.mpegurl');
+                //Yes I need hlsjs. 2019-06-12 && !!video.canPlayType('application/vnd.apple.mpegurl');
+                return isHlsSupport();
             }
         },
         {
@@ -124,7 +145,37 @@ const SupportChecker = function(){
             checkSupport: function (source) {
                 const file = source.file;
                 const type = source.type;
-                if (isRtmp(file, type)) {
+                function testFlash() {
+
+                    var support = false;
+
+                    //IE only
+                    if("ActiveXObject" in window) {
+
+                        try{
+                            support = !!(new ActiveXObject("ShockwaveFlash.ShockwaveFlash"));
+                        }catch(e){
+                            support = false;
+                        }
+
+                        //W3C, better support in legacy browser
+                    } else {
+
+                        support = !!navigator.mimeTypes['application/x-shockwave-flash'];
+
+                    }
+
+                    return support;
+
+                }
+                function checkSupport(){
+                    if(userAgentObject.browser === "Microsoft Edge" || userAgentObject.os === "Android" || userAgentObject.os === "iOS"  || userAgentObject.browser === "Safari"){
+                        return false;
+                    }else{
+                        return true;
+                    }
+                }
+                if (isRtmp(file, type) && testFlash() && checkSupport()) {
                     return true;
                 }else{
                     return false;
@@ -150,10 +201,10 @@ const SupportChecker = function(){
 
         }*/
         const item = playlistItem;
-        let source = "";
+
         if(item && item.sources){
             for(let j = 0; j < item.sources.length; j ++){
-                source = item.sources[j];
+                let source = item.sources[j];
                 if (source) {
                     const supported = that.findProviderNameBySource(source);
                     if (supported) {

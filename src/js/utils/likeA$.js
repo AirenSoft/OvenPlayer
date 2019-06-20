@@ -44,13 +44,18 @@ const La$ = function(selectorOrElement){
     };
 
     that.css = (name, value) => {
-        if($element.length > 0){
-            $element.forEach(function(element){
-                element.style[name] = value;
-            })
+        if(value){
+            if($element.length > 0){
+                $element.forEach(function(element){
+                    element.style[name] = value;
+                })
+            }else{
+                $element.style[name] = value;
+            }
         }else{
-            $element.style[name] = value;
+            return $element.style[name];
         }
+
     };
 
     that.addClass = (name) =>{

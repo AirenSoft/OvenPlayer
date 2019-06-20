@@ -208,18 +208,6 @@ export const analUserAgent = function(){
             break;
     }
 
-    // flash (you'll need to include swfobject)
-    /* script src="//ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js" */
-    var flashVersion = 'no check';
-    if (typeof swfobject != 'undefined') {
-        var fv = swfobject.getFlashPlayerVersion();
-        if (fv.major > 0) {
-            flashVersion = fv.major + '.' + fv.minor + ' r' + fv.release;
-        }
-        else  {
-            flashVersion = unknown;
-        }
-    }
     return {
         screen: screenSize,
         browser: browser,
@@ -229,8 +217,6 @@ export const analUserAgent = function(){
         ua : nAgt,
         os: os,
         osVersion: osVersion,
-        cookies: cookieEnabled,
-        flashVersion: flashVersion,
-        webview : isWebview
+        cookies: cookieEnabled
     };
 };

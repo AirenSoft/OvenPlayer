@@ -97,7 +97,27 @@ let player = OvenPlayer.create("player_id", {
     sources: [
     {
       "type": "dash",
-      "file": "../dist/OCP_480.mpd",
+      "file": "your_path_to/dash/url.mpd",
+      "label": "480p"
+    }
+  ]
+});
+
+```
+
+### Initialize for HLS
+
+```html 
+<script src="//cdn.jsdelivr.net/npm/hls.js@0.12.4/dist/hls.min.js"></script>
+<script src="your_path_to/ovenplayer/ovenplayer.js"></script>
+```
+
+```html
+let player = OvenPlayer.create("player_id", {
+    sources: [
+    {
+      "type": "hls",
+      "file": "your_path_to/hls/url.m3u8",
       "label": "480p"
     }
   ]

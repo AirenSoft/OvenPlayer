@@ -7,13 +7,16 @@ import sizeHumanizer from "utils/sizeHumanizer";
 import {
     STATE_IDLE,
     STATE_PLAYING,
+    STATE_AD_PLAYING,
+    STATE_AD_PAUSED,
     INIT_DASH_UNSUPPORT,
     INIT_DASH_NOTFOUND,
-    ERRORS,
+    ERRORS,CONTENT_META,
     PLAYER_UNKNWON_NEWWORK_ERROR,
     CONTENT_LEVEL_CHANGED,
-    PROVIDER_DASH, CONTENT_META
+    PROVIDER_DASH
 } from "api/constants";
+import _ from "utils/underscore";
 
 /**
  * @brief   dashjs provider extended core.
@@ -33,6 +36,8 @@ const Dash = function(element, playerConfig, adTagUrl){
     let isFirstError = false;
     let isDashMetaLoaded = false;
     let runedAutoStart = false;
+
+    let sourceOfFile = "";
     try {
         const coveredSetAutoSwitchQualityFor = function(isAuto){
             if(dashjs.Version > "2.9.0"){
@@ -76,10 +81,12 @@ const Dash = function(element, playerConfig, adTagUrl){
         };
 
         that = Provider(spec, playerConfig, function(source, lastPlayPosition){
-            OvenPlayerConsole.log("DASH : onExtendedLoad : ", source, "lastPlayPosition : "+ lastPlayPosition);
+            OvenPlayerConsole.log("DASH : Attach File : ", source, "lastPlayPosition : "+ lastPlayPosition);
             coveredSetAutoSwitchQualityFor(true);
-            dash.attachSource(source.file);
+            sourceOfFile = source.file;
+            dash.attachSource(sourceOfFile);
             seekPosition_sec = lastPlayPosition;
+
         });
         superPlay_func = that.super('play');
         superDestroy_func = that.super('destroy');
@@ -113,49 +120,62 @@ const Dash = function(element, playerConfig, adTagUrl){
                 });
             }
         });
+
         dash.on(dashjs.MediaPlayer.events.PLAYBACK_METADATA_LOADED, function(event){
-            OvenPlayerConsole.log("GetStreamInfo  : ", dash.getQualityFor("video"), dash.getBitrateInfoListFor('video'), dash.getBitrateInfoListFor('video')[dash.getQualityFor("video")]);
-            console.log("PLAYBACK_METADATA_LOADED");
+
+            OvenPlayerConsole.log("DASH : PLAYBACK_METADATA_LOADED  : ", dash.getQualityFor("video"), dash.getBitrateInfoListFor('video'), dash.getBitrateInfoListFor('video')[dash.getQualityFor("video")]);
+
             isDashMetaLoaded = true;
             let subQualityList = dash.getBitrateInfoListFor('video');
             spec.currentQuality = dash.getQualityFor("video");
             for(let i = 0; i < subQualityList.length; i ++){
-                spec.qualityLevels.push({
-                    bitrate: subQualityList[i].bitrate,
-                    height: subQualityList[i].height,
-                    width: subQualityList[i].width,
-                    index: subQualityList[i].qualityIndex,
-                    label : subQualityList[i].width+"x"+subQualityList[i].height+", "+ sizeHumanizer(subQualityList[i].bitrate, true, "bps")
-                });
+                if(!_.findWhere(spec.qualityLevels,{bitrate : subQualityList[i].bitrate, height: subQualityList[i].height,width: subQualityList[i].width})){
+                    spec.qualityLevels.push({
+                        bitrate: subQualityList[i].bitrate,
+                        height: subQualityList[i].height,
+                        width: subQualityList[i].width,
+                        index: subQualityList[i].qualityIndex,
+                        label : subQualityList[i].width+"x"+subQualityList[i].height+", "+ sizeHumanizer(subQualityList[i].bitrate, true, "bps")
+                    });
+                }
             }
 
-            if(dash.isDynamic()){
-                //islive
-            }
             if(seekPosition_sec){
                 dash.seek(seekPosition_sec);
                 if(!playerConfig.isAutoStart()){
                     that.play();
                 }
             }
-            //
+
+            if(dash.isDynamic()){
+                spec.isLive = true;
+            }
+
             if(playerConfig.isAutoStart() && !runedAutoStart){
+                OvenPlayerConsole.log("DASH : AUTOPLAY()!");
                 that.play();
+
                 runedAutoStart = true;
             }
+
+
         });
 
-        //Dash will infinite loading when player is in a paused state for a long time.
-        that.play = () =>{
-            isDashMetaLoaded = false;
-            dash.attachView(element);
 
+        that.play = (mutedPlay) =>{
             let retryCount = 0;
+            if(that.getState() === STATE_AD_PLAYING || that.getState() === STATE_AD_PAUSED){
 
+            }else{
+                isDashMetaLoaded = false;
+                dash.attachView(element);
+            }
+            //Dash can infinite loading when player is in a paused state for a long time.
+            //Then dash always have to reload(attachView) and wait for MetaLoaded event when resume.
             (function checkDashMetaLoaded(){
                 retryCount ++;
                 if(isDashMetaLoaded){
-                    superPlay_func();
+                    superPlay_func(mutedPlay);
                 }else{
 
                     if(retryCount < 300){

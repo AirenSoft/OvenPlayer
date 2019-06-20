@@ -96,14 +96,14 @@ const Api = function(container){
 
             let currentSourceIndex = pickQualityFromSource(playlistManager.getCurrentSources());
             let providerName = Providers[currentSourceIndex]["name"];
-
+            OvenPlayerConsole.log("API : init() provider", providerName);
             //Init Provider.
             currentProvider =  Providers[currentSourceIndex].provider(
                 mediaManager.createMedia(providerName, playerConfig),
                 playerConfig,
                 playlistManager.getCurrentAdTag()
             );
-            OvenPlayerConsole.log("API : init() provider", providerName);
+
 
 
             if(providerName === PROVIDER_RTMP){
@@ -351,7 +351,9 @@ const Api = function(container){
 
         OvenPlayerConsole.log("API : setCurrentQuality() isSameProvider", isSameProvider);
 
-        if(!isSameProvider){
+
+        //switching between streams on HLS. wth? https://video-dev.github.io/hls.js/latest/docs/API.html#final-step-destroying-switching-between-streams
+        if(!isSameProvider || currentProvider.getName() === PROVIDER_HLS){
             lazyQueue = LazyCommandExecutor(that, ['play','seek']);
             initProvider(lastPlayPosition);
         }

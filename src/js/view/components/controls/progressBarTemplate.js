@@ -10,7 +10,7 @@ export default () => {
             `<div class="ovp-progressbar-knob-container">` +
                 `<div class="ovp-progressbar-knob ovp-play-background-color"></div>` +
             `</div>` +
-            `<span class="ovp-progressbar-time">0:00</span>` +
+            `<span class="ovp-progressbar-time">00:00</span>` +
         `</div>`
     );
 };
