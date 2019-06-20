@@ -201,8 +201,8 @@ const Ads = function(elVideo, provider, playerConfig, adTagUrl, errorCallback){
                 //Main video sets user gesture when temporarySupportCheckVideo triggered checking.
                 elVideo.load();
             }
-            /* The policy that proxy the User Interaction on Mobile. My Guess. 2019-06-19
-            *   (temporarySupportCheckVideo's User Interaction proxy to elVideo.)
+            /* The method that delivery the User Interaction between video elements on mobile.  My Guess. 2019-06-19
+            *   (temporarySupportCheckVideo's User Interaction delivery to elVideo.)
             *   Mobile Chrome WebView :
             *   You have to run elVideo.load() when temporarySupportCheckVideo issues within 5 seconds of user interaction.
             *
