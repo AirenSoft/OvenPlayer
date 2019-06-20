@@ -410,6 +410,7 @@ Loads source.
 }
 ```
 
+
 #### `buffer` = player.getBuffer()
 
 Returns percentage (0-100) of the video's current loaded amount
@@ -739,7 +740,22 @@ Jump to the specified position within the currently playing item.
 |`framePosition`|Number|The position (in frame) to seek to.
 
 
+####  `userInfo` = player.getBrowser()
 
+Returns object analyzed from the User Agent. 
+It is simply information extracted from the User Agent. (can not be sure it is right.)
+
+||Type|Memo|
+|-|-|-|
+|`userInfo`|Object|browser, browserVersion, os, osVersion... 
+
+####  `version` = player.getVersion()
+
+Returns currently OvenPlayer version. 
+
+||Type|Memo|
+|-|-|-|
+|`version`|String| String of player version 
 
 
 ## Events
@@ -967,7 +983,7 @@ Type|Memo
 Boolean| True if the screen is full, false otherwise.
 
 
-#### player.on('click')
+#### player.on('clicked')
 
 Triggered when the player is clicked.
 If ad clicked, this returns {type : "adclick"}. 

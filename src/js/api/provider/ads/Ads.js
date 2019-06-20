@@ -201,7 +201,7 @@ const Ads = function(elVideo, provider, playerConfig, adTagUrl, errorCallback){
                 //Main video sets user gesture when temporarySupportCheckVideo triggered checking.
                 elVideo.load();
             }
-            /* The method that delivery the User Interaction between video elements on mobile.  My Guess. 2019-06-19
+            /* Different browser-specific ways to delivery UI to other elements.  My Guess. 2019-06-19
             *   (temporarySupportCheckVideo's User Interaction delivery to elVideo.)
             *   Mobile Chrome WebView :
             *   You have to run elVideo.load() when temporarySupportCheckVideo issues within 5 seconds of user interaction.
@@ -235,9 +235,30 @@ const Ads = function(elVideo, provider, playerConfig, adTagUrl, errorCallback){
                             resolve();
 
                         }).catch(function(error){
+
                             OvenPlayerConsole.log("ADS : auto play failed", error.message);
                             clearAndReport(false, false);
                             resolve();
+
+
+                            //Disable Muted Play
+                            /*temporarySupportCheckVideo.muted = true;
+                            temporarySupportCheckVideo.volume = 0;
+                            playPromise = temporarySupportCheckVideo.play();
+
+                            playPromise.then(function () {
+                                // If we make it here, muted autoplay works but unmuted autoplay does not.
+
+                                OvenPlayerConsole.log("ADS : muted auto play success.");
+                                provider.setMute(true);
+                                clearAndReport(true, true);
+                                resolve();
+
+                            }).catch(function (error) {
+                                OvenPlayerConsole.log("ADS : muted auto play failed", error.message);
+                                clearAndReport(false, false);
+                                resolve();
+                            });*/
                         });
                     }else{
                         OvenPlayerConsole.log("ADS : promise not support");
