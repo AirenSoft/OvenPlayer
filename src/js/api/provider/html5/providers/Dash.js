@@ -161,8 +161,7 @@ const Dash = function(element, playerConfig, adTagUrl){
 
         });
 
-        //Dash will infinite loading when player is in a paused state for a long time.
-        //This is Supper Play();
+
         that.play = (mutedPlay) =>{
             let retryCount = 0;
             if(that.getState() === STATE_AD_PLAYING || that.getState() === STATE_AD_PAUSED){
@@ -171,7 +170,8 @@ const Dash = function(element, playerConfig, adTagUrl){
                 isDashMetaLoaded = false;
                 dash.attachView(element);
             }
-
+            //Dash can infinite loading when player is in a paused state for a long time.
+            //Then dash always have to reload(attachView) and wait for MetaLoaded event when resume.
             (function checkDashMetaLoaded(){
                 retryCount ++;
                 if(isDashMetaLoaded){
