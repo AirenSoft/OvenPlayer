@@ -43,9 +43,9 @@ const PlayButton = function ($container, api) {
 
 
     const onRendered = function($current, template){
-        $iconPlay = $current.find( ".play");
-        $iconPause = $current.find(".pause");
-        $iconReplay = $current.find(".replay");
+        $iconPlay = $current.find( ".op-play");
+        $iconPause = $current.find(".op-pause");
+        $iconReplay = $current.find(".op-replay");
 
         api.on(PLAYER_STATE, function(data){
             if(data && data.newstate){

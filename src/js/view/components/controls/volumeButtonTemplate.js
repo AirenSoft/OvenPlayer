@@ -5,9 +5,9 @@ export default () => {
     return (
         `<div class="ovp-navigators ovp-volume-controller">`+
             `<button class="ovp-button ovp-volume-button">` +
-                `<i class="ovp-con volume-max"></i>` +
-                `<i class="ovp-con volume-small"></i>` +
-                `<i class="ovp-con volume-mute"></i>` +
+                `<i class="ovp-con op-volume-max"></i>` +
+                `<i class="ovp-con op-volume-small"></i>` +
+                `<i class="ovp-con op-volume-mute"></i>` +
             `</button>` +
             `<div class="ovp-volume-slider-container">` +
                 `<div class="ovp-volume-silder">` +

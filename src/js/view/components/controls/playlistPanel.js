@@ -34,8 +34,8 @@ const PlaylistPanel = function($container, api){
         pagedList = playlist.slice(page*pageSize, (page*pageSize)+pageSize);
 
         $playlistPanel.find(".ovp-playlist-body-row").removeChild();
-        $playlistPanel.find(".arrow-left").removeClass("disable");
-        $playlistPanel.find(".arrow-right").removeClass("disable");
+        $playlistPanel.find(".op-arrow-left").removeClass("disable");
+        $playlistPanel.find(".op-arrow-right").removeClass("disable");
 
         for(let i = 0; i < pagedList.length; i ++){
             let originalItemIndex = (page * pageSize) + i;
@@ -46,10 +46,10 @@ const PlaylistPanel = function($container, api){
         }
 
         if(page === 0){
-            $playlistPanel.find(".arrow-left").addClass("disable");
+            $playlistPanel.find(".op-arrow-left").addClass("disable");
         }
         if(page+1 === totalPageCount){
-            $playlistPanel.find(".arrow-right").addClass("disable");
+            $playlistPanel.find(".op-arrow-right").addClass("disable");
         }
     };
     const findCurrentPage = function(){
@@ -108,14 +108,14 @@ const PlaylistPanel = function($container, api){
             template.destroy();
 
         },
-        "click .arrow-left" : function(event, $current, template){
+        "click .op-arrow-left" : function(event, $current, template){
             event.preventDefault();
             if( !LA$(event.target).hasClass("disable") ){
                 page--;
                 pagenate(page);
             }
         },
-        "click .arrow-right" : function(event, $current, template){
+        "click .op-arrow-right" : function(event, $current, template){
             event.preventDefault();
             if( !LA$(event.target).hasClass("disable") ){
                 page++;

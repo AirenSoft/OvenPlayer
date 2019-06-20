@@ -75,9 +75,9 @@ const VolumeButton = function($container, api){
         $sliderHandle = $current.find(".ovp-volume-slider-handle");
         $sliderValue = $current.find(".ovp-volume-slider-value");
 
-        $volumeIconBig = $current.find( ".volume-max");
-        $volumeIconSmall = $current.find(".volume-small");
-        $volumeIconMute = $current.find(".volume-mute");
+        $volumeIconBig = $current.find( ".op-volume-max");
+        $volumeIconSmall = $current.find(".op-volume-small");
+        $volumeIconMute = $current.find(".op-volume-mute");
 
         //ToDo : Can't read width.
         //sliderWidth = $sliderContainer.width();

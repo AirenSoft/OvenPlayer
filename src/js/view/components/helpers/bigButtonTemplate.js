@@ -11,8 +11,8 @@ import {
 
 export default (playerState) => {
     return (`<div class="ovp-bigbutton-container ">` +
-            `${playerState === STATE_PLAYING ?`<i class="ovp-con pause-big"></i>` :`` }`+
-            `${playerState === STATE_PAUSED ?`<i class="ovp-bigbutton ovp-con play-big"></i>` :`` }`+
-            `${playerState === STATE_COMPLETE ?`<i class="ovp-bigbutton ovp-con replay-big"></i>` :`` }`+
+            `${playerState === STATE_PLAYING ?`<i class="ovp-con op-pause-big"></i>` :`` }`+
+            `${playerState === STATE_PAUSED ?`<i class="ovp-bigbutton ovp-con op-play-big"></i>` :`` }`+
+            `${playerState === STATE_COMPLETE ?`<i class="ovp-bigbutton ovp-con op-replay-big"></i>` :`` }`+
         `</div>`);
 };
