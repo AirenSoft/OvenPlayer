@@ -338,10 +338,10 @@ i.ovp-con{
     overflow: hidden;
     position : relative;
     .ovp-playlist-body-arrows{
-      margin: 0;
+      margin-top: -15px;
       position: absolute;
       top: 50%;
-      height : 0;
+      height : 30px;
       -ms-transform: translateY(-50%);
       transform: translateY(-50%);
       width: 100%;
@@ -581,7 +581,7 @@ i.ovp-con{
   overflow-y : auto;
   max-height:100%;
   width: 260px;
-  font-size: 0.8em;
+  //font-size: 0.8em;
   user-select: none;
   background-color: rgba(28,28,28,.9);
   text-shadow: 0 0 2px rgba(0,0,0,.5);
@@ -1309,16 +1309,16 @@ i.ovp-con{
   }
   .ovp-playlist{
     padding : 1rem;
-
+    .ovp-playlist-header{
+      font-size : 2em;
+    }
     .ovp-playlist-card{
       margin : 5px 0;
       -ms-flex: 0 0 100%;
       flex: 0 0 100%;
       max-width: 100%;
-      padding : 0 40px;
-      .ovp-playlist-header{
-        font-size : 2em;
-      }
+      padding : 0 6em;
+
       .ovp-playlist-card-title{
         margin-top : 0;
       }
