@@ -10,8 +10,6 @@ import {
  *
  * */
 const Configurator = function(options, provider){
-    //sources, tracks,
-
 
     const composeSourceOptions = function(options){
         const Defaults = {
@@ -29,6 +27,7 @@ const Configurator = function(options, provider){
             hidePlaylistIcon : false,
             rtmpBufferTime : 1,
             rtmpBufferTimeMax : 3,
+            adClient : "googleima"
         };
         const serialize = function (val) {
             if (val === undefined) {
@@ -111,6 +110,9 @@ const Configurator = function(options, provider){
     const that = {};
     that.getConfig = () => {
         return spec;
+    };
+    that.getAdClient = () => {
+        return spec.adClient;
     };
     that.setConfig = (config, value) => {
         spec[config] = value;

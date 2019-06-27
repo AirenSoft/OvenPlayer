@@ -1,15 +1,17 @@
 /**
  * Created by hoho on 2018. 8. 23..
  */
-import Ads from "api/provider/ads/Ads";
+import Ima from "api/ads/ima/Ad";
+import Vast from "api/ads/vast/Ad";
 import EventEmitter from "api/EventEmitter";
 import EventsListener from "api/provider/flash/Listener";
-import {extractVideoElement, separateLive, pickCurrentSource} from "api/provider/utils";
+import {extractVideoElement, pickCurrentSource} from "api/provider/utils";
 import {
     ERRORS, INIT_RTMP_SETUP_ERROR,
     STATE_IDLE, STATE_PLAYING, STATE_PAUSED, STATE_COMPLETE, STATE_ERROR,
     PLAYER_STATE, PLAYER_COMPLETE, PLAYER_PAUSE, PLAYER_PLAY, STATE_AD_PLAYING, STATE_AD_PAUSED,
     CONTENT_SOURCE_CHANGED, CONTENT_LEVEL_CHANGED, CONTENT_TIME, CONTENT_CAPTION_CUE_CHANGED,
+    AD_CLIENT_GOOGLEIMA, AD_CLIENT_VAST,
     PLAYBACK_RATE_CHANGED, CONTENT_MUTE, PROVIDER_HTML5, PROVIDER_WEBRTC, PROVIDER_DASH, PROVIDER_HLS
 } from "api/constants";
 
@@ -35,7 +37,13 @@ const Provider = function(spec, playerConfig){
     );
 
     if(spec.adTagUrl){
-        ads = Ads(elFlash, that, playerConfig, spec.adTagUrl);
+        OvenPlayerConsole.log("[Provider] Ad Client - ", playerConfig.getAdClient());
+        if(playerConfig.getAdClient() === AD_CLIENT_VAST){
+            ads = Vast(elFlash, that, playerConfig, spec.adTagUrl);
+        }else{
+            ads = Ima(elFlash, that, playerConfig, spec.adTagUrl);
+        }
+
         if(!ads){
             console.log("Can not load due to google ima for Ads.");
         }
@@ -57,6 +65,7 @@ const Provider = function(spec, playerConfig){
     //Flash has two init states. FlashLoaded and FileLoaded.
     //_load calls after FlashLoaded. _afterLoad calls after FileLoaded.
     const _afterLoad = function(lastPlayPosition){
+        spec.isLoaded = true;
         if(lastPlayPosition > 0){
             if(!playerConfig.isAutoStart()){
                 that.play();
@@ -94,7 +103,12 @@ const Provider = function(spec, playerConfig){
     that.setSeeking = (seeking)=>{
         spec.seeking = seeking;
     };
-
+    that.setMetaLoaded = () => {
+        spec.isLoaded = true;
+    }
+    that.metaLoaded = () => {
+        return spec.isLoaded;
+    }
     that.setState = (newState) => {
         if(spec.state !== newState){
             let prevState = spec.state;

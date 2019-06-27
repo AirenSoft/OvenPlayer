@@ -3,7 +3,7 @@
 
 /***/ "./src/js/api/provider/ads/Ads.js":
 /*!****************************************!*\
-  !*** ./src/js/api/provider/ads/Ads.js ***!
+  !*** ./src/js/api/provider/ads/Ad.js ***!
   \****************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {

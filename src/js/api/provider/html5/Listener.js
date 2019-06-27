@@ -104,6 +104,9 @@ const Listener = function(element, provider, videoEndedCallback){
             duration: provider.isLive() ?  Infinity : elVideo.duration,
             type :type
         };
+
+        provider.setMetaLoaded();
+
         OvenPlayerConsole.log("EventListener : on loadedmetadata", metadata);
         provider.trigger(CONTENT_META, metadata);
     };

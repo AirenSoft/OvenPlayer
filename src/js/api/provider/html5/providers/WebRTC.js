@@ -23,6 +23,7 @@ const WebRTC = function(element, playerConfig, adTagUrl){
         element : element,
         mse : null,
         listener : null,
+        isLoaded : false,
         canSeek : false,
         isLive : false,
         seeking : false,

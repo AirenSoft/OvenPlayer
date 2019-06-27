@@ -70,6 +70,10 @@ export const CONTENT_TIME_MODE_CHANGED = "timeDisplayModeChanged";
 export const OME_P2P_MODE = "p2pMode";
 
 
+export const AD_CLIENT_GOOGLEIMA = "googleima";
+export const AD_CLIENT_VAST = "vast";
+
+
 export const INIT_UNKNWON_ERROR = 100;
 export const INIT_UNSUPPORT_ERROR = 101;
 export const INIT_RTMP_SETUP_ERROR = 102;

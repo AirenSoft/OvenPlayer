@@ -67,6 +67,7 @@ const Dash = function(element, playerConfig, adTagUrl){
             element : element,
             mse : dash,
             listener : null,
+            isLoaded : false,
             canSeek : false,
             isLive : false,
             seeking : false,

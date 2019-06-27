@@ -14,8 +14,8 @@ player = OvenPlayer.create("player", {
     rtmpBufferTime : 1, 
     rtmpBufferTimeMax : 3,
     title : "Hi. This is ovenplayer.",
-    image : "https://path.to/your_video_thumbnail.jpeg",
-    
+    image : "https://path.to/your_video_thumbnail.jpeg",    
+    adClient : "googleima",    
     playlist : [
         {
                 title : "01. I drive slow.",
@@ -277,6 +277,13 @@ Number| 3
 
 Specifies a maximum buffer length for live streaming content, in seconds.
 (*optional when using rtmp protocol.)
+
+#### adClient 
+type|default
+------|------
+String|"googleima"
+
+Sets whether to Google IMA or Simple VAST the Ads client when player initialize. "googleima" or "vast"
 
 
 ## Static Methods

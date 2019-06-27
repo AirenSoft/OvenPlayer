@@ -30,8 +30,12 @@ const Controls = function($container, api){
 
     let webrtc_is_p2p_mode = false;
     let isLiveMode = false;
-    let isAndroid = api.getConfig().browser.os === "Android";
+    let isMobile = false;
+    let browser = api.getConfig().browser;
+    let isAndroid = browser.os === "Android";
     let checkAfterPlay = false;
+
+    isMobile  = isAndroid || (browser.os === "iOS");
 
     const $root = LA$("#"+api.getContainerId());
     let lastContentMeta = {};
@@ -84,8 +88,6 @@ const Controls = function($container, api){
         playButton = PlayButton($current.find(".ovp-left-controls"), api);
         volumeButton = VolumeButton($current.find(".ovp-left-controls"), api);
 
-        initFullscreenButton();
-
         let playlist = api.getPlaylist();
         let currentPlaylistIndex = api.getCurrentPlaylist();
 
@@ -97,8 +99,9 @@ const Controls = function($container, api){
             initSettingButton();
         }
 
-        let initControlUI = function(metadata){
+        let makeControlUI = function(metadata){
             initTimeDisplay(metadata);
+            initFullscreenButton();
             if(api.getFramerate && api.getFramerate() > 0){
                 //initFrameJumpButtons();
             }else{
@@ -124,8 +127,7 @@ const Controls = function($container, api){
             initialDuration = data.duration;
             lastContentMeta = data;
             data.isP2P = webrtc_is_p2p_mode;
-
-            initControlUI(data);
+            makeControlUI(data);
         }, template);
 
 
@@ -141,7 +143,7 @@ const Controls = function($container, api){
             if( isAndroid  || (api && api.getProviderName && api.getProviderName() === "rtmp") ){
                 if(!initialDuration && (lastContentMeta && (lastContentMeta.duration !== metadata_for_when_after_playing.duration))){
                     lastContentMeta = metadata_for_when_after_playing;
-                    initControlUI(metadata_for_when_after_playing);
+                    makeControlUI(metadata_for_when_after_playing);
                 }
             }
 
@@ -160,18 +162,18 @@ const Controls = function($container, api){
         }, template);
 
         api.on(AD_CHANGED, function(ad){
-
             if(ad.isLinear){
-                if(progressBar){
-                    progressBar.destroy();
-                }
+                $root.addClass("linear-ad");
+
                 initProgressBar(true);
                 if(timeDisplay){
                     timeDisplay.destroy();
                 }
-                $root.addClass("linear-ad");
                 if(settingButton){
                     settingButton.destroy();
+                }
+                if(isMobile && fullScreenButton){
+                    fullScreenButton.destroy();
                 }
             }else{
                 $root.removeClass("linear-ad");
@@ -179,33 +181,27 @@ const Controls = function($container, api){
         }, template);
 
         //ToDo : Same Code refactor
-        api.on(STATE_AD_COMPLETE, function(){
+
+        const resetControlUI = function(){
             initTimeDisplay(lastContentMeta);
-            if(progressBar){
-                progressBar.destroy();
+            initSettingButton();
+            initFullscreenButton();
+
+            if(!isLiveMode){
+                initProgressBar(false);
+            }else{
+                if(progressBar){
+                    progressBar.destroy();
+                }
             }
             $root.removeClass("linear-ad");
-            initSettingButton();
-            if(isLiveMode){
-
-            }else{
-                initProgressBar(false);
-            }
-
+        };
+        api.on(STATE_AD_COMPLETE, function(){
+            resetControlUI();
         }, template);
 
         api.on(STATE_AD_ERROR , function(){
-            initTimeDisplay(lastContentMeta);
-            if(progressBar){
-                progressBar.destroy();
-            }
-            $root.removeClass("linear-ad");
-            initSettingButton();
-            if(isLiveMode){
-
-            }else{
-                initProgressBar(false);
-            }
+            resetControlUI();
         },template);
 
     };
