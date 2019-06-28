@@ -51,9 +51,11 @@ const Provider = function(spec, playerConfig){
     listener = EventsListener(elFlash, that, ads ? ads.videoEndedCallback : null);
 
     const _load = (lastPlayPosition) =>{
+
         const source =  spec.sources[spec.currentSource];
         OvenPlayerConsole.log("source loaded : ", source, "lastPlayPosition : "+ lastPlayPosition);
         const previousSource = elFlash.getCurrentSource();
+
         const sourceChanged = (source.file !== previousSource);
         if (sourceChanged) {
             elFlash.load(source.file);
@@ -76,7 +78,6 @@ const Provider = function(spec, playerConfig){
 
             that.play();
         }
-
     };
 
     //This is why. Flash does not self trig to ads,lmalm,

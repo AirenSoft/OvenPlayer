@@ -115,7 +115,7 @@ const Listener = function(elAdVideo, vastTracker, provider, adsSpec, adButton, t
     };
 
     lowLevelEvents.canplay = function(){
-        vastTracker.trackImpression();
+
     };
     lowLevelEvents.ended = function(){
         vastTracker.complete();
@@ -144,6 +144,7 @@ const Listener = function(elAdVideo, vastTracker, provider, adsSpec, adButton, t
     };
     lowLevelEvents.loadedmetadata = function(){
         OvenPlayerConsole.log("VAST : listener : Ad CONTENT LOADED .");
+        vastTracker.trackImpression();
         provider.trigger(STATE_AD_LOADED, {remaining : elAdVideo.duration, isLinear : true});
         elAdVideo.play();
     };

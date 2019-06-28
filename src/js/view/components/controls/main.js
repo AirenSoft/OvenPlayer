@@ -36,6 +36,7 @@ const Controls = function($container, api){
     let checkAfterPlay = false;
 
     isMobile  = isAndroid || (browser.os === "iOS");
+    OvenPlayerConsole.log("ControlBar::::::::::::::",isMobile);
 
     const $root = LA$("#"+api.getContainerId());
     let lastContentMeta = {};
@@ -99,6 +100,7 @@ const Controls = function($container, api){
             initSettingButton();
         }
 
+        initFullscreenButton();
         let makeControlUI = function(metadata){
             initTimeDisplay(metadata);
             initFullscreenButton();
@@ -172,6 +174,9 @@ const Controls = function($container, api){
                 if(settingButton){
                     settingButton.destroy();
                 }
+
+                OvenPlayerConsole.log("ControlBar:::::::isMobile && fullScreenButton::",isMobile && fullScreenButton);
+
                 if(isMobile && fullScreenButton){
                     fullScreenButton.destroy();
                 }
