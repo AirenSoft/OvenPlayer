@@ -1,4 +1,4 @@
-/*! OvenPlayerv0.9.623 | (c)2019 AirenSoft Co., Ltd. | MIT license (https://github.com/AirenSoft/OvenPlayerPrivate/blob/master/LICENSE) | Github : https://github.com/AirenSoft/OvenPlayer */
+/*! OvenPlayerv0.9.6231 | (c)2019 AirenSoft Co., Ltd. | MIT license (https://github.com/AirenSoft/OvenPlayerPrivate/blob/master/LICENSE) | Github : https://github.com/AirenSoft/OvenPlayer */
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([["downloader"],{
 
 /***/ "./src/js/utils/downloader.js":
