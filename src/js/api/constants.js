@@ -119,5 +119,6 @@ export const ERRORS = {
 };
 
 export const UI_ICONS = {
-    volume_mute : "volume-mute"
+    volume_mute : "volume-mute",
+    op_warning : "op-warning"
 };

@@ -35,13 +35,13 @@ const ProgressBar = function($container, api, isAd){
     let isMobile = api.getBrowser().os === "iOS" || api.getBrowser().os === "Android";
 
     let positionElements = function (percentage) {
-        const progressBarWidth = $progressBar.width();
-        const position = progressBarWidth * percentage;
+        let progressBarWidth = $progressBar.width();
+        let position = progressBarWidth * percentage;
 
         $progressPlay.css("width", position+ "px");
         $progressHover.css("left", position+ "px");
 
-        const knobPostion = (progressBarWidth - knobWidth) * percentage;
+        let knobPostion = (progressBarWidth - knobWidth) * percentage;
         $knobContainer.css("left", knobPostion+ "px");
 
         currentPlayingPosition = position;
@@ -49,26 +49,25 @@ const ProgressBar = function($container, api, isAd){
     };
 
     let drawHoverProgress = function (percentage) {
-        const progressBarWidth = $progressBar.width();
-        const hoverPosition = progressBarWidth * percentage;
-
-        $progressHover.css("width", percentage == 0? percentage : (hoverPosition - currentPlayingPosition)+ "px");
+        let progressBarWidth = $progressBar.width();
+        let hoverPosition = progressBarWidth * percentage;
+        $progressHover.css("width", (percentage === 0 ? percentage : (hoverPosition - currentPlayingPosition))+ "px");
     };
 
     let drawLoadProgress = function(percentage) {
-        const progressBarWidth = $progressBar.width();
-        const loadPosition = progressBarWidth * percentage;
+        let progressBarWidth = $progressBar.width();
+        let loadPosition = progressBarWidth * percentage;
 
         $progressLoad.css("width", loadPosition+ "px");
         currentLoadedPercentage = percentage;
     };
 
     let calculatePercentage = function (event) {
-        const progressBarWidth = $progressBar.width();
-        const progressBarOffsetX = $progressBar.offset().left;
-        const pointerOffsetX =  (event.pageX || event.touches[0].clientX) ;
+        let progressBarWidth = $progressBar.width();
+        let progressBarOffsetX = $progressBar.offset().left;
+        let pointerOffsetX =  (event.pageX || event.touches[0].clientX) ;
 
-        const percentage = (pointerOffsetX - progressBarOffsetX) / progressBarWidth;
+        let percentage = (pointerOffsetX - progressBarOffsetX) / progressBarWidth;
 
         if (percentage < 0) {
             return 0;
@@ -88,8 +87,8 @@ const ProgressBar = function($container, api, isAd){
        }
 
         //const duration = isAd ? adDuration : api.getDuration();
-        const duration = api.getDuration();
-        const second = duration * percentage;
+        let duration = api.getDuration();
+        let second = duration * percentage;
 
         if(api.isTimecodeMode()){
             $time.text(naturalHms(second));
@@ -99,10 +98,10 @@ const ProgressBar = function($container, api, isAd){
 
 
 
-        const timeElemWidth = $time.width();
-        const progressBarWidth = $progressBar.width();
-        const position = progressBarWidth * percentage;
-        const positionOfPixel =  (event.pageX || event.touches[0].clientX)  - $progressBar.offset().left;
+        let timeElemWidth = $time.width();
+        let progressBarWidth = $progressBar.width();
+        let position = progressBarWidth * percentage;
+        let positionOfPixel =  (event.pageX || event.touches[0].clientX)  - $progressBar.offset().left;
 
 
         const calculateMagnetic = function(){

@@ -52,6 +52,7 @@
     transform: translate3d(0, 0, 0);
   }
 }
+
 @font-face {
   font-family: "frameIcon";
   src: url("../assets/images/ic-player-frame-jump.eot?rxg7gj");
@@ -78,10 +79,12 @@
 .ovp-wrapper.ovenplayer {
   position: relative;
   max-height: 100%;
+
   overflow: hidden;
   zoom: 1 !important;
   width: 100%;
   display: block;
+  font-family: Arial,Helvetica,sans-serif;
   background-color: #000;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
@@ -154,6 +157,26 @@
   & ::-webkit-scrollbar-button:start:decrement, ::-webkit-scrollbar-button:end:increment {display: block; height:3px; background:#2f2f3e;}
   & ::-webkit-scrollbar-track {background: #2f2f3e; -webkit-border-radius: 10px; border-radius:10px;}
   & ::-webkit-scrollbar-thumb {height: 50px; width: 50px; background:#606071; -webkit-border-radius: 8px; border-radius: 8px;}
+
+  .op-clear{
+    color: inherit;
+    background-color: transparent;
+    padding: 0;
+    margin: 0;
+    float: none;
+    font-family: Arial,Helvetica,sans-serif;
+    font-size: 1em;
+    line-height: 1em;
+    list-style: none;
+    text-transform: none;
+    vertical-align: baseline;
+    border: 0;
+    font-variant: inherit;
+    font-stretch: inherit;
+    -webkit-tap-highlight-color: rgba(255,255,255,0);
+    text-align: left;
+    direction: ltr;
+  }
 }
 
 .ovp-player {
@@ -543,12 +566,13 @@ i.ovp-con{
       display: inline-block;
       margin-top : 12px;
       width: 100%;
-      .ovp-con{
+      i.ovp-con{
         cursor: pointer;
         font-size: 80px;
         width : 80px;
         height : 80px;
         line-height : 80px;
+        display: inline-block;
       }
     }
     /*.ovp-message-button{
@@ -914,14 +938,14 @@ i.ovp-con{
     top: -5px;
     left: 0px;
 
-    -moz-transition: -moz-transform .1s cubic-bezier(0.4,0.0,1,1);
+    /*-moz-transition: -moz-transform .1s cubic-bezier(0.4,0.0,1,1);
     -webkit-transition: -webkit-transform .1s cubic-bezier(0.4,0.0,1,1);
     -ms-transition: -ms-transform .1s cubic-bezier(0.4,0.0,1,1);
     transition: transform .1s cubic-bezier(0.4,0.0,1,1);
     -moz-transform: scale(0);
     -ms-transform: scale(0);
     -webkit-transform: scale(0);
-    transform: scale(0);
+    transform: scale(0);*/
 
     .ovp-progressbar-knob {
       width: 14px;
@@ -1202,68 +1226,65 @@ i.ovp-con{
 .ovp-spinner-container {
   position: absolute;
   top: 50%;
-  width: 64px;
   left: 50%;
-  margin-left: -32px;
-  margin-top: -32px;
+  margin-left: -6px;
+  margin-top: -6px;
   z-index: 1009;
   display : none;
 
-  .ovp-ellipsis {
-    display: inline-block;
-    position: relative;
-    width: 64px;
-    height: 11px;
-  }
-  .ovp-ellipsis div {
+  .op-spinner:before{
+    content: "";
     position: absolute;
-    top: 27px;
-    width: 11px;
-    height: 11px;
-    border-radius: 50%;
+    background-color: rgba(80, 227, 194, .5);
+    top: 0px;
+    left: -25px;
+    height: 12px;
+    width: 12px;
+    border-radius: 12px;
+  }
+
+  .op-spinner{
+    position: relative;
+    width: 12px;
+    height: 12px;
+
+    top: 46%;
+    top: -webkit-calc(50% - 6px);
+    top: calc(50% - 6px);
+    left: 46%;
+    left: -webkit-calc(50% - 6px);
+    left: calc(50% - 6px);
+
+    border-radius: 12px;
     background-color: #50e3c2;
-    animation-timing-function: cubic-bezier(0, 1, 1, 0);
+    -webkit-transform-origin:  50% 50%;
+    transform-origin:  50% 50% ;
+    -webkit-animation: op-spinner 1s ease-in-out infinite;
+    animation: op-spinner 1s ease-in-out infinite;
   }
-  .ovp-ellipsis div:nth-child(1) {
-    left: 6px;
-    animation: lds-ellipsis1 0.6s infinite;
+
+  .op-spinner:after{
+    content: "";
+    position: absolute;
+    background-color: rgba(80, 227, 194 ,.5);
+    top: 0px;
+    left: 25px;
+    height: 12px;
+    width: 12px;
+    border-radius: 12px;
   }
-  .ovp-ellipsis div:nth-child(2) {
-    left: 6px;
-    animation: lds-ellipsis2 0.6s infinite;
+  @-webkit-keyframes op-spinner{
+    0%{-webkit-transform:rotate(0deg);}
+    50%{-webkit-transform:rotate(180deg);}
+    100%{-webkit-transform:rotate(180deg);}
   }
-  .ovp-ellipsis div:nth-child(3) {
-    left: 26px;
-    animation: lds-ellipsis2 0.6s infinite;
+
+  @keyframes op-spinner{
+    0%{transform:rotate(0deg);}
+    50%{transform:rotate(180deg);}
+    100%{transform:rotate(180deg);}
   }
-  .ovp-ellipsis div:nth-child(4) {
-    left: 45px;
-    animation: lds-ellipsis3 0.6s infinite;
-  }
-  @keyframes lds-ellipsis1 {
-    0% {
-      transform: scale(0);
-    }
-    100% {
-      transform: scale(1);
-    }
-  }
-  @keyframes lds-ellipsis3 {
-    0% {
-      transform: scale(1);
-    }
-    100% {
-      transform: scale(0);
-    }
-  }
-  @keyframes lds-ellipsis2 {
-    0% {
-      transform: translate(0, 0);
-    }
-    100% {
-      transform: translate(19px, 0);
-    }
-  }
+
 }
 
 
@@ -1406,6 +1427,7 @@ i.ovp-con{
 
 /*AD MODE*/
 .ovp-wrapper.ovenplayer.linear-ad{
+
   .ovp-bottom-panel{
     height : 34px;
     .ovp-controls{

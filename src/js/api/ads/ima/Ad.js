@@ -131,10 +131,6 @@ const Ad = function(elVideo, provider, playerConfig, adTagUrl, errorCallback){
         adDisplayContainer = new google.ima.AdDisplayContainer(adConatinerElment, elVideo);
         adsLoader = new google.ima.AdsLoader(adDisplayContainer);
 
-        /*let videos = document.getElementsByTagName("video");
-        if(videos.length === 3){
-            videos[2].parentElement.remove();
-        }*/
         adsLoader.addEventListener(ADS_MANAGER_LOADED, OnManagerLoaded, false);
         adsLoader.addEventListener(AD_ERROR, OnAdError, false);
 

@@ -28,7 +28,8 @@ import {
     PLAYER_STATE,
     ALL_PLAYLIST_ENDED,
     CONTENT_LEVEL_CHANGED,
-    NETWORK_UNSTABLED
+    NETWORK_UNSTABLED,
+    UI_ICONS
 } from "api/constants";
 
 const Helpers = function($container, api){
@@ -44,11 +45,11 @@ const Helpers = function($container, api){
             }
             bigButton = BigButton($current, api, state);
         };
-        let createMessage = function(message, description ,withTimer){
+        let createMessage = function(message, description ,withTimer, iconClass){
             if(messageBox){
                 messageBox.destroy();
             }
-            messageBox = MessageBox($current, api, message, description, withTimer);
+            messageBox = MessageBox($current, api, message, description, withTimer, iconClass);
         };
         let createThumbnail = function(){
             if(thumbnail){
@@ -154,7 +155,7 @@ const Helpers = function($container, api){
                 message = "Can not play due to unknown reasons.";
             }
             OvenPlayerConsole.log("error occured : ", error);
-            createMessage(message, description);
+            createMessage(message, description, null, UI_ICONS.op_warning);
         }, template);
 
         api.on(NETWORK_UNSTABLED, function(event){
