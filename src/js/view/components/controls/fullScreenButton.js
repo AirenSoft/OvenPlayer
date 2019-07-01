@@ -5,6 +5,7 @@ import OvenTemplate from "view/engine/OvenTemplate";
 import LA$ from "utils/likeA$";
 import {
     AD_CHANGED,
+    STATE_AD_COMPLETE,
     STATE_AD_LOADED,
     STATE_AD_PLAYING,
     STATE_AD_PAUSED,
@@ -30,10 +31,11 @@ const FullScreenButton = function($container, api){
         MSFullscreenChange : "MSFullscreenChange"
     };
     const checkFullScreen = function(){
+
         return document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement;
     };
 
-    const fullScreenChangedCallback = function(){
+    const resetFullscreenButtonState = function(){
         if (checkFullScreen()) {
             $root.addClass("ovp-fullscreen");
             isFullScreen = true;
@@ -45,6 +47,10 @@ const FullScreenButton = function($container, api){
             $iconExpand.show();
             $iconCompress.hide();
         }
+    };
+
+    const fullScreenChangedCallback = function(){
+        resetFullscreenButtonState();
         api.trigger(PLAYER_FULLSCREEN_CHANGED, isFullScreen);
     };
 
@@ -203,6 +209,8 @@ const FullScreenButton = function($container, api){
         $iconExpand = $current.find(".op-fullscreen-expand");
         $iconCompress = $current.find(".op-fullscreen-compress");
 
+        resetFullscreenButtonState();
+
         fullscreenChagedEventName = findFullScreenChangedEventName();
         if(fullscreenChagedEventName){
             document.addEventListener(fullscreenChagedEventName, fullScreenChangedCallback, false);
@@ -232,22 +240,20 @@ const FullScreenButton = function($container, api){
                 }
             }
         }, template);
-
-
     };
+
+
     const onDestroyed = function(template){
         if(fullscreenChagedEventName){
             document.removeEventListener(fullscreenChagedEventName, fullScreenChangedCallback);
         }
-
         api.off(AD_CHANGED, null, template);
     };
     const events = {
         "click .ovp-fullscreen-button" : function(event, $current, template){
             event.preventDefault();
-                api.trigger(PLAYER_FULLSCREEN_REQUEST, null);
-                toggleFullScreen();
-
+            api.trigger(PLAYER_FULLSCREEN_REQUEST, null);
+            toggleFullScreen();
         }
     };
 
