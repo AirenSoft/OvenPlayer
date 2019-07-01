@@ -30,13 +30,11 @@ const Controls = function($container, api){
 
     let webrtc_is_p2p_mode = false;
     let isLiveMode = false;
-    let isMobile = false;
+
     let browser = api.getConfig().browser;
     let isAndroid = browser.os === "Android";
+    let isIOS = browser.os === "iOS";
     let checkAfterPlay = false;
-
-    isMobile  = isAndroid || (browser.os === "iOS");
-    OvenPlayerConsole.log("ControlBar::::::::::::::",isMobile);
 
     const $root = LA$("#"+api.getContainerId());
     let lastContentMeta = {};
@@ -175,9 +173,8 @@ const Controls = function($container, api){
                     settingButton.destroy();
                 }
 
-                OvenPlayerConsole.log("ControlBar:::::::isMobile && fullScreenButton::",isMobile && fullScreenButton);
-
-                if(isMobile && fullScreenButton){
+                //Fullscreen button. Not required on iOS.
+                if(isIOS && fullScreenButton){
                     fullScreenButton.destroy();
                 }
             }else{
