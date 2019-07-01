@@ -106,6 +106,7 @@ const Configurator = function(options, provider){
     OvenPlayerConsole.log("Configurator loaded.", options);
     let spec = composeSourceOptions(options);
 
+    spec.isFullscreen = false; //IE 11 can't check current fullscreen state.
 
     const that = {};
     that.getConfig = () => {
@@ -121,6 +122,12 @@ const Configurator = function(options, provider){
     that.getContainer = () => {
         return spec.mediaContainer;
     };
+    that.isFullscreen = () => {
+        return spec.isFullscreen;
+    }
+    that.setFullscreen = (isFullscreen) => {
+        return spec.isFullscreen = isFullscreen;
+    }
 
     that.getPlaybackRate =()=>{
         return spec.playbackRate;

@@ -18,6 +18,10 @@ import {
 const FullScreenButton = function($container, api){
     const $root = LA$("#"+api.getContainerId());
     let $iconExpand = "", $iconCompress = "", isFullScreen = false;
+
+    //ToDo : Template have to access Player Config.
+    let config = api.getConfig();
+
     let browserInfo = api.getBrowser();
     let isIos = browserInfo.os === "iOS"; // && browserInfo.browser === "Safari";
     let isAndroid = browserInfo.os === "Android";
@@ -31,11 +35,11 @@ const FullScreenButton = function($container, api){
         MSFullscreenChange : "MSFullscreenChange"
     };
     const checkFullScreen = function(){
-
-        return document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement;
+        return document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement || config.isFullscreen;
     };
 
     const resetFullscreenButtonState = function(){
+        OvenPlayerConsole.log("FULLSCREEN STATE : ", checkFullScreen());
         if (checkFullScreen()) {
             $root.addClass("ovp-fullscreen");
             isFullScreen = true;
@@ -50,6 +54,7 @@ const FullScreenButton = function($container, api){
     };
 
     const fullScreenChangedCallback = function(){
+        console.log("FULLSCREEN CHANGED CALLBACK!");
         resetFullscreenButtonState();
         api.trigger(PLAYER_FULLSCREEN_CHANGED, isFullScreen);
     };
@@ -160,6 +165,8 @@ const FullScreenButton = function($container, api){
         if(promise){
             promise.then(function(){
                 isForceMode = false;
+                //config.setFullscreen(true);
+                config.isFullscreen = true;
             }).catch(function(error){
                 //This means to look like for fullscreen.
                 isForceMode = true;
@@ -191,6 +198,7 @@ const FullScreenButton = function($container, api){
         } else {
             // TODO(rock): warn not supported
         }
+        config.isFullscreen = false;
     }
     let toggleFullScreen = function () {
 
