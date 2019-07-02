@@ -190,7 +190,7 @@ const Listener = function(elAdVideo, vastTracker, provider, adsSpec, adButton, t
 
     vastTracker.on('skip-countdown', (data) => {
         if(data === 0){
-            $textView.html("광고 건너뛰기<i class='ovp-con op-arrow-right btn-right'></i>");
+            $textView.html("광고 건너뛰기<i class='op-con op-arrow-right btn-right'></i>");
             $textView.addClass("videoAdUiAction");
         }else{
             $textView.html((parseInt(data)+1)+"초 후에 이 광고를 건너뛸 수 있습니다.");

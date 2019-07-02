@@ -17,8 +17,8 @@ const TimeDisplay = function($container, api, data){
 
     const onRendered = function($current, template){
         let isTimecode = api.isTimecodeMode();
-        $position = $current.find(".ovp-time-current");
-        $duration = $current.find(".ovp-time-duration");
+        $position = $current.find(".op-time-current");
+        $duration = $current.find(".op-time-duration");
 
         if(data.duration !== Infinity){
 

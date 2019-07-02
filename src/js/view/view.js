@@ -46,16 +46,16 @@ const View = function($container){
             if(panelManager.size() > 0){
                 return false;
             }
-            $playerRoot.addClass("ovp-autohide");
+            $playerRoot.addClass("op-autohide");
         } else {
-            $playerRoot.removeClass("ovp-autohide");
+            $playerRoot.removeClass("op-autohide");
 
             if (autoHide) {
                 autoHideTimer = setTimeout(function() {
                     if(panelManager.size()> 0){
                         return false;
                     }
-                    $playerRoot.addClass("ovp-autohide");
+                    $playerRoot.addClass("op-autohide");
                 }, 3000);
             }
         }
@@ -163,7 +163,7 @@ const View = function($container){
                 //return false;
             }
 
-            if(!(LA$(event.target).closest(".ovp-controls-container") || LA$(event.target).closest(".ovp-setting-panel") )){
+            if(!(LA$(event.target).closest(".op-controls-container") || LA$(event.target).closest(".op-setting-panel") )){
                 if(panelManager.size() > 0){
                     event.preventDefault();
                     panelManager.clear();
@@ -255,7 +255,7 @@ const View = function($container){
         },
         "contextmenu .ovenplayer" : function(event, $current, template){
             event.stopPropagation();
-
+            return false;
             if(!LA$(event.currentTarget).find("object")){
                 event.preventDefault();
                 createContextPanel(event.pageX, event.pageY);
@@ -267,20 +267,20 @@ const View = function($container){
 
     return Object.assign(OvenTemplate($container, "View", $container.id, events, onRendered, onDestroyed, true), {
         getMediaElementContainer: function () {
-            return $playerRoot.find(".ovp-media-element-container").get();
+            return $playerRoot.find(".op-media-element-container").get();
         },
         setApi: function (playerInstance) {
             api = playerInstance;
             let showControlBar = api.getConfig() && api.getConfig().controls;
 
-            helper = Helpers($playerRoot.find(".ovp-ui"), playerInstance);
+            helper = Helpers($playerRoot.find(".op-ui"), playerInstance);
             if(showControlBar){
-                controls = Controls($playerRoot.find(".ovp-ui"), playerInstance);
+                controls = Controls($playerRoot.find(".op-ui"), playerInstance);
             }
 
             api.on(READY, function(data) {
                 if(!controls && showControlBar){
-                    controls = Controls($playerRoot.find(".ovp-ui"), playerInstance);
+                    controls = Controls($playerRoot.find(".op-ui"), playerInstance);
                 }
             });
 

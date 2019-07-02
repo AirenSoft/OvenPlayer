@@ -57,7 +57,7 @@ const PlayButton = function ($container, api) {
         api.off(PLAYER_STATE, null, template);
     };
     const events = {
-        "click .ovp-play-button" : function(event, $current, template){
+        "click .op-play-button" : function(event, $current, template){
             event.preventDefault();
             let currentState = api.getState();
             let playlist = api.getPlaylist();

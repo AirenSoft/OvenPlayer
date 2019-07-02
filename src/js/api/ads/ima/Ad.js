@@ -74,8 +74,8 @@ const Ad = function(elVideo, provider, playerConfig, adTagUrl, errorCallback){
 
         const createAdContainer = () => {
             let adContainer = document.createElement('div');
-            adContainer.setAttribute('class', 'ovp-ads');
-            adContainer.setAttribute('id', 'ovp-ads');
+            adContainer.setAttribute('class', 'op-ads');
+            adContainer.setAttribute('id', 'op-ads');
             playerConfig.getContainer().append(adContainer);
 
             return adContainer;
@@ -358,7 +358,7 @@ const Ad = function(elVideo, provider, playerConfig, adTagUrl, errorCallback){
                 listener.destroy();
             }
 
-            let $ads = LA$(playerConfig.getContainer()).find(".ovp-ads");
+            let $ads = LA$(playerConfig.getContainer()).find(".op-ads");
             if($ads){
                 $ads.remove();
             }

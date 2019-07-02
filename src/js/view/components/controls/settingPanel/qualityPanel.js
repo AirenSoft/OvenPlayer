@@ -25,16 +25,16 @@ const QualityPanel = function($container, api, data){
         api.on(CONTENT_LEVEL_CHANGED, function(data){
             let newQuality = data.currentQuality;
             if(data.type === "render"){
-                _.forEach( $root.find("#"+template.data.id).find(".ovp-setting-item").get(), function(panel){
+                _.forEach( $root.find("#"+template.data.id).find(".op-setting-item").get(), function(panel){
                     let $panel = LA$(panel);
-                    if( $panel.find(".ovp-setting-item-checked").hasClass("ovp-show")){
-                        $panel.find(".ovp-setting-item-checked").removeClass("ovp-show");
+                    if( $panel.find(".op-setting-item-checked").hasClass("op-show")){
+                        $panel.find(".op-setting-item-checked").removeClass("op-show");
                     }
-                    if(newQuality === parseInt($panel.attr("ovp-data-value"))){
-                        $panel.find(".ovp-setting-item-checked").addClass("ovp-show");
+                    if(newQuality === parseInt($panel.attr("op-data-value"))){
+                        $panel.find(".op-setting-item-checked").addClass("op-show");
                     }
-                    if(data.isAuto && $panel.attr("ovp-data-value") === "AUTO"){
-                        $panel.find(".ovp-setting-item-checked").addClass("ovp-show");
+                    if(data.isAuto && $panel.attr("op-data-value") === "AUTO"){
+                        $panel.find(".op-setting-item-checked").addClass("op-show");
                     }
                 });
             }
@@ -44,9 +44,9 @@ const QualityPanel = function($container, api, data){
         api.off(CONTENT_LEVEL_CHANGED, null, template);
     };
     const events = {
-        "click .ovp-setting-item": function (event, $current, template) {
+        "click .op-setting-item": function (event, $current, template) {
             event.preventDefault();
-            let value = LA$(event.currentTarget).attr("ovp-data-value");
+            let value = LA$(event.currentTarget).attr("op-data-value");
             if(value === "AUTO"){
                 api.setAutoQuality(true);
             }else{
@@ -54,7 +54,7 @@ const QualityPanel = function($container, api, data){
             }
             panelManager.clear();
         },
-        "click .ovp-setting-title" : function(event, $current, template){
+        "click .op-setting-title" : function(event, $current, template){
             event.preventDefault();
             panelManager.removeLastItem();
         }

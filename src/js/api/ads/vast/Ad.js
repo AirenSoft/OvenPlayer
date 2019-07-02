@@ -44,8 +44,8 @@ const Ad = function(elVideo, provider, playerConfig, adTagUrl){
 
     const createAdContainer = () => {
         let adContainer = document.createElement('div');
-        adContainer.setAttribute('class', 'ovp-ads');
-        adContainer.setAttribute('id', 'ovp-ads');
+        adContainer.setAttribute('class', 'op-ads');
+        adContainer.setAttribute('id', 'op-ads');
         playerConfig.getContainer().append(adContainer);
 
         elAdVideo = document.createElement('video');

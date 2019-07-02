@@ -3,7 +3,7 @@
  */
 
 const HelpersTemplate = function(text){
-    return `<div class="ovp-helpers-container"></div>`;
+    return `<div class="op-helpers-container"></div>`;
 };
 
 export default HelpersTemplate;

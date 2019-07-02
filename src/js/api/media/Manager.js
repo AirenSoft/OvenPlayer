@@ -139,7 +139,7 @@ const Manager = function(container, browserInfo){
 
     that.createAdContainer = () => {
         let adContainer = document.createElement('div');
-        adContainer.setAttribute('class', 'ovp-ads');
+        adContainer.setAttribute('class', 'op-ads');
         $container.append(adContainer);
 
         return adContainer;

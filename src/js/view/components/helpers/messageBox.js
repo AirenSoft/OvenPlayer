@@ -29,7 +29,7 @@ const MessageBox = function($container, api, message, description, withTimer, ic
     const onDestroyed = function(){
     };
     const events = {
-        "click .ovp-message-text" : function(event, $current, template){
+        "click .op-message-text" : function(event, $current, template){
             //event.preventDefault();
             event.stopPropagation();
             if(autoDestroyTimer){
@@ -40,7 +40,7 @@ const MessageBox = function($container, api, message, description, withTimer, ic
             }
             template.destroy();
         },
-        "click .ovp-con" : function(event, $current, template){
+        "click .op-con" : function(event, $current, template){
             event.preventDefault();
             if(autoDestroyTimer){
                 clearTimeout(autoDestroyTimer);

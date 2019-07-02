@@ -1,6 +1,6 @@
 export default (data) => {
-    return (`<div class="ovp-thumbnail-container"><div class="ovp-thumbnail-wrapper">`+
+    return (`<div class="op-thumbnail-container"><div class="op-thumbnail-wrapper">`+
         `${data.image ? `<img src="${data.image}">`:``}` +
-        `${data.title ? `<div class="ovp-thumbnail-header">${data.title}</div>`:``}` +
+        `${data.title ? `<div class="op-thumbnail-header">${data.title}</div>`:``}` +
     `</div></div>`);
 };

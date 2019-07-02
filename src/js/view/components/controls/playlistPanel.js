@@ -33,14 +33,14 @@ const PlaylistPanel = function($container, api){
 
         pagedList = playlist.slice(page*pageSize, (page*pageSize)+pageSize);
 
-        $playlistPanel.find(".ovp-playlist-body-row").removeChild();
+        $playlistPanel.find(".op-playlist-body-row").removeChild();
         $playlistPanel.find(".op-arrow-left").removeClass("disable");
         $playlistPanel.find(".op-arrow-right").removeClass("disable");
 
         for(let i = 0; i < pagedList.length; i ++){
             let originalItemIndex = (page * pageSize) + i;
             pagedList[i].index = originalItemIndex;
-            $playlistPanel.find(".ovp-playlist-body-row").get().append(
+            $playlistPanel.find(".op-playlist-body-row").get().append(
                 createAndSelectElement(playlistItemTemplate(pagedList[i], currentPlaylistIndex === originalItemIndex))
             );
         }
@@ -89,7 +89,7 @@ const PlaylistPanel = function($container, api){
         $current.get().addEventListener("click",function(evt){
             var gtarget = evt.target;
             while (gtarget){
-                if (LA$(gtarget).hasClass("ovp-playlist-card")){
+                if (LA$(gtarget).hasClass("op-playlist-card")){
                     api.setCurrentPlaylist(parseInt(LA$(gtarget).attr("data-index")));
                     return;
                 }
@@ -122,7 +122,7 @@ const PlaylistPanel = function($container, api){
                 pagenate(page);
             }
         }/*,
-        "click .ovp-playlist-card" : function(event, $current, template){
+        "click .op-playlist-card" : function(event, $current, template){
             event.preventDefault();
         }*/
     };

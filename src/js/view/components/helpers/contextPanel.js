@@ -21,7 +21,7 @@ const ContextPanel = function($container, api, position){
         //Do nothing.
     };
     const events = {
-        "click .ovp-context-item" : function(event, $current, template){
+        "click .op-context-item" : function(event, $current, template){
             event.preventDefault();
 
             window.open(

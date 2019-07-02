@@ -13,9 +13,9 @@ const SettingButton = function ($container, api) {
     const onDestroyed = function(template){
     };
     const events = {
-        "click .ovp-setting-button" : function(event, $current, template){
+        "click .op-setting-button" : function(event, $current, template){
             event.preventDefault();
-            let $parent = $current.closest(".ovp-controls-container");
+            let $parent = $current.closest(".op-controls-container");
             if(panelManager.size() > 0){
                 panelManager.clear();
             }else{

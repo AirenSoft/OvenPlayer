@@ -1,11 +1,11 @@
 export default (data) => {
     return (
-        `<div class="ovp-message-box op-clear">` +
-            `<div class="ovp-message-container ">` +
-                `<div class="ovp-message-text">${data.message}` +
-                 `${data.description ? `<div class="ovp-message-description">${data.description}</div>` : `` }`+
+        `<div class="op-message-box op-clear">` +
+            `<div class="op-message-container ">` +
+                `<div class="op-message-text">${data.message}` +
+                 `${data.description ? `<div class="op-message-description">${data.description}</div>` : `` }`+
                 `</div>` +
-                `${data.iconClass ? `<div class="ovp-message-icon"><i class="ovp-con ${data.iconClass}"></i></div>` : `` }`+
+                `${data.iconClass ? `<div class="op-message-icon"><i class="op-con ${data.iconClass}"></i></div>` : `` }`+
             `</div>` +
         `</div>`
     );

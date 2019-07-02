@@ -41,12 +41,12 @@ const FullScreenButton = function($container, api){
     const resetFullscreenButtonState = function(){
         OvenPlayerConsole.log("FULLSCREEN STATE : ", checkFullScreen());
         if (checkFullScreen()) {
-            $root.addClass("ovp-fullscreen");
+            $root.addClass("op-fullscreen");
             isFullScreen = true;
             $iconExpand.hide();
             $iconCompress.show();
         } else {
-            $root.removeClass("ovp-fullscreen");
+            $root.removeClass("op-fullscreen");
             isFullScreen = false;
             $iconExpand.show();
             $iconCompress.hide();
@@ -54,19 +54,18 @@ const FullScreenButton = function($container, api){
     };
 
     const fullScreenChangedCallback = function(){
-        console.log("FULLSCREEN CHANGED CALLBACK!");
         resetFullscreenButtonState();
         api.trigger(PLAYER_FULLSCREEN_CHANGED, isFullScreen);
     };
 
     const forcedFakeFullscreenToggle = function(){
         if(!isFullScreen){
-            $root.addClass("ovp-fullscreen");
+            $root.addClass("op-fullscreen");
             isFullScreen = true;
             $iconExpand.hide();
             $iconCompress.show();
         }else{
-            $root.removeClass("ovp-fullscreen");
+            $root.removeClass("op-fullscreen");
             isFullScreen = false;
             $iconExpand.show();
             $iconCompress.hide();
@@ -258,7 +257,7 @@ const FullScreenButton = function($container, api){
         api.off(AD_CHANGED, null, template);
     };
     const events = {
-        "click .ovp-fullscreen-button" : function(event, $current, template){
+        "click .op-fullscreen-button" : function(event, $current, template){
             event.preventDefault();
             api.trigger(PLAYER_FULLSCREEN_REQUEST, null);
             toggleFullScreen();

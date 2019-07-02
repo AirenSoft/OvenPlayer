@@ -289,7 +289,6 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
 
         isPlayingProcessing = true;
         if(that.getState() !== STATE_PLAYING){
-            console.log( (ads && ads.isActive()) || (ads && !ads.started()) );
             if (  (ads && ads.isActive()) || (ads && !ads.started()) ) {
                 ads.play().then(_ => {
                     //ads play success

@@ -1,8 +1,8 @@
 export default (isExpand) => {
     return (
-        `<button class="ovp-button ovp-fullscreen-button">`+
-        `<i class="ovp-con op-fullscreen-expand"></i>` +
-        `<i class="ovp-con op-fullscreen-compress"></i>` +
+        `<button class="op-button op-fullscreen-button">`+
+        `<i class="op-con op-fullscreen-expand"></i>` +
+        `<i class="op-con op-fullscreen-compress"></i>` +
         `</button>`
     );
 };

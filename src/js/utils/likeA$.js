@@ -39,6 +39,56 @@ const La$ = function(selectorOrElement){
         return null;
     }
 
+    /*EFFECTS*/
+
+    that.show = () =>{
+        $element.style.display = 'block';
+    };
+
+    that.hide = () =>{
+        $element.style.display = 'none';
+    };
+
+    /*ELEMENTS*/
+
+    that.addClass = (name) =>{
+        if($element.classList){
+            $element.classList.add(name);
+        }else{
+            let classNames = $element.className.split(" ");
+            if(classNames.indexOf(name) === -1){
+                $element.className += " " + name;
+            }
+        }
+    };
+
+    that.after = (htmlString) => {
+        $element.insertAdjacentHTML('afterend', htmlString);
+    };
+
+    that.append = (htmlString) => {
+        $element.appendChild(htmlString);
+    };
+
+    that.before = (htmlString) => {
+        $element.insertAdjacentHTML('beforebegin', htmlString);
+    };
+
+    that.children = () => {
+        return $element.children || [];
+    };
+
+    //The contains() method returns a Boolean value indicating whether a node is a descendant of a specified node.
+    //A descendant can be a child, grandchild, great-grandchild, and so on.
+    that.contains = (elChild) => {
+        return $element !== elChild && $element.contains(elChild);
+    };
+
+    that.empty = () => {
+        $element.innerHTML = "";
+    };
+
+
     that.find = (selector) =>{
         return La$(returnNode($element, selector));
     };
@@ -58,17 +108,7 @@ const La$ = function(selectorOrElement){
 
     };
 
-    that.addClass = (name) =>{
-        if($element.classList){
-            $element.classList.add(name);
-        }else{
-            let classNames = $element.className.split(" ");
-            if(classNames.indexOf(name) === -1){
-                $element.className += " " + name;
-            }
-        }
 
-    };
 
     that.removeClass = (name) =>{
         if ($element.classList){
@@ -83,13 +123,7 @@ const La$ = function(selectorOrElement){
         $element.removeAttribute(attrName);
     };
 
-    that.show = () =>{
-        $element.style.display = 'block';
-    };
 
-    that.hide = () =>{
-        $element.style.display = 'none';
-    };
 
     /*that.append = (htmlCode) =>{
         $element.innerHTML += htmlCode;
@@ -102,8 +136,8 @@ const La$ = function(selectorOrElement){
             $element.textContent = text;
         }
     };
-    that.html = (text) => {
-        $element.innerHTML = text;
+    that.html = (htmlString) => {
+        $element.innerHTML = htmlString;
     };
     that.hasClass = (name) => { //IE8+
         if($element.classList){
@@ -114,6 +148,11 @@ const La$ = function(selectorOrElement){
     };
 
     that.is = ($targetElement) => {
+        /*var matches = function(el, selector) {
+            return (el.matches || el.matchesSelector || el.msMatchesSelector || el.mozMatchesSelector || el.webkitMatchesSelector || el.oMatchesSelector).call(el, selector);
+        };
+
+        matches(el, '.my-class');*/
         return $element === $targetElement;
     };
 
@@ -142,9 +181,6 @@ const La$ = function(selectorOrElement){
         $element.replaceWith(html);
     };
 
-    that.append = (html) => {
-        $element.appendChild(html);
-    };
 
     that.remove = () => {
         if($element.length > 1){

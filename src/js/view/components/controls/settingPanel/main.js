@@ -33,7 +33,7 @@ const Panels = function($container, api, data){
             body : [],
             useCheck : true,
             panelType : panelType,
-            height : $root.height() - $root.find(".ovp-bottom-panel").height()
+            height : $root.height() - $root.find(".op-bottom-panel").height()
         };
         panel.title = PANEL_TITLE[panelType];
         if(panelType === "speed"){
@@ -125,8 +125,8 @@ const Panels = function($container, api, data){
         }
     };
     let setPanelMaxHeight = function(){
-        if($root.find(".ovp-setting-panel")){
-            $root.find(".ovp-setting-panel").css("max-height",  $root.height() - $root.find(".ovp-bottom-panel").height() + "px");
+        if($root.find(".op-setting-panel")){
+            $root.find(".op-setting-panel").css("max-height",  $root.height() - $root.find(".op-bottom-panel").height() + "px");
         }
     };
     const onRendered = function($current, template){
@@ -134,14 +134,14 @@ const Panels = function($container, api, data){
 
         api.on(CONTENT_LEVEL_CHANGED, function(data){
             let newQuality = data.currentQuality;
-            if(data.type === "render" && $root.find("#"+template.data.id).find(".ovp-setting-item")){
-                _.forEach( $root.find("#"+template.data.id).find(".ovp-setting-item").get() ||[], function(panel){
+            if(data.type === "render" && $root.find("#"+template.data.id).find(".op-setting-item")){
+                _.forEach( $root.find("#"+template.data.id).find(".op-setting-item").get() ||[], function(panel){
                     let $panel = LA$(panel);
 
-                    if($panel.attr("ovp-panel-type") === "quality"){
+                    if($panel.attr("op-panel-type") === "quality"){
                         let qualityList = api.getQualityLevels();
                         let newQualityObject = qualityList[newQuality];
-                        $panel.find(".ovp-setting-item-value").text(newQualityObject.width+"x"+newQualityObject.height+", "+ sizeHumanizer(newQualityObject.bitrate, true, "bps"));
+                        $panel.find(".op-setting-item-value").text(newQualityObject.width+"x"+newQualityObject.height+", "+ sizeHumanizer(newQualityObject.bitrate, true, "bps"));
                     }
 
                 });
@@ -153,13 +153,13 @@ const Panels = function($container, api, data){
         api.off(CONTENT_LEVEL_CHANGED, null, template);
     };
     const events = {
-        "click .ovp-setting-item": function (event, $current, template) {
+        "click .op-setting-item": function (event, $current, template) {
             event.preventDefault();
             //if this panel is background it disabled click.
             if($root.find("#"+data.id).hasClass("background")){
                 return false;
             }
-            let panelType = LA$(event.currentTarget).attr("ovp-panel-type");
+            let panelType = LA$(event.currentTarget).attr("op-panel-type");
             let panel = null;
             if(panelType === "speed"){
                 panel = SpeedPanel($container, api, extractSubPanelData(api, panelType));
@@ -175,7 +175,7 @@ const Panels = function($container, api, data){
 
             panelManager.add(panel);
         },
-        "click .ovp-setting-title" : function(event, $current, template){
+        "click .op-setting-title" : function(event, $current, template){
             event.preventDefault();
             if($root.find("#"+data.id).hasClass("background")){
                 return false;

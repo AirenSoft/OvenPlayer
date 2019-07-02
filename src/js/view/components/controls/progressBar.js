@@ -122,13 +122,13 @@ const ProgressBar = function($container, api, isAd){
     };
     const onRendered = function($current, template){
         $progressBar = $current;
-        $progressLoad = $current.find(".ovp-load-progress");
-        $progressPlay = $current.find(".ovp-play-progress");
-        $progressHover = $current.find(".ovp-hover-progress");
-        $knobContainer = $current.find(".ovp-progressbar-knob-container");
-        $knob = $current.find(".ovp-progressbar-knob");
+        $progressLoad = $current.find(".op-load-progress");
+        $progressPlay = $current.find(".op-play-progress");
+        $progressHover = $current.find(".op-hover-progress");
+        $knobContainer = $current.find(".op-progressbar-knob-container");
+        $knob = $current.find(".op-progressbar-knob");
         knobWidth = $knob.width();
-        $time = $current.find(".ovp-progressbar-time");
+        $time = $current.find(".op-progressbar-time");
 
         /*new ResizeSensor($progressBar.get(), function() {
             console.log('Changed  $progressBar' );
@@ -169,7 +169,7 @@ const ProgressBar = function($container, api, isAd){
         }
     };
     const events = {
-        "touchstart .ovp-progressbar" : function(event){
+        "touchstart .op-progressbar" : function(event){
             if(isAd){
                 return false;
             }
@@ -179,7 +179,7 @@ const ProgressBar = function($container, api, isAd){
             drawHoverProgress(0);
             seek(percentage);
         },
-        "touchmove .ovp-progressbar" : function(event){
+        "touchmove .op-progressbar" : function(event){
             if (mouseDown) {
                 const percentage = calculatePercentage(event);
                 positionElements(percentage);
@@ -188,36 +188,36 @@ const ProgressBar = function($container, api, isAd){
                 drawTimeIndicator(percentage, event);
             }
         },
-        "touchend .ovp-progressbar" : function(event){
+        "touchend .op-progressbar" : function(event){
             if(mouseDown){
                 mouseDown = false;
-                $root.removeClass("ovp-progressbar-hover");
+                $root.removeClass("op-progressbar-hover");
             }
 
         },
 
 
-        "mouseenter .ovp-progressbar" : function(event, $current, template){
+        "mouseenter .op-progressbar" : function(event, $current, template){
             event.preventDefault();
             if(!isMobile){
                 if(!isAd){
                     mouseInside = true;
                     $time.show();
                 }
-                $root.addClass("ovp-progressbar-hover");
+                $root.addClass("op-progressbar-hover");
             }
         },
-        "mouseleave .ovp-progressbar" : function(event, $current, template){
+        "mouseleave .op-progressbar" : function(event, $current, template){
             event.preventDefault();
 
             mouseInside = false;
             if (!mouseInside) {
-                $root.removeClass("ovp-progressbar-hover");
+                $root.removeClass("op-progressbar-hover");
                 $time.hide();
             }
             drawHoverProgress(0);
         },
-        "mousedown .ovp-progressbar" : function(event, $current, template){
+        "mousedown .op-progressbar" : function(event, $current, template){
             event.preventDefault();
             if(isAd){
                 return false;
@@ -228,7 +228,7 @@ const ProgressBar = function($container, api, isAd){
             drawHoverProgress(0);
             seek(percentage);
         },
-        "mousemove .ovp-progressbar" : function(event, $current, template){
+        "mousemove .op-progressbar" : function(event, $current, template){
             event.preventDefault();
 
             if (!mouseDown && !isAd) {
@@ -253,7 +253,7 @@ const ProgressBar = function($container, api, isAd){
 
             if(mouseDown){
                 mouseDown = false;
-                $root.removeClass("ovp-progressbar-hover");
+                $root.removeClass("op-progressbar-hover");
             }
 
         }

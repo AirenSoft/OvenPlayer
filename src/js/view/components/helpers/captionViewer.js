@@ -25,7 +25,7 @@ const CaptionViewer = function($container, api, playerState){
                 isDisable = false;
             }else{
                 isDisable  = true;
-                $container.find(".ovp-caption-text").text("");
+                $container.find(".op-caption-text").text("");
             }
         }, template);
 
@@ -37,11 +37,11 @@ const CaptionViewer = function($container, api, playerState){
                     clearTimeout(deleteTimer);
                 }
 
-                $container.find(".ovp-caption-text").html(data.text);
+                $container.find(".op-caption-text").html(data.text);
 
                 if(hideGap){
                     deleteTimer = setTimeout(function(){
-                        $container.find(".ovp-caption-text").text("");
+                        $container.find(".op-caption-text").text("");
                     },hideGap * 1000);
                 }
 
@@ -52,7 +52,7 @@ const CaptionViewer = function($container, api, playerState){
 
     };
     const onDestroyed = function(template){
-        $container.find(".ovp-caption-text").text("");
+        $container.find(".op-caption-text").text("");
         api.off(CONTENT_CAPTION_CHANGED, null, template);
         api.off(CONTENT_CAPTION_CUE_CHANGED, null, template);
     };
