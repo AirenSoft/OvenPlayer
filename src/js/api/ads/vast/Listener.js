@@ -72,13 +72,14 @@ const Listener = function(elAdVideo, vastTracker, provider, adsSpec, adButton, t
     };
     //Like a CONTENT_PAUSE_REQUESTED
     const processStartOfAd = function(){
+        if(adsSpec.started){
+            adsSpec.active = true;
+            provider.pause();
+        }
+
         $elAdVideo.show();
         $adButton.show();
-        adsSpec.active = true;
-        /*if(adsSpec.started){
 
-         provider.pause();
-         }*/
     };
     const skipButtonClicked = function(event){
         if($textView.hasClass("videoAdUiAction")){
@@ -145,6 +146,7 @@ const Listener = function(elAdVideo, vastTracker, provider, adsSpec, adButton, t
     lowLevelEvents.loadedmetadata = function(){
         OvenPlayerConsole.log("VAST : listener : Ad CONTENT LOADED .");
         vastTracker.trackImpression();
+
         provider.trigger(STATE_AD_LOADED, {remaining : elAdVideo.duration, isLinear : true});
         elAdVideo.play();
     };
@@ -169,7 +171,7 @@ const Listener = function(elAdVideo, vastTracker, provider, adsSpec, adButton, t
         OvenPlayerConsole.log("VAST : listener : vastTracker resumed.");
 
         //prevent to set STATE_AD_PLAYING when first play.
-        if(adsSpec.started){
+        if(adsSpec.started  && adsSpec.active ){
             provider.setState(STATE_AD_PLAYING);
         }
 
@@ -202,11 +204,12 @@ const Listener = function(elAdVideo, vastTracker, provider, adsSpec, adButton, t
 
     vastTracker.on('start', () => {
         OvenPlayerConsole.log("VAST : listener : started");
+
+        adsSpec.started = true;
+        processStartOfAd();
+
         provider.trigger(AD_CHANGED, {isLinear : true});
         provider.setState(STATE_AD_PLAYING);
-        adsSpec.started = true;
-
-        processStartOfAd();
     });
     vastTracker.on('firstQuartile', () => {
         // firstQuartile tracking URLs have been called

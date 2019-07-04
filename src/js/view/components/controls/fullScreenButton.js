@@ -35,7 +35,7 @@ const FullScreenButton = function($container, api){
         MSFullscreenChange : "MSFullscreenChange"
     };
     const checkFullScreen = function(){
-        return document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement || config.isFullscreen;
+        return document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement;
     };
 
     const resetFullscreenButtonState = function(){
@@ -45,6 +45,7 @@ const FullScreenButton = function($container, api){
             isFullScreen = true;
             $iconExpand.hide();
             $iconCompress.show();
+
         } else {
             $root.removeClass("op-fullscreen");
             isFullScreen = false;
@@ -53,7 +54,8 @@ const FullScreenButton = function($container, api){
         }
     };
 
-    const fullScreenChangedCallback = function(){
+    const afterFullScreenChangedCallback = function(){
+        OvenPlayerConsole.log("afterFullScreenChangedCallback () ");
         resetFullscreenButtonState();
         api.trigger(PLAYER_FULLSCREEN_CHANGED, isFullScreen);
     };
@@ -101,7 +103,7 @@ const FullScreenButton = function($container, api){
          Object.keys(fullScreenEventTypes).forEach(eventName => {
             if(document[eventName]){
                 console.log(eventName);
-                document.addEventListener(fullScreenEventTypes[eventName], fullScreenChangedCallback, false);
+                document.addEventListener(fullScreenEventTypes[eventName], afterFullScreenChangedCallback, false);
             }
          });
          */
@@ -162,10 +164,12 @@ const FullScreenButton = function($container, api){
         }
 
         if(promise){
+
             promise.then(function(){
+
                 isForceMode = false;
                 //config.setFullscreen(true);
-                config.isFullscreen = true;
+
             }).catch(function(error){
                 //This means to look like for fullscreen.
                 isForceMode = true;
@@ -184,6 +188,7 @@ const FullScreenButton = function($container, api){
         }
     };
     let exitFullScreen = function () {
+
         if (document.exitFullscreen) {
             document.exitFullscreen();
         } else if (document.webkitExitFullscreen) {
@@ -197,7 +202,7 @@ const FullScreenButton = function($container, api){
         } else {
             // TODO(rock): warn not supported
         }
-        config.isFullscreen = false;
+
     }
     let toggleFullScreen = function () {
 
@@ -220,7 +225,7 @@ const FullScreenButton = function($container, api){
 
         fullscreenChagedEventName = findFullScreenChangedEventName();
         if(fullscreenChagedEventName){
-            document.addEventListener(fullscreenChagedEventName, fullScreenChangedCallback, false);
+            document.addEventListener(fullscreenChagedEventName, afterFullScreenChangedCallback, false);
         }
 
         api.on(AD_CHANGED, function(ad){
@@ -252,7 +257,7 @@ const FullScreenButton = function($container, api){
 
     const onDestroyed = function(template){
         if(fullscreenChagedEventName){
-            document.removeEventListener(fullscreenChagedEventName, fullScreenChangedCallback);
+            document.removeEventListener(fullscreenChagedEventName, afterFullScreenChangedCallback);
         }
         api.off(AD_CHANGED, null, template);
     };
