@@ -43,6 +43,10 @@ const Api = function(container){
         let hasNextPlaylist = playlist[nextPlaylistIndex]? true : false;
         //init source index
         playerConfig.setSourceIndex(0);
+
+        //set Golbal Volume info
+        playerConfig.setVolume(currentProvider.getVolume());
+
         if(hasNextPlaylist){
             //that.pause();
             lazyQueue = LazyCommandExecutor(that, ['play','seek','stop']);

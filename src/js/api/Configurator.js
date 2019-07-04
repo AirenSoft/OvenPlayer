@@ -179,6 +179,9 @@ const Configurator = function(options, provider){
     that.getVolume = () =>{
         return spec.volume;
     };
+    that.setVolume = (volume) =>{
+        spec.volume = volume;
+    };
     that.isLoop = () =>{
         return spec.loop;
     };

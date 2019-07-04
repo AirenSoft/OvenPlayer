@@ -72,6 +72,7 @@ const Ad = function(elVideo, provider, playerConfig, adTagUrl){
     let vastTracker = null;
     let ad = null;
 
+
     const OnAdError = function(error){
         console.log(error);
         adsErrorOccurred = true;
