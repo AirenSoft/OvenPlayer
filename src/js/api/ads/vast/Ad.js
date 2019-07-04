@@ -104,6 +104,10 @@ const Ad = function(elVideo, provider, playerConfig, adTagUrl){
             }
             elAdVideo.src = videoURL;
 
+            //keep volume even if playlist item changes.
+            elAdVideo.volume = elVideo.volume;
+            elAdVideo.muted = elVideo.muted;
+
         }).catch(function(error){
             OnAdError(error);
         });

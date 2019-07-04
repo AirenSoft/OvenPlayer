@@ -1,0 +1,6 @@
+#!/bin/sh
+
+rm -rf dist/production/ovenplayer
+npm run build 
+cp src/assets/OvenPlayerFlash.swf dist/production/ovenplayer
+git add dist/production/ovenplayer
