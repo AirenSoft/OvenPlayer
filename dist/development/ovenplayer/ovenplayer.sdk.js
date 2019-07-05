@@ -1,4 +1,4 @@
-/*! OvenPlayerv0.9.6242 | (c)2019 AirenSoft Co., Ltd. | MIT license (https://github.com/AirenSoft/OvenPlayerPrivate/blob/master/LICENSE) | Github : https://github.com/AirenSoft/OvenPlayer */
+/*! OvenPlayerv0.9.6243 | (c)2019 AirenSoft Co., Ltd. | MIT license (https://github.com/AirenSoft/OvenPlayerPrivate/blob/master/LICENSE) | Github : https://github.com/AirenSoft/OvenPlayer */
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// install a JSONP callback for chunk loading
 /******/ 	function webpackJsonpCallback(data) {
@@ -4339,7 +4339,7 @@ Object.defineProperty(exports, "__esModule", {
 /**
  * Created by hoho on 2018. 6. 29..
  */
-var version = exports.version = '0.9.6242-2019070420-localbuild';
+var version = exports.version = '0.9.6243-2019070512-localbuild';
 
 /***/ })
 

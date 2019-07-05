@@ -170,8 +170,11 @@ const Listener = function(elAdVideo, vastTracker, provider, adsSpec, adButton, t
         // resume tracking URLs have been called
         OvenPlayerConsole.log("VAST : listener : vastTracker resumed.");
 
+        if(STATE_PLAYING === provider.getState()){
+            provider.pause();
+        }
         //prevent to set STATE_AD_PLAYING when first play.
-        if(adsSpec.started  && adsSpec.active ){
+        if(adsSpec.started){
             provider.setState(STATE_AD_PLAYING);
         }
 
