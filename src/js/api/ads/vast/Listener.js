@@ -72,10 +72,6 @@ const Listener = function(elAdVideo, vastTracker, provider, adsSpec, adButton, t
     };
     //Like a CONTENT_PAUSE_REQUESTED
     const processStartOfAd = function(){
-        if(adsSpec.started){
-            adsSpec.active = true;
-            provider.pause();
-        }
 
         $elAdVideo.show();
         $adButton.show();
@@ -145,11 +141,14 @@ const Listener = function(elAdVideo, vastTracker, provider, adsSpec, adButton, t
     };
     lowLevelEvents.loadedmetadata = function(){
         OvenPlayerConsole.log("VAST : listener : Ad CONTENT LOADED .");
-        vastTracker.trackImpression();
 
+        //Flash play is very fast...
         if(STATE_PLAYING === provider.getState()){
             provider.pause();
         }
+
+        vastTracker.trackImpression();
+
         provider.trigger(STATE_AD_LOADED, {remaining : elAdVideo.duration, isLinear : true});
         elAdVideo.play();
     };
@@ -209,6 +208,7 @@ const Listener = function(elAdVideo, vastTracker, provider, adsSpec, adButton, t
         OvenPlayerConsole.log("VAST : listener : started");
 
         adsSpec.started = true;
+        adsSpec.active = true;
         processStartOfAd();
 
         provider.trigger(AD_CHANGED, {isLinear : true});
