@@ -255,7 +255,6 @@ const View = function($container){
         },
         "contextmenu .ovenplayer" : function(event, $current, template){
             event.stopPropagation();
-            return false;
             if(!LA$(event.currentTarget).find("object")){
                 event.preventDefault();
                 createContextPanel(event.pageX, event.pageY);

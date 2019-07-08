@@ -147,6 +147,9 @@ const Listener = function(elAdVideo, vastTracker, provider, adsSpec, adButton, t
         OvenPlayerConsole.log("VAST : listener : Ad CONTENT LOADED .");
         vastTracker.trackImpression();
 
+        if(STATE_PLAYING === provider.getState()){
+            provider.pause();
+        }
         provider.trigger(STATE_AD_LOADED, {remaining : elAdVideo.duration, isLinear : true});
         elAdVideo.play();
     };
@@ -170,9 +173,6 @@ const Listener = function(elAdVideo, vastTracker, provider, adsSpec, adButton, t
         // resume tracking URLs have been called
         OvenPlayerConsole.log("VAST : listener : vastTracker resumed.");
 
-        if(STATE_PLAYING === provider.getState()){
-            provider.pause();
-        }
         //prevent to set STATE_AD_PLAYING when first play.
         if(adsSpec.started){
             provider.setState(STATE_AD_PLAYING);

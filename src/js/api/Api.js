@@ -276,7 +276,7 @@ const Api = function(container){
             if(currentProvider){
                 currentProvider.setCurrentQuality(0);
             }
-            playlistManager.initPlaylist(playlist);
+            playlistManager.initPlaylist(playlist, playerConfig);
         }
         return initProvider();
 
