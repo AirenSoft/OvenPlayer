@@ -147,8 +147,11 @@
         $( document ).ready(function() {
 
             var player = OvenPlayer.create("player", {
+                image : "docs/lib/thumbnail.png",
+                title : "OvenPlayer Demo",
                 sources: defaultSources,
                 tracks : tracks
+
             });
             player.on("ready", function(data){
             });
