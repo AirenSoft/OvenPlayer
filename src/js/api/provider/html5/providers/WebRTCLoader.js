@@ -360,7 +360,7 @@ const WebRTCLoader = function (provider, webSocketUrl, loadCallback, errorTrigge
     }
 
     function initWebSocket(resolve, reject) {
-
+        //ToDo : resolve not wokring
         try {
 
             ws = new WebSocket(webSocketUrl);

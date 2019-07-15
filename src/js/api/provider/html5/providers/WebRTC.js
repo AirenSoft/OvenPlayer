@@ -5,7 +5,7 @@ import Provider from "api/provider/html5/Provider";
 import WebRTCLoader from "api/provider/html5/providers/WebRTCLoader";
 import {isWebRTC} from "utils/validator";
 import {errorTrigger} from "api/provider/utils";
-import {PROVIDER_WEBRTC, STATE_IDLE} from "api/constants";
+import {PROVIDER_WEBRTC, STATE_IDLE, CONTENT_META, STATE_PLAYING} from "api/constants";
 
 /**
  * @brief   webrtc provider extended core.
@@ -52,15 +52,23 @@ const WebRTC = function(element, playerConfig, adTagUrl){
                 }
 
                 element.srcObject = stream;
-                //that.play();
             };
+
 
             webrtcLoader = WebRTCLoader(that, source.file, loadCallback, errorTrigger);
 
-            webrtcLoader.connect().catch(function(error){
+            webrtcLoader.connect(function(){
+                //ToDo : resolve not wokring
+            }).catch(function(error){
                 //that.destroy();
                 //Do nothing
             });
+
+            that.on(CONTENT_META, function(){
+                if(playerConfig.isAutoStart()){
+                    that.play();
+                }
+            }, that);
         }
     });
     superDestroy_func = that.super('destroy');
@@ -73,6 +81,7 @@ const WebRTC = function(element, playerConfig, adTagUrl){
             webrtcLoader.destroy();
             webrtcLoader = null;
         }
+        that.off(CONTENT_META, null, that);
         OvenPlayerConsole.log("WEBRTC :  PROVIDER DESTROYED.");
 
         superDestroy_func();
