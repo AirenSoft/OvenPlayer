@@ -27,7 +27,8 @@ const Configurator = function(options, provider){
             hidePlaylistIcon : false,
             rtmpBufferTime : 1,
             rtmpBufferTimeMax : 3,
-            adClient : "googleima"
+            adClient : "googleima",
+            currentProtocolOnly : false
         };
         const serialize = function (val) {
             if (val === undefined) {
@@ -144,6 +145,9 @@ const Configurator = function(options, provider){
         spec.qualityLabel = newLabel;
     };
 
+    that.isCurrentProtocolOnly = () => {
+        return spec.currentProtocolOnly;
+    };
     /*that.getSourceLabel = () => {
         return spec.sourceLabel;
     };

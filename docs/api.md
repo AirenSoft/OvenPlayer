@@ -13,6 +13,7 @@ player = OvenPlayer.create("player", {
     controls : true,
     rtmpBufferTime : 1, 
     rtmpBufferTimeMax : 3,
+    currentProtocolOnly : true, 
     title : "Hi. This is ovenplayer.",
     image : "https://path.to/your_video_thumbnail.jpeg",    
     adClient : "googleima",    
@@ -277,6 +278,16 @@ Number| 3
 
 Specifies a maximum buffer length for live streaming content, in seconds.
 (*optional when using rtmp protocol.)
+
+
+#### currentProtocolOnly 
+type|default
+------|------
+Boolean| false
+
+Shows only current protocols.
+(*If you want to show only quality information when there are various protocols and various quality information together, please use it.)
+
 
 #### adClient 
 type|default

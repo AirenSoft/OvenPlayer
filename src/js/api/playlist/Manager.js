@@ -83,7 +83,8 @@ const Manager = function(provider){
 
     }
 
-    that.initPlaylist =(playlist) =>{
+    that.initPlaylist =(playlist, playerConfig) =>{
+
         OvenPlayerConsole.log("PlaylistManager setPlaylist() ", playlist);
         const prettiedPlaylist = (_.isArray(playlist) ? playlist : [playlist]).map(function(item){
             if(!_.isArray(item.tracks)) {
@@ -156,6 +157,17 @@ const Manager = function(provider){
             }*/
 
 
+            function extractOnlyOneProtocol(sources){
+                if(!!sources){
+                    let highPriorityType = playlistItem.sources[0].type;
+
+                    return _.filter(sources, {type : highPriorityType});
+                }
+            }
+
+            if(playerConfig.isCurrentProtocolOnly()){
+                playlistItem.sources = extractOnlyOneProtocol(playlistItem.sources);
+            }
 
             if(!_.isArray(playlistItem.tracks)){
                 playlistItem.tracks = [];

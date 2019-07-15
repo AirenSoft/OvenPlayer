@@ -194,7 +194,7 @@ const Api = function(container){
         OvenPlayerConsole.log("API : init()");
         OvenPlayerConsole.log("API : init() config : ", playerConfig);
 
-        playlistManager.initPlaylist(playerConfig.getPlaylist());
+        playlistManager.initPlaylist(playerConfig.getPlaylist(), playerConfig);
         OvenPlayerConsole.log("API : init() sources : " , playlistManager.getCurrentSources());
 
         initProvider();
