@@ -4,6 +4,10 @@
 import OvenTemplate from "view/engine/OvenTemplate";
 import Panels from "view/components/controls/settingPanel/main";
 import PanelManager from "view/global/PanelManager";
+import {
+    PROVIDER_RTMP
+} from "api/constants";
+
 let PANEL_TITLE = {
     "speed" : "Speed",
     "source" : "Source",
