@@ -1,16 +1,16 @@
-export default () => {
+export default (uiText) => {
     return (
-        `<div class="ovp-progressbar" tabindex="0">` +
-            `<div class="ovp-progressbar-padding"></div>` +
-            `<div class="ovp-progress-list">` +
-                `<div class="ovp-load-progress"></div>` +
-                `<div class="ovp-play-progress ovp-play-background-color"></div>` +
-                `<div class="ovp-hover-progress"></div>` +
+        `<div class="op-progressbar" tabindex="0">` +
+            `<div class="op-progressbar-padding"></div>` +
+            `<div class="op-progress-list">` +
+                `<div class="op-load-progress"></div>` +
+                `<div class="op-play-progress op-play-background-color"></div>` +
+                `<div class="op-hover-progress"></div>` +
             `</div>` +
-            `<div class="ovp-progressbar-knob-container">` +
-                `<div class="ovp-progressbar-knob ovp-play-background-color"></div>` +
+            `<div class="op-progressbar-knob-container">` +
+                `<div class="op-progressbar-knob op-play-background-color"></div>` +
             `</div>` +
-            `<span class="ovp-progressbar-time">00:00</span>` +
+            `<span class="op-progressbar-time">00:00</span>` +
         `</div>`
     );
 };

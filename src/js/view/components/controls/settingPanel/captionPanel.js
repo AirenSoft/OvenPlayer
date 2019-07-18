@@ -24,19 +24,19 @@ const CaptionPanel = function($container, api, data){
         //Do nothing
     };
     const events = {
-        "click .ovp-setting-item": function (event, $current, template) {
+        "click .op-setting-item": function (event, $current, template) {
             event.preventDefault();
-            let value = LA$(event.currentTarget).attr("ovp-data-value");
+            let value = LA$(event.currentTarget).attr("op-data-value");
             api.setCurrentCaption(parseFloat(value));
             panelManager.clear();
         },
-        "click .ovp-setting-title" : function(event, $current, template){
+        "click .op-setting-title" : function(event, $current, template){
             event.preventDefault();
             panelManager.removeLastItem();
         }
     };
 
-    return OvenTemplate($container, "CaptionPanel", data, events, onRendered, onDestroyed );
+    return OvenTemplate($container, "CaptionPanel", api.getConfig(),  data, events, onRendered, onDestroyed );
 
 };
 

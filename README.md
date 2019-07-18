@@ -14,6 +14,8 @@ OvenMediaEngine(OME) is a streaming engine for real-time live broadcasting with 
 - Support for playback regardless of browser and media type
 - Supports all common player functions
 - Supported Protocols : WebRTC (Signalling protocol conforms to the OME specification.), HLS, MPEG-Dash
+- Easily create profit by adding Ads in various formats
+- Supports various subtitle formats (SMI, VTT, SRT)
 
 ## Quick Start
 

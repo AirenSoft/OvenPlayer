@@ -16,6 +16,7 @@ import {
     READY,
     CONTENT_META, CONTENT_LEVEL_CHANGED, CONTENT_TIME_MODE_CHANGED, CONTENT_TIME, PLAYER_PLAY,
     STATE_AD_LOADED,
+    PLAYER_RESIZED,
     AD_CHANGED,
     STATE_AD_ERROR,
     STATE_AD_PLAYING,
@@ -26,11 +27,15 @@ import {
     ERROR
 } from "api/constants";
 const Controls = function($container, api){
+
     let volumeButton = "", playButton = "", settingButton = "", progressBar = "", timeDisplay = "", fullScreenButton = "", frameButtons = "", hasPlaylist = false, initialDuration;
 
     let webrtc_is_p2p_mode = false;
     let isLiveMode = false;
-    let isAndroid = api.getConfig().browser.os === "Android";
+
+    let browser = api.getConfig().browser;
+    let isAndroid = browser.os === "Android";
+    let isIOS = browser.os === "iOS";
     let checkAfterPlay = false;
 
     const $root = LA$("#"+api.getContainerId());
@@ -40,65 +45,53 @@ const Controls = function($container, api){
     hasPlaylist = api.getPlaylist().length > 1 ? (!hidePlaylistIcon ? true : false) : false;
 
     let playlistPanel = "";
-    let setPanelMaxHeight = function(){
-        if($root.find(".ovp-setting-panel")){
-            $root.find(".ovp-setting-panel").css("max-height",  $root.height() - $root.find(".ovp-bottom-panel").height() + "px");
-        }
-    };
+
 
     const onRendered = function($current, template){
+        function setPanelMaxHeight(){
+            if($root.find(".op-setting-panel")){
+                $root.find(".op-setting-panel").css("max-height",  $root.height() - $root.find(".op-bottom-panel").height() + "px");
+            }
+        };
 
-        let initTimeDisplay = function(data){
+        function initTimeDisplay(data){
             if(timeDisplay){
                 timeDisplay.destroy();
             }
-            timeDisplay = TimeDisplay($current.find(".ovp-left-controls"), api, data);
+            timeDisplay = TimeDisplay($current.find(".op-left-controls"), api, data);
         };
-        let initProgressBar = function(isAd){
+        function initProgressBar(isAd){
             if(progressBar){
                 progressBar.destroy();
             }
-            progressBar = ProgressBar($current.find(".ovp-progressbar-container"), api, isAd);
+            progressBar = ProgressBar($current.find(".op-progressbar-container"), api, isAd);
         };
-        let initFrameJumpButtons = function(){
+        function initFrameJumpButtons(){
             if(frameButtons){
                 frameButtons.destroy();
             }
-            frameButtons = FrameButtons($current.find(".ovp-controls"), api);
+            frameButtons = FrameButtons($current.find(".op-controls"), api);
         };
 
-        let initSettingButton = function(){
+        function initSettingButton(){
             if(settingButton){
                 settingButton.destroy();
             }
             settingButton = SettingButton($current.find(".setting-holder"), api);
         };
 
-        let initFullscreenButton = function(){
+        function initFullscreenButton(){
             if(fullScreenButton){
                 fullScreenButton.destroy();
             }
             fullScreenButton = FullScreenButton($current.find(".fullscreen-holder"), api);
         };
 
-        playButton = PlayButton($current.find(".ovp-left-controls"), api);
-        volumeButton = VolumeButton($current.find(".ovp-left-controls"), api);
+        function makeControlUI(metadata){
 
-        initFullscreenButton();
-
-        let playlist = api.getPlaylist();
-        let currentPlaylistIndex = api.getCurrentPlaylist();
-
-
-        //ToDo : Sometimes ad init failed.
-        if(playlist && playlist[currentPlaylistIndex] && playlist[currentPlaylistIndex].adTagUrl){
-
-        }else{
-            initSettingButton();
-        }
-
-        let initControlUI = function(metadata){
             initTimeDisplay(metadata);
+            initFullscreenButton();
+
             if(api.getFramerate && api.getFramerate() > 0){
                 //initFrameJumpButtons();
             }else{
@@ -119,19 +112,47 @@ const Controls = function($container, api){
                 initProgressBar(false);
             }
         };
+        function resetControlUI(){
+            initTimeDisplay(lastContentMeta);
+            initSettingButton();
+            initFullscreenButton();
+
+            if(!isLiveMode){
+                initProgressBar(false);
+            }else{
+                if(progressBar){
+                    progressBar.destroy();
+                }
+            }
+            $root.removeClass("linear-ad");
+        };
+
+
+        playButton = PlayButton($current.find(".op-left-controls"), api);
+        volumeButton = VolumeButton($current.find(".op-left-controls"), api);
+
+        let playlist = api.getPlaylist();
+        let currentPlaylistIndex = api.getCurrentPlaylist();
+
+        if(playlist && playlist[currentPlaylistIndex] && playlist[currentPlaylistIndex].adTagUrl){
+            //does not show setting button when ads plays.
+        }else{
+            initSettingButton();
+        }
+        initFullscreenButton();
 
         api.on(CONTENT_META, function(data){
             initialDuration = data.duration;
             lastContentMeta = data;
             data.isP2P = webrtc_is_p2p_mode;
-
-            initControlUI(data);
+            makeControlUI(data);
         }, template);
 
 
         /*
         * I think do not nessessary this code anymore. Because muted play solves everything. 2019-06-04
-
+        *
+        *  -> muted play canceled. 2019-06-20(?)
         */
         api.on(CONTENT_TIME, function(metadata_for_when_after_playing){
 
@@ -141,13 +162,13 @@ const Controls = function($container, api){
             if( isAndroid  || (api && api.getProviderName && api.getProviderName() === "rtmp") ){
                 if(!initialDuration && (lastContentMeta && (lastContentMeta.duration !== metadata_for_when_after_playing.duration))){
                     lastContentMeta = metadata_for_when_after_playing;
-                    initControlUI(metadata_for_when_after_playing);
+                    makeControlUI(metadata_for_when_after_playing);
                 }
             }
 
         }, template);
 
-        api.on("resize", function(size){
+        api.on(PLAYER_RESIZED, function(size){
             setPanelMaxHeight();
         },template);
 
@@ -156,56 +177,37 @@ const Controls = function($container, api){
         }, template);
 
         api.on(PLAYER_PLAY, function(data){
-            $current.css("display", "block");
+            $current.show();
         }, template);
 
         api.on(AD_CHANGED, function(ad){
-
             if(ad.isLinear){
-                if(progressBar){
-                    progressBar.destroy();
-                }
+                $root.addClass("linear-ad");
+
                 initProgressBar(true);
                 if(timeDisplay){
                     timeDisplay.destroy();
                 }
-                $root.addClass("linear-ad");
                 if(settingButton){
                     settingButton.destroy();
+                }
+
+                //Fullscreen button. Not required on iOS.
+                if(isIOS && fullScreenButton){
+                    fullScreenButton.destroy();
                 }
             }else{
                 $root.removeClass("linear-ad");
             }
         }, template);
 
-        //ToDo : Same Code refactor
+
         api.on(STATE_AD_COMPLETE, function(){
-            initTimeDisplay(lastContentMeta);
-            if(progressBar){
-                progressBar.destroy();
-            }
-            $root.removeClass("linear-ad");
-            initSettingButton();
-            if(isLiveMode){
-
-            }else{
-                initProgressBar(false);
-            }
-
+            resetControlUI();
         }, template);
 
         api.on(STATE_AD_ERROR , function(){
-            initTimeDisplay(lastContentMeta);
-            if(progressBar){
-                progressBar.destroy();
-            }
-            $root.removeClass("linear-ad");
-            initSettingButton();
-            if(isLiveMode){
-
-            }else{
-                initProgressBar(false);
-            }
+            resetControlUI();
         },template);
 
     };
@@ -216,6 +218,7 @@ const Controls = function($container, api){
         api.off(AD_CHANGED, null, template);
         api.off(OME_P2P_MODE, null, template);
         api.off(STATE_AD_ERROR, null, template);
+        api.off(PLAYER_RESIZED, null, template);
         if(timeDisplay){
             timeDisplay.destroy();
         }
@@ -231,24 +234,21 @@ const Controls = function($container, api){
         if(volumeButton){
             volumeButton.destroy();
         }
-
-        api.off("resize", null, template);
-
     };
     const events = {
-        "mouseleave .ovp-controls" : function(event, $current, template){
+        "mouseleave .op-controls" : function(event, $current, template){
             event.preventDefault();
             volumeButton.setMouseDown(false);
-            $current.find(".ovp-volume-slider-container").removeClass("active");
+            $current.find(".op-volume-slider-container").removeClass("active");
         },
 
-        "click .ovp-playlist-button" : function(event, $current, template){
+        "click .op-playlist-button" : function(event, $current, template){
             event.preventDefault();
             playlistPanel = PlaylistPanel($current, api);
         }
     };
 
-    return OvenTemplate($container, "Controls",  hasPlaylist , events, onRendered, onDestroyed);
+    return OvenTemplate($container, "Controls",  hasPlaylist , api.getConfig(), events, onRendered, onDestroyed);
 };
 
 export default Controls;

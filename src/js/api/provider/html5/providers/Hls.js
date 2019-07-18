@@ -29,6 +29,7 @@ const HlsProvider = function(element, playerConfig, adTagUrl){
             element : element,
             mse : hls,
             listener : null,
+            isLoaded : false,
             canSeek : false,
             isLive : false,
             seeking : false,
@@ -72,7 +73,7 @@ const HlsProvider = function(element, playerConfig, adTagUrl){
             superDestroy_func();
         };
     }catch(error){
-        let tempError =  ERRORS[INIT_HLSJS_NOTFOUND];
+        let tempError =  ERRORS.codes[INIT_HLSJS_NOTFOUND];
         tempError.error = error;
         throw tempError;
     }

@@ -1,9 +1,9 @@
-export default () => {
+export default (uiText) => {
     return (
-        `<div class="ovp-navigators"><button class="ovp-button ovp-play-button" type="button">` +
-            `<i class="ovp-con op-play"></i>` +
-            `<i class="ovp-con op-pause"></i>` +
-            `<i class="ovp-con op-replay"></i>` +
+        `<div class="op-navigators"><button class="op-button op-play-button" type="button">` +
+            `<i class="op-con op-play"></i>` +
+            `<i class="op-con op-pause"></i>` +
+            `<i class="op-con op-replay"></i>` +
         `</button></div>`
     );
 };

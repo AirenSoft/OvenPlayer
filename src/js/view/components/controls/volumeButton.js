@@ -23,8 +23,7 @@ const VolumeButton = function($container, api){
     let isMobile = api.getBrowser().os === "iOS" || api.getBrowser().os === "Android";
 
 
-    /*private functions*/
-    let setVolumeIcon = function(percentage) {
+    function setVolumeIcon(percentage) {
         $volumeIconBig.hide();
         $volumeIconSmall.hide();
         $volumeIconMute.hide();
@@ -40,7 +39,7 @@ const VolumeButton = function($container, api){
         }
     }
 
-    let setVolumeUI = function(percentage) {
+    function setVolumeUI(percentage) {
         if (api.getMute()) {
             percentage = 0;
         }
@@ -54,7 +53,7 @@ const VolumeButton = function($container, api){
         $sliderValue.css("width", handlePosition+ "px");
     }
 
-    let calculatePercentage = function (event) {
+    function calculatePercentage(event) {
         const relativeX = (event.pageX || event.touches[0].clientX) - $slider.offset().left;
         let percentage = relativeX / sliderWidth * 100;
 
@@ -70,10 +69,10 @@ const VolumeButton = function($container, api){
 
 
     const onRendered = function($current, template){
-        $sliderContainer = $current.find(".ovp-volume-slider-container");
-        $slider = $current.find(".ovp-volume-silder");
-        $sliderHandle = $current.find(".ovp-volume-slider-handle");
-        $sliderValue = $current.find(".ovp-volume-slider-value");
+        $sliderContainer = $current.find(".op-volume-slider-container");
+        $slider = $current.find(".op-volume-silder");
+        $sliderHandle = $current.find(".op-volume-slider-handle");
+        $sliderValue = $current.find(".op-volume-slider-value");
 
         $volumeIconBig = $current.find( ".op-volume-max");
         $volumeIconSmall = $current.find(".op-volume-small");
@@ -110,7 +109,7 @@ const VolumeButton = function($container, api){
         api.off(CONTENT_MUTE, null, template);
     };
     const events = {
-        "click .ovp-volume-button" : function(event, $current, template){
+        "click .op-volume-button" : function(event, $current, template){
             event.preventDefault();
             if(isMobile){
 
@@ -124,24 +123,24 @@ const VolumeButton = function($container, api){
             }
 
         },
-        "touchstart .ovp-volume-slider-handle" : function(event){
+        "touchstart .op-volume-slider-handle" : function(event){
             mouseDown = true;
 
         },
-        "touchmove .ovp-volume-slider-handle" : function(event){
+        "touchmove .op-volume-slider-handle" : function(event){
             if(mouseDown){
 
                 api.setMute(false);
                 api.setVolume(calculatePercentage(event));
             }
         },
-        "touchend .ovp-volume-slider-handle" : function(event){
+        "touchend .op-volume-slider-handle" : function(event){
 
             if(mouseDown){
                 mouseDown = false;
             }
         },
-        "touchstart .ovp-volume-button" : function(event){
+        "touchstart .op-volume-button" : function(event){
             if(isMobile && $sliderContainer.hasClass("active")){
                 if (api.getVolume() === 0) {
                     api.setMute(false);
@@ -153,29 +152,29 @@ const VolumeButton = function($container, api){
                 $sliderContainer.addClass("active");
             }
         },
-        "mouseenter .ovp-volume-button" : function(event, $current, template){
+        "mouseenter .op-volume-button" : function(event, $current, template){
             event.preventDefault();
 
             if(!isMobile){
                 $sliderContainer.addClass("active");
             }
         },
-        "mouseleave .ovp-volume-silder" : function(event, $current, template){
+        "mouseleave .op-volume-silder" : function(event, $current, template){
             event.preventDefault();
 
             mouseDown = false;
         },
-        "mousedown .ovp-volume-silder" : function(event, $current, template){
+        "mousedown .op-volume-silder" : function(event, $current, template){
             event.preventDefault();
             mouseDown = true;
             api.setMute(false);
             api.setVolume(calculatePercentage(event));
         },
-        "mouseup .ovp-volume-silder" : function(event, $current, template){
+        "mouseup .op-volume-silder" : function(event, $current, template){
             event.preventDefault();
             mouseDown = false;
         },
-        "mousemove .ovp-volume-silder" : function(event, $current, template){
+        "mousemove .op-volume-silder" : function(event, $current, template){
             event.preventDefault();
             if (!mouseDown) {
                 return false;
@@ -184,12 +183,19 @@ const VolumeButton = function($container, api){
             api.setVolume(calculatePercentage(event));
         }
     };
+    let that = OvenTemplate($container, "VolumeButton", api.getConfig(), null, events, onRendered, onDestroyed);
+    that.setMouseDown = (state) => {
+        mouseDown = state;
+    };
+    return that;
 
-    return Object.assign(OvenTemplate($container, "VolumeButton", null, events, onRendered, onDestroyed), {
+    /*or
+
+    return Object.assign(OvenTemplate($container, "VolumeButton", api.getConfig(), null, events, onRendered, onDestroyed), {
         setMouseDown: function (state) {
             mouseDown = state;
         }
-    });
+    });*/
 };
 
 export default VolumeButton;

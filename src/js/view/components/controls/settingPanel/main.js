@@ -14,7 +14,7 @@ import {
     CONTENT_LEVEL_CHANGED, PROVIDER_RTMP
 } from "api/constants";
 
-const PANEL_TITLE = {
+let PANEL_TITLE = {
     "speed" : "Speed",
     "source" : "Source",
     "quality" : "Quality",
@@ -23,17 +23,26 @@ const PANEL_TITLE = {
 };
 
 const Panels = function($container, api, data){
+
     const $root = LA$("#"+api.getContainerId());
     let panelManager = PanelManager();
 
-    const extractSubPanelData = function(api, panelType){
+    let playerConfig = api.getConfig();
+
+    if(playerConfig && playerConfig.systemText){
+        Object.keys(PANEL_TITLE).forEach(title => {
+            PANEL_TITLE[title] = playerConfig.systemText.ui.setting[title];
+        });
+    }
+
+    function extractSubPanelData(api, panelType){
         let panel = {
             id : "panel-"+new Date().getTime() ,
             title : "",
             body : [],
             useCheck : true,
             panelType : panelType,
-            height : $root.height() - $root.find(".ovp-bottom-panel").height()
+            height : $root.height() - $root.find(".op-bottom-panel").height()
         };
         panel.title = PANEL_TITLE[panelType];
         if(panelType === "speed"){
@@ -124,9 +133,9 @@ const Panels = function($container, api, data){
             $root.find("#"+data.id).addClass("background");
         }
     };
-    let setPanelMaxHeight = function(){
-        if($root.find(".ovp-setting-panel")){
-            $root.find(".ovp-setting-panel").css("max-height",  $root.height() - $root.find(".ovp-bottom-panel").height() + "px");
+    function setPanelMaxHeight(){
+        if($root.find(".op-setting-panel")){
+            $root.find(".op-setting-panel").css("max-height",  $root.height() - $root.find(".op-bottom-panel").height() + "px");
         }
     };
     const onRendered = function($current, template){
@@ -134,14 +143,14 @@ const Panels = function($container, api, data){
 
         api.on(CONTENT_LEVEL_CHANGED, function(data){
             let newQuality = data.currentQuality;
-            if(data.type === "render" && $root.find("#"+template.data.id).find(".ovp-setting-item")){
-                _.forEach( $root.find("#"+template.data.id).find(".ovp-setting-item").get() ||[], function(panel){
+            if(data.type === "render" && $root.find("#"+template.data.id).find(".op-setting-item")){
+                _.forEach( $root.find("#"+template.data.id).find(".op-setting-item").get() ||[], function(panel){
                     let $panel = LA$(panel);
 
-                    if($panel.attr("ovp-panel-type") === "quality"){
+                    if($panel.attr("op-panel-type") === "quality"){
                         let qualityList = api.getQualityLevels();
                         let newQualityObject = qualityList[newQuality];
-                        $panel.find(".ovp-setting-item-value").text(newQualityObject.width+"x"+newQualityObject.height+", "+ sizeHumanizer(newQualityObject.bitrate, true, "bps"));
+                        $panel.find(".op-setting-item-value").text(newQualityObject.width+"x"+newQualityObject.height+", "+ sizeHumanizer(newQualityObject.bitrate, true, "bps"));
                     }
 
                 });
@@ -153,13 +162,13 @@ const Panels = function($container, api, data){
         api.off(CONTENT_LEVEL_CHANGED, null, template);
     };
     const events = {
-        "click .ovp-setting-item": function (event, $current, template) {
+        "click .op-setting-item": function (event, $current, template) {
             event.preventDefault();
             //if this panel is background it disabled click.
             if($root.find("#"+data.id).hasClass("background")){
                 return false;
             }
-            let panelType = LA$(event.currentTarget).attr("ovp-panel-type");
+            let panelType = LA$(event.currentTarget).attr("op-panel-type");
             let panel = null;
             if(panelType === "speed"){
                 panel = SpeedPanel($container, api, extractSubPanelData(api, panelType));
@@ -175,7 +184,7 @@ const Panels = function($container, api, data){
 
             panelManager.add(panel);
         },
-        "click .ovp-setting-title" : function(event, $current, template){
+        "click .op-setting-title" : function(event, $current, template){
             event.preventDefault();
             if($root.find("#"+data.id).hasClass("background")){
                 return false;
@@ -184,90 +193,9 @@ const Panels = function($container, api, data){
         }
     };
 
-    return OvenTemplate($container, "Panels", data, events, onRendered, onDestroyed );
+    return OvenTemplate($container, "Panels", api.getConfig(), data, events, onRendered, onDestroyed );
 
 };
 
 export default Panels;
 
-
-export const generateMainData = function(api){
-    let panel = {
-        id : "panel-"+new Date().getTime(),
-        title : "Settings",
-        body : [],
-        isRoot : true,
-        panelType : ""
-    };
-
-    let sources = api.getSources();
-    let currentSource = sources && sources.length > 0 ? sources[api.getCurrentSource()] : null;
-
-    let qualityLevels = api.getQualityLevels();
-    let currentQuality = qualityLevels && qualityLevels.length > 0 ? qualityLevels[api.getCurrentQuality()] : null;
-
-    let captions = api.getCaptionList();
-    let currentCaption = api.getCurrentCaption();
-
-    let framerate = api.getFramerate();
-
-    if(api.getDuration() !== Infinity && currentSource && currentSource.type !== PROVIDER_RTMP){
-        let body = {
-            title : PANEL_TITLE.speed,
-            value :  api.getPlaybackRate() + "x",
-            description :  api.getPlaybackRate() + "x",
-            panelType : "speed",
-            hasNext : true
-        };
-        panel.body.push(body);
-    }
-    if (sources.length > 0) {
-
-        let body = {
-            title : PANEL_TITLE.source,
-            value : currentSource ? currentSource.label : "Default",
-            description : currentSource ? currentSource.label : "Default",
-            panelType : "source",
-            hasNext : true
-        };
-
-        panel.body.push(body);
-    }
-    if (qualityLevels.length > 0) {
-
-        let body = {
-            title : PANEL_TITLE.quality,
-            value : currentQuality ? currentQuality.label : "Default",
-            description : currentQuality ? currentQuality.label : "Default",
-            panelType : "quality",
-            hasNext : true
-        };
-
-        panel.body.push(body);
-    }
-    if (captions.length > 0) {
-
-        let body = {
-            title : PANEL_TITLE.caption,
-            value : captions[currentCaption] ? captions[currentCaption].label : "OFF",
-            description : captions[currentCaption] ? captions[currentCaption].label : "OFF",
-            panelType : "caption",
-            hasNext : true
-        };
-
-        panel.body.push(body);
-    }
-    if(framerate > 0){
-        let body = {
-            title : PANEL_TITLE.display,
-            value : api.isTimecodeMode() ? "Play time" : "Framecode",
-            description : api.isTimecodeMode() ? "Play time" : "Framecode",
-            panelType : "display",
-            hasNext : true
-        };
-
-        panel.body.push(body);
-    }
-
-    return panel;
-};

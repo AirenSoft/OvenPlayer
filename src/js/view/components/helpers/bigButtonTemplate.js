@@ -9,10 +9,10 @@ import {
 } from "api/constants";
 
 
-export default (playerState) => {
-    return (`<div class="ovp-bigbutton-container ">` +
-            `${playerState === STATE_PLAYING ?`<i class="ovp-con op-pause-big"></i>` :`` }`+
-            `${playerState === STATE_PAUSED ?`<i class="ovp-bigbutton ovp-con op-play-big"></i>` :`` }`+
-            `${playerState === STATE_COMPLETE ?`<i class="ovp-bigbutton ovp-con op-replay-big"></i>` :`` }`+
+export default (uiText, playerState) => {
+    return (`<div class="op-bigbutton-container ">` +
+            `${playerState === STATE_PLAYING ?`<i class="op-con op-pause-big"></i>` :`` }`+
+            `${playerState === STATE_PAUSED ?`<i class="op-bigbutton op-con op-play-big"></i>` :`` }`+
+            `${playerState === STATE_COMPLETE ?`<i class="op-bigbutton op-con op-replay-big"></i>` :`` }`+
         `</div>`);
 };

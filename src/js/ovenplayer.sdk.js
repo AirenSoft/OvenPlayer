@@ -144,7 +144,7 @@ OvenPlayerSDK.debug = function(isDebugMode) {
     if(isDebugMode){
         window.OvenPlayerConsole = {log : window['console']['log']};
     }else{
-        OvenPlayerConsole['log'] = function(){};
+        window.OvenPlayerConsole = {log :  function(){}};
     }
     return isDebugMode;
 };

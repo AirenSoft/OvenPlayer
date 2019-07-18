@@ -11,14 +11,15 @@ import {
 const TimeDisplay = function($container, api, data){
 
     let $position = "", $duration = "";
-    let convertHumanizeTime = function(time){
+
+    function convertHumanizeTime(time){
         return naturalHms(time);
     };
 
     const onRendered = function($current, template){
         let isTimecode = api.isTimecodeMode();
-        $position = $current.find(".ovp-time-current");
-        $duration = $current.find(".ovp-time-duration");
+        $position = $current.find(".op-time-current");
+        $duration = $current.find(".op-time-duration");
 
         if(data.duration !== Infinity){
 
@@ -55,7 +56,7 @@ const TimeDisplay = function($container, api, data){
 
     };
 
-    return OvenTemplate($container, "TimeDisplay", data, events, onRendered, onDestroyed );
+    return OvenTemplate($container, "TimeDisplay", api.getConfig(), data, events, onRendered, onDestroyed );
 };
 
 

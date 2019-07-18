@@ -1,8 +1,20 @@
 @charset "UTF-8";
+
+
 /**
  * @brief   Animation
  * */
-@-webkit-keyframes slideOutDown {
+
+@keyframes op-spinner {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@-webkit-keyframes op-slideOutDown {
   from {
     -webkit-transform: translate3d(0, 0, 0);
     transform: translate3d(0, 0, 0);
@@ -15,7 +27,7 @@
   }
 }
 
-@keyframes slideOutDown {
+@keyframes op-slideOutDown {
   from {
     -webkit-transform: translate3d(0, 0, 0);
     transform: translate3d(0, 0, 0);
@@ -27,7 +39,7 @@
     transform: translate3d(0, 100%, 0);
   }
 }
-@-webkit-keyframes slideInUp {
+@-webkit-keyframes op-slideInUp {
   from {
     -webkit-transform: translate3d(0, 100%, 0);
     transform: translate3d(0, 100%, 0);
@@ -40,7 +52,7 @@
   }
 }
 
-@keyframes slideInUp {
+@keyframes op-slideInUp {
   from {
     -webkit-transform: translate3d(0, 100%, 0);
     transform: translate3d(0, 100%, 0);
@@ -52,6 +64,7 @@
     transform: translate3d(0, 0, 0);
   }
 }
+
 @font-face {
   font-family: "frameIcon";
   src: url("../assets/images/ic-player-frame-jump.eot?rxg7gj");
@@ -62,7 +75,7 @@
   font-style: normal;
 }
 @font-face {
-  font-family: 'ovp-icons';
+  font-family: 'op-icons';
   src: url('../assets/fonts/fontello.eot?13010392');
   src: url('../assets/fonts/fontello.eot?13010392#iefix') format('embedded-opentype'),
   url('../assets/fonts/fontello.ttf?13010392') format('truetype'),
@@ -75,13 +88,15 @@
  * @brief   common style
  * */
 
-.ovp-wrapper.ovenplayer {
+.op-wrapper.ovenplayer {
   position: relative;
   max-height: 100%;
+
   overflow: hidden;
   zoom: 1 !important;
   width: 100%;
   display: block;
+  font-family: Helvetica,Arial,sans-serif;
   background-color: #000;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
@@ -114,7 +129,7 @@
     box-sizing: border-box;
   }
 
-  &.ovp-fullscreen {
+  &.op-fullscreen {
     width: 100% !important;
     height: 100% !important;
     top: 0;
@@ -126,37 +141,55 @@
     position: fixed;
 
   }
-  &.ovp-autohide{
+  &.op-autohide{
     cursor: none;
 
-    .ovp-bottom-panel{
+    .op-bottom-panel{
 
-      -webkit-animation-name: slideOutDown;
-      animation-name: slideOutDown;
+      -webkit-animation-name: op-slideOutDown;
+      animation-name: op-slideOutDown;
 
       -webkit-animation-duration: 0.2s;
       animation-duration: 0.2s;
       -webkit-animation-fill-mode: both;
       animation-fill-mode: both;
     }
-    .ovp-progressbar-container, .ovp-controls .ovp-button{
+    .op-progressbar-container, .op-controls .op-button{
       cursor: none;
     }
-    .ovp-caption-text-container {
+    .op-caption-text-container {
       bottom: 25px;
     }
   }
 
-  .ovp-ratio {
+  .op-ratio {
     padding-bottom: 56.25%; /*16:9*/
   }
   & ::-webkit-scrollbar {width:5px; height:8px;}
   & ::-webkit-scrollbar-button:start:decrement, ::-webkit-scrollbar-button:end:increment {display: block; height:3px; background:#2f2f3e;}
   & ::-webkit-scrollbar-track {background: #2f2f3e; -webkit-border-radius: 10px; border-radius:10px;}
   & ::-webkit-scrollbar-thumb {height: 50px; width: 50px; background:#606071; -webkit-border-radius: 8px; border-radius: 8px;}
+
+  .op-clear{
+    color: inherit;
+    background-color: transparent;
+    padding: 0;
+    margin: 0;
+    float: none;
+    font-family: Helvetica,Arial,sans-serif;
+    font-size: 1em;
+    line-height: 1em;
+    list-style: none;
+    text-transform: none;
+    vertical-align: baseline;
+    border: 0;
+    font-variant: inherit;
+    font-stretch: inherit;
+    -webkit-tap-highlight-color: rgba(255,255,255,0);
+  }
 }
 
-.ovp-player {
+.op-player {
   position: absolute;
   top: 0;
   height: 100%;
@@ -164,12 +197,12 @@
 
 
 
-  .ovp-core-ui-wrapper {
+  .op-core-ui-wrapper {
     position : relative;
     height: 100%;
   }
 
-  .ovp-media-element-container {
+  .op-media-element-container {
    /* display: block;
     height: 100%;
     width: auto;
@@ -192,22 +225,22 @@
     }
   }
 
-  .ovp-ui {
+  .op-ui {
     /*position : absolute;
     bottom : 0px;
     left : 0px;
     width: 100%;
     height: 100%;*/
-    .ovp-controls-container{}
-    .ovp-helpers-container{}
+    .op-controls-container{}
+    .op-helpers-container{}
   }
 }
-.ovp-ads{
+.op-ads{
   position: absolute;
   height: 100%;
   width: 100%;
   padding-bottom : 34px;
-  pointer-events: none;
+  //pointer-events: none;
   top:0;
   &>div{
     position: absolute !important;
@@ -217,13 +250,69 @@
       pointer-events :auto;
     }
   }
+
+  video.op-ads-vast-video{
+    background-color: rgb(0, 0, 0);
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0px;
+    top: 0px;
+    z-index: 1000;
+  }
+
+  .op-ads-button{
+    bottom: 36px;
+    cursor: default;
+    margin-right: 4px;
+    pointer-events: auto;
+    position: absolute;
+    right: 0;
+    z-index: 1000;
+    width: auto !important;
+    height: auto !important;
+    border-radius: 4px;
+    background-color: rgba(18, 18, 28, 0.7);
+    min-width: 155px;
+    display: none;
+
+    .op-ads-textview{
+      color: #e6e6e6;
+      //font-family: arial,sans-serif;
+      font-weight: normal;
+      font-size: 11px;
+      padding: 6px 12px;
+      text-align: center;
+      display: inline-block;
+      width: 100%;
+      vertical-align: middle;
+    }
+    .videoAdUiAction {
+      color: #fff;
+      padding: 8px 24px;
+      cursor: pointer;
+      direction: ltr;
+      font-weight: normal;
+      font-size: 20px;
+      border : 1px solid rgba(255,255,255,0.5);
+      &:hover{
+        border-radius: 4px;
+        border : 1px solid rgba(255,255,255,1);
+      }
+      i{
+        display: inline-block;
+        width : auto;
+      }
+    }
+  }
+
 }
 
 /**
  * @brief   common components
  * */
 
-.ovp-button {
+.op-button {
   display: inline-block;
   border: none;
   background: transparent;
@@ -233,14 +322,15 @@
   overflow: hidden;
   font-weight: 100;
   font-size : 30px;
+  text-indent: 0 !important;
 
   &:focus, & {
     outline: 0;
   }
 }
 
-i.ovp-con{
-  font-family: "ovp-icons";
+i.op-con{
+  font-family: "op-icons";
   font-style: normal;
   font-weight: normal;
   speak: none;
@@ -274,7 +364,7 @@ i.ovp-con{
   &.op-arrow-right{&::before{content: "\e909";}}
   &.op-empty-video{&::before{content: "\e904";}}
   &.op-play{&::before{content: "\e906";}}
-  &.op-playlist{&::before{content: "\e907";}}
+  &.op-playlist-icon{&::before{content: "\e907";}}
   &.op-replay-big{&::before{content: "\e908";}}
   &.op-setting{&::before{content: "\e90A";}}
   &.op-pause{&::before{content: "\e90C";}}
@@ -284,7 +374,7 @@ i.ovp-con{
   &.op-play-big{&::before{content: "\e910";}}
   &.op-warning{&::before{content: "\e912";}}
 }
-.ovp-badge{
+.op-badge{
   display: inline-block;
   padding: .75em .714em .714em .680em;
   font-size: 1em;
@@ -296,7 +386,7 @@ i.ovp-con{
   color: #fff;
   background-color: #12121c;
 }
-.ovp-playlist {
+.op-playlist {
   position : absolute;
   width : 100%;
   height:100%;
@@ -305,7 +395,7 @@ i.ovp-con{
   padding: 2.857em;
   background: #000;
   z-index : 1008;
-  .ovp-badge{
+  .op-badge{
     position: absolute;
     top: 0.857em;
     right: 0.857em;
@@ -320,7 +410,7 @@ i.ovp-con{
     font-size: 2.857em;
   }
 
-  .ovp-playlist-header{
+  .op-playlist-header{
     font-size: 2.857em;
     font-weight: bold;
     &:after{
@@ -328,32 +418,32 @@ i.ovp-con{
       content: '';
       clear: both;
     }
-    .ovp-con.op-close-icon{
+    .op-con.op-close-icon{
       float : right;
     }
   }
-  .ovp-playlist-body{
+  .op-playlist-body{
     height: 100%;
     overflow: hidden;
     position : relative;
-    .ovp-playlist-body-arrows{
-      margin: 0;
+    .op-playlist-body-arrows{
+      margin-top: -15px;
       position: absolute;
       top: 50%;
-      height : 0;
+      height : 30px;
       -ms-transform: translateY(-50%);
       transform: translateY(-50%);
       width: 100%;
       left: 0;
     }
-    .ovp-playlist-body-container{
+    .op-playlist-body-container{
       width: 100%;
       height : 100%;
       position : relative;
       margin-right : auto;
       margin-left : auto;
       max-width : 992px;
-      .ovp-playlist-body-center{
+      .op-playlist-body-center{
         margin: 0;
         position: absolute;
         top: 50%;
@@ -364,7 +454,7 @@ i.ovp-con{
         width: 100%;
       }
     }
-    .ovp-playlist-body-row{
+    .op-playlist-body-row{
       margin-right: -15px;
       margin-left: -15px;
       display: -ms-flexbox;
@@ -373,7 +463,7 @@ i.ovp-con{
       flex-wrap: wrap;
 
 
-      .ovp-playlist-card{
+      .op-playlist-card{
         padding-right : 15px;
         padding-left : 15px;
         margin : 15px 0;
@@ -388,12 +478,12 @@ i.ovp-con{
 
         &.active {
           color : #50e3c2;
-          .ovp-playlist-card-thumbnail{
+          .op-playlist-card-thumbnail{
             border-color : #50e3c2;
           }
         }
 
-        .ovp-playlist-card-thumbnail{
+        .op-playlist-card-thumbnail{
           position: relative;
           display: block;
           width: 100%;
@@ -429,7 +519,7 @@ i.ovp-con{
             content: "";
           }
         }
-        .ovp-playlist-card-title{
+        .op-playlist-card-title{
           margin-top : 0.857em;
           font-size: 1.429em;
           padding: 2px 0;
@@ -449,14 +539,14 @@ i.ovp-con{
  * @brief   Message Box
  * */
 
-.ovp-message-box {
+.op-message-box {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
   z-index : 1007;
-  .ovp-message-container {
+  .op-message-container {
     position: absolute;
     top: 45%;
     margin-top : -35px;
@@ -466,7 +556,7 @@ i.ovp-con{
     color: #fff;
 
 
-    .ovp-message-text {
+    .op-message-text {
       display: inline-block;
       background-color: rgba(18,18,28,.3);
       padding: 0.8em 1.2em;
@@ -474,7 +564,7 @@ i.ovp-con{
       max-width : 80%;
       border-radius: 4px;
       cursor: pointer;
-      .ovp-message-description{
+      .op-message-description{
         font-size : 12px;
         margin-top: 12px;
         color : #999;
@@ -482,19 +572,20 @@ i.ovp-con{
     }
 
 
-    .ovp-message-icon{
+    .op-message-icon{
       display: inline-block;
       margin-top : 12px;
       width: 100%;
-      .ovp-con{
+      i.op-con{
         cursor: pointer;
         font-size: 80px;
         width : 80px;
         height : 80px;
         line-height : 80px;
+        display: inline-block;
       }
     }
-    /*.ovp-message-button{
+    /*.op-message-button{
       display: inline-block;
       padding : 1em;
       margin-left : 0.4em;
@@ -509,7 +600,7 @@ i.ovp-con{
  * @brief   Big button
  * */
 
-.ovp-bigbutton-container {
+.op-bigbutton-container {
   cursor: pointer;
   position: absolute;
   top: 50%;
@@ -518,7 +609,7 @@ i.ovp-con{
   margin-left: -40px;
   text-align: center;
   z-index : 1008;
-  .ovp-bigbutton {
+  .op-bigbutton {
     width: 80px;
     height: 80px;
     display: block;
@@ -531,7 +622,7 @@ i.ovp-con{
  * @brief   Thumbnail
  * */
 
-.ovp-thumbnail-container{
+.op-thumbnail-container{
   position: absolute;
   top: 0;
   width: 100%;
@@ -540,7 +631,7 @@ i.ovp-con{
   z-index : 1001;
   pointer-events: none;
 
-  .ovp-thumbnail-wrapper{
+  .op-thumbnail-wrapper{
     position: relative;
     height : 100%;
     padding: 2.857em;
@@ -552,7 +643,7 @@ i.ovp-con{
       left: 50%;
       transform: translate(-50%, -50%);
     }
-    .ovp-thumbnail-header{
+    .op-thumbnail-header{
       position: relative;
       left : 0;
       top : 0;
@@ -573,14 +664,14 @@ i.ovp-con{
  * @brief   Setting panel
  * */
 
-.ovp-setting-panel {
+.op-setting-panel {
   position: absolute;
   bottom: 55px;
   right: 12px;
   overflow-y : auto;
   max-height:100%;
   width: 260px;
-  font-size: 0.8em;
+  //font-size: 0.8em;
   user-select: none;
   background-color: rgba(28,28,28,.9);
   text-shadow: 0 0 2px rgba(0,0,0,.5);
@@ -590,7 +681,7 @@ i.ovp-con{
     //background-color: rgba(28,28,28,.0);
     display: none;
   }
-  .ovp-setting-title, .ovp-setting-item {
+  .op-setting-title, .op-setting-item {
     width: 100%;
     height: 38px;
     line-height: 38px;
@@ -599,14 +690,14 @@ i.ovp-con{
     outline: none;
   }
 
-  .ovp-setting-title-container{
-    .ovp-setting-title{
-      .ovp-setting-title-title {
+  .op-setting-title-container{
+    .op-setting-title{
+      .op-setting-title-title {
         padding-left: 12px;
         font-weight: bold;
         //font-size: 0.9rem;
       }
-      .ovp-setting-title-previcon {
+      .op-setting-title-previcon {
         padding: 0 0 0 12px;
         margin-right: -6px;
       }
@@ -614,29 +705,29 @@ i.ovp-con{
     }
   }
 
-  .ovp-setting-item-container{
-    .ovp-setting-item{
+  .op-setting-item-container{
+    .op-setting-item{
       &:hover {
         background-color: rgba(255,255,255,.1);
       }
 
-      .ovp-setting-item-title {
+      .op-setting-item-title {
         padding-left: 12px;
       }
-      .ovp-setting-item-nexticon {
+      .op-setting-item-nexticon {
         float: right;
         padding-right: 12px;
         margin-left: -6px;
       }
-      span.ovp-setting-item-value {
+      span.op-setting-item-value {
         float: right;
         padding-right: 12px;
       }
-      .ovp-setting-item-checked {
+      .op-setting-item-checked {
         padding-left: 12px;
         visibility: hidden;
       }
-      .ovp-setting-item-checked.ovp-show {
+      .op-setting-item-checked.op-show {
         visibility: visible;
       }
     }
@@ -649,42 +740,41 @@ i.ovp-con{
  * @brief   Controls (container)
  * */
 
-.ovp-controls-container{
+.op-controls-container{
    display: none;
-  .ovp-bottom-panel {
+  .op-bottom-panel {
     position: absolute;
     left: 0px;
     bottom: 0px;
     height: 54px;
     width : 100%;
     z-index : 1007;
-    .ovp-gradient-bottom {
+    .op-gradient-bottom {
       position: absolute;
       width: 100%;
       height: 100%;
-      background-color: #12121c;
+      background-color: rgba(18, 18, 28, 0.3);
       pointer-events: none;
-      opacity: 0.3;
       /*-moz-transition: opacity .25s cubic-bezier(0.0,0.0,0.2,1);
       -webkit-transition: opacity .25s cubic-bezier(0.0,0.0,0.2,1);
       transition: opacity .25s cubic-bezier(0.0,0.0,0.2,1);*/
     }
-    -webkit-animation-name: slideInUp;
-    animation-name: slideInUp;
+    -webkit-animation-name: op-slideInUp;
+    animation-name: op-slideInUp;
 
     -webkit-animation-duration: 0.5s;
     animation-duration: 0.5s;
     -webkit-animation-fill-mode: both;
     animation-fill-mode: both;
 
-    .ovp-progressbar-container {
+    .op-progressbar-container {
       display: block;
       position: relative;
       width: 100%;
       height: 4px;
       cursor: pointer;
 
-      .ovp-progressbar-padding {
+      .op-progressbar-padding {
         position: absolute;
         width: 100%;
         height: 4px;
@@ -694,7 +784,7 @@ i.ovp-con{
 
 
     /*contols container*/
-    .ovp-controls {
+    .op-controls {
       position: relative;
       width: 100%;
       text-align: left;
@@ -704,21 +794,21 @@ i.ovp-con{
         content: '';
         clear: both;
       }
-      .ovp-setting-button {
+      .op-setting-button {
         position: relative;
         margin-right: 12px;
       }
-      .ovp-playlist-button {
+      .op-playlist-button {
         position: relative;
         margin-right: 12px;
       }
 
-      .ovp-navigators{
+      .op-navigators{
         float : left;
         height: 30px;
         line-height: 30px;
       }
-      .ovp-left-controls {
+      .op-left-controls {
         float: left;
         height: 50px;
         padding: 10px 0;
@@ -727,7 +817,7 @@ i.ovp-con{
           clear: both;
         }
       }
-      .ovp-right-controls {
+      .op-right-controls {
         float: right;
         height: 50px;
         padding: 10px 0;
@@ -740,7 +830,7 @@ i.ovp-con{
       }
 
       /*maybe not use*/
-      .ovp-frame-buttons {
+      .op-frame-buttons {
         position: relative;
         display: inline-block;
         margin-left: 14px;
@@ -748,7 +838,7 @@ i.ovp-con{
         font-weight: 100;
         height: 30px;
 
-        .ovp-frame-button{
+        .op-frame-button{
           margin-right: 6px;
           position: relative;
           text-align: center;
@@ -801,7 +891,7 @@ i.ovp-con{
  * @brief   Progressbar
  * */
 
-.ovp-progressbar {
+.op-progressbar {
   position: absolute;
   bottom: 0;
   left: 0;
@@ -810,18 +900,18 @@ i.ovp-con{
   outline: none;
   margin-top : 10px;
 
-  .ovp-play-background-color {
+  .op-play-background-color {
     background-color: #50e3c2;
   }
 
-  .ovp-progress-list {
+  .op-progress-list {
     position: relative;
     height: 100%;
     background: rgba(255,255,255,0.2);
 
-    .ovp-load-progress,
-    .ovp-play-progress,
-    .ovp-hover-progress {
+    .op-load-progress,
+    .op-play-progress,
+    .op-hover-progress {
       position: absolute;
       left: 0;
       bottom: 0;
@@ -832,20 +922,20 @@ i.ovp-con{
       -webkit-transform-origin: 0 0;
       transform-origin: 0 0
     }
-    .ovp-play-progress {
+    .op-play-progress {
       width: 0;
       -moz-transform-origin: 0 0;
       -ms-transform-origin: 0 0;
       -webkit-transform-origin: 0 0;
       transform-origin: 0 0
     }
-    .ovp-load-progress {
+    .op-load-progress {
       width: 0;
       background-color: rgba(255,255,255,.5);
       -webkit-transition: width 0.5s ease;
       transition: width 0.5s ease;
     }
-    .ovp-hover-progress {
+    .op-hover-progress {
       left: 0;
       width: 0;
       background-color: rgba(255,255,255,.6);
@@ -853,21 +943,21 @@ i.ovp-con{
 
   }
 
-  .ovp-progressbar-knob-container {
+  .op-progressbar-knob-container {
     position: absolute;
     top: -5px;
     left: 0px;
 
-    -moz-transition: -moz-transform .1s cubic-bezier(0.4,0.0,1,1);
+    /*-moz-transition: -moz-transform .1s cubic-bezier(0.4,0.0,1,1);
     -webkit-transition: -webkit-transform .1s cubic-bezier(0.4,0.0,1,1);
     -ms-transition: -ms-transform .1s cubic-bezier(0.4,0.0,1,1);
     transition: transform .1s cubic-bezier(0.4,0.0,1,1);
     -moz-transform: scale(0);
     -ms-transform: scale(0);
     -webkit-transform: scale(0);
-    transform: scale(0);
+    transform: scale(0);*/
 
-    .ovp-progressbar-knob {
+    .op-progressbar-knob {
       width: 14px;
       height: 14px;
       border-radius: 7px;
@@ -878,7 +968,7 @@ i.ovp-con{
 
   }
 
-  .ovp-progressbar-time {
+  .op-progressbar-time {
     display: none;
     position: absolute;
     bottom: 15px;
@@ -894,7 +984,7 @@ i.ovp-con{
 
 
 }
-.ovp-progressbar-hover .ovp-progressbar-knob-container {
+.op-progressbar-hover .op-progressbar-knob-container {
   -moz-transform: none;
   -ms-transform: none;
   -webkit-transform: none;
@@ -905,11 +995,11 @@ i.ovp-con{
   transition: transform .1s cubic-bezier(0.0,0.0,0.2,1)
 }
 
-.ovp-progressbar-hover .ovp-progressbar-time {
+.op-progressbar-hover .op-progressbar-time {
   display: inline-block;
 }
 
-.ovp-on-error .ovp-progressbar-time {
+.op-on-error .op-progressbar-time {
   display: none;
 }
 
@@ -918,13 +1008,13 @@ i.ovp-con{
  * @brief   Play button
  * */
 
-.ovp-play-button  {
+.op-play-button  {
   position: relative;
   margin-left: 15px;
-  .ovp-play-button-playicon {
+  .op-play-button-playicon {
     background: url('../assets/images/ic-player-play.svg');
   }
-  .ovp-play-button-pauseicon {
+  .op-play-button-pauseicon {
     background: url('../assets/images/ic-player-stop.svg');
   }
 }
@@ -933,7 +1023,7 @@ i.ovp-con{
 /**
  * @brief   Volume button
  * */
-.ovp-volume-controller {
+.op-volume-controller {
   display: inline-block;
   position: relative;
   margin-left: 12px;
@@ -942,14 +1032,21 @@ i.ovp-con{
     content: '';
     clear: both;
   }
-  .ovp-volume-button {
+  .op-volume-button {
     float : left;
   }
+  @-webkit-keyframes slide {
+    100% { left: 0; }
+  }
 
-  .ovp-volume-slider-container {
+  @keyframes slide {
+    100% { left: 0; }
+  }
+
+  .op-volume-slider-container {
     /*display: inline-block;*/
     float : left;
-    visibility: hidden;
+    opacity : 0;
     position: relative;
     width: 0px;
     margin-right: 0;
@@ -958,25 +1055,20 @@ i.ovp-con{
     cursor: pointer;
     user-select: none;
     outline: none;
-    //display : block;
-
-    //-moz-transition: visible .2s cubic-bezier(0.4,0.0,1,1),width .2s cubic-bezier(0.4,0.0,1,1);
-    //-webkit-transition: visible .2s cubic-bezier(0.4,0.0,1,1),width .2s cubic-bezier(0.4,0.0,1,1);
-    //transition: visible .2s cubic-bezier(0.4,0.0,1,1),width .2s cubic-bezier(0.4,0.0,1,1);
 
     &.active{
       width: 70px;
+      opacity : 1;
       margin-left: 8px;
-      visibility: visible;
-      //-moz-transition: visible .2s cubic-bezier(0.0,0.0,0.2,1),width .2s cubic-bezier(0.0,0.0,0.2,1);
-      //-webkit-transition: visible .2s cubic-bezier(0.0,0.0,0.2,1),width .2s cubic-bezier(0.0,0.0,0.2,1);
-      //transition: visible .2s cubic-bezier(0.0,0.0,0.2,1),width .2s cubic-bezier(0.0,0.0,0.2,1)
+      -moz-transition: opacity .4s cubic-bezier(0.0,0.0,0.2,1);
+      -webkit-transition: opacity .4s cubic-bezier(0.0,0.0,0.2,1);
+      transition: opacity .4s cubic-bezier(0.0,0.0,0.2,1);
     }
 
-    .ovp-volume-silder {
+    .op-volume-silder {
       height: 100%;
       position: relative;
-      .ovp-volume-slider-bg, .ovp-volume-slider-value {
+      .op-volume-slider-bg, .op-volume-slider-value {
         position: absolute;
         display: block;
         left: 0;
@@ -985,43 +1077,31 @@ i.ovp-con{
         margin-top: -2px;
         border-radius: 10px;
       }
-      .ovp-volume-slider-bg {
+      .op-volume-slider-bg {
         width: 100%;
         background: #fff;
       }
-      .ovp-volume-slider-value {
+      .op-volume-slider-value {
         width: 100%;
         background: #50e3c2;
         border-radius: 10px 0 0 10px;
+        -moz-transition: width .2s cubic-bezier(0.0,0.0,0.2,1);
+        -webkit-transition: width .2s cubic-bezier(0.0,0.0,0.2,1);
+        transition: width .2s cubic-bezier(0.0,0.0,0.2,1);
       }
 
-      .ovp-volume-slider-handle {
+      .op-volume-slider-handle {
         position: absolute;
         top: 50%;
         left: 30px;
         width: 12px;
         height: 12px;
-        border-radius: 6px;
+        border-radius: 10px;
         margin-top: -6px;
         background: #fff;
-
-        /*&:before, &:after {
-          content: '';
-          position: absolute;
-          display: none;
-          top: 50%;
-          height: 4px;
-          margin-top: -2px;
-          width: 80px;
-        }
-        &:before {
-          left: -58px;
-          background: #50e3c2;
-        }
-        &:after {
-          left: 6px;
-          background: #fff;
-        }*/
+        -moz-transition: left .2s cubic-bezier(0.0,0.0,0.2,1);
+        -webkit-transition: left .2s cubic-bezier(0.0,0.0,0.2,1);
+        transition: left .2s cubic-bezier(0.0,0.0,0.2,1);
       }
     }
   }
@@ -1032,7 +1112,7 @@ i.ovp-con{
  * @brief   Time Display
  * */
 
-.ovp-time-display {
+.op-time-display {
   float : left;
   position: relative;
   margin-left: 14px;
@@ -1043,13 +1123,13 @@ i.ovp-con{
   font-size: 14px;
   user-select: none; /*흠 이부분 어떻게 처리하지*/
 
-  .ovp-time-current,
-  .ovp-time-separator,
-  .ovp-time-duration {
+  .op-time-current,
+  .op-time-separator,
+  .op-time-duration {
     color: #fff;
   }
 
-  .ovp-live-badge {
+  .op-live-badge {
     opacity: 1;
     width: auto;
     display: inline-block;
@@ -1065,7 +1145,7 @@ i.ovp-con{
       content: '';
       border-radius: 6px;
     }
-    .ovp-live-badge-lowlatency {
+    .op-live-badge-lowlatency {
       display: inline-block;
       margin-right: 5px;
     }
@@ -1078,7 +1158,7 @@ i.ovp-con{
  * @brief   Context Panel
  * */
 
-.ovp-context-panel {
+.op-context-panel {
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
@@ -1089,7 +1169,6 @@ i.ovp-con{
   padding: 6px 0;
   background: rgba(28,28,28,0.9);
   text-shadow: 0 0 2px rgba(0,0,0,.5);
-  font-family: Roboto,Arial,Helvetica,sans-serif;
   font-weight : lighter;
   user-select: none;
 
@@ -1104,7 +1183,7 @@ i.ovp-con{
     box-sizing: border-box;
   }
 
-  .ovp-context-item {
+  .op-context-item {
     width: 100%;
     height: 38px;
     padding-left: 12px;
@@ -1133,7 +1212,7 @@ i.ovp-con{
  * @brief   FullScreen button
  * */
 
-.ovp-fullscreen-button {
+.op-fullscreen-button {
   position: relative;
   margin-right: 15px;
   .op-fullscreen-compress{display:none;}
@@ -1143,7 +1222,7 @@ i.ovp-con{
  * @brief   spinner
  * */
 
-.ovp-spinner-container {
+.op-spinner-container {
   position: absolute;
   top: 50%;
   width: 64px;
@@ -1153,61 +1232,24 @@ i.ovp-con{
   z-index: 1009;
   display : none;
 
-  .ovp-ellipsis {
+
+  .op-spinner {
     display: inline-block;
     position: relative;
     width: 64px;
-    height: 11px;
-  }
-  .ovp-ellipsis div {
-    position: absolute;
-    top: 27px;
-    width: 11px;
-    height: 11px;
+    height: 64px;
+
+    border: 4px solid transparent;
+    border-top: 4px solid #50e3c2;
     border-radius: 50%;
-    background-color: #50e3c2;
-    animation-timing-function: cubic-bezier(0, 1, 1, 0);
-  }
-  .ovp-ellipsis div:nth-child(1) {
-    left: 6px;
-    animation: lds-ellipsis1 0.6s infinite;
-  }
-  .ovp-ellipsis div:nth-child(2) {
-    left: 6px;
-    animation: lds-ellipsis2 0.6s infinite;
-  }
-  .ovp-ellipsis div:nth-child(3) {
-    left: 26px;
-    animation: lds-ellipsis2 0.6s infinite;
-  }
-  .ovp-ellipsis div:nth-child(4) {
-    left: 45px;
-    animation: lds-ellipsis3 0.6s infinite;
-  }
-  @keyframes lds-ellipsis1 {
-    0% {
-      transform: scale(0);
-    }
-    100% {
-      transform: scale(1);
+
+    animation: spin 1.2s  cubic-bezier(0.5, 0, 0.5, 1)  infinite;
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
   }
-  @keyframes lds-ellipsis3 {
-    0% {
-      transform: scale(1);
-    }
-    100% {
-      transform: scale(0);
-    }
-  }
-  @keyframes lds-ellipsis2 {
-    0% {
-      transform: translate(0, 0);
-    }
-    100% {
-      transform: translate(19px, 0);
-    }
-  }
+
 }
 
 
@@ -1215,9 +1257,9 @@ i.ovp-con{
  * @brief   caption.
  * */
 
-.ovp-caption-viewer {
+.op-caption-viewer {
 
-  .ovp-caption-text-container {
+  .op-caption-text-container {
     position: absolute;
     bottom: 60px;
     width: 100%;
@@ -1226,7 +1268,7 @@ i.ovp-con{
     -moz-transition: bottom .25s cubic-bezier(0.0,0.0,0.2,1);
     -webkit-transition: bottom .25s cubic-bezier(0.0,0.0,0.2,1);
     transition: bottom .25s cubic-bezier(0.0,0.0,0.2,1);
-    .ovp-caption-text {
+    .op-caption-text {
       font-size: 1em;
       line-height: 1.2em;
       text-shadow: 2px 2px 2px gray;
@@ -1240,18 +1282,18 @@ i.ovp-con{
   }
 }
 
-.ovp-caption-button {
+.op-caption-button {
   width: 36px;
 }
 
-.ovp-caption-button > i {
+.op-caption-button > i {
   font-size: 18px;
   -moz-transition: color .25s cubic-bezier(0.0,0.0,0.2,1);
   -webkit-transition: color .25s cubic-bezier(0.0,0.0,0.2,1);
   transition: color .25s cubic-bezier(0.0,0.0,0.2,1);
 }
 
-.ovp-caption-active .ovp-caption-button > i {
+.op-caption-active .op-caption-button > i {
   color: #F36446;
 }
 
@@ -1259,42 +1301,42 @@ i.ovp-con{
 
 /*Responsive  */
 
-.ovp-wrapper.ovenplayer.large{
+.op-wrapper.ovenplayer.large{
   font-size : 14px;
-  .ovp-caption-text{
+  .op-caption-text{
     font-size : 2em;
     line-height : 2em;
   }
 
 }
-.ovp-wrapper.ovenplayer.medium{
+.op-wrapper.ovenplayer.medium{
   font-size : 12px;
-  .ovp-caption-text{
+  .op-caption-text{
     font-size : 1.4em;
     line-height : 1.4em;
   }
 }
-.ovp-wrapper.ovenplayer.small{
+.op-wrapper.ovenplayer.small{
   font-size : 10px;
-  .ovp-caption-text{
+  .op-caption-text{
     font-size : 1.4em;
     line-height : 1.4em;
   }
-  .ovp-playlist{
+  .op-playlist{
     padding : 1rem;
-    .ovp-playlist-card{
+    .op-playlist-card{
       margin : 5px 0;
     }
   }
 
 }
-.ovp-wrapper.ovenplayer.xsmall{
+.op-wrapper.ovenplayer.xsmall{
   font-size : 10px;
-  .ovp-bigbutton-container {
+  .op-bigbutton-container {
     margin-top: -20px;
     margin-left: -20px;
 
-    .ovp-bigbutton {
+    .op-bigbutton {
       width: 40px;
       height: 40px;
       font-size: 40px;
@@ -1302,35 +1344,35 @@ i.ovp-con{
     }
   }
 
-  .ovp-caption-text{
+  .op-caption-text{
     font-size : 1.4em;
     line-height : 1.4em;
   }
-  .ovp-playlist{
+  .op-playlist{
     padding : 1rem;
-
-    .ovp-playlist-card{
+    .op-playlist-header{
+      font-size : 2em;
+    }
+    .op-playlist-card{
       margin : 5px 0;
       -ms-flex: 0 0 100%;
       flex: 0 0 100%;
       max-width: 100%;
-      padding : 0 40px;
-      .ovp-playlist-header{
-        font-size : 2em;
-      }
-      .ovp-playlist-card-title{
+      padding : 0 6em;
+
+      .op-playlist-card-title{
         margin-top : 0;
       }
     }
   }
-  .ovp-message-box{
-    .ovp-message-container{
+  .op-message-box{
+    .op-message-container{
       top : 50%;
       font-weight : bold;
 
-      .ovp-message-icon{
+      .op-message-icon{
         margin-top: 0;
-        .ovp-con{
+        .op-con{
           font-size: 40px;
           width : 40px;
           height : 40px;
@@ -1339,38 +1381,45 @@ i.ovp-con{
       }
     }
   }
-
+  .op-ads-button{
+    bottom: 22px;
+    .videoAdUiAction{
+      padding: 4px;
+      font-size: 14px;
+    }
+  }
 }
 
 /*AD MODE*/
-.ovp-wrapper.ovenplayer.linear-ad{
-  .ovp-bottom-panel{
+.op-wrapper.ovenplayer.linear-ad{
+
+  .op-bottom-panel{
     height : 34px;
-    .ovp-controls{
-      .ovp-left-controls{
+    .op-controls{
+      .op-left-controls{
         height: 30px;
         padding : 0;
       }
-      .ovp-right-controls{
+      .op-right-controls{
         height: 30px;
         padding : 0;
       }
     }
   }
-  .ovp-ads{
+  .op-ads{
     top: 0;
     bottom : 0;
   }
 
-  .ovp-button{
-    i.ovp-con{
+  .op-button{
+    i.op-con{
       width: 24px;
       height: 24px;
       font-size: 24px;
     }
   }
-  .ovp-right-controls{
-    .ovp-button{
+  .op-right-controls{
+    .op-button{
       //margin-top: -2px;
     }
   }
@@ -1379,7 +1428,7 @@ i.ovp-con{
  * @brief   Animation
  * */
 
-.ovp-player{
+.op-player{
   @keyframes fade {
     from { opacity: 0.3; }
     /*5% { opacity: 0.3; }*/
@@ -1525,7 +1574,7 @@ i.ovp-con{
 
 
   /* Pulse Shrink */
-  /*.ovp-button {
+  /*.op-button {
     //display: inline-block;
     //vertical-align: middle;
     transform: translateZ(0);
@@ -1535,9 +1584,9 @@ i.ovp-con{
     transition-duration: 0.3s;
     transition-property: transform;
   }
-  .ovp-button:hover,
-  .ovp-button:focus,
-  .ovp-button:active {
+  .op-button:hover,
+  .op-button:focus,
+  .op-button:active {
     transform: scale(1.1);
   }*/
 }

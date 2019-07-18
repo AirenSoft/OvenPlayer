@@ -27,20 +27,20 @@ const PlaylistPanel = function($container, api){
         pageSize = 1;
     }
 
-    const pagenate = function(page){
+    function pagenate(page){
         let totalPageCount = Math.ceil(totalCount / pageSize);
         let currentPlaylistIndex = api.getCurrentPlaylist();
 
         pagedList = playlist.slice(page*pageSize, (page*pageSize)+pageSize);
 
-        $playlistPanel.find(".ovp-playlist-body-row").removeChild();
+        $playlistPanel.find(".op-playlist-body-row").removeChild();
         $playlistPanel.find(".op-arrow-left").removeClass("disable");
         $playlistPanel.find(".op-arrow-right").removeClass("disable");
 
         for(let i = 0; i < pagedList.length; i ++){
             let originalItemIndex = (page * pageSize) + i;
             pagedList[i].index = originalItemIndex;
-            $playlistPanel.find(".ovp-playlist-body-row").get().append(
+            $playlistPanel.find(".op-playlist-body-row").get().append(
                 createAndSelectElement(playlistItemTemplate(pagedList[i], currentPlaylistIndex === originalItemIndex))
             );
         }
@@ -52,11 +52,11 @@ const PlaylistPanel = function($container, api){
             $playlistPanel.find(".op-arrow-right").addClass("disable");
         }
     };
-    const findCurrentPage = function(){
+    function findCurrentPage(){
         let currentPlaylistIndex = api.getCurrentPlaylist();
         return Math.ceil((currentPlaylistIndex+1)/ pageSize) -1
     };
-    let createAndSelectElement = function (html) {
+    function createAndSelectElement(html) {
         const newElement = document.createElement('div');
         newElement.innerHTML = html;
         return newElement.firstChild;
@@ -89,7 +89,7 @@ const PlaylistPanel = function($container, api){
         $current.get().addEventListener("click",function(evt){
             var gtarget = evt.target;
             while (gtarget){
-                if (LA$(gtarget).hasClass("ovp-playlist-card")){
+                if (LA$(gtarget).hasClass("op-playlist-card")){
                     api.setCurrentPlaylist(parseInt(LA$(gtarget).attr("data-index")));
                     return;
                 }
@@ -122,12 +122,12 @@ const PlaylistPanel = function($container, api){
                 pagenate(page);
             }
         }/*,
-        "click .ovp-playlist-card" : function(event, $current, template){
+        "click .op-playlist-card" : function(event, $current, template){
             event.preventDefault();
         }*/
     };
 
-    return OvenTemplate($container, "PlaylistPanel", playlist, events, onRendered, onDestroyed );
+    return OvenTemplate($container, "PlaylistPanel", api.getConfig(), playlist, events, onRendered, onDestroyed );
 };
 
 export default PlaylistPanel;

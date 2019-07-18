@@ -1,7 +1,8 @@
 /**
  * Created by hoho on 2018. 6. 27..
  */
-import Ads from "api/provider/ads/Ads";
+import Ima from "api/ads/ima/Ad";
+import Vast from "api/ads/vast/Ad";
 import EventEmitter from "api/EventEmitter";
 import EventsListener from "api/provider/html5/Listener";
 import {extractVideoElement, pickCurrentSource} from "api/provider/utils";
@@ -11,6 +12,7 @@ import {
     STATE_IDLE, STATE_PLAYING, STATE_PAUSED, STATE_COMPLETE, STATE_ERROR,
     PLAYER_STATE, PLAYER_COMPLETE, PLAYER_PAUSE, PLAYER_PLAY, STATE_AD_PLAYING, STATE_AD_PAUSED,
     CONTENT_TIME, CONTENT_CAPTION_CUE_CHANGED, CONTENT_SOURCE_CHANGED,
+    AD_CLIENT_GOOGLEIMA, AD_CLIENT_VAST,
     PLAYBACK_RATE_CHANGED, CONTENT_MUTE, PROVIDER_HTML5, PROVIDER_WEBRTC, PROVIDER_DASH, PROVIDER_HLS
 } from "api/constants";
 
@@ -21,7 +23,7 @@ import {
  * @param   onExtendedLoad on load handler
  * */
 const Provider = function (spec, playerConfig, onExtendedLoad){
-    OvenPlayerConsole.log("CORE loaded. ");
+    OvenPlayerConsole.log("[Provider] loaded. ");
 
     let that ={};
     EventEmitter(that);
@@ -34,7 +36,13 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
     let isPlayingProcessing = false;
 
     if(spec.adTagUrl){
-        ads = Ads(elVideo, that, playerConfig, spec.adTagUrl);
+        OvenPlayerConsole.log("[Provider] Ad Client - ", playerConfig.getAdClient());
+        if(playerConfig.getAdClient() === AD_CLIENT_VAST){
+            ads = Vast(elVideo, that, playerConfig, spec.adTagUrl);
+        }else{
+            ads = Ima(elVideo, that, playerConfig, spec.adTagUrl);
+        }
+
         if(!ads){
             console.log("Can not load due to google ima for Ads.");
         }
@@ -46,6 +54,9 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
     const _load = (lastPlayPosition) =>{
         const source =  spec.sources[spec.currentSource];
         spec.framerate = source.framerate;
+
+        that.setVolume(playerConfig.getVolume());
+
         if(!spec.framerate){
             //init timecode mode
             playerConfig.setTimecodeMode(true);
@@ -109,6 +120,12 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
     that.setSeeking = (seeking)=>{
         spec.seeking = seeking;
     };
+    that.setMetaLoaded = () => {
+        spec.isLoaded = true;
+    }
+    that.metaLoaded = () => {
+        return spec.isLoaded;
+    }
 
     that.setState = (newState) => {
         if(spec.state !== newState){
@@ -467,6 +484,7 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
 
         if(ads){
             ads.destroy();
+            ads = null;
         }
         that.off();
         OvenPlayerConsole.log("CORE : destroy() player stop, listener, event destroied");

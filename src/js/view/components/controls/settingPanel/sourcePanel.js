@@ -24,19 +24,19 @@ const SourcePanel = function($container, api, data){
         //Do nothing
     };
     const events = {
-        "click .ovp-setting-item": function (event, $current, template) {
+        "click .op-setting-item": function (event, $current, template) {
             event.preventDefault();
-            let value = LA$(event.currentTarget).attr("ovp-data-value");
+            let value = LA$(event.currentTarget).attr("op-data-value");
             api.setCurrentSource(parseInt(value));
             panelManager.clear();
         },
-        "click .ovp-setting-title" : function(event, $current, template){
+        "click .op-setting-title" : function(event, $current, template){
             event.preventDefault();
             panelManager.removeLastItem();
         }
     };
 
-    return OvenTemplate($container, "SourcePanel", data, events, onRendered, onDestroyed );
+    return OvenTemplate($container, "SourcePanel", api.getConfig(), data, events, onRendered, onDestroyed );
 
 };
 

@@ -1,8 +1,7 @@
 import SupportChecker from "api/SupportChecker";
 import {ApiRtmpExpansion} from 'api/ApiExpansions';
 import {
-    PROVIDER_HTML5, PROVIDER_WEBRTC, PROVIDER_DASH, PROVIDER_HLS, PROVIDER_RTMP,
-    ERRORS, INIT_UNSUPPORT_ERROR
+    PROVIDER_HTML5, PROVIDER_WEBRTC, PROVIDER_DASH, PROVIDER_HLS, PROVIDER_RTMP, ERRORS, INIT_UNSUPPORT_ERROR
 } from "api/constants";
 
 /**
@@ -82,7 +81,7 @@ const Controller = function(){
         const supportedProviderNames = supportChacker.findProviderNamesByPlaylist(playlistItem);
         OvenPlayerConsole.log("ProviderController loadProviders() ", supportedProviderNames);
         if(!supportedProviderNames){
-            return Promise.reject(ERRORS[INIT_UNSUPPORT_ERROR]);
+            return Promise.reject(ERRORS.codes[INIT_UNSUPPORT_ERROR]);
         }else{
             return Promise.all(
                 supportedProviderNames.filter(function(providerName){

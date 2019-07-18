@@ -34,41 +34,40 @@ const ProgressBar = function($container, api, isAd){
 
     let isMobile = api.getBrowser().os === "iOS" || api.getBrowser().os === "Android";
 
-    let positionElements = function (percentage) {
-        const progressBarWidth = $progressBar.width();
-        const position = progressBarWidth * percentage;
+    function positionElements(percentage) {
+        let progressBarWidth = $progressBar.width();
+        let position = progressBarWidth * percentage;
 
         $progressPlay.css("width", position+ "px");
         $progressHover.css("left", position+ "px");
 
-        const knobPostion = (progressBarWidth - knobWidth) * percentage;
+        let knobPostion = (progressBarWidth - knobWidth) * percentage;
         $knobContainer.css("left", knobPostion+ "px");
 
         currentPlayingPosition = position;
         currentPlayingPercentage = percentage;
     };
 
-    let drawHoverProgress = function (percentage) {
-        const progressBarWidth = $progressBar.width();
-        const hoverPosition = progressBarWidth * percentage;
-
-        $progressHover.css("width", percentage == 0? percentage : (hoverPosition - currentPlayingPosition)+ "px");
+    function drawHoverProgress(percentage) {
+        let progressBarWidth = $progressBar.width();
+        let hoverPosition = progressBarWidth * percentage;
+        $progressHover.css("width", (percentage === 0 ? percentage : (hoverPosition - currentPlayingPosition))+ "px");
     };
 
-    let drawLoadProgress = function(percentage) {
-        const progressBarWidth = $progressBar.width();
-        const loadPosition = progressBarWidth * percentage;
+    function drawLoadProgress(percentage) {
+        let progressBarWidth = $progressBar.width();
+        let loadPosition = progressBarWidth * percentage;
 
         $progressLoad.css("width", loadPosition+ "px");
         currentLoadedPercentage = percentage;
     };
 
-    let calculatePercentage = function (event) {
-        const progressBarWidth = $progressBar.width();
-        const progressBarOffsetX = $progressBar.offset().left;
-        const pointerOffsetX =  (event.pageX || event.touches[0].clientX) ;
+    function calculatePercentage(event) {
+        let progressBarWidth = $progressBar.width();
+        let progressBarOffsetX = $progressBar.offset().left;
+        let pointerOffsetX =  (event.pageX || event.touches[0].clientX) ;
 
-        const percentage = (pointerOffsetX - progressBarOffsetX) / progressBarWidth;
+        let percentage = (pointerOffsetX - progressBarOffsetX) / progressBarWidth;
 
         if (percentage < 0) {
             return 0;
@@ -81,15 +80,15 @@ const ProgressBar = function($container, api, isAd){
         return percentage;
     };
 
-    let drawTimeIndicator = function (percentage, event) {
+    function drawTimeIndicator(percentage, event) {
        if(panelManager.size() > 0){
            $time.hide();
            return ;
        }
 
         //const duration = isAd ? adDuration : api.getDuration();
-        const duration = api.getDuration();
-        const second = duration * percentage;
+        let duration = api.getDuration();
+        let second = duration * percentage;
 
         if(api.isTimecodeMode()){
             $time.text(naturalHms(second));
@@ -99,10 +98,10 @@ const ProgressBar = function($container, api, isAd){
 
 
 
-        const timeElemWidth = $time.width();
-        const progressBarWidth = $progressBar.width();
-        const position = progressBarWidth * percentage;
-        const positionOfPixel =  (event.pageX || event.touches[0].clientX)  - $progressBar.offset().left;
+        let timeElemWidth = $time.width();
+        let progressBarWidth = $progressBar.width();
+        let position = progressBarWidth * percentage;
+        let positionOfPixel =  (event.pageX || event.touches[0].clientX)  - $progressBar.offset().left;
 
 
         const calculateMagnetic = function(){
@@ -118,18 +117,20 @@ const ProgressBar = function($container, api, isAd){
         $time.css("left", magneticPosition+ "px");
     };
 
-    let seek = function (percentage) {
+    function seek(percentage) {
         api.seek( (api.getDuration()||0) * percentage);
     };
+
+
     const onRendered = function($current, template){
         $progressBar = $current;
-        $progressLoad = $current.find(".ovp-load-progress");
-        $progressPlay = $current.find(".ovp-play-progress");
-        $progressHover = $current.find(".ovp-hover-progress");
-        $knobContainer = $current.find(".ovp-progressbar-knob-container");
-        $knob = $current.find(".ovp-progressbar-knob");
+        $progressLoad = $current.find(".op-load-progress");
+        $progressPlay = $current.find(".op-play-progress");
+        $progressHover = $current.find(".op-hover-progress");
+        $knobContainer = $current.find(".op-progressbar-knob-container");
+        $knob = $current.find(".op-progressbar-knob");
         knobWidth = $knob.width();
-        $time = $current.find(".ovp-progressbar-time");
+        $time = $current.find(".op-progressbar-time");
 
         /*new ResizeSensor($progressBar.get(), function() {
             console.log('Changed  $progressBar' );
@@ -170,7 +171,7 @@ const ProgressBar = function($container, api, isAd){
         }
     };
     const events = {
-        "touchstart .ovp-progressbar" : function(event){
+        "touchstart .op-progressbar" : function(event){
             if(isAd){
                 return false;
             }
@@ -180,7 +181,7 @@ const ProgressBar = function($container, api, isAd){
             drawHoverProgress(0);
             seek(percentage);
         },
-        "touchmove .ovp-progressbar" : function(event){
+        "touchmove .op-progressbar" : function(event){
             if (mouseDown) {
                 const percentage = calculatePercentage(event);
                 positionElements(percentage);
@@ -189,36 +190,36 @@ const ProgressBar = function($container, api, isAd){
                 drawTimeIndicator(percentage, event);
             }
         },
-        "touchend .ovp-progressbar" : function(event){
+        "touchend .op-progressbar" : function(event){
             if(mouseDown){
                 mouseDown = false;
-                $root.removeClass("ovp-progressbar-hover");
+                $root.removeClass("op-progressbar-hover");
             }
 
         },
 
 
-        "mouseenter .ovp-progressbar" : function(event, $current, template){
+        "mouseenter .op-progressbar" : function(event, $current, template){
             event.preventDefault();
             if(!isMobile){
                 if(!isAd){
                     mouseInside = true;
                     $time.show();
                 }
-                $root.addClass("ovp-progressbar-hover");
+                $root.addClass("op-progressbar-hover");
             }
         },
-        "mouseleave .ovp-progressbar" : function(event, $current, template){
+        "mouseleave .op-progressbar" : function(event, $current, template){
             event.preventDefault();
 
             mouseInside = false;
             if (!mouseInside) {
-                $root.removeClass("ovp-progressbar-hover");
+                $root.removeClass("op-progressbar-hover");
                 $time.hide();
             }
             drawHoverProgress(0);
         },
-        "mousedown .ovp-progressbar" : function(event, $current, template){
+        "mousedown .op-progressbar" : function(event, $current, template){
             event.preventDefault();
             if(isAd){
                 return false;
@@ -229,7 +230,7 @@ const ProgressBar = function($container, api, isAd){
             drawHoverProgress(0);
             seek(percentage);
         },
-        "mousemove .ovp-progressbar" : function(event, $current, template){
+        "mousemove .op-progressbar" : function(event, $current, template){
             event.preventDefault();
 
             if (!mouseDown && !isAd) {
@@ -254,13 +255,13 @@ const ProgressBar = function($container, api, isAd){
 
             if(mouseDown){
                 mouseDown = false;
-                $root.removeClass("ovp-progressbar-hover");
+                $root.removeClass("op-progressbar-hover");
             }
 
         }
     };
 
-    return OvenTemplate($container, "ProgressBar", null, events, onRendered, onDestroyed );
+    return OvenTemplate($container, "ProgressBar", api.getConfig(), null, events, onRendered, onDestroyed );
 };
 
 export default ProgressBar;

@@ -157,19 +157,19 @@ const WebRTCLoader = function (provider, webSocketUrl, loadCallback, errorTrigge
 
                         }).catch(function (error) {
 
-                            let tempError = ERRORS[PLAYER_WEBRTC_SET_LOCAL_DESC_ERROR];
+                            let tempError = ERRORS.codes[PLAYER_WEBRTC_SET_LOCAL_DESC_ERROR];
                             tempError.error = error;
                             closePeer(tempError);
                         });
                     })
                     .catch(function (error) {
-                        let tempError = ERRORS[PLAYER_WEBRTC_CREATE_ANSWER_ERROR];
+                        let tempError = ERRORS.codes[PLAYER_WEBRTC_CREATE_ANSWER_ERROR];
                         tempError.error = error;
                         closePeer(tempError);
                     });
             })
             .catch(function (error) {
-                let tempError = ERRORS[PLAYER_WEBRTC_SET_REMOTE_DESC_ERROR];
+                let tempError = ERRORS.codes[PLAYER_WEBRTC_SET_REMOTE_DESC_ERROR];
                 tempError.error = error;
                 closePeer(tempError);
             });
@@ -194,7 +194,34 @@ const WebRTCLoader = function (provider, webSocketUrl, loadCallback, errorTrigge
                 });
             }
         };
+        peerConnection.onconnectionstatechange = function (e) {
+            //iceConnectionState
+            OvenPlayerConsole.log("[on connection state change]", peerConnection.connectionState ,e);
+        };
+        peerConnection.oniceconnectionstatechange = function (e) {
+            OvenPlayerConsole.log("[on ice connection state change]", peerConnection.iceConnectionState ,e);
 
+            /*
+            * https://developer.mozilla.org/en-US/docs/Web/API/RTCPeerConnection/iceConnectionState
+            * Checks to ensure that components are still connected failed for at least one component of the RTCPeerConnection. This is a less stringent test than "failed" and may trigger intermittently and resolve just as spontaneously on less reliable networks, or during temporary disconnections. When the problem resolves, the connection may return to the "connected" state.
+            * */
+            //This process is my imagination. I do not know how to reproduce.
+            //Situation : OME is dead but ome can't send 'stop' message.
+            if(peerConnection.iceConnectionState === "disconnected"){
+                mainStream = null;
+                mainPeerConnectionInfo.peerConnection.close();
+                mainPeerConnectionInfo = null;
+
+                //resetCallback();
+                provider.pause();
+
+                sendMessage(ws, {
+                    command: 'request_offer'
+                });
+
+
+            }
+        };
         peerConnection.ontrack = function (e) {
 
             OvenPlayerConsole.log("stream received.");
@@ -314,7 +341,7 @@ const WebRTCLoader = function (provider, webSocketUrl, loadCallback, errorTrigge
                 peerConnection.addIceCandidate(new RTCIceCandidate(basicCandidate)).then(function () {
                     OvenPlayerConsole.log("addIceCandidate : success");
                 }).catch(function (error) {
-                    let tempError = ERRORS[PLAYER_WEBRTC_ADD_ICECANDIDATE_ERROR];
+                    let tempError = ERRORS.codes[PLAYER_WEBRTC_ADD_ICECANDIDATE_ERROR];
                     tempError.error = error;
                     closePeer(tempError);
                 });
@@ -322,7 +349,7 @@ const WebRTCLoader = function (provider, webSocketUrl, loadCallback, errorTrigge
                     peerConnection.addIceCandidate(new RTCIceCandidate(cloneCandidate)).then(function () {
                         console.log("cloneCandidate addIceCandidate : success");
                     }).catch(function (error) {
-                        let tempError = ERRORS[PLAYER_WEBRTC_ADD_ICECANDIDATE_ERROR];
+                        let tempError = ERRORS.codes[PLAYER_WEBRTC_ADD_ICECANDIDATE_ERROR];
                         tempError.error = error;
                         closePeer(tempError);
                     });
@@ -333,7 +360,7 @@ const WebRTCLoader = function (provider, webSocketUrl, loadCallback, errorTrigge
     }
 
     function initWebSocket(resolve, reject) {
-
+        //ToDo : resolve not wokring
         try {
 
             ws = new WebSocket(webSocketUrl);
@@ -354,7 +381,7 @@ const WebRTCLoader = function (provider, webSocketUrl, loadCallback, errorTrigge
                 // console.log('Receive message', message);
 
                 if (message.error) {
-                    let tempError = ERRORS[PLAYER_WEBRTC_WS_ERROR];
+                    let tempError = ERRORS.codes[PLAYER_WEBRTC_WS_ERROR];
                     tempError.error = message.error;
                     closePeer(tempError);
                     return;
@@ -365,7 +392,7 @@ const WebRTCLoader = function (provider, webSocketUrl, loadCallback, errorTrigge
                     OvenPlayerConsole.log('ID must be not null');
                     return;
                 }
-
+                console.log("MESSAGE :::::", message.command);
                 if (message.command === 'offer') {
 
                     createMainPeerConnection(message.id, message.peer_id, message.sdp, message.candidates, resolve);
@@ -390,7 +417,7 @@ const WebRTCLoader = function (provider, webSocketUrl, loadCallback, errorTrigge
 
                         })
                         .catch(function (error) {
-                            let tempError = ERRORS[PLAYER_WEBRTC_SET_REMOTE_DESC_ERROR];
+                            let tempError = ERRORS.codes[PLAYER_WEBRTC_SET_REMOTE_DESC_ERROR];
                             tempError.error = error;
                             closePeer(tempError);
                         });
@@ -415,6 +442,8 @@ const WebRTCLoader = function (provider, webSocketUrl, loadCallback, errorTrigge
                 if (message.command === 'stop') {
 
                     if (mainPeerConnectionInfo.peerId === message.peer_id) {
+
+                        //My parent was dead. And then I will retry.
 
                         // close connection with host and retry
                         // console.log('close connection with host');
@@ -443,7 +472,7 @@ const WebRTCLoader = function (provider, webSocketUrl, loadCallback, errorTrigge
             };
             ws.onclose = function () {
                 if(!wsClosedByPlayer){
-                    let tempError = ERRORS[PLAYER_WEBRTC_WS_ERROR];
+                    let tempError = ERRORS.codes[PLAYER_WEBRTC_WS_ERROR];
                     closePeer(tempError);
                 }
             };
@@ -451,7 +480,7 @@ const WebRTCLoader = function (provider, webSocketUrl, loadCallback, errorTrigge
             ws.onerror = function (error) {
                 //Why Edge Browser calls onerror() when ws.close()?
                 if(!wsClosedByPlayer){
-                    let tempError = ERRORS[PLAYER_WEBRTC_WS_ERROR];
+                    let tempError = ERRORS.codes[PLAYER_WEBRTC_WS_ERROR];
                     tempError.error = error;
                     closePeer(tempError);
                     reject(error);

@@ -19,7 +19,6 @@ const Manager = function(api, playlistIndex){
     let isFisrtLoad = true;
     let isShowing = false;
 
-
     OvenPlayerConsole.log("Caption Manager >> ", playlistIndex);
 
 
@@ -65,7 +64,7 @@ const Manager = function(api, playlistIndex){
                             let captionId = bindTrack(track, vttCues);
                         }
                     }, function(error){
-                        let tempError = ERRORS[PLAYER_CAPTION_ERROR];
+                        let tempError = ERRORS.codes[PLAYER_CAPTION_ERROR];
                         tempError.error = error;
                         api.trigger(ERROR, tempError);
                     });
@@ -112,7 +111,7 @@ const Manager = function(api, playlistIndex){
                     bindTrack(track, vttCues);
                 }
             }, function(error){
-                let tempError = ERRORS[PLAYER_CAPTION_ERROR];
+                let tempError = errors[PLAYER_CAPTION_ERROR];
                 tempError.error = error;
                 api.trigger(ERROR, tempError);
             });

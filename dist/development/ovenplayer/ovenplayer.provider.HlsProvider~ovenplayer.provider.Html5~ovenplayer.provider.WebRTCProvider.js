@@ -267,7 +267,7 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _Ads = __webpack_require__(/*! api/provider/ads/Ads */ "./src/js/api/provider/ads/Ads.js");
+var _Ads = __webpack_require__(/*! api/provider/ads/Ads */ "./src/js/api/provider/ads/Ad.js");
 
 var _Ads2 = _interopRequireDefault(_Ads);
 

@@ -21,7 +21,7 @@ const ContextPanel = function($container, api, position){
         //Do nothing.
     };
     const events = {
-        "click .ovp-context-item" : function(event, $current, template){
+        "click .op-context-item" : function(event, $current, template){
             event.preventDefault();
 
             window.open(
@@ -31,7 +31,7 @@ const ContextPanel = function($container, api, position){
         }
     };
 
-    return OvenTemplate($container, "ContextPanel", position, events, onRendered, onDestroyed );
+    return OvenTemplate($container, "ContextPanel", api.getConfig(), position, events, onRendered, onDestroyed );
 
 };
 

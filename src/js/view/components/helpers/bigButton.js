@@ -18,7 +18,7 @@ const BigButton = function($container, api, playerState){
         //Do nothing!
     };
     const events = {
-        "click .ovp-bigbutton-container" : function(event){
+        "click .op-bigbutton-container" : function(event){
             event.preventDefault();
 
             const currentState = api.getState();
@@ -35,7 +35,7 @@ const BigButton = function($container, api, playerState){
         }
     };
 
-    return OvenTemplate($container, "BigButton", playerState, events, onRendered, onDestroyed );
+    return OvenTemplate($container, "BigButton", api.getConfig(), playerState, events, onRendered, onDestroyed );
 };
 
 export default BigButton;

@@ -1,16 +1,16 @@
 
-const Controls = function(hasPlaylist){
+const Controls = function(uiText, hasPlaylist){
     return (
-        `<div class="ovp-controls-container">`+
-            `<div class="ovp-bottom-panel">` +
-                `<div class="ovp-gradient-bottom"></div>` +
-                `<div class="ovp-progressbar-container"></div>` +
-                `<div class="ovp-controls">` +
-                    `<div class="ovp-left-controls"></div>` +
-                    `<div class="ovp-right-controls">`+
-                        `<div class="playlist-holder ovp-navigators">${hasPlaylist?`<button class="ovp-button ovp-playlist-button"><i class="ovp-con op-playlist"></i></button>`:``}</div>`+
-                        `<div class="setting-holder ovp-navigators"></div>`+
-                        `<div class="fullscreen-holder ovp-navigators"></div>`+
+        `<div class="op-controls-container op-clear">`+
+            `<div class="op-bottom-panel op-clear">` +
+                `<div class="op-gradient-bottom op-clear"></div>` +
+                `<div class="op-progressbar-container op-clear"></div>` +
+                `<div class="op-controls op-clear">` +
+                    `<div class="op-left-controls op-clear"></div>` +
+                    `<div class="op-right-controls op-clear">`+
+                        `<div class="playlist-holder op-navigators op-clear">${hasPlaylist?`<button class="op-button op-playlist-button"><i class="op-con op-playlist-icon"></i></button>`:``}</div>`+
+                        `<div class="setting-holder op-navigators op-clear"></div>`+
+                        `<div class="fullscreen-holder op-navigators op-clear"></div>`+
                     `</div>` +
                 `</div>` +
             `</div>` +

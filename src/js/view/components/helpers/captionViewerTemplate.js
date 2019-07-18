@@ -1,11 +1,11 @@
 /**
  * Created by hoho on 22/11/2018.
  */
-export default () => {
+export default (uiText) => {
     return (
-        `<div class="ovp-caption-viewer">` +
-        `    <div class="ovp-caption-text-container">` +
-        `        <pre class="ovp-caption-text"></pre>` +
+        `<div class="op-caption-viewer">` +
+        `    <div class="op-caption-text-container">` +
+        `        <pre class="op-caption-text"></pre>` +
         `      </div>` +
         `</div>`
     );

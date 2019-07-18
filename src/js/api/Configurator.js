@@ -1,7 +1,7 @@
 import _ from "utils/underscore";
 
 import {
-    CONTENT_TIME_MODE_CHANGED
+    CONTENT_TIME_MODE_CHANGED, SYSTEM_TEXT
 } from "api/constants";
 
 /**
@@ -10,8 +10,6 @@ import {
  *
  * */
 const Configurator = function(options, provider){
-    //sources, tracks,
-
 
     const composeSourceOptions = function(options){
         const Defaults = {
@@ -29,6 +27,10 @@ const Configurator = function(options, provider){
             hidePlaylistIcon : false,
             rtmpBufferTime : 1,
             rtmpBufferTimeMax : 3,
+            adClient : "googleima",
+            currentProtocolOnly : false,
+            systemText : null,
+            lang : "en"
         };
         const serialize = function (val) {
             if (val === undefined) {
@@ -59,6 +61,14 @@ const Configurator = function(options, provider){
 
         deserialize(options);
         let config = Object.assign({}, Defaults, options);
+
+        let systemText = _.findWhere(config.systemText || SYSTEM_TEXT, {"lang": config.lang});
+
+        if(!systemText){
+            config.lang = "en";
+            systemText = _.findWhere(SYSTEM_TEXT, {"lang": config.lang});
+        }
+        config.systemText = systemText;
 
         let playbackRates = config.playbackRates;
 
@@ -107,10 +117,14 @@ const Configurator = function(options, provider){
     OvenPlayerConsole.log("Configurator loaded.", options);
     let spec = composeSourceOptions(options);
 
+    //spec.isFullscreen = false; //IE 11 can't check current fullscreen state.
 
     const that = {};
     that.getConfig = () => {
         return spec;
+    };
+    that.getAdClient = () => {
+        return spec.adClient;
     };
     that.setConfig = (config, value) => {
         spec[config] = value;
@@ -119,6 +133,12 @@ const Configurator = function(options, provider){
     that.getContainer = () => {
         return spec.mediaContainer;
     };
+    /*that.isFullscreen = () => {
+        return spec.isFullscreen;
+    }
+    that.setFullscreen = (isFullscreen) => {
+        return spec.isFullscreen = isFullscreen;
+    }*/
 
     that.getPlaybackRate =()=>{
         return spec.playbackRate;
@@ -135,6 +155,9 @@ const Configurator = function(options, provider){
         spec.qualityLabel = newLabel;
     };
 
+    that.isCurrentProtocolOnly = () => {
+        return spec.currentProtocolOnly;
+    };
     /*that.getSourceLabel = () => {
         return spec.sourceLabel;
     };
@@ -170,6 +193,9 @@ const Configurator = function(options, provider){
     that.getVolume = () =>{
         return spec.volume;
     };
+    that.setVolume = (volume) =>{
+        spec.volume = volume;
+    };
     that.isLoop = () =>{
         return spec.loop;
     };
@@ -185,6 +211,12 @@ const Configurator = function(options, provider){
     };
     that.getBrowser = () => {
         return spec.browser;
+    };
+    that.getSystemText = () => {
+        return spec.systemText;
+    };
+    that.getLanguage = () => {
+        return spec.lang;
     };
 
     that.getPlaylist =()=>{

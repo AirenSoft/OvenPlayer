@@ -22,16 +22,16 @@ const FrameButtons = function ($container, api) {
 
     };
     const events = {
-        "click .ovp-frame-button" : function(event, $current, template){
+        "click .op-frame-button" : function(event, $current, template){
             event.preventDefault();
-            let value = LA$(event.currentTarget).attr("ovp-data-value");
+            let value = LA$(event.currentTarget).attr("op-data-value");
             if(value){
                 api.seekFrame(parseInt(value));
             }
         }
     };
 
-    return OvenTemplate($container, "FrameButtons", null, events, onRendered, onDestroyed );
+    return OvenTemplate($container, "FrameButtons", api.getConfig(), null, events, onRendered, onDestroyed );
 };
 
 export default FrameButtons;

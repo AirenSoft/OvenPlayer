@@ -1,19 +1,19 @@
-export default (data) => {
-    return`<div class="ovp-navigators ovp-time-display">`+
+export default (uiText, data) => {
+    return`<div class="op-navigators op-time-display">`+
             (data.duration === Infinity
                 ?
                 (
-                    `<span class="ovp-live-badge" disabled="disabled">` +
+                    `<span class="op-live-badge" disabled="disabled">` +
                         (data.type ==="webrtc"
                         ?
                             (data.isP2P ?
-                                    `<span class="ovp-live-badge-lowlatency">low latency <strong>P2P</strong></span>` : `<span class="ovp-live-badge-lowlatency">low latency live</span>`
+                                    `<span class="op-live-badge-lowlatency">${uiText.controls.low_latency_p2p}</span>` : `<span class="op-live-badge-lowlatency">${uiText.controls.low_latency_live}</span>`
                             )
                         :
-                        `<span>live</span>`) +
+                        `<span>${uiText.controls.live}</span>`) +
                     `</span>`
                 )
-                :(`<span class="ovp-time-current">00:00</span><span class="ovp-time-separator"> / </span><span class="ovp-time-duration">00:00</span>`)
+                :(`<span class="op-time-current">00:00</span><span class="op-time-separator"> / </span><span class="op-time-duration">00:00</span>`)
             ) +
         `</div>`;
 };

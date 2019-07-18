@@ -1,3 +1,3 @@
-export default () => {
-    return `<div class="ovp-spinner-container"><div class="ovp-ellipsis"><div></div><div></div><div></div><div></div></div></div>`;
+export default (uiText) => {
+    return `<div class="op-spinner-container"><div class="op-spinner"></div></div>`;
 };
