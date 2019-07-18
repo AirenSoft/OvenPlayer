@@ -34,7 +34,7 @@ const ProgressBar = function($container, api, isAd){
 
     let isMobile = api.getBrowser().os === "iOS" || api.getBrowser().os === "Android";
 
-    let positionElements = function (percentage) {
+    function positionElements(percentage) {
         let progressBarWidth = $progressBar.width();
         let position = progressBarWidth * percentage;
 
@@ -48,13 +48,13 @@ const ProgressBar = function($container, api, isAd){
         currentPlayingPercentage = percentage;
     };
 
-    let drawHoverProgress = function (percentage) {
+    function drawHoverProgress(percentage) {
         let progressBarWidth = $progressBar.width();
         let hoverPosition = progressBarWidth * percentage;
         $progressHover.css("width", (percentage === 0 ? percentage : (hoverPosition - currentPlayingPosition))+ "px");
     };
 
-    let drawLoadProgress = function(percentage) {
+    function drawLoadProgress(percentage) {
         let progressBarWidth = $progressBar.width();
         let loadPosition = progressBarWidth * percentage;
 
@@ -62,7 +62,7 @@ const ProgressBar = function($container, api, isAd){
         currentLoadedPercentage = percentage;
     };
 
-    let calculatePercentage = function (event) {
+    function calculatePercentage(event) {
         let progressBarWidth = $progressBar.width();
         let progressBarOffsetX = $progressBar.offset().left;
         let pointerOffsetX =  (event.pageX || event.touches[0].clientX) ;
@@ -80,7 +80,7 @@ const ProgressBar = function($container, api, isAd){
         return percentage;
     };
 
-    let drawTimeIndicator = function (percentage, event) {
+    function drawTimeIndicator(percentage, event) {
        if(panelManager.size() > 0){
            $time.hide();
            return ;
@@ -117,9 +117,11 @@ const ProgressBar = function($container, api, isAd){
         $time.css("left", magneticPosition+ "px");
     };
 
-    let seek = function (percentage) {
+    function seek(percentage) {
         api.seek( (api.getDuration()||0) * percentage);
     };
+
+
     const onRendered = function($current, template){
         $progressBar = $current;
         $progressLoad = $current.find(".op-load-progress");
@@ -259,7 +261,7 @@ const ProgressBar = function($container, api, isAd){
         }
     };
 
-    return OvenTemplate($container, "ProgressBar", null, events, onRendered, onDestroyed );
+    return OvenTemplate($container, "ProgressBar", api.getConfig(), null, events, onRendered, onDestroyed );
 };
 
 export default ProgressBar;

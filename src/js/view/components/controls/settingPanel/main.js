@@ -14,7 +14,7 @@ import {
     CONTENT_LEVEL_CHANGED, PROVIDER_RTMP
 } from "api/constants";
 
-const PANEL_TITLE = {
+let PANEL_TITLE = {
     "speed" : "Speed",
     "source" : "Source",
     "quality" : "Quality",
@@ -23,10 +23,19 @@ const PANEL_TITLE = {
 };
 
 const Panels = function($container, api, data){
+
     const $root = LA$("#"+api.getContainerId());
     let panelManager = PanelManager();
 
-    const extractSubPanelData = function(api, panelType){
+    let playerConfig = api.getConfig();
+
+    if(playerConfig && playerConfig.systemText){
+        Object.keys(PANEL_TITLE).forEach(title => {
+            PANEL_TITLE[title] = playerConfig.systemText.ui.setting[title];
+        });
+    }
+
+    function extractSubPanelData(api, panelType){
         let panel = {
             id : "panel-"+new Date().getTime() ,
             title : "",
@@ -124,7 +133,7 @@ const Panels = function($container, api, data){
             $root.find("#"+data.id).addClass("background");
         }
     };
-    let setPanelMaxHeight = function(){
+    function setPanelMaxHeight(){
         if($root.find(".op-setting-panel")){
             $root.find(".op-setting-panel").css("max-height",  $root.height() - $root.find(".op-bottom-panel").height() + "px");
         }
@@ -184,90 +193,9 @@ const Panels = function($container, api, data){
         }
     };
 
-    return OvenTemplate($container, "Panels", data, events, onRendered, onDestroyed );
+    return OvenTemplate($container, "Panels", api.getConfig(), data, events, onRendered, onDestroyed );
 
 };
 
 export default Panels;
 
-
-export const generateMainData = function(api){
-    let panel = {
-        id : "panel-"+new Date().getTime(),
-        title : "Settings",
-        body : [],
-        isRoot : true,
-        panelType : ""
-    };
-
-    let sources = api.getSources();
-    let currentSource = sources && sources.length > 0 ? sources[api.getCurrentSource()] : null;
-
-    let qualityLevels = api.getQualityLevels();
-    let currentQuality = qualityLevels && qualityLevels.length > 0 ? qualityLevels[api.getCurrentQuality()] : null;
-
-    let captions = api.getCaptionList();
-    let currentCaption = api.getCurrentCaption();
-
-    let framerate = api.getFramerate();
-
-    if(api.getDuration() !== Infinity && currentSource && currentSource.type !== PROVIDER_RTMP){
-        let body = {
-            title : PANEL_TITLE.speed,
-            value :  api.getPlaybackRate() + "x",
-            description :  api.getPlaybackRate() + "x",
-            panelType : "speed",
-            hasNext : true
-        };
-        panel.body.push(body);
-    }
-    if (sources.length > 0) {
-
-        let body = {
-            title : PANEL_TITLE.source,
-            value : currentSource ? currentSource.label : "Default",
-            description : currentSource ? currentSource.label : "Default",
-            panelType : "source",
-            hasNext : true
-        };
-
-        panel.body.push(body);
-    }
-    if (qualityLevels.length > 0) {
-
-        let body = {
-            title : PANEL_TITLE.quality,
-            value : currentQuality ? currentQuality.label : "Default",
-            description : currentQuality ? currentQuality.label : "Default",
-            panelType : "quality",
-            hasNext : true
-        };
-
-        panel.body.push(body);
-    }
-    if (captions.length > 0) {
-
-        let body = {
-            title : PANEL_TITLE.caption,
-            value : captions[currentCaption] ? captions[currentCaption].label : "OFF",
-            description : captions[currentCaption] ? captions[currentCaption].label : "OFF",
-            panelType : "caption",
-            hasNext : true
-        };
-
-        panel.body.push(body);
-    }
-    if(framerate > 0){
-        let body = {
-            title : PANEL_TITLE.display,
-            value : api.isTimecodeMode() ? "Play time" : "Framecode",
-            description : api.isTimecodeMode() ? "Play time" : "Framecode",
-            panelType : "display",
-            hasNext : true
-        };
-
-        panel.body.push(body);
-    }
-
-    return panel;
-};

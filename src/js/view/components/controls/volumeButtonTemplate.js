@@ -1,7 +1,7 @@
 /**
  * Created by hoho on 2018. 7. 20..
  */
-export default () => {
+export default (uiText) => {
     return (
         `<div class="op-navigators op-volume-controller">`+
             `<button class="op-button op-volume-button">` +

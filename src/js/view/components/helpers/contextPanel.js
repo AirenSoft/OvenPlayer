@@ -31,7 +31,7 @@ const ContextPanel = function($container, api, position){
         }
     };
 
-    return OvenTemplate($container, "ContextPanel", position, events, onRendered, onDestroyed );
+    return OvenTemplate($container, "ContextPanel", api.getConfig(), position, events, onRendered, onDestroyed );
 
 };
 

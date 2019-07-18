@@ -48,7 +48,6 @@ const Listener = function(elAdVideo, vastTracker, provider, adsSpec, adButton, t
     let $adButton = LA$(adButton);
     let $elAdVideo = LA$(elAdVideo);
 
-
     provider.on(CONTENT_VOLUME, function(data) {
         if(data.mute){
             elAdVideo.muted = true;
@@ -194,10 +193,19 @@ const Listener = function(elAdVideo, vastTracker, provider, adsSpec, adButton, t
 
     vastTracker.on('skip-countdown', (data) => {
         if(data === 0){
-            $textView.html("광고 건너뛰기<i class='op-con op-arrow-right btn-right'></i>");
+            if(adsSpec.lang === "ko"){
+                $textView.html("광고 건너뛰기<i class='op-con op-arrow-right btn-right'></i>");
+            }else{
+                $textView.html("Ad Skip<i class='op-con op-arrow-right btn-right'></i>");
+            }
             $textView.addClass("videoAdUiAction");
         }else{
-            $textView.html((parseInt(data)+1)+"초 후에 이 광고를 건너뛸 수 있습니다.");
+            if(adsSpec.lang === "ko"){
+                $textView.html((parseInt(data)+1)+"초 후에 이 광고를 건너뛸 수 있습니다.");
+            }else{
+                $textView.html("You can skip this ad in "+(parseInt(data)+1));
+
+            }
         }
     });
     vastTracker.on('rewind', () => {

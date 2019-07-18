@@ -23,8 +23,7 @@ const VolumeButton = function($container, api){
     let isMobile = api.getBrowser().os === "iOS" || api.getBrowser().os === "Android";
 
 
-    /*private functions*/
-    let setVolumeIcon = function(percentage) {
+    function setVolumeIcon(percentage) {
         $volumeIconBig.hide();
         $volumeIconSmall.hide();
         $volumeIconMute.hide();
@@ -40,7 +39,7 @@ const VolumeButton = function($container, api){
         }
     }
 
-    let setVolumeUI = function(percentage) {
+    function setVolumeUI(percentage) {
         if (api.getMute()) {
             percentage = 0;
         }
@@ -54,7 +53,7 @@ const VolumeButton = function($container, api){
         $sliderValue.css("width", handlePosition+ "px");
     }
 
-    let calculatePercentage = function (event) {
+    function calculatePercentage(event) {
         const relativeX = (event.pageX || event.touches[0].clientX) - $slider.offset().left;
         let percentage = relativeX / sliderWidth * 100;
 
@@ -184,12 +183,19 @@ const VolumeButton = function($container, api){
             api.setVolume(calculatePercentage(event));
         }
     };
+    let that = OvenTemplate($container, "VolumeButton", api.getConfig(), null, events, onRendered, onDestroyed);
+    that.setMouseDown = (state) => {
+        mouseDown = state;
+    };
+    return that;
 
-    return Object.assign(OvenTemplate($container, "VolumeButton", null, events, onRendered, onDestroyed), {
+    /*or
+
+    return Object.assign(OvenTemplate($container, "VolumeButton", api.getConfig(), null, events, onRendered, onDestroyed), {
         setMouseDown: function (state) {
             mouseDown = state;
         }
-    });
+    });*/
 };
 
 export default VolumeButton;

@@ -1,8 +1,8 @@
 import {naturalHms} from "utils/strings"
 
-export default (playlist) => {
+export default (uiText, playlist) => {
     return (`<div class="op-playlist" tabindex="0">` +
-                `<div class="op-playlist-header">Playlist <i class="op-con op-close-icon btn-close"></i></div>` +
+                `<div class="op-playlist-header">${uiText.playlist} <i class="op-con op-close-icon btn-close"></i></div>` +
                 `<div class="op-playlist-body">` +
                     `<div class="op-playlist-body-container">` +
                         `<div class="op-playlist-body-center"><div class="op-playlist-body-row"></div></div>`+

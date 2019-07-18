@@ -2,7 +2,7 @@
  * Created by hoho on 2018. 7. 20..
  */
 
-const ViewTemplate = function(id){
+const ViewTemplate = function(uiText, id){
     return `<div class="ovenplayer op-wrapper" tabindex="-1" aria-label="" id="${id}">` +
         `<div class="op-ratio"></div>` +
         `<div class="op-player op-clear">`+

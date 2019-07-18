@@ -36,7 +36,7 @@ const SpeedPanel = function($container, api, data){
         }
     };
 
-    return OvenTemplate($container, "SpeedPanel", data, events, onRendered, onDestroyed );
+    return OvenTemplate($container, "SpeedPanel", api.getConfig(), data, events, onRendered, onDestroyed );
 
 };
 

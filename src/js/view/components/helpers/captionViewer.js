@@ -59,7 +59,7 @@ const CaptionViewer = function($container, api, playerState){
     const events = {
     };
 
-    return OvenTemplate($container, "CaptionViewer", playerState, events, onRendered, onDestroyed );
+    return OvenTemplate($container, "CaptionViewer", api.getConfig(), playerState, events, onRendered, onDestroyed );
 };
 
 export default CaptionViewer;

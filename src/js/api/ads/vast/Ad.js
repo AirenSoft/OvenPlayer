@@ -28,7 +28,8 @@ const Ad = function(elVideo, provider, playerConfig, adTagUrl){
     let spec = {
         started: false, //player started
         active : false, //on Ad
-        isVideoEnded : false
+        isVideoEnded : false,
+        lang : playerConfig.getLanguage()
     };
     let adsErrorOccurred = false;
     let listener = null;

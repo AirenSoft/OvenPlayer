@@ -36,7 +36,7 @@ const CaptionPanel = function($container, api, data){
         }
     };
 
-    return OvenTemplate($container, "CaptionPanel", data, events, onRendered, onDestroyed );
+    return OvenTemplate($container, "CaptionPanel", api.getConfig(),  data, events, onRendered, onDestroyed );
 
 };
 

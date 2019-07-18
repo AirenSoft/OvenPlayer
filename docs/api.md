@@ -296,6 +296,146 @@ String|"googleima"
 
 Sets whether to Google IMA or Simple VAST the Ads client when player initialize. "googleima" or "vast"
 
+#### lang 
+type|default
+------|------
+String|"en"
+
+Sets the language to be displayed. The player is built in English and Korean. 
+
+#### systemText 
+
+Sets the custom language to be displayed. 
+```
+player = OvenPlayer.create("player",
+                {
+                    sources : newUrls,
+                    systemText : {
+                        "lang" : "cn",
+                        "ui" : {
+                            "context" : "关于OvenPlayer",
+                            "controls" : {
+                                "live" : "直播",
+                                "low_latency_live" : "低延迟直播",
+                                "low_latency_p2p" : "低延迟实时p2p",
+                            },
+                            "playlist" : "播放列表",
+                            "setting" : {
+                                "title" : "设置",
+                                "speed" : "Speed",
+                                "source" : "Source",
+                                "quality" : "Quality",
+                                "caption" : "Caption",
+                                "display" : "Display"
+                            }
+                        },
+                        "api" : {
+                            "message" : {
+                                "muted_play" : "Please touch here to turn on the sound."
+                            },
+                            "error": {
+                                100: {
+                                    "code": 100,
+                                    "message": "Can not load due to unknown reasons.",
+                                    "reason": "Can not load due to unknown reasons."
+                                },
+                                101: {
+                                    "code": 101,
+                                    "message": "Can not load due to unsupported media.",
+                                    "reason": "Can not load due to unsupported media."
+                                },
+                                102: {
+                                    "code": 102,
+                                    "message": "Flash fetching process aborted. </br><a href='http://www.adobe.com/go/getflashplayer' target='_self'><img src='http://www.adobe.com/images/shared/download_buttons/get_flash_player.gif' alt='Get Adobe Flash player'></a>",
+                                    "reason": "It looks like not found swf or your environment is localhost."
+                                },
+                                103: {
+                                    "code": 103,
+                                    "message": "Can not load due to dashjs. Please check the lastest version.",
+                                    "reason": "dash.js version is old. Please check the lastest."
+                                },
+                                104: {
+                                    "code": 104,
+                                    "message": "Can not load due to google ima for Ads. ",
+                                    "reason": "Please check the google ima library."
+                                },
+                                105: {
+                                    "code": 105,
+                                    "message": "Can not find the dashjs. Please check the dashjs.",
+                                    "reason": "Not found dashjs."
+                                },
+                                106: {
+                                    "code": 106,
+                                    "message": "Can not find the hlsjs. Please check the hlsjs.",
+                                    "reason": "Not found hlsjs."
+                                },
+                                300: {
+                                    "code": 300,
+                                    "message": "Can not play due to unknown reasons.",
+                                    "reason": "Can not play due to unknown reasons."
+                                },
+                                301: {
+                                    "code": 301,
+                                    "message": "Fetching process aborted by user.",
+                                    "reason": "Fetching process aborted by user."
+                                },
+                                302: {
+                                    "code": 302,
+                                    "message": "Some of the media could not be downloaded due to a network error.",
+                                    "reason": "Error occurred when downloading."
+                                },
+                                303: {
+                                    "code": 303,
+                                    "message": "Unable to load media. This may be due to a server or network error, or due to an unsupported format.",
+                                    "reason": "Error occurred when decoding."
+                                },
+                                304: {
+                                    "code": 304,
+                                    "message": "Media playback has been canceled. It looks like your media is corrupted or your browser does not support the features your media uses.",
+                                    "reason": "Media playback not supported."
+                                },
+                                305: {
+                                    "code": 305,
+                                    "message": "Can not load captions due to unknown reasons.",
+                                    "reason": "Can not load captions due to unknown reasons."
+                                },
+                                501: {
+                                    "code": 501,
+                                    "message": "Connection with low-latency(OME) server failed.",
+                                    "reason": "WebSocket connection failed."
+                                },
+                                502: {
+                                    "code": 502,
+                                    "message": "Connection with low-latency(OME) server failed.",
+                                    "reason": "WebRTC addIceCandidate failed."
+                                },
+                                503: {
+                                    "code": 503,
+                                    "message": "Connection with low-latency(OME) server failed.",
+                                    "reason": "WebRTC setRemoteDescription failed."
+                                },
+                                504: {
+                                    "code": 504,
+                                    "message": "Connection with low-latency(OME) server failed.",
+                                    "reason": "WebRTC peer createOffer failed."
+                                },
+                                505: {
+                                    "code": 505,
+                                    "message": "Connection with low-latency(OME) server failed.",
+                                    "reason": "WebRTC setLocalDescription failed."
+                                },
+                                510: {
+                                    "code": 510,
+                                    "message": "Network connection is unstable. Check the network connection.",
+                                    "reason": "Network is slow."
+                                }
+                            }
+                        }
+                    }
+
+                });
+```
+
 
 ## Static Methods
 

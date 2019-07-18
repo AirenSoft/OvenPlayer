@@ -36,7 +36,7 @@ const TimeDisplayPanel = function($container, api, data){
         }
     };
 
-    return OvenTemplate($container, "TimeDisplayPanel", data, events, onRendered, onDestroyed );
+    return OvenTemplate($container, "TimeDisplayPanel", api.getConfig(), data, events, onRendered, onDestroyed );
 
 };
 

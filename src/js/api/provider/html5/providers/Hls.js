@@ -73,7 +73,7 @@ const HlsProvider = function(element, playerConfig, adTagUrl){
             superDestroy_func();
         };
     }catch(error){
-        let tempError =  ERRORS[INIT_HLSJS_NOTFOUND];
+        let tempError =  ERRORS.codes[INIT_HLSJS_NOTFOUND];
         tempError.error = error;
         throw tempError;
     }

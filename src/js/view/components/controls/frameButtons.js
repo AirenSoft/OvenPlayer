@@ -31,7 +31,7 @@ const FrameButtons = function ($container, api) {
         }
     };
 
-    return OvenTemplate($container, "FrameButtons", null, events, onRendered, onDestroyed );
+    return OvenTemplate($container, "FrameButtons", api.getConfig(), null, events, onRendered, onDestroyed );
 };
 
 export default FrameButtons;

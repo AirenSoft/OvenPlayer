@@ -27,7 +27,7 @@ const PlaylistPanel = function($container, api){
         pageSize = 1;
     }
 
-    const pagenate = function(page){
+    function pagenate(page){
         let totalPageCount = Math.ceil(totalCount / pageSize);
         let currentPlaylistIndex = api.getCurrentPlaylist();
 
@@ -52,11 +52,11 @@ const PlaylistPanel = function($container, api){
             $playlistPanel.find(".op-arrow-right").addClass("disable");
         }
     };
-    const findCurrentPage = function(){
+    function findCurrentPage(){
         let currentPlaylistIndex = api.getCurrentPlaylist();
         return Math.ceil((currentPlaylistIndex+1)/ pageSize) -1
     };
-    let createAndSelectElement = function (html) {
+    function createAndSelectElement(html) {
         const newElement = document.createElement('div');
         newElement.innerHTML = html;
         return newElement.firstChild;
@@ -127,7 +127,7 @@ const PlaylistPanel = function($container, api){
         }*/
     };
 
-    return OvenTemplate($container, "PlaylistPanel", playlist, events, onRendered, onDestroyed );
+    return OvenTemplate($container, "PlaylistPanel", api.getConfig(), playlist, events, onRendered, onDestroyed );
 };
 
 export default PlaylistPanel;

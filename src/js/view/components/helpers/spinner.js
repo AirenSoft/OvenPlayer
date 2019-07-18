@@ -14,7 +14,7 @@ const Spinner = function($container, api){
     };
     const events = {};
 
-    return Object.assign(OvenTemplate($container, "Spinner", null, events, onRendered, onDestroyed ), {
+    return Object.assign(OvenTemplate($container, "Spinner", api.getConfig(), null, events, onRendered, onDestroyed ), {
         show: function (isShow) {
             if(isShow){
                 $spinner.show();

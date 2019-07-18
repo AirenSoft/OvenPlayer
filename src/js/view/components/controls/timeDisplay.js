@@ -11,7 +11,8 @@ import {
 const TimeDisplay = function($container, api, data){
 
     let $position = "", $duration = "";
-    let convertHumanizeTime = function(time){
+
+    function convertHumanizeTime(time){
         return naturalHms(time);
     };
 
@@ -55,7 +56,7 @@ const TimeDisplay = function($container, api, data){
 
     };
 
-    return OvenTemplate($container, "TimeDisplay", data, events, onRendered, onDestroyed );
+    return OvenTemplate($container, "TimeDisplay", api.getConfig(), data, events, onRendered, onDestroyed );
 };
 
 

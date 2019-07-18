@@ -1,4 +1,4 @@
-export default () => {
+export default (uiText) => {
     return (
         '<div class="op-frame-buttons">'+
             '<button class="op-button op-frame-button" op-data-value="-5"><div class="frame-icon"><span class="btn-text">-5f</span></div></button>'+

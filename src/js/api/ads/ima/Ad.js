@@ -6,7 +6,7 @@ import {TEMP_VIDEO_URL} from "api/ads/utils";
 import LA$ from "utils/likeA$.js";
 import {errorTrigger} from "api/provider/utils";
 import {
-    ERROR, ERRORS,
+    ERROR,
     CONTENT_VOLUME,
     STATE_LOADING,
     INIT_ADS_ERROR,
@@ -51,7 +51,6 @@ const Ad = function(elVideo, provider, playerConfig, adTagUrl, errorCallback){
     // google.ima.settings.setAutoPlayAdBreaks(false);
     //google.ima.settings.setVpaidMode(google.ima.ImaSdkSettings.VpaidMode.ENABLED);
 
-    //google.ima.settings.setLocale('ko');
     //google.ima.settings.setVpaidMode(google.ima.ImaSdkSettings.VpaidMode.ENABLED);
     //google.ima.settings.setDisableCustomPlaybackForIOS10Plus(true);
     const sendWarningMessageForMutedPlay = function(){
@@ -69,7 +68,7 @@ const Ad = function(elVideo, provider, playerConfig, adTagUrl, errorCallback){
     try{
         ADS_MANAGER_LOADED = google.ima.AdsManagerLoadedEvent.Type.ADS_MANAGER_LOADED;
         AD_ERROR = google.ima.AdErrorEvent.Type.AD_ERROR;
-        google.ima.settings.setLocale("ko");
+        google.ima.settings.setLocale(playerConfig.getLanguage());
         google.ima.settings.setDisableCustomPlaybackForIOS10Plus(true);
 
         const createAdContainer = () => {

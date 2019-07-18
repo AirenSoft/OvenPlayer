@@ -157,19 +157,19 @@ const WebRTCLoader = function (provider, webSocketUrl, loadCallback, errorTrigge
 
                         }).catch(function (error) {
 
-                            let tempError = ERRORS[PLAYER_WEBRTC_SET_LOCAL_DESC_ERROR];
+                            let tempError = ERRORS.codes[PLAYER_WEBRTC_SET_LOCAL_DESC_ERROR];
                             tempError.error = error;
                             closePeer(tempError);
                         });
                     })
                     .catch(function (error) {
-                        let tempError = ERRORS[PLAYER_WEBRTC_CREATE_ANSWER_ERROR];
+                        let tempError = ERRORS.codes[PLAYER_WEBRTC_CREATE_ANSWER_ERROR];
                         tempError.error = error;
                         closePeer(tempError);
                     });
             })
             .catch(function (error) {
-                let tempError = ERRORS[PLAYER_WEBRTC_SET_REMOTE_DESC_ERROR];
+                let tempError = ERRORS.codes[PLAYER_WEBRTC_SET_REMOTE_DESC_ERROR];
                 tempError.error = error;
                 closePeer(tempError);
             });
@@ -341,7 +341,7 @@ const WebRTCLoader = function (provider, webSocketUrl, loadCallback, errorTrigge
                 peerConnection.addIceCandidate(new RTCIceCandidate(basicCandidate)).then(function () {
                     OvenPlayerConsole.log("addIceCandidate : success");
                 }).catch(function (error) {
-                    let tempError = ERRORS[PLAYER_WEBRTC_ADD_ICECANDIDATE_ERROR];
+                    let tempError = ERRORS.codes[PLAYER_WEBRTC_ADD_ICECANDIDATE_ERROR];
                     tempError.error = error;
                     closePeer(tempError);
                 });
@@ -349,7 +349,7 @@ const WebRTCLoader = function (provider, webSocketUrl, loadCallback, errorTrigge
                     peerConnection.addIceCandidate(new RTCIceCandidate(cloneCandidate)).then(function () {
                         console.log("cloneCandidate addIceCandidate : success");
                     }).catch(function (error) {
-                        let tempError = ERRORS[PLAYER_WEBRTC_ADD_ICECANDIDATE_ERROR];
+                        let tempError = ERRORS.codes[PLAYER_WEBRTC_ADD_ICECANDIDATE_ERROR];
                         tempError.error = error;
                         closePeer(tempError);
                     });
@@ -381,7 +381,7 @@ const WebRTCLoader = function (provider, webSocketUrl, loadCallback, errorTrigge
                 // console.log('Receive message', message);
 
                 if (message.error) {
-                    let tempError = ERRORS[PLAYER_WEBRTC_WS_ERROR];
+                    let tempError = ERRORS.codes[PLAYER_WEBRTC_WS_ERROR];
                     tempError.error = message.error;
                     closePeer(tempError);
                     return;
@@ -417,7 +417,7 @@ const WebRTCLoader = function (provider, webSocketUrl, loadCallback, errorTrigge
 
                         })
                         .catch(function (error) {
-                            let tempError = ERRORS[PLAYER_WEBRTC_SET_REMOTE_DESC_ERROR];
+                            let tempError = ERRORS.codes[PLAYER_WEBRTC_SET_REMOTE_DESC_ERROR];
                             tempError.error = error;
                             closePeer(tempError);
                         });
@@ -472,7 +472,7 @@ const WebRTCLoader = function (provider, webSocketUrl, loadCallback, errorTrigge
             };
             ws.onclose = function () {
                 if(!wsClosedByPlayer){
-                    let tempError = ERRORS[PLAYER_WEBRTC_WS_ERROR];
+                    let tempError = ERRORS.codes[PLAYER_WEBRTC_WS_ERROR];
                     closePeer(tempError);
                 }
             };
@@ -480,7 +480,7 @@ const WebRTCLoader = function (provider, webSocketUrl, loadCallback, errorTrigge
             ws.onerror = function (error) {
                 //Why Edge Browser calls onerror() when ws.close()?
                 if(!wsClosedByPlayer){
-                    let tempError = ERRORS[PLAYER_WEBRTC_WS_ERROR];
+                    let tempError = ERRORS.codes[PLAYER_WEBRTC_WS_ERROR];
                     tempError.error = error;
                     closePeer(tempError);
                     reject(error);

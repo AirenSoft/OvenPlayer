@@ -1,7 +1,7 @@
 import _ from "utils/underscore";
 
 import {
-    CONTENT_TIME_MODE_CHANGED
+    CONTENT_TIME_MODE_CHANGED, SYSTEM_TEXT
 } from "api/constants";
 
 /**
@@ -28,7 +28,9 @@ const Configurator = function(options, provider){
             rtmpBufferTime : 1,
             rtmpBufferTimeMax : 3,
             adClient : "googleima",
-            currentProtocolOnly : false
+            currentProtocolOnly : false,
+            systemText : null,
+            lang : "en"
         };
         const serialize = function (val) {
             if (val === undefined) {
@@ -59,6 +61,14 @@ const Configurator = function(options, provider){
 
         deserialize(options);
         let config = Object.assign({}, Defaults, options);
+
+        let systemText = _.findWhere(config.systemText || SYSTEM_TEXT, {"lang": config.lang});
+
+        if(!systemText){
+            config.lang = "en";
+            systemText = _.findWhere(SYSTEM_TEXT, {"lang": config.lang});
+        }
+        config.systemText = systemText;
 
         let playbackRates = config.playbackRates;
 
@@ -201,6 +211,12 @@ const Configurator = function(options, provider){
     };
     that.getBrowser = () => {
         return spec.browser;
+    };
+    that.getSystemText = () => {
+        return spec.systemText;
+    };
+    that.getLanguage = () => {
+        return spec.lang;
     };
 
     that.getPlaylist =()=>{

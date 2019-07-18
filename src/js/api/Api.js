@@ -84,7 +84,7 @@ const Api = function(container){
 
         return providerController.loadProviders(playlistManager.getCurrentPlayList()).then(Providers => {
             if(Providers.length < 1){
-                throw ERRORS[INIT_UNSUPPORT_ERROR];
+                throw ERRORS.codes[INIT_UNSUPPORT_ERROR];
             }
 
             if(currentProvider){
@@ -148,20 +148,20 @@ const Api = function(container){
 
             }).catch((error) => {
                 lazyQueue.off();
-                if(error && error.code && ERRORS[error.code]){
-                    that.trigger(ERROR, ERRORS[error.code]);
+                if(error && error.code && ERRORS.codes[error.code]){
+                    that.trigger(ERROR, ERRORS.codes[error.code]);
                 }else {
-                    let tempError = ERRORS[INIT_UNKNWON_ERROR];
+                    let tempError = ERRORS.codes[INIT_UNKNWON_ERROR];
                     tempError.error = error;
                     that.trigger(ERROR, tempError);
                 }
             });
         }).catch((error) => {
             //INIT ERROR
-            if(error && error.code && ERRORS[error.code]){
-                that.trigger(ERROR, ERRORS[error.code]);
+            if(error && error.code && ERRORS.codes[error.code]){
+                that.trigger(ERROR, ERRORS.codes[error.code]);
             }else {
-                let tempError = ERRORS[INIT_UNKNWON_ERROR];
+                let tempError = ERRORS.codes[INIT_UNKNWON_ERROR];
                 tempError.error = error;
                 that.trigger(ERROR, tempError);
             }
@@ -193,6 +193,11 @@ const Api = function(container){
         playerConfig = Configurator(options, that);
         OvenPlayerConsole.log("API : init()");
         OvenPlayerConsole.log("API : init() config : ", playerConfig);
+
+        //Not working : SyntaxError: "ERRORS.codes" is read-only
+        ERRORS.codes = playerConfig.getSystemText().api.error;
+        //Cool
+        //ERRORS.codes.push(playerConfig.getSystemText());
 
         playlistManager.initPlaylist(playerConfig.getPlaylist(), playerConfig);
         OvenPlayerConsole.log("API : init() sources : " , playlistManager.getCurrentSources());

@@ -53,7 +53,7 @@ const MessageBox = function($container, api, message, description, withTimer, ic
         }
     };
 
-    return OvenTemplate($container, "MessageBox", data, events, onRendered, onDestroyed );
+    return OvenTemplate($container, "MessageBox", api.getConfig(), data, events, onRendered, onDestroyed );
 };
 
 

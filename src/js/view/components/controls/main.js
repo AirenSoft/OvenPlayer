@@ -48,46 +48,46 @@ const Controls = function($container, api){
 
 
     const onRendered = function($current, template){
-        const setPanelMaxHeight = function(){
+        function setPanelMaxHeight(){
             if($root.find(".op-setting-panel")){
                 $root.find(".op-setting-panel").css("max-height",  $root.height() - $root.find(".op-bottom-panel").height() + "px");
             }
         };
 
-        const initTimeDisplay = function(data){
+        function initTimeDisplay(data){
             if(timeDisplay){
                 timeDisplay.destroy();
             }
             timeDisplay = TimeDisplay($current.find(".op-left-controls"), api, data);
         };
-        const initProgressBar = function(isAd){
+        function initProgressBar(isAd){
             if(progressBar){
                 progressBar.destroy();
             }
             progressBar = ProgressBar($current.find(".op-progressbar-container"), api, isAd);
         };
-        const initFrameJumpButtons = function(){
+        function initFrameJumpButtons(){
             if(frameButtons){
                 frameButtons.destroy();
             }
             frameButtons = FrameButtons($current.find(".op-controls"), api);
         };
 
-        const initSettingButton = function(){
+        function initSettingButton(){
             if(settingButton){
                 settingButton.destroy();
             }
             settingButton = SettingButton($current.find(".setting-holder"), api);
         };
 
-        const initFullscreenButton = function(){
+        function initFullscreenButton(){
             if(fullScreenButton){
                 fullScreenButton.destroy();
             }
             fullScreenButton = FullScreenButton($current.find(".fullscreen-holder"), api);
         };
 
-        const makeControlUI = function(metadata){
+        function makeControlUI(metadata){
 
             initTimeDisplay(metadata);
             initFullscreenButton();
@@ -112,7 +112,7 @@ const Controls = function($container, api){
                 initProgressBar(false);
             }
         };
-        const resetControlUI = function(){
+        function resetControlUI(){
             initTimeDisplay(lastContentMeta);
             initSettingButton();
             initFullscreenButton();
@@ -248,7 +248,7 @@ const Controls = function($container, api){
         }
     };
 
-    return OvenTemplate($container, "Controls",  hasPlaylist , events, onRendered, onDestroyed);
+    return OvenTemplate($container, "Controls",  hasPlaylist , api.getConfig(), events, onRendered, onDestroyed);
 };
 
 export default Controls;

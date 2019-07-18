@@ -246,7 +246,7 @@ const Listener = function(element, provider, videoEndedCallback){
         }[code]||0);
 
         OvenPlayerConsole.log("EventListener : on error", convertedErroCode);
-        errorTrigger(ERRORS[convertedErroCode], provider);
+        errorTrigger(ERRORS.codes[convertedErroCode], provider);
     };
 
     Object.keys(lowLevelEvents).forEach(eventName => {

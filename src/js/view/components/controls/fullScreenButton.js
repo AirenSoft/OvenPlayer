@@ -17,6 +17,9 @@ import {
 
 const FullScreenButton = function($container, api){
     const $root = LA$("#"+api.getContainerId());
+
+    console.log("#"+api.getContainerId() , LA$("#"+api.getContainerId()));
+
     let $iconExpand = "", $iconCompress = "", isFullScreen = false;
 
     //ToDo : Template have to access Player Config.
@@ -34,11 +37,11 @@ const FullScreenButton = function($container, api){
         onwebkitfullscreenchange : "webkitfullscreenchange",
         MSFullscreenChange : "MSFullscreenChange"
     };
-    const checkFullScreen = function(){
+    function checkFullScreen(){
         return document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement;
     };
 
-    const resetFullscreenButtonState = function(){
+    function resetFullscreenButtonState(){
         OvenPlayerConsole.log("FULLSCREEN STATE : ", checkFullScreen());
         if (checkFullScreen()) {
             $root.addClass("op-fullscreen");
@@ -54,13 +57,13 @@ const FullScreenButton = function($container, api){
         }
     };
 
-    const afterFullScreenChangedCallback = function(){
+    function afterFullScreenChangedCallback(){
         OvenPlayerConsole.log("afterFullScreenChangedCallback () ");
         resetFullscreenButtonState();
         api.trigger(PLAYER_FULLSCREEN_CHANGED, isFullScreen);
     };
 
-    const forcedFakeFullscreenToggle = function(){
+    function forcedFakeFullscreenToggle(){
         if(!isFullScreen){
             $root.addClass("op-fullscreen");
             isFullScreen = true;
@@ -75,7 +78,7 @@ const FullScreenButton = function($container, api){
         api.trigger(PLAYER_FULLSCREEN_CHANGED, isFullScreen);
     };
 
-    let findFullScreenChangedEventName = function(){
+    function findFullScreenChangedEventName(){
         let rootElement =  $root.get();
         let eventName = "";
         //ios don;t have a fullscreenchage event. go to hell.
@@ -109,7 +112,7 @@ const FullScreenButton = function($container, api){
          */
     };
 
-    let requestFullScreen = function () {
+    function requestFullScreen() {
         let promise = "";
         let rootElement =  $root.get();
         let videoElements = $root.find("video") ? $root.find("video").get() : rootElement;
@@ -187,7 +190,7 @@ const FullScreenButton = function($container, api){
             });
         }
     };
-    let exitFullScreen = function () {
+    function exitFullScreen() {
 
         if (document.exitFullscreen) {
             document.exitFullscreen();
@@ -204,7 +207,7 @@ const FullScreenButton = function($container, api){
         }
 
     }
-    let toggleFullScreen = function () {
+    function toggleFullScreen() {
 
         if (!isFullScreen || (isIos && !checkFullScreen())) {
             requestFullScreen();
@@ -268,8 +271,7 @@ const FullScreenButton = function($container, api){
             toggleFullScreen();
         }
     };
-
-    return OvenTemplate($container, "FullScreenButton", null, events, onRendered, onDestroyed );
+    return OvenTemplate($container, "FullScreenButton", api.getConfig(), null, events, onRendered, onDestroyed );
 
 };
 

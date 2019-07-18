@@ -1,4 +1,4 @@
-export default () => {
+export default (uiText) => {
     return (
         `<div class="op-progressbar" tabindex="0">` +
             `<div class="op-progressbar-padding"></div>` +

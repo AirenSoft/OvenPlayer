@@ -17,10 +17,12 @@ import _ from "utils/underscore";
  * @param   isRoot
  *
  * */
-const OvenTemplate = function (container, templateName, data, events, onRendered, onDestroyed, isRoot) {
+const OvenTemplate = function (container, templateName, playerConfig, data, events, onRendered, onDestroyed, isRoot) {
+
     let $container = _.isElement(container) ? LA$(container) : container;
     let $template;
     let viewEvents = {};
+    let uiText = null;
     let that = {};
     that.data = data;
     let createAndSelectElement = function (html) {
@@ -31,11 +33,13 @@ const OvenTemplate = function (container, templateName, data, events, onRendered
 
         return newElement.firstChild;
     }
-
+    if(playerConfig && playerConfig.systemText){
+        uiText = playerConfig.systemText.ui;
+    }
     if (isRoot) {
-        $container.replace(createAndSelectElement(Templates[templateName + "Template"](data)));
+        $container.replace(createAndSelectElement(Templates[templateName + "Template"](uiText, data)));
     } else {
-        $container.append(createAndSelectElement(Templates[templateName + "Template"](data)));
+        $container.append(createAndSelectElement(Templates[templateName + "Template"](uiText, data)));
     }
 
     if (onRendered) {

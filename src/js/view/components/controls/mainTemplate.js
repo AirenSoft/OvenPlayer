@@ -1,5 +1,5 @@
 
-const Controls = function(hasPlaylist){
+const Controls = function(uiText, hasPlaylist){
     return (
         `<div class="op-controls-container op-clear">`+
             `<div class="op-bottom-panel op-clear">` +

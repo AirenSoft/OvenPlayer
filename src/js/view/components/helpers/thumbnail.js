@@ -21,7 +21,7 @@ const Thumbnail = function($container, api, playerState){
 
     };
 
-    return OvenTemplate($container, "Thumbnail", playerState, events, onRendered, onDestroyed );
+    return OvenTemplate($container, "Thumbnail", api.getConfig(), playerState, events, onRendered, onDestroyed );
 };
 
 export default Thumbnail;

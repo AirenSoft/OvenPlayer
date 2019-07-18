@@ -1,6 +1,6 @@
 import _ from "utils/underscore";
 
-export default (data) => {
+export default (uiText, data) => {
     let elements = '<div id="'+data.id+'" class="op-setting-panel '+(data.isRoot ? 'animated fadeIn': '')+'" style="max-height: '+data.height+'px">' +
                         '<div class="op-setting-title-container">' +
                             '<div class="op-setting-title" tabindex="0">' +

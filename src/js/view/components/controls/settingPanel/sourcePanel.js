@@ -36,7 +36,7 @@ const SourcePanel = function($container, api, data){
         }
     };
 
-    return OvenTemplate($container, "SourcePanel", data, events, onRendered, onDestroyed );
+    return OvenTemplate($container, "SourcePanel", api.getConfig(), data, events, onRendered, onDestroyed );
 
 };
 

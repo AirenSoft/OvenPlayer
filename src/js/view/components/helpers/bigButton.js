@@ -35,7 +35,7 @@ const BigButton = function($container, api, playerState){
         }
     };
 
-    return OvenTemplate($container, "BigButton", playerState, events, onRendered, onDestroyed );
+    return OvenTemplate($container, "BigButton", api.getConfig(), playerState, events, onRendered, onDestroyed );
 };
 
 export default BigButton;

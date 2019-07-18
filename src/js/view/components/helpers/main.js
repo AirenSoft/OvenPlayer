@@ -39,19 +39,19 @@ const Helpers = function($container, api){
 
     const onRendered = function($current, template){
         let qualityLevelChanging = false, newQualityLevel = -1;
-        let createBigButton = function(state){
+        function createBigButton(state){
             if(bigButton){
                 bigButton.destroy();
             }
             bigButton = BigButton($current, api, state);
         };
-        let createMessage = function(message, description ,withTimer, iconClass){
+        function createMessage(message, description ,withTimer, iconClass){
             if(messageBox){
                 messageBox.destroy();
             }
             messageBox = MessageBox($current, api, message, description, withTimer, iconClass);
         };
-        let createThumbnail = function(){
+        function createThumbnail(){
             if(thumbnail){
                 thumbnail.destroy();
             }
@@ -187,7 +187,7 @@ const Helpers = function($container, api){
 
     };
 
-    return OvenTemplate($container, "Helpers", null, events, onRendered, onDestroyed );
+    return OvenTemplate($container, "Helpers", api.getConfig(), null, events, onRendered, onDestroyed );
 };
 
 export default Helpers;

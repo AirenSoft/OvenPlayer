@@ -57,7 +57,7 @@ const Dash = function(element, playerConfig, adTagUrl){
         };
         dash = dashjs.MediaPlayer().create();
         if(dashjs.Version < "2.6.5"){
-            throw ERRORS[INIT_DASH_UNSUPPORT];
+            throw ERRORS.codes[INIT_DASH_UNSUPPORT];
         }
         dash.getDebug().setLogToBrowserConsole(false);
         dash.initialize(element, null, false);
@@ -96,7 +96,7 @@ const Dash = function(element, playerConfig, adTagUrl){
         dash.on(dashjs.MediaPlayer.events.ERROR, function(error){
             if(error && !isFirstError && ( error.error === DASHERROR.DOWNLOAD || error.error === DASHERROR.MANIFESTERROR )){
                 isFirstError = true;
-                let tempError = ERRORS[PLAYER_UNKNWON_NEWWORK_ERROR];
+                let tempError = ERRORS.codes[PLAYER_UNKNWON_NEWWORK_ERROR];
                 tempError.error = error;
                 errorTrigger(tempError, that);
             }
@@ -215,7 +215,7 @@ const Dash = function(element, playerConfig, adTagUrl){
         if(error && error.code && error.code === INIT_DASH_UNSUPPORT){
             throw error;
         }else{
-            let tempError =  ERRORS[INIT_DASH_NOTFOUND];
+            let tempError =  ERRORS.codes[INIT_DASH_NOTFOUND];
             tempError.error = error;
             throw tempError;
         }

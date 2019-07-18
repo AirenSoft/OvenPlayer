@@ -1,4 +1,4 @@
-export default (data) => {
+export default (uiText, data) => {
     return (
         `<div class="op-message-box op-clear">` +
             `<div class="op-message-container ">` +

@@ -60,7 +60,7 @@ const QualityPanel = function($container, api, data){
         }
     };
 
-    return OvenTemplate($container, "QualityPanel", data, events, onRendered, onDestroyed );
+    return OvenTemplate($container, "QualityPanel", api.getConfig(), data, events, onRendered, onDestroyed );
 
 };
 

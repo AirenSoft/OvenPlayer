@@ -36,7 +36,10 @@ const View = function($container){
     let screenSize = "";
     let currentPlayerSize = "";
 
-    let setHide = function (hide, autoHide) {
+    let that = {};
+
+    //Member Functions
+    function setHide(hide, autoHide) {
         if (autoHideTimer) {
             clearTimeout(autoHideTimer);
             autoHideTimer = null;
@@ -60,7 +63,7 @@ const View = function($container){
             }
         }
     };
-    let togglePlayPause = function () {
+    function togglePlayPause() {
         const currentState = playerState;
 
         if (currentState === STATE_IDLE || currentState === STATE_PAUSED || currentState === STATE_COMPLETE) {
@@ -69,7 +72,7 @@ const View = function($container){
             api.pause();
         }
     };
-    let seek = function (seconds, isRewind) {
+    function seek(seconds, isRewind) {
 
         const duration = api.getDuration();
         const currentPosition = api.getPosition();
@@ -83,7 +86,7 @@ const View = function($container){
 
         api.seek(position);
     };
-    let volume = function(isUp){
+    function volume(isUp){
         const currentVolumn = api.getVolume();
         let newVolume = 0;
         if(isUp){
@@ -93,7 +96,7 @@ const View = function($container){
         }
         api.setVolume(newVolume);
     };
-    let createContextPanel = function(pageX, pageY){
+    function createContextPanel(pageX, pageY){
         if(contextPanel){
             contextPanel.destroy();
             contextPanel = null;
@@ -101,7 +104,7 @@ const View = function($container){
         contextPanel = ContextPanel($playerRoot, api, {pageX : pageX, pageY : pageY});
     };
 
-    const calcPlayerWidth = function(){
+    function calcPlayerWidth(){
         let playerWidth = $playerRoot.width();
         if(playerWidth < 576){
             screenSize = "xsmall";
@@ -117,7 +120,6 @@ const View = function($container){
             $playerRoot.addClass("large");
         }
     };
-
 
     const onRendered = function($current, template){
         $playerRoot = $current;
@@ -263,53 +265,56 @@ const View = function($container){
         }
     };
 
+    that = OvenTemplate($container, "View", null, $container.id, events, onRendered, onDestroyed, true);
 
-    return Object.assign(OvenTemplate($container, "View", $container.id, events, onRendered, onDestroyed, true), {
-        getMediaElementContainer: function () {
-            return $playerRoot.find(".op-media-element-container").get();
-        },
-        setApi: function (playerInstance) {
-            api = playerInstance;
-            let showControlBar = api.getConfig() && api.getConfig().controls;
+    that.getMediaElementContainer = () => {
+        return $playerRoot.find(".op-media-element-container").get();
+    };
 
-            helper = Helpers($playerRoot.find(".op-ui"), playerInstance);
-            if(showControlBar){
+    that.setApi = (playerInstance) => {
+        api = playerInstance;
+        let showControlBar = api.getConfig() && api.getConfig().controls;
+
+        helper = Helpers($playerRoot.find(".op-ui"), playerInstance);
+        if(showControlBar){
+            controls = Controls($playerRoot.find(".op-ui"), playerInstance);
+        }
+
+        api.on(READY, function(data) {
+            if(!controls && showControlBar){
                 controls = Controls($playerRoot.find(".op-ui"), playerInstance);
             }
+        });
 
-            api.on(READY, function(data) {
-                if(!controls && showControlBar){
-                    controls = Controls($playerRoot.find(".op-ui"), playerInstance);
+        api.on(ERROR, function(error) {
+            if(api){
+                let sources = api.getSources()||[];
+                if(controls && (sources.length <= 1)){
+                    controls.destroy();
+                    controls = null;
                 }
-            });
+            }
 
-            api.on(ERROR, function(error) {
-                if(api){
-                    let sources = api.getSources()||[];
-                    if(controls && (sources.length <= 1)){
-                        controls.destroy();
-                        controls = null;
-                    }
+        });
+
+        api.on(DESTROY, function(data) {
+            viewTemplate.destroy();
+        });
+
+        api.on(PLAYER_STATE, function(data){
+            if(data && data.newstate){
+                playerState = data.newstate;
+                if(data.newstate === STATE_PLAYING || (data.newstate === STATE_AD_PLAYING && screenSize === "xsmall")){
+                    setHide(false, true);
+                }else{
+                    setHide(false);
                 }
+            }
+        });
+    };
 
-            });
 
-            api.on(DESTROY, function(data) {
-                viewTemplate.destroy();
-            });
-
-            api.on(PLAYER_STATE, function(data){
-                if(data && data.newstate){
-                    playerState = data.newstate;
-                    if(data.newstate === STATE_PLAYING || (data.newstate === STATE_AD_PLAYING && screenSize === "xsmall")){
-                        setHide(false, true);
-                    }else{
-                        setHide(false);
-                    }
-                }
-            });
-        }
-    });
+    return that;
 };
 
 

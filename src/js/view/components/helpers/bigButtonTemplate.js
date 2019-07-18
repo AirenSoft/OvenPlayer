@@ -9,7 +9,7 @@ import {
 } from "api/constants";
 
 
-export default (playerState) => {
+export default (uiText, playerState) => {
     return (`<div class="op-bigbutton-container ">` +
             `${playerState === STATE_PLAYING ?`<i class="op-con op-pause-big"></i>` :`` }`+
             `${playerState === STATE_PAUSED ?`<i class="op-bigbutton op-con op-play-big"></i>` :`` }`+

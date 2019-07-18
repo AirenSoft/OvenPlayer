@@ -252,7 +252,7 @@ const Provider = function(spec, playerConfig){
                             if(retryCount < 300){
                                 setTimeout(checkFileLoaded, 100);
                             }else{
-                                return reject(ERRORS[INIT_RTMP_SETUP_ERROR]);
+                                return reject(ERRORS.codes[INIT_RTMP_SETUP_ERROR]);
                             }
                         }
                     })();
@@ -261,7 +261,7 @@ const Provider = function(spec, playerConfig){
                     if(retryCount < 100){
                         setTimeout(checkSwfIsReady, 100);
                     }else{
-                        return reject(ERRORS[INIT_RTMP_SETUP_ERROR]);
+                        return reject(ERRORS.codes[INIT_RTMP_SETUP_ERROR]);
                     }
                 }
 

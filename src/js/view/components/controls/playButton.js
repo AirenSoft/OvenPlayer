@@ -24,7 +24,7 @@ const PlayButton = function ($container, api) {
         $iconReplay = "";
 
 
-    let setButtonState = function(state){
+    function setButtonState(state){
         $iconPlay.hide();
         $iconPause.hide();
         $iconReplay.hide();
@@ -77,7 +77,7 @@ const PlayButton = function ($container, api) {
         }
     };
 
-    return OvenTemplate($container, "PlayButton", null, events, onRendered, onDestroyed );
+    return OvenTemplate($container, "PlayButton", api.getConfig(), null, events, onRendered, onDestroyed );
 };
 
 export default PlayButton;
