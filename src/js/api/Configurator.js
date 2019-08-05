@@ -61,19 +61,22 @@ const Configurator = function(options, provider){
 
         deserialize(options);
         let config = Object.assign({}, Defaults, options);
+        let userCustumSystemText = [];
+        if(config.systemText){
+            userCustumSystemText = _.isArray(config.systemText) ? config.systemText : [config.systemText];
+        }
 
-        let userSystemText = _.isArray(config.systemText) ? config.systemText : [config.systemText];
-
-        for(let i = 0; i < userSystemText.length; i ++){
-            if(userSystemText[i].lang){
-
-                let currentSystemText = _.findWhere(SYSTEM_TEXT , {"lang": userSystemText[i].lang});
+        for(let i = 0; i < userCustumSystemText.length; i ++){
+            if(userCustumSystemText[i].lang){
+                let currentSystemText = _.findWhere(SYSTEM_TEXT , {"lang": userCustumSystemText[i].lang});
                 if(currentSystemText){
                     //validate & update
-                    Object.assign(currentSystemText,  userSystemText[i]);
+                    Object.assign(currentSystemText, userCustumSystemText[i]);
                 }else{
                     //create
-                    SYSTEM_TEXT.push(userSystemText[i]);
+                    currentSystemText = _.findWhere(SYSTEM_TEXT , {"lang": "en"});
+                    currentSystemText.lang = userCustumSystemText[i].lang;
+                    SYSTEM_TEXT.push(Object.assign(userCustumSystemText[i], currentSystemText));
                 }
             }
         }
