@@ -21,7 +21,11 @@ const HlsProvider = function(element, playerConfig, adTagUrl){
     let superDestroy_func = null;
 
     try {
-        hls = new Hls({debug: false});
+        hls = new Hls({
+            debug: false,
+            maxBufferLength: 20,
+            maxMaxBufferLength: 30
+        });
         hls.attachMedia(element);
 
         let spec = {
