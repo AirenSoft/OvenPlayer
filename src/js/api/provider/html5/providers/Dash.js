@@ -62,6 +62,11 @@ const Dash = function(element, playerConfig, adTagUrl){
         dash.getDebug().setLogToBrowserConsole(false);
         dash.initialize(element, null, false);
 
+        if (playerConfig.getConfig().liveDelay && typeof(playerConfig.getConfig().liveDelay) === 'number') {
+            dash.setLowLatencyEnabled(true);
+            dash.setLiveDelay(playerConfig.getConfig().liveDelay);
+        }
+
         let spec = {
             name : PROVIDER_DASH,
             element : element,
@@ -84,6 +89,9 @@ const Dash = function(element, playerConfig, adTagUrl){
         that = Provider(spec, playerConfig, function(source, lastPlayPosition){
             OvenPlayerConsole.log("DASH : Attach File : ", source, "lastPlayPosition : "+ lastPlayPosition);
             coveredSetAutoSwitchQualityFor(true);
+
+            console.log(source)
+
             sourceOfFile = source.file;
             dash.attachSource(sourceOfFile);
             seekPosition_sec = lastPlayPosition;

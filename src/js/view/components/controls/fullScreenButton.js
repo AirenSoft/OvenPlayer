@@ -18,7 +18,7 @@ import {
 const FullScreenButton = function($container, api){
     const $root = LA$("#"+api.getContainerId());
 
-    console.log("#"+api.getContainerId() , LA$("#"+api.getContainerId()));
+    // console.log("#"+api.getContainerId() , LA$("#"+api.getContainerId()));
 
     let $iconExpand = "", $iconCompress = "", isFullScreen = false;
 
