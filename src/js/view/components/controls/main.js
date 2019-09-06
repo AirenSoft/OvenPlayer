@@ -26,6 +26,7 @@ import {
     PROVIDER_RTMP,
     ERROR
 } from "api/constants";
+import {PLAYER_WEBRTC_WS_ERROR} from "../../../api/constants";
 const Controls = function($container, api){
 
     let volumeButton = "", playButton = "", settingButton = "", progressBar = "", timeDisplay = "", fullScreenButton = "", frameButtons = "", hasPlaylist = false, initialDuration;
@@ -141,6 +142,11 @@ const Controls = function($container, api){
         }
         initFullscreenButton();
 
+        api.on(READY, function () {
+            $current.show();
+        }, template);
+
+
         api.on(CONTENT_META, function(data){
             initialDuration = data.duration;
             lastContentMeta = data;
@@ -179,6 +185,11 @@ const Controls = function($container, api){
         api.on(PLAYER_PLAY, function(data){
             $current.show();
         }, template);
+
+        api.on(ERROR, function (error) {
+            $current.show();
+        }, template);
+
 
         api.on(AD_CHANGED, function(ad){
             if(ad.isLinear){

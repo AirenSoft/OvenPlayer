@@ -56,16 +56,15 @@ const Dash = function(element, playerConfig, adTagUrl){
             return result;
         };
         dash = dashjs.MediaPlayer().create();
+
+        window.op_dash = dash;
+
         if(dashjs.Version < "2.6.5"){
             throw ERRORS.codes[INIT_DASH_UNSUPPORT];
         }
         dash.getDebug().setLogToBrowserConsole(false);
         dash.initialize(element, null, false);
 
-        if (playerConfig.getConfig().liveDelay && typeof(playerConfig.getConfig().liveDelay) === 'number') {
-            dash.setLowLatencyEnabled(true);
-            dash.setLiveDelay(playerConfig.getConfig().liveDelay);
-        }
 
         let spec = {
             name : PROVIDER_DASH,
@@ -87,12 +86,21 @@ const Dash = function(element, playerConfig, adTagUrl){
         };
 
         that = Provider(spec, playerConfig, function(source, lastPlayPosition){
+
             OvenPlayerConsole.log("DASH : Attach File : ", source, "lastPlayPosition : "+ lastPlayPosition);
             coveredSetAutoSwitchQualityFor(true);
-
-            console.log(source)
-
             sourceOfFile = source.file;
+
+            if (source.lowLatency) {
+
+                dash.setLowLatencyEnabled(source.lowLatency);
+
+                if (playerConfig.getConfig().lowLatencyMpdLiveDelay && typeof(playerConfig.getConfig().lowLatencyMpdLiveDelay) === 'number') {
+
+                    dash.setLiveDelay(playerConfig.getConfig().lowLatencyMpdLiveDelay);
+                }
+            }
+
             dash.attachSource(sourceOfFile);
             seekPosition_sec = lastPlayPosition;
 
@@ -102,8 +110,9 @@ const Dash = function(element, playerConfig, adTagUrl){
         OvenPlayerConsole.log("DASH PROVIDER LOADED.");
 
         dash.on(dashjs.MediaPlayer.events.ERROR, function(error){
-            if(error && !isFirstError && ( error.error === DASHERROR.DOWNLOAD || error.error === DASHERROR.MANIFESTERROR )){
-                isFirstError = true;
+
+            if(error && ( error.error === DASHERROR.DOWNLOAD || error.error === DASHERROR.MANIFESTERROR )){
+
                 let tempError = ERRORS.codes[PLAYER_UNKNWON_NEWWORK_ERROR];
                 tempError.error = error;
                 errorTrigger(tempError, that);

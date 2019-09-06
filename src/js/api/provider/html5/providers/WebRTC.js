@@ -54,8 +54,7 @@ const WebRTC = function(element, playerConfig, adTagUrl){
                 element.srcObject = stream;
             };
 
-
-            webrtcLoader = WebRTCLoader(that, source.file, loadCallback, errorTrigger);
+            webrtcLoader = WebRTCLoader(that, source.file, loadCallback, errorTrigger, playerConfig);
 
             webrtcLoader.connect(function(){
                 //ToDo : resolve not wokring
@@ -79,6 +78,7 @@ const WebRTC = function(element, playerConfig, adTagUrl){
     that.destroy = () =>{
         if(webrtcLoader){
             webrtcLoader.destroy();
+            element.srcObject = null;
             webrtcLoader = null;
         }
         that.off(CONTENT_META, null, that);

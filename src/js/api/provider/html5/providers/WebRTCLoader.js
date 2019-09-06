@@ -9,22 +9,39 @@ import {
     PLAYER_WEBRTC_CREATE_ANSWER_ERROR,
     PLAYER_WEBRTC_SET_LOCAL_DESC_ERROR,
     PLAYER_WEBRTC_NETWORK_SLOW,
-    NETWORK_UNSTABLED,
+    PLAYER_WEBRTC_UNEXPECTED_DISCONNECT,
     OME_P2P_MODE
 } from "api/constants";
 
 
-const WebRTCLoader = function (provider, webSocketUrl, loadCallback, errorTrigger) {
+const WebRTCLoader = function (provider, webSocketUrl, loadCallback, errorTrigger, playerConfig) {
 
-    const peerConnectionConfig = {
-        'iceServers': [{
-            'urls': 'stun:stun.l.google.com:19302'
-        }]
+    let peerConnectionConfig = {
+        'iceServers': [
+            {
+                'urls': 'stun:stun.l.google.com:19302'
+            }
+        ]
     };
+
+    if (playerConfig.getConfig().webrtcConfig) {
+
+        if (playerConfig.getConfig().webrtcConfig.iceServers) {
+
+            peerConnectionConfig.iceServers = playerConfig.getConfig().webrtcConfig.iceServers;
+        }
+
+        if (playerConfig.getConfig().webrtcConfig.iceTransportPolicy) {
+
+            peerConnectionConfig.iceTransportPolicy = playerConfig.getConfig().webrtcConfig.iceTransportPolicy;
+        }
+    }
 
     let that = {};
 
     let ws = null;
+
+    let wsPing = null;
 
     let mainStream = null;
 
@@ -65,6 +82,10 @@ const WebRTCLoader = function (provider, webSocketUrl, loadCallback, errorTrigge
 
     function extractLossPacketsOnNetworkStatus(peerConnectionInfo) {
 
+        if (peerConnectionInfo.statisticsTimer) {
+            clearTimeout(peerConnectionInfo.statisticsTimer);
+        }
+
         if (!peerConnectionInfo.status) {
             peerConnectionInfo.status = {};
             peerConnectionInfo.status.lostPacketsArr = [];
@@ -72,53 +93,67 @@ const WebRTCLoader = function (provider, webSocketUrl, loadCallback, errorTrigge
             peerConnectionInfo.status.prevPacketsLost = 0;
             peerConnectionInfo.status.avg8Losses = 0;
             peerConnectionInfo.status.avgMoreThanThresholdCount = 0;  //If avg8Loss more than threshold.
-            peerConnectionInfo.status.threshold = 20;
+            peerConnectionInfo.status.threshold = 40;
         }
 
         let lostPacketsArr = peerConnectionInfo.status.lostPacketsArr,
             slotLength = peerConnectionInfo.status.slotLength, //8 statistics. every 2 seconds
             prevPacketsLost = peerConnectionInfo.status.prevPacketsLost,
             avg8Losses = peerConnectionInfo.status.avg8Losses,
-            avgMoreThanThresholdCount = peerConnectionInfo.status.avgMoreThanThresholdCount,  //If avg8Loss more than threshold.
+            // avgMoreThanThresholdCount = peerConnectionInfo.status.avgMoreThanThresholdCount,  //If avg8Loss more than threshold.
             threshold = peerConnectionInfo.status.threshold;
 
         peerConnectionInfo.statisticsTimer = setTimeout(function () {
             if (!peerConnectionInfo.peerConnection) {
                 return false;
             }
+
             peerConnectionInfo.peerConnection.getStats().then(function (stats) {
-                stats.forEach(function (state) {
-                    if (state.type === "inbound-rtp" && !state.isRemote) {
 
-                        //(state.packetsLost - prevPacketsLost) is real current lost.
-                        lostPacketsArr.push(parseInt(state.packetsLost) - parseInt(prevPacketsLost));
+                if (!stats) {
+                    return;
+                }
 
-                        if (lostPacketsArr.length > slotLength) {
-                            lostPacketsArr = lostPacketsArr.slice(lostPacketsArr.length - slotLength, lostPacketsArr.length);
-                            avg8Losses = _.reduce(lostPacketsArr, function (memo, num) {
-                                return memo + num;
-                            }, 0) / slotLength;
-                            OvenPlayerConsole.log("Last8 LOST PACKET AVG  : " + (avg8Losses), state.packetsLost, lostPacketsArr);
-                            if (avg8Losses > threshold) {
-                                avgMoreThanThresholdCount++;
-                                if (avgMoreThanThresholdCount === 3) {
-                                    OvenPlayerConsole.log("NETWORK UNSTABLED!!! ");
-                                    // clearTimeout(statisticsTimer);
-                                    // provider.trigger(NETWORK_UNSTABLED);
-                                    closePeer(NETWORK_UNSTABLED);
-                                }
-                            } else {
-                                avgMoreThanThresholdCount = 0;
+                if (playerConfig.getConfig().autoFallback && stats) {
+                    stats.forEach(function (state) {
+                        if (state.type === "inbound-rtp" && state.kind === 'video' && !state.isRemote) {
+
+                            //(state.packetsLost - prevPacketsLost) is real current lost.
+
+                            let actualPacketLost = parseInt(state.packetsLost) - parseInt(prevPacketsLost);
+
+                            lostPacketsArr.push(parseInt(state.packetsLost) - parseInt(prevPacketsLost));
+
+                            if (lostPacketsArr.length > slotLength) {
+
+                                lostPacketsArr.shift();
                             }
 
+                            if (lostPacketsArr.length === slotLength) {
+
+                                avg8Losses = _.reduce(lostPacketsArr, function (memo, num) {
+                                    return memo + num;
+                                }, 0) / slotLength;
+                                OvenPlayerConsole.log("Last8 LOST PACKET AVG  : " + (avg8Losses), "Current Packet LOST: " +  actualPacketLost, "Total Packet Lost: " + state.packetsLost, lostPacketsArr);
+
+                                if (avg8Losses > threshold) {
+                                    peerConnectionInfo.status.avgMoreThanThresholdCount = peerConnectionInfo.status.avgMoreThanThresholdCount + 1;
+                                    if (peerConnectionInfo.status.avgMoreThanThresholdCount >= 60) {
+                                        OvenPlayerConsole.log("NETWORK UNSTABLED!!! ");
+                                        let tempError = ERRORS.codes[PLAYER_WEBRTC_NETWORK_SLOW];
+                                        closePeer(tempError);
+                                    }
+                                } else {
+                                    peerConnectionInfo.status.avgMoreThanThresholdCount = 0;
+                                }
+                            }
+                            peerConnectionInfo.status.prevPacketsLost = state.packetsLost;
                         }
+                    });
 
-                        prevPacketsLost = state.packetsLost;
-                    }
-                });
-
-                extractLossPacketsOnNetworkStatus(peerConnectionInfo);
-            })
+                    extractLossPacketsOnNetworkStatus(peerConnectionInfo);
+                }
+            });
 
         }, 2000);
 
@@ -133,6 +168,7 @@ const WebRTCLoader = function (provider, webSocketUrl, loadCallback, errorTrigge
             peerId: peerId,
             peerConnection: peerConnection
         };
+
 
         //Set remote description when I received sdp from server.
         peerConnection.setRemoteDescription(new RTCSessionDescription(sdp))
@@ -175,13 +211,13 @@ const WebRTCLoader = function (provider, webSocketUrl, loadCallback, errorTrigge
             });
 
         if (candidates) {
-            console.log("[Message candidates]", candidates);
+            // console.log("[Message candidates]", candidates);
             addIceCandidate(peerConnection, candidates);
         }
 
         peerConnection.onicecandidate = function (e) {
             if (e.candidate) {
-                console.log("[onicecandidate]", e.candidate);
+
                 OvenPlayerConsole.log("WebRTCLoader send candidate to server : " + e.candidate);
 
                 // console.log('Main Peer Connection candidate', e.candidate);
@@ -197,6 +233,7 @@ const WebRTCLoader = function (provider, webSocketUrl, loadCallback, errorTrigge
         peerConnection.onconnectionstatechange = function (e) {
             //iceConnectionState
             OvenPlayerConsole.log("[on connection state change]", peerConnection.connectionState ,e);
+
         };
         peerConnection.oniceconnectionstatechange = function (e) {
             OvenPlayerConsole.log("[on ice connection state change]", peerConnection.iceConnectionState ,e);
@@ -207,19 +244,13 @@ const WebRTCLoader = function (provider, webSocketUrl, loadCallback, errorTrigge
             * */
             //This process is my imagination. I do not know how to reproduce.
             //Situation : OME is dead but ome can't send 'stop' message.
-            if(peerConnection.iceConnectionState === "disconnected"){
-                mainStream = null;
-                mainPeerConnectionInfo.peerConnection.close();
-                mainPeerConnectionInfo = null;
-
-                //resetCallback();
-                provider.pause();
-
-                sendMessage(ws, {
-                    command: 'request_offer'
-                });
-
-
+            if (peerConnection.iceConnectionState === 'disconnected' || peerConnection.iceConnectionState === 'closed') {
+                if (!wsClosedByPlayer) {
+                    if (mainPeerConnectionInfo) {
+                        let tempError = ERRORS.codes[PLAYER_WEBRTC_UNEXPECTED_DISCONNECT];
+                        closePeer(tempError);
+                    }
+                }
             }
         };
         peerConnection.ontrack = function (e) {
@@ -334,20 +365,22 @@ const WebRTCLoader = function (provider, webSocketUrl, loadCallback, errorTrigge
 
         for (let i = 0; i < candidates.length; i++) {
             if (candidates[i] && candidates[i].candidate) {
+
                 let basicCandidate = candidates[i];
 
                 let cloneCandidate = copyCandidate(basicCandidate);
 
-                peerConnection.addIceCandidate(new RTCIceCandidate(basicCandidate)).then(function () {
+                peerConnection.addIceCandidate(new RTCIceCandidate(basicCandidate)).then(function (e) {
                     OvenPlayerConsole.log("addIceCandidate : success");
                 }).catch(function (error) {
                     let tempError = ERRORS.codes[PLAYER_WEBRTC_ADD_ICECANDIDATE_ERROR];
                     tempError.error = error;
                     closePeer(tempError);
                 });
+
                 if(cloneCandidate){
                     peerConnection.addIceCandidate(new RTCIceCandidate(cloneCandidate)).then(function () {
-                        console.log("cloneCandidate addIceCandidate : success");
+                        // console.log("cloneCandidate addIceCandidate : success");
                     }).catch(function (error) {
                         let tempError = ERRORS.codes[PLAYER_WEBRTC_ADD_ICECANDIDATE_ERROR];
                         tempError.error = error;
@@ -360,25 +393,27 @@ const WebRTCLoader = function (provider, webSocketUrl, loadCallback, errorTrigge
     }
 
     function initWebSocket(resolve, reject) {
-        //ToDo : resolve not wokring
+
         try {
 
             ws = new WebSocket(webSocketUrl);
 
             ws.onopen = function () {
 
-                // console.log('웹소켓 열림');
-
                 sendMessage(ws, {
                     command: "request_offer"
                 });
+
+                // wsPing = setInterval(function () {
+                //
+                //     sendMessage(ws, {command: "ping"});
+                //
+                // }, 20 * 1000);
             };
 
             ws.onmessage = function (e) {
 
                 const message = JSON.parse(e.data);
-
-                // console.log('Receive message', message);
 
                 if (message.error) {
                     let tempError = ERRORS.codes[PLAYER_WEBRTC_WS_ERROR];
@@ -387,12 +422,24 @@ const WebRTCLoader = function (provider, webSocketUrl, loadCallback, errorTrigge
                     return;
                 }
 
+                if (Object.keys(message).length === 0 && message.constructor === Object) {
+
+                    OvenPlayerConsole.log('Empty Message');
+                    return;
+                }
+
+                if (message.command === 'ping') {
+
+                    sendMessage(ws, {command: 'pong'});
+                    return;
+                }
+
                 if (!message.id) {
 
                     OvenPlayerConsole.log('ID must be not null');
                     return;
                 }
-                console.log("MESSAGE :::::", message.command);
+
                 if (message.command === 'offer') {
 
                     createMainPeerConnection(message.id, message.peer_id, message.sdp, message.candidates, resolve);
@@ -471,25 +518,32 @@ const WebRTCLoader = function (provider, webSocketUrl, loadCallback, errorTrigge
                 }
             };
             ws.onclose = function () {
+
                 if(!wsClosedByPlayer){
+
                     let tempError = ERRORS.codes[PLAYER_WEBRTC_WS_ERROR];
+
+                    if (mainPeerConnectionInfo) {
+                        tempError = ERRORS.codes[PLAYER_WEBRTC_UNEXPECTED_DISCONNECT];
+                    }
+
                     closePeer(tempError);
                 }
             };
 
             ws.onerror = function (error) {
+
                 //Why Edge Browser calls onerror() when ws.close()?
                 if(!wsClosedByPlayer){
                     let tempError = ERRORS.codes[PLAYER_WEBRTC_WS_ERROR];
                     tempError.error = error;
                     closePeer(tempError);
-                    reject(error);
+                    // reject(error);
                 }
             };
 
         } catch (error) {
 
-            console.error(error);
             closePeer(error);
         }
     }
@@ -508,31 +562,12 @@ const WebRTCLoader = function (provider, webSocketUrl, loadCallback, errorTrigge
 
     function closePeer(error) {
 
-        OvenPlayerConsole.log('WebRTC Loader closePeear()');
-        if (ws) {
-            OvenPlayerConsole.log('Closing websocket connection...');
-            OvenPlayerConsole.log("Send Signaling : Stop.");
-            /*
-            0 (CONNECTING)
-            1 (OPEN)
-            2 (CLOSING)
-            3 (CLOSED)
-            */
-            if (ws.readyState === 1) {
+        OvenPlayerConsole.log('WebRTC Loader closePeer()');
 
-                if (mainPeerConnectionInfo) {
-                    sendMessage(ws, {
-                        command: 'stop',
-                        id: mainPeerConnectionInfo.id
-                    });
-                }
-                wsClosedByPlayer = true;
-                ws.close();
-            }
-            ws = null;
-        }else{
-            wsClosedByPlayer = false;
+        if (!error) {
+            wsClosedByPlayer = true;
         }
+
         if (mainPeerConnectionInfo) {
 
             mainStream = null;
@@ -541,6 +576,7 @@ const WebRTCLoader = function (provider, webSocketUrl, loadCallback, errorTrigge
             if (statisticsTimer) {
                 clearTimeout(statisticsTimer);
             }
+
             mainPeerConnectionInfo.peerConnection.close();
             mainPeerConnectionInfo = null;
         }
@@ -559,6 +595,38 @@ const WebRTCLoader = function (provider, webSocketUrl, loadCallback, errorTrigge
             clientPeerConnections = {};
         }
 
+        clearInterval(wsPing);
+        wsPing = null;
+
+        if (ws) {
+            OvenPlayerConsole.log('Closing websocket connection...');
+            OvenPlayerConsole.log("Send Signaling : Stop.");
+            /*
+            0 (CONNECTING)
+            1 (OPEN)
+            2 (CLOSING)
+            3 (CLOSED)
+            */
+            if (ws.readyState === 0 || ws.readyState === 1) {
+
+                wsClosedByPlayer = true;
+
+                if (mainPeerConnectionInfo) {
+                    sendMessage(ws, {
+                        command: 'stop',
+                        id: mainPeerConnectionInfo.id
+                    });
+                }
+
+                ws.close();
+            }
+
+        }else{
+            wsClosedByPlayer = false;
+        }
+
+        ws = null;
+
         if (error) {
             errorTrigger(error, provider);
         }
@@ -566,8 +634,10 @@ const WebRTCLoader = function (provider, webSocketUrl, loadCallback, errorTrigge
 
     function sendMessage(ws, message) {
 
-        // console.log('Send Message', message);
-        ws.send(JSON.stringify(message));
+        if (ws) {
+            ws.send(JSON.stringify(message));
+        }
+
     }
 
     that.connect = () => {
@@ -575,7 +645,6 @@ const WebRTCLoader = function (provider, webSocketUrl, loadCallback, errorTrigge
     };
 
     that.destroy = () => {
-        // console.log("WEBRTC LOADER destroy");
         closePeer();
     };
 

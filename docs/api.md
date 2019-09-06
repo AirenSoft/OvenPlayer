@@ -134,6 +134,13 @@ Enter the URLs of the diverse protocols to play.
         label: "360P DASH"
     },
     {
+        type : "mpd", 
+        file :  "https://path.to/your_video.mpd", 
+        framerate : 30,
+        label: "360P DASH",
+        lowLatency: true // Enable or disable low latency mode (optional)
+    },
+    {
         type : "hls", 
         file :  "https://path.to/your_video.m3u8", 
         framerate : 30,
@@ -279,6 +286,13 @@ Number| 3
 Specifies a maximum buffer length for live streaming content, in seconds.
 (*optional when using rtmp protocol.)
 
+#### lowLatencyMpdLiveDelay 
+type|default
+------|------
+Number| null
+
+Lowering this value will lower latency but may decrease the player's ability to build a stable buffer.
+(*optional when using low latancy mpeg dash protocol.)
 
 #### currentProtocolOnly 
 type|default

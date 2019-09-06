@@ -7,6 +7,7 @@ import {PROVIDER_HLS, STATE_IDLE,
     INIT_DASH_UNSUPPORT, ERRORS,
     INIT_HLSJS_NOTFOUND} from "api/constants";
 import _ from "utils/underscore";
+import {PLAYER_UNKNWON_NEWWORK_ERROR} from "../../../constants";
 
 /**
  * @brief   hlsjs provider extended core.
@@ -28,6 +29,7 @@ const HlsProvider = function(element, playerConfig, adTagUrl){
         });
         hls.attachMedia(element);
 
+
         let spec = {
             name : PROVIDER_HLS,
             element : element,
@@ -48,6 +50,7 @@ const HlsProvider = function(element, playerConfig, adTagUrl){
         };
         that = Provider(spec, playerConfig, function(source, lastPlayPosition){
             OvenPlayerConsole.log("HLS : onExtendedLoad : ", source, "lastPlayPosition : "+ lastPlayPosition);
+
             hls.loadSource(source.file);
 
             hls.once(Hls.Events.LEVEL_LOADED, function (event, data) {
@@ -64,7 +67,11 @@ const HlsProvider = function(element, playerConfig, adTagUrl){
                 }
             });
 
-
+            hls.on(Hls.Events.ERROR, function (event, data) {
+                let tempError = ERRORS.codes[PLAYER_UNKNWON_NEWWORK_ERROR];
+                tempError.error = data.details;
+                errorTrigger(tempError, that);
+            });
         });
 
         superDestroy_func = that.super('destroy');

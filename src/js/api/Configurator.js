@@ -21,6 +21,7 @@ const Configurator = function(options, provider){
             loop : false,
             controls : true,
             autoStart : false,
+            autoFallback: true,
             timecode : true,
             sourceIndex : 0,
             browser : "",
