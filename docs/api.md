@@ -294,6 +294,25 @@ Number| null
 Lowering this value will lower latency but may decrease the player's ability to build a stable buffer.
 (*optional when using low latancy mpeg dash protocol.)
 
+
+#### webrtcConfig.iceServers
+type|default
+------|------
+Object| null
+
+Specifies STUN / TURN server
+(*optional when using WebRTC protocol.)
+
+
+#### webrtcConfig.iceTransportPolicy
+type|default
+------|------
+String| null
+
+Specifies Ice Transport Policy. "all", "public", "relay"
+(*optional when using WebRTC protocol.)
+
+
 #### currentProtocolOnly 
 type|default
 ------|------
