@@ -176,7 +176,7 @@ const View = function($container){
         },
         //For iOS safari
         "touchstart .ovenplayer" : function(event, $current, template){
-            if (playerState === STATE_PLAYING || (playerState === STATE_AD_PLAYING && screenSize === "xsmall")) {
+            if (playerState === STATE_PLAYING || playerState === STATE_IDLE  || playerState === STATE_LOADING || (playerState === STATE_AD_PLAYING && screenSize === "xsmall")) {
                 setHide(false, true);
             } else {
                 setHide(false);
@@ -186,7 +186,7 @@ const View = function($container){
             event.preventDefault();
 
             //small screen with STATE_AD_PLAYING setHide too. becuase mobile hide ad ui.
-            if (playerState === STATE_PLAYING || (playerState === STATE_AD_PLAYING && screenSize === "xsmall")) {
+            if (playerState === STATE_PLAYING || playerState === STATE_IDLE || playerState === STATE_LOADING || (playerState === STATE_AD_PLAYING && screenSize === "xsmall")) {
                 setHide(false, true);
             } else {
                 setHide(false);
@@ -195,7 +195,7 @@ const View = function($container){
         "mousemove .ovenplayer" : function(event, $current, template){
             event.preventDefault();
 
-            if (playerState === STATE_PLAYING || (playerState === STATE_AD_PLAYING && screenSize === "xsmall")) {
+            if (playerState === STATE_PLAYING || playerState === STATE_IDLE || playerState === STATE_LOADING || (playerState === STATE_AD_PLAYING && screenSize === "xsmall")) {
                 setHide(false, true);
             } else {
                 setHide(false);
@@ -204,7 +204,7 @@ const View = function($container){
         "mouseleave .ovenplayer" : function(event, $current, template){
             event.preventDefault();
 
-            if(playerState === STATE_PLAYING  || (playerState === STATE_AD_PLAYING && screenSize === "xsmall")){
+            if(playerState === STATE_PLAYING  || playerState === STATE_IDLE || playerState === STATE_LOADING || (playerState === STATE_AD_PLAYING && screenSize === "xsmall")){
                 setHide(true);
             }
         },

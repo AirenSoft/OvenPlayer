@@ -93,6 +93,7 @@ export const PLAYER_WEBRTC_SET_REMOTE_DESC_ERROR = 503;
 export const PLAYER_WEBRTC_CREATE_ANSWER_ERROR = 504;
 export const PLAYER_WEBRTC_SET_LOCAL_DESC_ERROR = 505;
 export const PLAYER_WEBRTC_NETWORK_SLOW = 510;
+export const PLAYER_WEBRTC_UNEXPECTED_DISCONNECT = 511;
 
 export const WARN_MSG_MUTEDPLAY = "Please touch here to turn on the sound.";
 
@@ -225,6 +226,11 @@ export const SYSTEM_TEXT = [
                     "code": 510,
                     "message": "Network connection is unstable. Check the network connection.",
                     "reason": "Network is slow."
+                },
+                511: {
+                    "code": 511,
+                    "message": "Connection with low-latency(OME) terminated unexpectedly.",
+                    "reason": "Unexpected end of connection."
                 }
             }
         }
