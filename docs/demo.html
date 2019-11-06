@@ -26,7 +26,7 @@
 
     <script src="lib/vue.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-    <script src="lib/dash.all.min.js"></script>
+    <script src="https://cdn.dashjs.org/latest/dash.all.min.js"></script>
     <script src="lib/clipboard.min.js"></script>
     <script src="lib/jquery-1.12.4.min.js"></script>
     <script src="lib/popper.min.js"></script>
@@ -66,7 +66,7 @@
             <div class="col-12 mb-4">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Test Stream</h5>
+                        <h5 class="card-title">Test</h5>
                         <div class="row mb-2">
                             <div class="col-12">
                                 <div class="input-group">
@@ -78,19 +78,34 @@
                                             </a>
                                         </div>
                                     </div>
-
                                     <input type="text" class="form-control" placeholder="Please Enter URL." v-model="url">
                                     <div class="input-group-append">
                                         <button class="btn btn-outline-success" type="button" v-on:click="addSource">Add Source</button>
                                     </div>
                                 </div>
                                 <small v-if="errorMessage" class="form-text text-danger text-center">
-                                    {{ errorMessage }}
-                                </small>
 
+                                </small>
                             </div>
                         </div>
-
+                        <div class="mb-2 text-right" v-if="sources.length">
+                            <button type="button" class="btn btn-primary" v-on:click="loadSources">Load Player</button>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-12">
+                                <div class="form-check mt-3 mb-3">
+                                    <input type="checkbox" class="form-check-input" id="lowlatencyCheck">
+                                    <label class="form-check-label" for="lowlatencyCheck">Enable MPEG DASH Low Latency</label>
+                                </div>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="inputGroup-sizing-default">MPEG DASH Low Latency Live Delay</span>
+                                    </div>
+                                    <input id="liveDelayInput" type="number" class="form-control text-right" aria-label="Default" aria-describedby="inputGroup-sizing-default">
+                                    <div class="input-group-append"><button type="button" id="applyLiveDelayButton" class="btn btn-outline-success">Apply</button></div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="card mb-2" v-for="(source, index) in sources">
                             <div class="card-body">
                                 <strong>{{ source.type }}</strong> {{ source.file }}
@@ -99,10 +114,6 @@
                                 </button>
                             </div>
                         </div>
-
-                        <div class="mt-2 text-right"  v-if="sources.length">
-                            <button type="button" class="btn btn-primary" v-on:click="loadSources">Load Player</button>
-                        </div>
                     </div>
                 </div>
                 <div class="card mt-2">
@@ -110,28 +121,25 @@
                         <h5 class="card-title">Usage</h5>
                         <div class="card bg-light">
                             <div class="card-body">
-<pre>
+                                <pre>
 player = OvenPlayer.create("player", {
     sources: {{getSources()}}
 });
 </pre>
                             </div>
                         </div>
-                        <div  v-if="sources.length">
+                        <div v-if="sources.length">
                             <h5 class="card-title mt-4">Export</h5>
                             <div class="input-group">
                                 <input type="text" id="exportURL" v-model="exportUrl" readonly class="form-control">
                                 <div class="input-group-append">
-                                    <button class="btn btn-outline-danger btnExport" type="button" data-clipboard-target="#exportURL"  data-trigger="manual" data-placement="top" title="Copied to clipboard.">Export Source</button>
+                                    <button class="btn btn-outline-danger btnExport" type="button" data-clipboard-target="#exportURL" data-trigger="manual" data-placement="top" title="Copied to clipboard.">Export Source</button>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
             </div>
-
-
             <div class="col-12 mb-2">
                 <div class="text-center mt-2">
                     <small>
@@ -140,203 +148,297 @@ player = OvenPlayer.create("player", {
                 </div>
             </div>
         </div>
-
     </div>
-
-
-
-
     <script>
-        var player = "", preSources = "", errorOccured = false, isSSL = window.location.protocol === "https:";
-        var getParameterByName = function (name, url) {
-            if (!url) url = window.location.href;
-            name = name.replace(/[\[\]]/g, '\\$&');
-            var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
-                results = regex.exec(url);
-            if (!results) return null;
-            if (!results[2]) return '';
-            return decodeURIComponent(results[2].replace(/\+/g, ' '));
+    var player = "",
+        preSources = "",
+        errorOccured = false,
+        isSSL = window.location.protocol === "https:";
+    var getParameterByName = function(name, url) {
+        if (!url) url = window.location.href;
+        name = name.replace(/[\[\]]/g, '\\$&');
+        var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, ' '));
+    }
+    var urlSources = getParameterByName("sources");
+    var defaultSources = [{
+            type: 'mp4',
+            file:  '../dist/OCP_480.mp4',
+            label: '480p'
+        },
+        {
+            type: 'mp4',
+            file: '../dist/OCP_720.mp4',
+            label: '720p'
+        },
+        {
+            type: 'mp4',
+            file: '../dist/OCP_1080.mp4',
+            label: '1080p'
+        }];
+    var tracks = [
+        {
+            file: '../dist/caption_en.srt',
+            kind: "captions",
+            label: "ENG SRT"
+        },
+        {
+            file: '../dist/caption_en.vtt',
+            kind: "captions",
+            label: "ENG VTT"
+        },
+        {
+            file: '../dist/caption_ko.smi',
+            kind: "captions",
+            label: "KOR SMI"
+        },
+        {
+            file: '../dist/caption_ko.vtt',
+            kind: "captions",
+            label: "KOR VTT"
         }
-        var urlSources = getParameterByName("sources");
-        var defaultSources = [{
-                type: 'mp4',
-                file:  '../dist/OCP_480.mp4',
-                label: '480p'
-            },
-            {
-                type: 'mp4',
-                file: '../dist/OCP_720.mp4',
-                label: '720p'
-            },
-            {
-                type: 'mp4',
-                file: '../dist/OCP_1080.mp4',
-                label: '1080p'
-            }];
-        var tracks = [
-            {
-                file: '../dist/caption_en.srt',
-                kind: "captions",
-                label: "ENG SRT"
-            },
-            {
-                file: '../dist/caption_en.vtt',
-                kind: "captions",
-                label: "ENG VTT"
-            },
-            {
-                file: '../dist/caption_ko.smi',
-                kind: "captions",
-                label: "KOR SMI"
-            },
-            {
-                file: '../dist/caption_ko.vtt',
-                kind: "captions",
-                label: "KOR VTT"
-            }
-        ];
-        if(urlSources){
-            preSources = JSON.parse(urlSources);
-        }
-        console.log("PRE SOURCE : ");
-        console.log(preSources);
-        $( document ).ready(function() {
+    ];
+    if (urlSources) {
+        preSources = JSON.parse(urlSources);
+    }
+    console.log("PRE SOURCE : ");
+    console.log(preSources);
+    $(document).ready(function() {
+        // OvenPlayer.debug(true);
+        var clipboard = new ClipboardJS('.btnExport');
 
-            var clipboard = new ClipboardJS('.btnExport');
+        clipboard.on('success', function(e) {
+            $('.btnExport').tooltip('show');
+            setTimeout(function() {
+                $('.btnExport').tooltip('hide');
+            }, 3000);
 
-            clipboard.on('success', function(e) {
-                $('.btnExport').tooltip('show');
-                setTimeout(function(){
-                    $('.btnExport').tooltip('hide');
-                },3000);
-
-                e.clearSelection();
-            });
-
-
-            player = OvenPlayer.create("player", {
-                sources: preSources || defaultSources
-            });
-            player.on("ready", function(error){
-                errorOccured = false;
-            });
-            player.on("error", function(error){
-                errorOccured = true;
-                console.log(error);
-                navigation.errorMessage = error.message;
-            });
-
+            e.clearSelection();
         });
 
-        var navigation = new Vue({
-            el: '#demo-navi',
-            data: {
-                choicedProtocol : "Protocol",
-                protocols : ["webrtc", "rtmp", "dash", "hls", "http"],
-                url : "",
-                sources : preSources||[],
-                sourceId : 0,
-                errorMessage : "",
-                exportUrl : preSources ?  "https://ovenplayer.com/docs/demo.html?sources="+ encodeURIComponent(JSON.stringify(preSources)) : ""
-            },
-            methods : {
-                setProtocol : function(protocol){
-                    this.choicedProtocol = protocol;
-                },
-                addSource : function(){
-                    let type = "", data = {}, isMixedContentProblem = false;
+        var lowLatency = getParameterByName("lowLatency");
+        var liveDelay = getParameterByName("liveDelay");
 
-                    const findProtocol = function(url){
-                        let protocol = "Protocol";
-                        if(url.indexOf('rtmp:') === 0){
-                            protocol = "rtmp";
-                        }else if(url.indexOf('ws:') === 0 || url.indexOf('wss:') === 0){
-                            protocol = "webrtc";
-                        }else if(url.indexOf('http:') === 0 || url.indexOf('https:') === 0){
-                            if(url.indexOf('.m3u8') > 0){
-                                protocol = "hls";
-                            }else if(url.indexOf('.mpd') > 0){
-                                protocol = "dash";
-                            }else if(url.indexOf('.mp4') > 0){
-                                protocol = "http";
-                            }
-                        }
-                        return protocol;
-                    };
-                    this.choicedProtocol = findProtocol(this.url);
-                    if(this.choicedProtocol === "Protocol"){
-                        this.errorMessage = "Please enter a protocol.";
-                        return;
-                    }
-                    if(!this.url){
-                        this.errorMessage = "Please enter a playback url.";
-                        return;
-                    }
+        var playerOption = {
+            autoStart: true,
+            sources: preSources || defaultSources
+        };
 
+        if (lowLatency && lowLatency !== 'false') {
+            $('#lowlatencyCheck').prop('checked', true);
 
-                    if(this.choicedProtocol === "webrtc" && ( this.url.indexOf('ws:') !== 0 && this.url.indexOf('wss:') !== 0)){
-                        this.errorMessage = "Please enter a correct OME URL. ex)ws://dev2.airensoft.com:3333/app/stream_o";
-                        return;
-                    }
-                    if(isSSL){
-                        if(this.choicedProtocol === "webrtc" && this.url.indexOf('wss:') < 0){
-                            isMixedContentProblem = true;
-                        }else if((this.choicedProtocol === "http" || this.choicedProtocol === "hls" || this.choicedProtocol === "dash") && this.url.indexOf('https:') < 0){
-                            isMixedContentProblem = true;
-                        }
-                        if(isMixedContentProblem){
-                            this.errorMessage = "Please check the protocol. Mixed content error! HTTP sources on HTTPS.";
-                            isMixedContentProblem = false;
-                            return;
-                        }
-                    }
+            for (var i = 0; i < preSources.length; i ++) {
 
+                preSources[i].lowLatency = true;
+            }
+        }
 
+        if (liveDelay && liveDelay !== 'false') {
+            $('#liveDelayInput').val(liveDelay);
+            playerOption.lowLatencyMpdLiveDelay = liveDelay;
+        }
 
-                    this.sources.push({
-                        id : this.sourceId ++,
-                        file : this.url,
-                        type : this.choicedProtocol === "http" ? "mp4" : this.choicedProtocol
-                    });
-                    this.errorMessage = "";
-                    this.choicedProtocol = "Protocol";
-                    this.url = "";
+        console.log(playerOption)
 
-                    if(this.sources){
-                        this.exportUrl = "https://ovenplayer.com/docs/demo.html?sources="+ encodeURIComponent(JSON.stringify(this.sources));
-                    }
-                },
-                removeSource : function(index){
-                    this.sources.splice(index, 1);
+        player = OvenPlayer.create("player", playerOption);
 
-                    if(this.sources){
-                        this.exportUrl = "https://ovenplayer.com/docs/demo.html?sources="+ encodeURIComponent(JSON.stringify(this.sources));
-                    }
-                },
-                loadSources : function(){
-                    if(this.sources && this.sources.length > 0){
-                        if(errorOccured){
-                            player.remove();
-                            player = OvenPlayer.create("player", {
-                                sources: JSON.parse(JSON.stringify(this.sources))
-                            });
-                        }else{
-                            player.load({sources :JSON.parse(JSON.stringify(this.sources))});
-                        }
-                        this.errorMessage = "";
-                    }else{
-                        this.errorMessage = "Please add a playback info.";
-                    }
-                },
-                getSources : function(){
-                    return this.sources.length ? this.sources.map(function(source){return {file : source.file, type : source.type};}) :  defaultSources;
+        player.on("ready", function(error) {
+            errorOccured = false;
+        });
+
+        player.on("error", function(error) {
+            errorOccured = true;
+            console.log(error);
+            navigation.errorMessage = error.message;
+        });
+
+        $('#lowlatencyCheck, #liveDelayInput').on('change', function() {
+
+            if (navigation.sources) {
+
+                var lowLatencyCheck = false;
+
+                if($('#lowlatencyCheck').prop('checked')) {
+                    lowLatencyCheck = true;
                 }
+
+                var liveDelayValue = false;
+
+                if($.trim($('#liveDelayInput').val()) !== '') {
+                    liveDelayValue = $.trim($('#liveDelayInput').val());
+                }
+
+                navigation.exportUrl = window.location.protocol + "//" + location.host + "?sources=" + encodeURIComponent(JSON.stringify(navigation.sources)) +
+                '&lowLatency='+ lowLatencyCheck + '&liveDelay=' + liveDelayValue;
             }
         });
 
+        $('#applyLiveDelayButton').on('click', function () {
+            navigation.loadSources()
+        });
+    });
+
+    var navigation = new Vue({
+        el: '#demo-navi',
+        data: {
+            choicedProtocol: "Protocol",
+            protocols: ["webrtc", "rtmp", "dash", "hls", "http"],
+            url: "",
+            sources: preSources || [],
+            sourceId: 0,
+            errorMessage: "",
+            exportUrl: preSources ? window.location.protocol + "//" + location.host + "?sources=" + encodeURIComponent(JSON.stringify(preSources)) : ""
+        },
+        methods: {
+            setProtocol: function(protocol) {
+                this.choicedProtocol = protocol;
+            },
+            addSource: function() {
+                let type = "",
+                    data = {},
+                    isMixedContentProblem = false;
+                const findProtocol = function(url) {
+                    let protocol = "Protocol";
+                    if (url.indexOf('rtmp:') === 0) {
+                        protocol = "rtmp";
+                    } else if (url.indexOf('ws:') === 0 || url.indexOf('wss:') === 0) {
+                        protocol = "webrtc";
+                    } else if (url.indexOf('http:') === 0 || url.indexOf('https:') === 0) {
+                        if (url.indexOf('.m3u8') > 0) {
+                            protocol = "hls";
+                        } else if (url.indexOf('.mpd') > 0) {
+                            protocol = "dash";
+                        } else if (url.indexOf('.mp4') > 0) {
+                            protocol = "http";
+                        }
+                    }
+                    return protocol;
+                };
+                this.choicedProtocol = findProtocol(this.url);
+                if (this.choicedProtocol == "Protocol") {
+                    this.errorMessage = "Please enter a protocol.";
+                    return;
+                }
+                if (!this.url) {
+                    this.errorMessage = "Please enter a playback url.";
+                    return;
+                }
 
 
+                if (this.choicedProtocol === "webrtc" && (this.url.indexOf('ws:') !== 0 && this.url.indexOf('wss:') !== 0)) {
+                    this.errorMessage = "Please enter a correct OME URL. ex)ws://dev2.airensoft.com:3333/app/stream_o";
+                    return;
+                }
+                if (isSSL) {
+                    if (this.choicedProtocol === "webrtc" && this.url.indexOf('wss:') < 0) {
+                        isMixedContentProblem = true;
+                    } else if ((this.choicedProtocol === "http" || this.choicedProtocol === "hls" || this.choicedProtocol === "dash") && this.url.indexOf('https:') < 0) {
+                        isMixedContentProblem = true;
+                    }
+                    if (isMixedContentProblem) {
+                        this.errorMessage = "Please check the protocol. Mixed content error! HTTP sources on HTTPS.";
+                        isMixedContentProblem = false;
+                        return;
+                    }
+                }
 
+                var sources1 = {
+                    id: this.sourceId++,
+                    file: this.url,
+                    type: this.choicedProtocol === "http" ? "mp4" : this.choicedProtocol
+                };
+
+                this.sources.push(sources1);
+                this.errorMessage = "";
+                this.choicedProtocol = "Protocol";
+                this.url = "";
+
+                if (this.sources) {
+
+                    var lowLatency = false;
+
+                    if($('#lowlatencyCheck').prop('checked')) {
+                        lowLatency = true;
+                    }
+
+                    var liveDelay = false;
+
+                    if($.trim($('#liveDelayInput').val()) !== '') {
+                        liveDelay = $.trim($('#liveDelayInput').val());
+                    }
+
+                    this.exportUrl = window.location.protocol + "//" + location.host + "?sources=" + encodeURIComponent(JSON.stringify(this.sources)) +
+                    '&lowLatency='+ lowLatency + '&liveDelay=' + liveDelay;
+                }
+            },
+            removeSource: function(index) {
+                this.sources.splice(index, 1);
+
+                if (this.sources) {
+                    var lowLatency = false;
+
+                    if($('#lowlatencyCheck').prop('checked')) {
+                        lowLatency = true;
+                    }
+
+                    var liveDelay = false;
+
+                    if($.trim($('#liveDelayInput').val()) !== '') {
+                        liveDelay = $.trim($('#liveDelayInput').val());
+                    }
+
+                    this.exportUrl = window.location.protocol + "//" + location.host + "?sources=" + encodeURIComponent(JSON.stringify(this.sources)) +
+                    '&lowLatency='+ lowLatency + '&liveDelay=' + liveDelay;
+                }
+            },
+            loadSources: function() {
+                if (this.sources && this.sources.length > 0) {
+                    player.remove();
+                    playerOption = {
+                        autoStart: true,
+                        sources: JSON.parse(JSON.stringify(this.sources))
+                    };
+
+                    if($('#lowlatencyCheck').prop('checked')) {
+
+
+                        for (var i = 0; i < playerOption.sources.length; i ++) {
+
+                            playerOption.sources[i].lowLatency = true;
+                        }
+
+                    }
+
+                    if($.trim($('#liveDelayInput').val()) !== '') {
+                        playerOption.lowLatencyMpdLiveDelay = parseInt($.trim($('#liveDelayInput').val()))
+                    }
+
+                    player = OvenPlayer.create("player", playerOption);
+                    this.errorMessage = "";
+                } else {
+                    this.errorMessage = "Please add a playback info.";
+                }
+            },
+            getSources: function() {
+                return this.sources.length ? this.sources.map(function(source) {
+
+                    var sourceR = {
+                        file: source.file,
+                        type: source.type
+                    }
+
+                    return sourceR;
+                }) : defaultSources;
+            },
+            getInitCode: function() {
+
+            }
+        }
+    });
     </script>
 </body>
+
 </html>
