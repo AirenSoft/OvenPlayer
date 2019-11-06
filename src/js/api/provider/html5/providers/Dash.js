@@ -24,10 +24,10 @@ import _ from "utils/underscore";
  * @param   playerConfig    config.
  * */
 const DASHERROR = {
-    DOWNLOAD : "download",
-    MANIFESTERROR : "manifestError"
+    DOWNLOAD: "download",
+    MANIFESTERROR: "manifestError"
 };
-const Dash = function(element, playerConfig, adTagUrl){
+const Dash = function (element, playerConfig, adTagUrl) {
     let that = {};
     let dash = null;
     let superPlay_func = null;
@@ -39,68 +39,129 @@ const Dash = function(element, playerConfig, adTagUrl){
 
     let sourceOfFile = "";
     try {
-        const coveredSetAutoSwitchQualityFor = function(isAuto){
-            if(dashjs.Version > "2.9.0"){
+        const coveredSetAutoSwitchQualityFor = function (isAuto) {
+
+            if (dashjs.Version >= '3.0.0') {
+                dash.updateSettings({
+                    streaming: {
+                        abr: {
+                            autoSwitchBitrate: {
+                                video: isAuto
+                            }
+                        }
+                    }
+                });
+            } else if (dashjs.Version > "2.9.0") {
                 dash.setAutoSwitchQualityFor("video", isAuto);
-            }else{
+            } else {
                 dash.setAutoSwitchQualityFor(isAuto);
             }
         };
-        const coveredGetAutoSwitchQualityFor = function(){
+        const coveredGetAutoSwitchQualityFor = function () {
             let result = "";
-            if(dashjs.Version > "2.9.0"){
+
+            if (dashjs.Version >= '3.0.0') {
+                result = dash.getSettings().streaming.abr.autoSwitchBitrate.video;
+            } else if (dashjs.Version > "2.9.0") {
                 result = dash.getAutoSwitchQualityFor("video");
-            }else{
+            } else {
                 result = dash.getAutoSwitchQualityFor();
             }
             return result;
         };
+
         dash = dashjs.MediaPlayer().create();
 
-        if(dashjs.Version < "2.6.5"){
+        window.dash = dash;
+
+        if (dashjs.Version < "2.6.5") {
             throw ERRORS.codes[INIT_DASH_UNSUPPORT];
         }
-        dash.getDebug().setLogToBrowserConsole(false);
+
+        if (dashjs.Version >= '3.0.0') {
+
+            dash.updateSettings({
+                'debug': {
+                    'logLevel': dashjs.Debug.LOG_LEVEL_NONE
+                }
+            });
+        } else {
+
+            dash.getDebug().setLogToBrowserConsole(false);
+        }
+
         dash.initialize(element, null, false);
 
-
         let spec = {
-            name : PROVIDER_DASH,
-            element : element,
-            mse : dash,
-            listener : null,
-            isLoaded : false,
-            canSeek : false,
-            isLive : false,
-            seeking : false,
-            state : STATE_IDLE,
-            buffer : 0,
-            framerate : 0,
-            currentQuality : -1,
-            currentSource : -1,
-            qualityLevels : [],
-            sources : [],
-            adTagUrl : adTagUrl
+            name: PROVIDER_DASH,
+            element: element,
+            mse: dash,
+            listener: null,
+            isLoaded: false,
+            canSeek: false,
+            isLive: false,
+            seeking: false,
+            state: STATE_IDLE,
+            buffer: 0,
+            framerate: 0,
+            currentQuality: -1,
+            currentSource: -1,
+            qualityLevels: [],
+            sources: [],
+            adTagUrl: adTagUrl
         };
 
-        that = Provider(spec, playerConfig, function(source, lastPlayPosition){
+        that = Provider(spec, playerConfig, function (source, lastPlayPosition) {
 
-            OvenPlayerConsole.log("DASH : Attach File : ", source, "lastPlayPosition : "+ lastPlayPosition);
+            OvenPlayerConsole.log("DASH : Attach File : ", source, "lastPlayPosition : " + lastPlayPosition);
             coveredSetAutoSwitchQualityFor(true);
             sourceOfFile = source.file;
 
             if (source.lowLatency) {
 
-                dash.setLowLatencyEnabled(source.lowLatency);
+                if (dashjs.Version >= '3.0.0') {
+
+                    dash.updateSettings({
+                        streaming: {
+                            lowLatencyEnabled: source.lowLatency
+                        }
+                    });
+                } else {
+
+                    dash.setLowLatencyEnabled(source.lowLatency);
+                }
 
                 if (playerConfig.getConfig().lowLatencyMpdLiveDelay && typeof(playerConfig.getConfig().lowLatencyMpdLiveDelay) === 'number') {
 
-                    dash.setLiveDelay(playerConfig.getConfig().lowLatencyMpdLiveDelay);
+                    if (dashjs.Version >= '3.0.0') {
+
+                        dash.updateSettings({
+                            streaming: {
+                                liveDelay: playerConfig.getConfig().lowLatencyMpdLiveDelay
+                            }
+                        });
+                    } else {
+                        dash.setLiveDelay(playerConfig.getConfig().lowLatencyMpdLiveDelay);
+                    }
                 }
+
             } else {
 
-                dash.setLowLatencyEnabled(false);
-                dash.setLiveDelay();
+                if (dashjs.Version >= '3.0.0') {
+
+                    dash.updateSettings({
+                        streaming: {
+                            lowLatencyEnabled: false,
+                            liveDelay: undefined
+                        }
+                    });
+
+                } else {
+
+                    dash.setLowLatencyEnabled(false);
+                    dash.setLiveDelay();
+                }
+
             }
 
             dash.attachSource(sourceOfFile);
@@ -111,9 +172,9 @@ const Dash = function(element, playerConfig, adTagUrl){
         superDestroy_func = that.super('destroy');
         OvenPlayerConsole.log("DASH PROVIDER LOADED.");
 
-        dash.on(dashjs.MediaPlayer.events.ERROR, function(error){
+        dash.on(dashjs.MediaPlayer.events.ERROR, function (error) {
 
-            if(error && ( error.error === DASHERROR.DOWNLOAD || error.error === DASHERROR.MANIFESTERROR )){
+            if (error && (error.error === DASHERROR.DOWNLOAD || error.error === DASHERROR.MANIFESTERROR)) {
 
                 let tempError = ERRORS.codes[PLAYER_UNKNWON_NEWWORK_ERROR];
                 tempError.error = error;
@@ -121,57 +182,57 @@ const Dash = function(element, playerConfig, adTagUrl){
             }
         });
 
-        dash.on(dashjs.MediaPlayer.events.QUALITY_CHANGE_REQUESTED, function(event){
-            if(event && event.mediaType && event.mediaType === "video"){
+        dash.on(dashjs.MediaPlayer.events.QUALITY_CHANGE_REQUESTED, function (event) {
+            if (event && event.mediaType && event.mediaType === "video") {
                 that.trigger(CONTENT_LEVEL_CHANGED, {
                     isAuto: coveredGetAutoSwitchQualityFor(),
                     currentQuality: spec.currentQuality,
-                    type : "request"
+                    type: "request"
                 });
             }
         });
-        dash.on(dashjs.MediaPlayer.events.QUALITY_CHANGE_RENDERED, function(event){
-            if(event && event.mediaType && event.mediaType === "video"){
+        dash.on(dashjs.MediaPlayer.events.QUALITY_CHANGE_RENDERED, function (event) {
+            if (event && event.mediaType && event.mediaType === "video") {
                 spec.currentQuality = event.newQuality;
                 that.trigger(CONTENT_LEVEL_CHANGED, {
                     isAuto: coveredGetAutoSwitchQualityFor(),
                     currentQuality: event.newQuality,
-                    type : "render"
+                    type: "render"
                 });
             }
         });
 
-        dash.on(dashjs.MediaPlayer.events.PLAYBACK_METADATA_LOADED, function(event){
+        dash.on(dashjs.MediaPlayer.events.PLAYBACK_METADATA_LOADED, function (event) {
 
             OvenPlayerConsole.log("DASH : PLAYBACK_METADATA_LOADED  : ", dash.getQualityFor("video"), dash.getBitrateInfoListFor('video'), dash.getBitrateInfoListFor('video')[dash.getQualityFor("video")]);
 
             isDashMetaLoaded = true;
             let subQualityList = dash.getBitrateInfoListFor('video');
             spec.currentQuality = dash.getQualityFor("video");
-            for(let i = 0; i < subQualityList.length; i ++){
-                if(!_.findWhere(spec.qualityLevels,{bitrate : subQualityList[i].bitrate, height: subQualityList[i].height,width: subQualityList[i].width})){
+            for (let i = 0; i < subQualityList.length; i++) {
+                if (!_.findWhere(spec.qualityLevels, {bitrate: subQualityList[i].bitrate, height: subQualityList[i].height, width: subQualityList[i].width})) {
                     spec.qualityLevels.push({
                         bitrate: subQualityList[i].bitrate,
                         height: subQualityList[i].height,
                         width: subQualityList[i].width,
                         index: subQualityList[i].qualityIndex,
-                        label : subQualityList[i].width+"x"+subQualityList[i].height+", "+ sizeHumanizer(subQualityList[i].bitrate, true, "bps")
+                        label: subQualityList[i].width + "x" + subQualityList[i].height + ", " + sizeHumanizer(subQualityList[i].bitrate, true, "bps")
                     });
                 }
             }
 
-            if(seekPosition_sec){
+            if (seekPosition_sec) {
                 dash.seek(seekPosition_sec);
-                if(!playerConfig.isAutoStart()){
+                if (!playerConfig.isAutoStart()) {
                     that.play();
                 }
             }
 
-            if(dash.isDynamic()){
+            if (dash.isDynamic()) {
                 spec.isLive = true;
             }
 
-            if(playerConfig.isAutoStart() && !runedAutoStart){
+            if (playerConfig.isAutoStart() && !runedAutoStart) {
                 OvenPlayerConsole.log("DASH : AUTOPLAY()!");
                 that.play();
 
@@ -182,25 +243,25 @@ const Dash = function(element, playerConfig, adTagUrl){
         });
 
 
-        that.play = (mutedPlay) =>{
+        that.play = (mutedPlay) => {
             let retryCount = 0;
-            if(that.getState() === STATE_AD_PLAYING || that.getState() === STATE_AD_PAUSED){
+            if (that.getState() === STATE_AD_PLAYING || that.getState() === STATE_AD_PAUSED) {
 
-            }else{
+            } else {
                 isDashMetaLoaded = false;
                 dash.attachView(element);
             }
             //Dash can infinite loading when player is in a paused state for a long time.
             //Then dash always have to reload(attachView) and wait for MetaLoaded event when resume.
-            (function checkDashMetaLoaded(){
-                retryCount ++;
-                if(isDashMetaLoaded){
+            (function checkDashMetaLoaded() {
+                retryCount++;
+                if (isDashMetaLoaded) {
                     superPlay_func(mutedPlay);
-                }else{
+                } else {
 
-                    if(retryCount < 300){
+                    if (retryCount < 300) {
                         setTimeout(checkDashMetaLoaded, 100);
-                    }else{
+                    } else {
                         that.play();
                     }
                 }
@@ -209,11 +270,11 @@ const Dash = function(element, playerConfig, adTagUrl){
         };
 
         that.setCurrentQuality = (qualityIndex) => {
-            if(that.getState() !== STATE_PLAYING){
+            if (that.getState() !== STATE_PLAYING) {
                 that.play();
             }
             spec.currentQuality = qualityIndex;
-            if(coveredGetAutoSwitchQualityFor()){
+            if (coveredGetAutoSwitchQualityFor()) {
                 coveredSetAutoSwitchQualityFor(false);
             }
             dash.setQualityFor("video", qualityIndex);
@@ -225,16 +286,19 @@ const Dash = function(element, playerConfig, adTagUrl){
         that.setAutoQuality = (isAuto) => {
             coveredSetAutoSwitchQualityFor(isAuto);
         };
-        that.destroy = () =>{
+        that.destroy = () => {
             dash.reset();
             OvenPlayerConsole.log("DASH : PROVIDER DESTROYED.");
             superDestroy_func();
         };
-    }catch(error){
-        if(error && error.code && error.code === INIT_DASH_UNSUPPORT){
+    } catch (error) {
+
+        console.log(error);
+
+        if (error && error.code && error.code === INIT_DASH_UNSUPPORT) {
             throw error;
-        }else{
-            let tempError =  ERRORS.codes[INIT_DASH_NOTFOUND];
+        } else {
+            let tempError = ERRORS.codes[INIT_DASH_NOTFOUND];
             tempError.error = error;
             throw tempError;
         }
