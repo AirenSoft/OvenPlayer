@@ -57,8 +57,6 @@ const Dash = function(element, playerConfig, adTagUrl){
         };
         dash = dashjs.MediaPlayer().create();
 
-        window.op_dash = dash;
-
         if(dashjs.Version < "2.6.5"){
             throw ERRORS.codes[INIT_DASH_UNSUPPORT];
         }
@@ -99,6 +97,10 @@ const Dash = function(element, playerConfig, adTagUrl){
 
                     dash.setLiveDelay(playerConfig.getConfig().lowLatencyMpdLiveDelay);
                 }
+            } else {
+
+                dash.setLowLatencyEnabled(false);
+                dash.setLiveDelay();
             }
 
             dash.attachSource(sourceOfFile);
