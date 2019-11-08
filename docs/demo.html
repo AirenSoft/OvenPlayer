@@ -66,7 +66,7 @@
             <div class="col-12 mb-4">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Test</h5>
+                        <h5 class="card-title">Test Stream</h5>
                         <div class="row mb-2">
                             <div class="col-12">
                                 <div class="input-group">
@@ -99,7 +99,7 @@
                                 </div>
                                 <div class="input-group">
                                     <div class="input-group-prepend">
-                                        <span class="input-group-text" id="inputGroup-sizing-default">MPEG DASH Low Latency Live Delay</span>
+                                        <span class="input-group-text" id="inputGroup-sizing-default">L-DASH Live Delay</span>
                                     </div>
                                     <input id="liveDelayInput" type="number" class="form-control text-right" aria-label="Default" aria-describedby="inputGroup-sizing-default">
                                     <div class="input-group-append"><button type="button" id="applyLiveDelayButton" class="btn btn-outline-success">Apply</button></div>
@@ -271,9 +271,14 @@ player = OvenPlayer.create("player", {
                     liveDelayValue = $.trim($('#liveDelayInput').val());
                 }
 
-                navigation.exportUrl = window.location.protocol + "//" + location.host + "?sources=" + encodeURIComponent(JSON.stringify(navigation.sources)) +
+                navigation.exportUrl = window.location.protocol + "//" + location.host + location.pathname  + "?sources=" + encodeURIComponent(JSON.stringify(navigation.sources)) +
                 '&lowLatency='+ lowLatencyCheck + '&liveDelay=' + liveDelayValue;
             }
+        });
+
+        $('#lowlatencyCheck').on('change', function () {
+
+            navigation.loadSources();
         });
 
         $('#applyLiveDelayButton').on('click', function () {
@@ -290,7 +295,7 @@ player = OvenPlayer.create("player", {
             sources: preSources || [],
             sourceId: 0,
             errorMessage: "",
-            exportUrl: preSources ? window.location.protocol + "//" + location.host + "?sources=" + encodeURIComponent(JSON.stringify(preSources)) : ""
+            exportUrl: preSources ? window.location.protocol + "//" + location.host + location.pathname  + "?sources=" + encodeURIComponent(JSON.stringify(preSources)) : ""
         },
         methods: {
             setProtocol: function(protocol) {
@@ -370,7 +375,7 @@ player = OvenPlayer.create("player", {
                         liveDelay = $.trim($('#liveDelayInput').val());
                     }
 
-                    this.exportUrl = window.location.protocol + "//" + location.host + "?sources=" + encodeURIComponent(JSON.stringify(this.sources)) +
+                    this.exportUrl = window.location.protocol + "//" + location.host + location.pathname  + "?sources=" + encodeURIComponent(JSON.stringify(this.sources)) +
                     '&lowLatency='+ lowLatency + '&liveDelay=' + liveDelay;
                 }
             },
@@ -390,7 +395,7 @@ player = OvenPlayer.create("player", {
                         liveDelay = $.trim($('#liveDelayInput').val());
                     }
 
-                    this.exportUrl = window.location.protocol + "//" + location.host + "?sources=" + encodeURIComponent(JSON.stringify(this.sources)) +
+                    this.exportUrl = window.location.protocol + "//" + location.host + location.pathname + "?sources=" + encodeURIComponent(JSON.stringify(this.sources)) +
                     '&lowLatency='+ lowLatency + '&liveDelay=' + liveDelay;
                 }
             },
