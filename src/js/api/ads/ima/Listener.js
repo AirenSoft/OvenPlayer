@@ -114,14 +114,8 @@ const Listener = function(adsManager, provider, adsSpec, OnAdError){
     };
     lowLevelEvents[LOADED] = (adEvent) => {
         OvenPlayerConsole.log(adEvent.type);
-        console.log(adEvent.getAd());
-        console.log(adEvent.getAdData());
         let remainingTime = adsManager.getRemainingTime();
         let ad = adEvent.getAd();
-        /*var metadata = {
-            duration: remainingTime,
-            type :"ad"
-        };*/
         provider.trigger(STATE_AD_LOADED, {remaining : remainingTime, isLinear : ad.isLinear() });
 
     };

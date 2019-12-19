@@ -128,10 +128,10 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
     };
     that.setMetaLoaded = () => {
         spec.isLoaded = true;
-    }
+    };
     that.metaLoaded = () => {
         return spec.isLoaded;
-    }
+    };
 
     that.setState = (newState) => {
         if(spec.state !== newState){
@@ -351,8 +351,9 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
 
         }
 
-    }
+    };
     that.pause = () =>{
+
         OvenPlayerConsole.log("Provider : pause()");
         if(!elVideo){
             return false;

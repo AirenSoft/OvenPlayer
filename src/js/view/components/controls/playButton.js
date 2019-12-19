@@ -28,7 +28,7 @@ const PlayButton = function ($container, api) {
         $iconPlay.hide();
         $iconPause.hide();
         $iconReplay.hide();
-        if(state === STATE_PLAYING || state === STATE_AD_PLAYING){
+        if(state === STATE_PLAYING || state === STATE_AD_PLAYING || state === STATE_LOADING || state === STATE_STALLED){
             $iconPause.show();
         }else if(state === STATE_PAUSED || state === STATE_AD_PAUSED){
             $iconPlay.show();
@@ -67,6 +67,8 @@ const PlayButton = function ($container, api) {
                 api.play();
             } else if (currentState === STATE_PLAYING || currentState === STATE_AD_PLAYING) {
                 api.pause();
+            } else if (currentState === STATE_LOADING || currentState === STATE_STALLED) {
+                api.stop()
             } else if (currentState === STATE_PAUSED || currentState === STATE_AD_PAUSED) {
                 api.play();
             } else if (currentState === STATE_COMPLETE) {

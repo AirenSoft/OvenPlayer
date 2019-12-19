@@ -155,8 +155,6 @@ const Helpers = function($container, api){
          }, template);
         api.on(ERROR, function(error) {
 
-            console.log(error);
-
             if (error.code === 510 || error.code === 511) {
                 dont_show_message = true;
             }
