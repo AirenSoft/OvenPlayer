@@ -37,7 +37,7 @@ const Api = function(container){
 
     let webrtcRetry = false;
     const WEBRTC_RETRY_COUNT = 240;
-    let webrtcRetryCount = 240;
+    let webrtcRetryCount = WEBRTC_RETRY_COUNT;
     let webrtcRetryInterval = 500;
     let webrtcRetryTimer = null;
 
@@ -135,15 +135,9 @@ const Api = function(container){
                 //data.code === PLAYER_FILE_ERROR
                 if( name === ERROR || name === NETWORK_UNSTABLED ){
 
-                    if (data) {
-                        console.log(data.code, playerConfig.getConfig().autoFallback, name)
-                    } else {
-                        console.log(playerConfig.getConfig().autoFallback, name)
-                    }
-
                     if (data.code === PLAYER_WEBRTC_UNEXPECTED_DISCONNECT
                         || (!playerConfig.getConfig().autoFallback && data.code === PLAYER_WEBRTC_NETWORK_SLOW)) {
-                        console.log('retry', webrtcRetryCount);
+
                         webrtcRetry = true;
                         webrtcRetryCount = WEBRTC_RETRY_COUNT;
                         webrtcRetryTimer = setTimeout(function () {
@@ -156,7 +150,7 @@ const Api = function(container){
                     }
 
                     if (webrtcRetry && webrtcRetryCount > 0) {
-                        console.log('retry', webrtcRetryCount);
+
                         webrtcRetryTimer = setTimeout(function () {
 
                             that.setCurrentSource(playerConfig.getSourceIndex());
@@ -173,7 +167,6 @@ const Api = function(container){
                         webrtcRetryCount = WEBRTC_RETRY_COUNT;
                     }
 
-                    //let currentSourceIndex = that.getCurrentSource();
                     if(playerConfig.getConfig().autoFallback && playerConfig.getSourceIndex()+1 < that.getSources().length){
                         //this sequential has available source.
                         that.pause();
