@@ -35,7 +35,6 @@ const Dash = function (element, playerConfig, adTagUrl) {
     let superDestroy_func = null;
     let seekPosition_sec = 0;
     let isDashMetaLoaded = false;
-    let runedAutoStart = false;
     var prevLLLiveDuration = null;
 
     let sourceOfFile = "";
@@ -85,6 +84,10 @@ const Dash = function (element, playerConfig, adTagUrl) {
 
                 var dvrInfo = dash.getDashMetrics().getCurrentDVRInfo();
                 var liveDelay = playerConfig.getConfig().lowLatencyMpdLiveDelay;
+
+                if (!liveDelay) {
+                    liveDelay = 3;
+                }
 
                 dash.seek(dvrInfo.range.end - dvrInfo.range.start - liveDelay)
             }
@@ -170,8 +173,6 @@ const Dash = function (element, playerConfig, adTagUrl) {
 
             } else {
 
-                console.log('unset low latency')
-
                 if (dashjs.Version >= '3.0.0') {
 
                     dash.updateSettings({
@@ -200,7 +201,7 @@ const Dash = function (element, playerConfig, adTagUrl) {
 
         dash.on(dashjs.MediaPlayer.events.ERROR, function (error) {
 
-            if (error && (error.error === DASHERROR.DOWNLOAD || error.error === DASHERROR.MANIFESTERROR)) {
+            if (error && (error.error === DASHERROR.DOWNLOAD || error.error === DASHERROR.MANIFESTERROR || error.error.code === 25)) {
 
                 let tempError = ERRORS.codes[PLAYER_UNKNWON_NEWWORK_ERROR];
                 tempError.error = error;

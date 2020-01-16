@@ -46,7 +46,7 @@ const Listener = function(element, provider, videoEndedCallback){
     let elVideo =  element;
     const between = function (num, min, max) {
         return Math.max(Math.min(num, max), min);
-    }
+    };
     const compareStalledTime = function(stalled, position){
         //Original Code is stalled !== position
         //Because Dashjs is very meticulous. Then always diffrence stalled and position.

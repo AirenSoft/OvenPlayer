@@ -47,11 +47,11 @@ const Helpers = function($container, api){
             }
             bigButton = BigButton($current, api, state);
         }
-        function createMessage(message, description ,withTimer, iconClass){
+        function createMessage(message, description ,withTimer, iconClass, clickCallback, dontClose){
             if(messageBox){
                 messageBox.destroy();
             }
-            messageBox = MessageBox($current, api, message, description, withTimer, iconClass);
+            messageBox = MessageBox($current, api, message, description, withTimer, iconClass, clickCallback, dontClose);
         }
         function createThumbnail(){
             if(thumbnail){
@@ -86,7 +86,7 @@ const Helpers = function($container, api){
                 if(messageBox){
                     messageBox.destroy();
                 }
-                mutedMessage = MessageBox($current, api, data.message, null, data.timer, data.iconClass, data.onClickCallback);
+                mutedMessage = MessageBox($current, api, data.message, null, data.timer, data.iconClass, data.onClickCallback, false);
 
                 //When the volume is turned on by an external something.
                 api.once(CONTENT_MUTE, function(data){
@@ -178,7 +178,7 @@ const Helpers = function($container, api){
             }
             OvenPlayerConsole.log("error occured : ", error);
 
-            createMessage(message, description, null, UI_ICONS.op_warning);
+            createMessage(message, description, null, UI_ICONS.op_warning , null, true);
         }, template);
 
 
