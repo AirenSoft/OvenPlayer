@@ -34475,6 +34475,20 @@ function PlaybackController() {
     }
 
     function needToCatchUp() {
+        if (/Edge/.test(navigator.userAgent)) {
+
+            if (settings.get().streaming.liveCatchUpPlaybackRate === 0 && getCurrentLiveLatency() >  mediaPlayerModel.getLiveDelay() + 0.5) {
+
+                settings.update({
+                    streaming : {
+                        liveCatchUpPlaybackRate: 0.5
+                    }
+                });
+                // console.log('reset liveCatchUpPlaybackRate');
+                return settings.get().streaming.liveCatchUpPlaybackRate > 0 && getTime() > 0 && Math.abs(getCurrentLiveLatency() - mediaPlayerModel.getLiveDelay()) > settings.get().streaming.liveCatchUpMinDrift;
+            }
+        }
+
         return settings.get().streaming.liveCatchUpPlaybackRate > 0 && getTime() > 0 && Math.abs(getCurrentLiveLatency() - mediaPlayerModel.getLiveDelay()) > settings.get().streaming.liveCatchUpMinDrift;
     }
 
@@ -34502,7 +34516,31 @@ function PlaybackController() {
 
             // don't change playbackrate for small variations (don't overload element with playbackrate changes)
             if (Math.abs(videoModel.getPlaybackRate() - newRate) > minPlaybackRateChange) {
-                videoModel.setPlaybackRate(newRate);
+
+                if (/Edge/.test(navigator.userAgent)) {
+
+                    if (videoModel.getPlaybackRate() === 1
+                            || (videoModel.getPlaybackRate() > 1 && videoModel.getPlaybackRate() > newRate)
+                            || (videoModel.getPlaybackRate() < 1 && videoModel.getPlaybackRate() < newRate)) {
+
+                        videoModel.setPlaybackRate(newRate);
+                    }
+
+                    if (Math.abs(deltaLatency) < 0.3) {
+
+                        settings.update({
+                            streaming : {
+                                liveCatchUpPlaybackRate: 0
+                            }
+                        });
+
+                        videoModel.setPlaybackRate(1);
+                    }
+                } else {
+
+                    videoModel.setPlaybackRate(newRate);
+                }
+
             }
 
             if (settings.get().streaming.liveCatchUpMaxDrift > 0 && !isLowLatencySeekingInProgress && deltaLatency > settings.get().streaming.liveCatchUpMaxDrift) {
