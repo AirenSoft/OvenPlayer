@@ -169,6 +169,8 @@ player = OvenPlayer.create("player", {
 </div>
 <script>
 
+    var errorRetryer = null;
+
     var getExportUrl = function (sources, lowLatency, liveDelay) {
 
         var exportUrl = window.location.protocol + "//" + location.host + location.pathname + "?sources=" + encodeURIComponent(JSON.stringify(sources)) +
@@ -300,7 +302,16 @@ player = OvenPlayer.create("player", {
         player.on("error", function (error) {
             errorOccured = true;
             console.log(error);
-            navigation.errorMessage = error.message;
+            // navigation.errorMessage = error.message;
+
+            if (errorRetryer) {
+                clearTimeout(errorRetryer);
+                errorRetryer = null;
+            }
+
+            errorRetryer = setTimeout(function () {
+                navigation.loadSources();
+            }, 2000);
         });
 
         $('#lowlatencyCheck, #liveDelayInput').on('change', function () {
@@ -522,13 +533,34 @@ player = OvenPlayer.create("player", {
 
                     var playerState = player.getState();
 
-                    if (playerState === 'playing' || playerState === 'stalled' || playerState === 'loading') {
+                    if (playerState === 'playing' || playerState === 'stalled' || playerState === 'loading' || playerState === 'error') {
                         playerOption.autoStart = true;
                     }
 
                     player.remove();
 
                     player = OvenPlayer.create("player", playerOption);
+
+                    player.on("ready", function (error) {
+                        errorOccured = false;
+                    });
+
+                    player.on("error", function (error) {
+                        errorOccured = true;
+                        console.log(error);
+                        // navigation.errorMessage = error.message;
+
+                        if (errorRetryer) {
+                            clearTimeout(errorRetryer);
+                            errorRetryer = null;
+                        }
+
+                        errorRetryer = setTimeout(function () {
+
+                            navigation.loadSources();
+                        }, 2000);
+                    });
+
 
                     this.errorMessage = "";
                 } else {
