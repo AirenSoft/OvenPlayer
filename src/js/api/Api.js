@@ -36,9 +36,9 @@ const Api = function(container){
     let captionManager = "";
 
     let webrtcRetry = false;
-    const WEBRTC_RETRY_COUNT = 240;
+    const WEBRTC_RETRY_COUNT = 3;
     let webrtcRetryCount = WEBRTC_RETRY_COUNT;
-    let webrtcRetryInterval = 500;
+    let webrtcRetryInterval = 1000;
     let webrtcRetryTimer = null;
 
 

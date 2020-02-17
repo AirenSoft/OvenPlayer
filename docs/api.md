@@ -16,13 +16,13 @@ player = OvenPlayer.create("player", {
     currentProtocolOnly : true, 
     title : "Hi. This is ovenplayer.",
     image : "https://path.to/your_video_thumbnail.jpeg",    
-    adClient : "googleima",    
+    adClient : "googleima",
+    hidePlaylistIcon : true,
     playlist : [
         {
                 title : "01. I drive slow.",
                 image : "https://path.to/your_video_thumbnail.jpeg",
                 duration : 7343,
-                hidePlaylistIcon : true,
                 sources: [{
                         type : "mpd", 
                         file :  "https://path.to/your_video.mpd", 

@@ -77,7 +77,7 @@ const Dash = function (element, playerConfig, adTagUrl) {
             return result;
         };
 
-        const liveDelayReducingCallback  = function () {
+        const liveDelayReducingCallback = function () {
 
             if (dash.duration() !== prevLLLiveDuration) {
                 prevLLLiveDuration = dash.duration();
@@ -96,18 +96,6 @@ const Dash = function (element, playerConfig, adTagUrl) {
 
         dash = dashjs.MediaPlayer().create();
         dash.initialize(element, null, playerConfig.getConfig().autoStart);
-
-        if (dashjs.Version >= '3.0.0') {
-
-            dash.updateSettings({
-                'debug': {
-                    'logLevel': dashjs.Debug.LOG_LEVEL_NONE
-                }
-            });
-        } else {
-
-            dash.getDebug().setLogToBrowserConsole(false);
-        }
 
         window.dash = dash;
 
@@ -190,7 +178,26 @@ const Dash = function (element, playerConfig, adTagUrl) {
 
             }
 
+            if (dashjs.Version >= '3.0.0') {
+
+                dash.updateSettings({
+                    debug: {
+                        logLevel: dashjs.Debug.LOG_LEVEL_NONE
+                    },
+                    streaming: {
+                        retryAttempts: {
+                            MPD: 0
+                        }
+                    }
+                });
+
+            } else {
+
+                dash.getDebug().setLogToBrowserConsole(false);
+            }
+
             dash.attachSource(sourceOfFile);
+
             seekPosition_sec = lastPlayPosition;
 
         });
@@ -201,7 +208,12 @@ const Dash = function (element, playerConfig, adTagUrl) {
 
         dash.on(dashjs.MediaPlayer.events.ERROR, function (error) {
 
-            if (error && (error.error === DASHERROR.DOWNLOAD || error.error === DASHERROR.MANIFESTERROR || error.error.code === 25)) {
+            // Handle mpd load error.
+            if (error &&
+                (
+                    error.error.code === dashjs.MediaPlayer.errors.DOWNLOAD_ERROR_ID_MANIFEST_CODE ||
+                    error.error.code === dashjs.MediaPlayer.errors.MANIFEST_LOADER_LOADING_FAILURE_ERROR_CODE
+                )) {
 
                 let tempError = ERRORS.codes[PLAYER_UNKNWON_NEWWORK_ERROR];
                 tempError.error = error;
@@ -230,6 +242,17 @@ const Dash = function (element, playerConfig, adTagUrl) {
         });
 
         dash.on(dashjs.MediaPlayer.events.PLAYBACK_METADATA_LOADED, function (event) {
+
+            if (dashjs.Version >= '3.0.0') {
+
+                dash.updateSettings({
+                    streaming: {
+                        retryAttempts: {
+                            MPD: 2
+                        }
+                    }
+                });
+            }
 
             OvenPlayerConsole.log("DASH : PLAYBACK_METADATA_LOADED  : ", dash.getQualityFor("video"), dash.getBitrateInfoListFor('video'), dash.getBitrateInfoListFor('video')[dash.getQualityFor("video")]);
 
