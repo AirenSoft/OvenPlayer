@@ -68,7 +68,7 @@ const PlayButton = function ($container, api) {
             } else if (currentState === STATE_PLAYING || currentState === STATE_AD_PLAYING) {
                 api.pause();
             } else if (currentState === STATE_LOADING || currentState === STATE_STALLED) {
-                api.stop()
+                api.stop();
             } else if (currentState === STATE_PAUSED || currentState === STATE_AD_PAUSED) {
                 api.play();
             } else if (currentState === STATE_COMPLETE) {

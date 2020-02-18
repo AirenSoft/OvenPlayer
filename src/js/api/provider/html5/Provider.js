@@ -479,13 +479,16 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
             return false;
         }
         OvenPlayerConsole.log("CORE : stop() ");
+
         elVideo.removeAttribute('preload');
         elVideo.removeAttribute('src');
         while (elVideo.firstChild) {
             elVideo.removeChild(elVideo.firstChild);
         }
+
         that.pause();
         that.setState(STATE_IDLE);
+        isPlayingProcessing = false;
     };
 
     that.destroy = () =>{

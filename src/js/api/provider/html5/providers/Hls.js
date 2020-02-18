@@ -4,7 +4,8 @@
 import Provider from "api/provider/html5/Provider";
 import {errorTrigger} from "api/provider/utils";
 import {
-    PROVIDER_HLS, STATE_IDLE,
+    PROVIDER_HLS,
+    PLAYER_STATE, STATE_IDLE, STATE_LOADING,
     INIT_DASH_UNSUPPORT, ERRORS,
     INIT_HLSJS_NOTFOUND
 } from "api/constants";
@@ -21,13 +22,18 @@ import {PLAYER_UNKNWON_NEWWORK_ERROR} from "../../../constants";
 const HlsProvider = function (element, playerConfig, adTagUrl) {
     let that = {};
     let hls = null;
+    let superPlay_func = null;
     let superDestroy_func = null;
+    let loadRetryer = null;
+    let isManifestLoaded = false;
+    let firstLoaded = false;
 
     try {
         hls = new Hls({
             debug: false,
             maxBufferLength: 20,
             maxMaxBufferLength: 30,
+            fragLoadingMaxRetry: 0,
             manifestLoadingMaxRetry: 0,
             levelLoadingMaxRetry: 0
         });
@@ -59,8 +65,21 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
 
             hls.loadSource(source.file);
 
+            hls.once(Hls.Events.MANIFEST_LOADED, function (event, data) {
+
+                isManifestLoaded = true;
+            });
+
             hls.once(Hls.Events.LEVEL_LOADED, function (event, data) {
 
+                firstLoaded = true;
+
+                if (loadRetryer) {
+                    clearTimeout(loadRetryer);
+                    loadRetryer = null;
+                }
+
+                hls.config.fragLoadingMaxRetry = 2;
                 hls.config.manifestLoadingMaxRetry = 2;
                 hls.config.levelLoadingMaxRetry = 2;
 
@@ -68,7 +87,6 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
                     spec.isLive = true;
                 } else {
                     if (lastPlayPosition > 0) {
-
                         that.seek(lastPlayPosition);
                     }
                 }
@@ -78,14 +96,58 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
             });
 
             hls.on(Hls.Events.ERROR, function (event, data) {
-                let tempError = ERRORS.codes[PLAYER_UNKNWON_NEWWORK_ERROR];
-                tempError.error = data.details;
-                errorTrigger(tempError, that);
+
+                if (data.networkDetails.status === 202) {
+
+                    that.setState(STATE_LOADING);
+
+                    if (loadRetryer) {
+                        clearTimeout(loadRetryer);
+                        loadRetryer = null;
+                    }
+
+                    loadRetryer = setTimeout(function () {
+
+                        hls.stopLoad();
+                        hls.loadSource(source.file);
+                    }, 1000);
+
+                } else {
+
+                    let tempError = ERRORS.codes[PLAYER_UNKNWON_NEWWORK_ERROR];
+                    tempError.error = data.details;
+                    errorTrigger(tempError, that);
+                }
+            });
+
+            that.on(PLAYER_STATE, function (data) {
+
+                if (!firstLoaded && data.prevstate === STATE_LOADING && data.newstate === STATE_IDLE) {
+
+                    if (loadRetryer) {
+                        clearTimeout(loadRetryer);
+                        loadRetryer = null;
+                    }
+
+                    hls.stopLoad();
+                }
             });
         });
 
+        superPlay_func = that.super('play');
         superDestroy_func = that.super('destroy');
         OvenPlayerConsole.log("HLS PROVIDER LOADED.");
+
+        that.play = () => {
+
+            if (!isManifestLoaded) {
+                let source = that.getSources()[that.getCurrentSource()].file;
+                hls.loadSource(source);
+            } else {
+                superPlay_func();
+            }
+
+        };
 
         that.destroy = () => {
             hls.destroy();
