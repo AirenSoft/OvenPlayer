@@ -63,6 +63,8 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
 
             OvenPlayerConsole.log("HLS : onExtendedLoad : ", source, "lastPlayPosition : " + lastPlayPosition);
 
+            let loadingRetryCount = playerConfig.getConfig().loadingRetryCount;
+
             hls.loadSource(source.file);
 
             hls.once(Hls.Events.MANIFEST_LOADED, function (event, data) {
@@ -114,9 +116,27 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
 
                 } else {
 
-                    let tempError = ERRORS.codes[PLAYER_UNKNWON_NEWWORK_ERROR];
-                    tempError.error = data.details;
-                    errorTrigger(tempError, that);
+                    if (loadingRetryCount > 0) {
+
+                        that.setState(STATE_LOADING);
+
+                        if (loadRetryer) {
+                            clearTimeout(loadRetryer);
+                            loadRetryer = null;
+                        }
+
+                        loadingRetryCount = loadingRetryCount - 1;
+
+                        loadRetryer = setTimeout(function () {
+
+                            hls.stopLoad();
+                            hls.loadSource(source.file);
+                        }, 1000);
+                    } else {
+                        let tempError = ERRORS.codes[PLAYER_UNKNWON_NEWWORK_ERROR];
+                        tempError.error = data.details;
+                        errorTrigger(tempError, that);
+                    }
                 }
             });
 

@@ -17,6 +17,7 @@ import {
     PROVIDER_DASH
 } from "api/constants";
 import _ from "utils/underscore";
+import {STATE_LOADING} from "../../../constants";
 
 /**
  * @brief   dashjs provider extended core.
@@ -36,7 +37,7 @@ const Dash = function (element, playerConfig, adTagUrl) {
     let seekPosition_sec = 0;
     let isDashMetaLoaded = false;
     var prevLLLiveDuration = null;
-
+    let loadRetryer = null;
     let sourceOfFile = "";
 
     try {
@@ -121,6 +122,7 @@ const Dash = function (element, playerConfig, adTagUrl) {
         that = Provider(spec, playerConfig, function (source, lastPlayPosition) {
 
             OvenPlayerConsole.log("DASH : Attach File : ", source, "lastPlayPosition : " + lastPlayPosition);
+
             coveredSetAutoSwitchQualityFor(true);
             sourceOfFile = source.file;
 
@@ -206,6 +208,8 @@ const Dash = function (element, playerConfig, adTagUrl) {
         superDestroy_func = that.super('destroy');
         OvenPlayerConsole.log("DASH PROVIDER LOADED.");
 
+        let loadingRetryCount = playerConfig.getConfig().loadingRetryCount;
+
         dash.on(dashjs.MediaPlayer.events.ERROR, function (error) {
 
             // Handle mpd load error.
@@ -215,9 +219,28 @@ const Dash = function (element, playerConfig, adTagUrl) {
                     error.error.code === dashjs.MediaPlayer.errors.MANIFEST_LOADER_LOADING_FAILURE_ERROR_CODE
                 )) {
 
-                let tempError = ERRORS.codes[PLAYER_UNKNWON_NEWWORK_ERROR];
-                tempError.error = error;
-                errorTrigger(tempError, that);
+                if (loadingRetryCount > 0) {
+
+                    that.setState(STATE_LOADING);
+
+                    if (loadRetryer) {
+                        clearTimeout(loadRetryer);
+                        loadRetryer = null;
+                    }
+
+                    loadingRetryCount = loadingRetryCount - 1;
+
+                    loadRetryer = setTimeout(function () {
+
+
+                        dash.attachSource(sourceOfFile);
+                    }, 1000);
+                } else {
+
+                    let tempError = ERRORS.codes[PLAYER_UNKNWON_NEWWORK_ERROR];
+                    tempError.error = error;
+                    errorTrigger(tempError, that);
+                }
             }
         });
 

@@ -18,6 +18,7 @@ player = OvenPlayer.create("player", {
     image : "https://path.to/your_video_thumbnail.jpeg",    
     adClient : "googleima",
     hidePlaylistIcon : true,
+    loadingRetryCount: 3,
     playlist : [
         {
                 title : "01. I drive slow.",
@@ -62,6 +63,13 @@ type|default
 boolean|false
 
 When the source is loaded, it plays automatically.
+
+#### loadingRetryCount
+type|default
+------|------
+number|0
+
+If set, HLS and DASH retries reload when initial load fail.
  
 #### playbackRate 
 type|default
