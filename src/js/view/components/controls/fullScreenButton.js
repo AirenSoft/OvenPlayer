@@ -37,6 +37,10 @@ const FullScreenButton = function($container, api){
         onwebkitfullscreenchange : "webkitfullscreenchange",
         MSFullscreenChange : "MSFullscreenChange"
     };
+
+
+    api.toggleFullScreen = toggleFullScreen;
+
     function checkFullScreen(){
         return document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement;
     };
@@ -113,6 +117,7 @@ const FullScreenButton = function($container, api){
     };
 
     function requestFullScreen() {
+
         let promise = "";
         let rootElement =  $root.get();
         let videoElements = $root.find("video") ? $root.find("video").get() : rootElement;
@@ -170,6 +175,7 @@ const FullScreenButton = function($container, api){
 
             promise.then(function(){
 
+                isFullScreen = true;
                 isForceMode = false;
                 //config.setFullscreen(true);
 
@@ -192,18 +198,31 @@ const FullScreenButton = function($container, api){
     };
     function exitFullScreen() {
 
+        let promise = "";
+
         if (document.exitFullscreen) {
-            document.exitFullscreen();
+            promise = document.exitFullscreen();
         } else if (document.webkitExitFullscreen) {
-            document.webkitExitFullscreen();
+            promise = document.webkitExitFullscreen();
         } else if (document.webkitExitFullScreen) {
-            document.webkitExitFullScreen();
+            promise = document.webkitExitFullScreen();
         } else if (document.mozCancelFullScreen) {
-            document.mozCancelFullScreen();
+            promise = document.mozCancelFullScreen();
         } else if (document.msExitFullscreen) {
-            document.msExitFullscreen();
+            promise = document.msExitFullscreen();
         } else {
             // TODO(rock): warn not supported
+        }
+
+        if(promise){
+
+            promise.then(function(){
+
+                isFullScreen = false;
+
+            }).catch(function(error){
+
+            });
         }
 
     }
@@ -259,9 +278,14 @@ const FullScreenButton = function($container, api){
 
 
     const onDestroyed = function(template){
-        if(fullscreenChagedEventName){
-            document.removeEventListener(fullscreenChagedEventName, afterFullScreenChangedCallback);
+
+        if (api.getConfig() && !api.getConfig().expandFullScreenUI) {
+
+            if(fullscreenChagedEventName){
+                document.removeEventListener(fullscreenChagedEventName, afterFullScreenChangedCallback);
+            }
         }
+
         api.off(AD_CHANGED, null, template);
     };
     const events = {

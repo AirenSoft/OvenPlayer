@@ -252,6 +252,14 @@ boolean|false
 
 Sets whether to show or hide the playlist button when playlist initialized.
 
+#### expandFullScreenUI 
+type|default
+------|------
+boolean|false
+
+Enables user to enter or exit full screen with double click.
+
+
 #### tracks 
 type|default
 ------|------
