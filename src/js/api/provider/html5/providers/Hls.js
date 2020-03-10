@@ -99,7 +99,7 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
 
             hls.on(Hls.Events.ERROR, function (event, data) {
 
-                if (data && data.networkDetail && data.networkDetails.status === 202) {
+                if (data && data.networkDetails && data.networkDetails.status === 202) {
 
                     that.setState(STATE_LOADING);
 
@@ -109,7 +109,6 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
                     }
 
                     loadRetryer = setTimeout(function () {
-
                         hls.stopLoad();
                         hls.loadSource(source.file);
                     }, 1000);

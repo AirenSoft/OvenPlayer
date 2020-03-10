@@ -7,6 +7,7 @@ import {
     CONTENT_VOLUME,
     CONTENT_MUTE
 } from "api/constants";
+import {PLAYER_PLAY} from "../../../api/constants";
 
 const VolumeButton = function($container, api){
 
@@ -88,6 +89,9 @@ const VolumeButton = function($container, api){
 
         api.on(READY, function() {
             setVolumeUI(api.getVolume());
+        }, template);
+        api.on(PLAYER_PLAY, function (data) {
+            setVolumeUI(data.volume);
         }, template);
         api.on(CONTENT_VOLUME, function(data) {
 

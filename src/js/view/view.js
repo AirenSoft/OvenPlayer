@@ -285,19 +285,6 @@ const View = function($container){
 
     that.setApi = (playerInstance) => {
         api = playerInstance;
-        let showControlBar = api.getConfig() && api.getConfig().controls;
-
-        helper = Helpers($playerRoot.find(".op-ui"), playerInstance);
-        if(showControlBar){
-            controls = Controls($playerRoot.find(".op-ui"), playerInstance);
-        } else {
-
-            // to use full screen api
-            if (api.getConfig() && api.getConfig().expandFullScreenUI) {
-                controls = Controls($playerRoot.find(".op-ui"), playerInstance);
-                controls.destroy();
-            }
-        }
 
         api.on(READY, function(data) {
             if(!controls && showControlBar){
@@ -320,6 +307,12 @@ const View = function($container){
             viewTemplate.destroy();
         });
 
+        api.on(PLAYER_PLAY, function (data) {
+            if(!controls && showControlBar){
+                controls = Controls($playerRoot.find(".op-ui"), playerInstance);
+            }
+        });
+
         api.on(PLAYER_STATE, function(data){
             if(data && data.newstate){
                 playerState = data.newstate;
@@ -330,6 +323,20 @@ const View = function($container){
                 }
             }
         });
+
+        let showControlBar = api.getConfig() && api.getConfig().controls;
+
+        helper = Helpers($playerRoot.find(".op-ui"), playerInstance);
+        if(showControlBar){
+            controls = Controls($playerRoot.find(".op-ui"), playerInstance);
+        } else {
+
+            // to use full screen api
+            if (api.getConfig() && api.getConfig().expandFullScreenUI) {
+                controls = Controls($playerRoot.find(".op-ui"), playerInstance);
+                controls.destroy();
+            }
+        }
     };
 
 

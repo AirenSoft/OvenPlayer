@@ -31,7 +31,7 @@ import {PLAYER_WEBRTC_WS_ERROR} from "../../../api/constants";
 const Controls = function ($container, api) {
 
     let volumeButton = "", playButton = "", settingButton = "", progressBar = "", timeDisplay = "", fullScreenButton = "", frameButtons = "", hasPlaylist = false, initialDuration;
-
+    let uiInited = false;
     let webrtc_is_p2p_mode = false;
     let isLiveMode = false;
 
@@ -118,7 +118,9 @@ const Controls = function ($container, api) {
                 //vod
                 initProgressBar(false);
             }
-        }
+
+            uiInited = true;
+        }K
 
         function resetControlUI() {
             initTimeDisplay(lastContentMeta);
@@ -187,7 +189,28 @@ const Controls = function ($container, api) {
             webrtc_is_p2p_mode = isP2P;
         }, template);
 
-        api.on(PLAYER_PLAY, function (data) {
+        api.on(PLAYER_PLAY, function () {
+            if (!uiInited) {
+
+                let type = '';
+
+                if (api.getSources().length > 0) {
+
+                    if (api.getSources()[api.getCurrentSource()]) {
+
+                        if (api.getSources()[api.getCurrentSource()].type) {
+                            type = api.getSources()[api.getCurrentSource()].type;
+                        }
+                    }
+                }
+
+                makeControlUI({
+                    isP2P: webrtc_is_p2p_mode,
+                    duration: api.getDuration(),
+                    type: type
+                });
+                console.log(api.getDuration());
+            }
             $current.show();
         }, template);
 
@@ -250,6 +273,7 @@ const Controls = function ($container, api) {
         if (volumeButton) {
             volumeButton.destroy();
         }
+        console.log('destroy all contol uis');
     };
 
     const events = {
