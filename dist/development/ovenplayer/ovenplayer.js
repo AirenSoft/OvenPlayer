@@ -14065,7 +14065,7 @@ Object.defineProperty(exports, "__esModule", {
 /**
  * Created by hoho on 2018. 6. 29..
  */
-var version = exports.version = '0.9.853-2020031014-localbuild';
+var version = exports.version = '0.9.853-2020031015-localbuild';
 
 /***/ }),
 

@@ -120,7 +120,7 @@ const Controls = function ($container, api) {
             }
 
             uiInited = true;
-        }K
+        }
 
         function resetControlUI() {
             initTimeDisplay(lastContentMeta);
