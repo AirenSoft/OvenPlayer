@@ -209,7 +209,6 @@ const Controls = function ($container, api) {
                     duration: api.getDuration(),
                     type: type
                 });
-                console.log(api.getDuration());
             }
             $current.show();
         }, template);
@@ -273,7 +272,7 @@ const Controls = function ($container, api) {
         if (volumeButton) {
             volumeButton.destroy();
         }
-        console.log('destroy all contol uis');
+
     };
 
     const events = {

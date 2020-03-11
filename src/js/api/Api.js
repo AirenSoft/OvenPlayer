@@ -505,13 +505,14 @@ const Api = function(container){
             mediaManager.destroy();
             mediaManager = null;
         }
+
+        that.trigger(DESTROY);
+        that.off();
+
         providerController = null;
         playlistManager = null;
         playerConfig = null;
         lazyQueue = null;
-
-        that.trigger(DESTROY);
-        that.off();
 
         OvenPlayerConsole.log("API : remove() - lazyQueue, currentProvider, providerController, playlistManager, playerConfig, api event destroed. ");
         OvenPlayerSDK.removePlayer(that.getContainerId());
