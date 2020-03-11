@@ -162,7 +162,6 @@ const WebRTCLoader = function (provider, webSocketUrl, loadCallback, errorTrigge
     function createMainPeerConnection(id, peerId, sdp, candidates, resolve) {
 
         let peerConnection = new RTCPeerConnection(peerConnectionConfig);
-
         mainPeerConnectionInfo = {
             id: id,
             peerId: peerId,
@@ -570,6 +569,10 @@ const WebRTCLoader = function (provider, webSocketUrl, loadCallback, errorTrigge
 
         if (mainPeerConnectionInfo) {
 
+            if (mainPeerConnectionInfo.statisticsTimer) {
+                clearTimeout(mainPeerConnectionInfo.statisticsTimer);
+            }
+
             mainStream = null;
 
             OvenPlayerConsole.log('Closing main peer connection...');
@@ -578,6 +581,7 @@ const WebRTCLoader = function (provider, webSocketUrl, loadCallback, errorTrigge
             }
 
             mainPeerConnectionInfo.peerConnection.close();
+            mainPeerConnectionInfo.peerConnection = null;
             mainPeerConnectionInfo = null;
         }
 
