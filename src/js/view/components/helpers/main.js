@@ -122,6 +122,9 @@ const Helpers = function($container, api){
                     if(data.newstate === STATE_STALLED || data.newstate === STATE_LOADING || data.newstate === STATE_AD_LOADING){
 
                         dont_show_message = false;
+                        if(messageBox){
+                            messageBox.destroy();
+                        }
                         spinner.show(true);
                     }else{
                         if(!qualityLevelChanging){
@@ -155,7 +158,7 @@ const Helpers = function($container, api){
          }, template);
         api.on(ERROR, function(error) {
 
-            if (error.code === 510 || error.code === 511) {
+            if (error.code === 510) {
                 dont_show_message = true;
             }
 
