@@ -126,7 +126,7 @@
                     </div>
                     <div class="card mb-2" v-for="(source, index) in sources">
                         <div class="card-body">
-                            <strong>{{ source.type }}</strong> {{ source.file }}
+                            <strong>{{ source.type }}</strong> <span>{{ source.file }}</span>
                             <button type="button" class="close" aria-label="Close" v-on:click="removeSource(index)">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -173,11 +173,11 @@ player = OvenPlayer.create("player", {
 
     var getExportUrl = function (sources, lowLatency, liveDelay) {
 
-        var exportUrl = window.location.protocol + "//" + location.host + location.pathname + "?sources=" + encodeURIComponent(JSON.stringify(sources)) +
+        var exportUrl = window.location.protocol + "//" + location.host + location.pathname + "#sources=" + encodeURIComponent(JSON.stringify(sources)) +
                         '&lowLatency=' + lowLatency + '&liveDelay=' + liveDelay;
 
         exportUrl = exportUrl.replace('%2C%22lowLatency%22%3Atrue', '');
-
+        location.href = exportUrl;
         return exportUrl;
     };
 
@@ -195,7 +195,7 @@ player = OvenPlayer.create("player", {
 
         name = name.replace(/[\[\]]/g, '\\$&');
 
-        var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)')
+        var regex = new RegExp('[#&]' + name + '(=([^&#]*)|&|#|$)');
         var results = regex.exec(url);
 
         if (!results) {
@@ -509,7 +509,7 @@ player = OvenPlayer.create("player", {
                         liveDelay = $.trim($('#liveDelayInput').val());
                     }
 
-                    this.exportUrl = getExportUrl(this.sources, lowLatency, liveDelay);;
+                    this.exportUrl = getExportUrl(this.sources, lowLatency, liveDelay);
                 }
             },
             loadSources: function () {
