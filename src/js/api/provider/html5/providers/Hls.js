@@ -10,7 +10,7 @@ import {
     INIT_HLSJS_NOTFOUND
 } from "api/constants";
 import _ from "utils/underscore";
-import {PLAYER_UNKNWON_NEWWORK_ERROR} from "../../../constants";
+import {PLAYER_UNKNWON_NETWORK_ERROR, PLAYER_UNKNWON_DECODE_ERROR, PLAYER_BAD_REQUEST_ERROR, PLAYER_AUTH_FAILED_ERROR, PLAYER_NOT_ACCEPTABLE_ERROR} from "../../../constants";
 
 /**
  * @brief   hlsjs provider extended core.
@@ -132,7 +132,20 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
                             hls.loadSource(source.file);
                         }, 1000);
                     } else {
-                        let tempError = ERRORS.codes[PLAYER_UNKNWON_NEWWORK_ERROR];
+
+                        let errorType = PLAYER_UNKNWON_NETWORK_ERROR;
+
+                        if (data && data.networkDetails && data.networkDetails.status === 400) {
+                            errorType = PLAYER_BAD_REQUEST_ERROR;
+                        } else if (data && data.networkDetails && data.networkDetails.status === 403) {
+                            errorType = PLAYER_AUTH_FAILED_ERROR;
+                        } else if (data && data.networkDetails && data.networkDetails.status === 406) {
+                            errorType = PLAYER_NOT_ACCEPTABLE_ERROR;
+                        } else if (data.type === Hls.ErrorTypes.MEDIA_ERROR) {
+                            errorType = PLAYER_UNKNWON_DECODE_ERROR;
+                        }
+
+                        let tempError = ERRORS.codes[errorType];
                         tempError.error = data.details;
                         errorTrigger(tempError, that);
                     }

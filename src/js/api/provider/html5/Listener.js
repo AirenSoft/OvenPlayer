@@ -19,7 +19,7 @@ import {
     CONTENT_META,
     PLAYER_UNKNWON_ERROR,
     PLAYER_UNKNWON_OPERATION_ERROR,
-    PLAYER_UNKNWON_NEWWORK_ERROR,
+    PLAYER_UNKNWON_NETWORK_ERROR,
     PLAYER_UNKNWON_DECODE_ERROR,
     PLAYER_FILE_ERROR,
     PROVIDER_HTML5,
@@ -240,7 +240,7 @@ const Listener = function(element, provider, videoEndedCallback){
         let convertedErroCode = ({
             0: PLAYER_UNKNWON_ERROR,
             1: PLAYER_UNKNWON_OPERATION_ERROR,
-            2: PLAYER_UNKNWON_NEWWORK_ERROR,
+            2: PLAYER_UNKNWON_NETWORK_ERROR,
             3: PLAYER_UNKNWON_DECODE_ERROR,
             4: PLAYER_FILE_ERROR
         }[code]||0);

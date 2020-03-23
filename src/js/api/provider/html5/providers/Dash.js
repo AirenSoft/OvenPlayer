@@ -12,7 +12,7 @@ import {
     INIT_DASH_UNSUPPORT,
     INIT_DASH_NOTFOUND,
     ERRORS,
-    PLAYER_UNKNWON_NEWWORK_ERROR,
+    PLAYER_UNKNWON_NETWORK_ERROR,
     CONTENT_LEVEL_CHANGED,
     PROVIDER_DASH
 } from "api/constants";
@@ -237,7 +237,7 @@ const Dash = function (element, playerConfig, adTagUrl) {
                     }, 1000);
                 } else {
 
-                    let tempError = ERRORS.codes[PLAYER_UNKNWON_NEWWORK_ERROR];
+                    let tempError = ERRORS.codes[PLAYER_UNKNWON_NETWORK_ERROR];
                     tempError.error = error;
                     errorTrigger(tempError, that);
                 }
