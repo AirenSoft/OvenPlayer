@@ -296,8 +296,8 @@ const View = function($container){
             if(api){
                 let sources = api.getSources()||[];
                 if(controls && (sources.length <= 1)){
-                    controls.destroy();
-                    controls = null;
+                    // controls.destroy();
+                    // controls = null;
                 }
             }
 

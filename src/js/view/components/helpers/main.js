@@ -100,6 +100,12 @@ const Helpers = function($container, api){
         api.on(PLAYER_STATE, function(data){
             if(data && data.newstate){
 
+                if (data.newstate === STATE_IDLE) {
+                    if(messageBox){
+                        messageBox.destroy();
+                    }
+                }
+
                 if(data.newstate === STATE_PLAYING ||  data.newstate === STATE_AD_PLAYING){
 
                     dont_show_message = false;
@@ -132,6 +138,7 @@ const Helpers = function($container, api){
                         }
                     }
                 }
+
             }
         }, template);
 

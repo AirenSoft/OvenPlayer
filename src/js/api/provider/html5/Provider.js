@@ -289,15 +289,16 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
     };
 
     that.play = () =>{
+
         OvenPlayerConsole.log("Provider : play()");
         if(!elVideo){
             return false;
         }
 
-        //ToDo : Test it thoroughly and remove isPlayingProcessing. Most of the hazards have been removed. a lot of nonblocking play() way -> blocking play()
-        if(isPlayingProcessing){
-            return false;
-        }
+        //Test it thoroughly and remove isPlayingProcessing. Most of the hazards have been removed. a lot of nonblocking play() way -> blocking play()
+        // if(isPlayingProcessing){
+        //     return false;
+        // }
 
         isPlayingProcessing = true;
         if(that.getState() !== STATE_PLAYING){
