@@ -22,6 +22,11 @@
         .jq-toast-single {
             padding-right: 25px;
         }
+
+        .dummy_player {
+            padding-bottom: 56.25%;
+            background: #000;
+        }
     </style>
 
     <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -76,7 +81,7 @@
 </nav>
 <div class="container mt-4">
     <div id="demo-navi" class="row">
-        <div class="col-12 mb-4">
+        <div class="col-12 mb-4 player_area">
             <div id="player"></div>
         </div>
         <div class="col-12 mb-4">
@@ -105,7 +110,7 @@
                         </div>
                     </div>
                     <div class="mb-2 text-right" v-if="sources.length">
-                        <button type="button" class="btn btn-primary" v-on:click="loadSources">Load Player</button>
+                        <button type="button" class="btn btn-primary" v-on:click="loadSources">{{loadButtonText}}</button>
                     </div>
                     <div class="row mb-2">
                         <div class="col-12">
@@ -169,12 +174,14 @@ player = OvenPlayer.create("player", {
 </div>
 <script>
 
+    var playerLoaded = false;
+
     var errorRetryer = null;
 
     var getExportUrl = function (sources, lowLatency, liveDelay) {
 
         var exportUrl = window.location.protocol + "//" + location.host + location.pathname + "#sources=" + encodeURIComponent(JSON.stringify(sources)) +
-                        '&lowLatency=' + lowLatency + '&liveDelay=' + liveDelay;
+            '&lowLatency=' + lowLatency + '&liveDelay=' + liveDelay;
 
         exportUrl = exportUrl.replace('%2C%22lowLatency%22%3Atrue', '');
         location.href = exportUrl;
@@ -297,12 +304,16 @@ player = OvenPlayer.create("player", {
 
         player.on("ready", function (error) {
             errorOccured = false;
+
+            if (preSources) {
+                playerLoaded = true;
+                navigation.loadButtonText = 'Unload Player';
+            }
         });
 
         player.on("error", function (error) {
             errorOccured = true;
             console.log(error);
-            // navigation.errorMessage = error.message;
 
             if (errorRetryer) {
                 clearTimeout(errorRetryer);
@@ -310,8 +321,10 @@ player = OvenPlayer.create("player", {
             }
 
             errorRetryer = setTimeout(function () {
+                playerLoaded = false;
                 navigation.loadSources();
             }, 2000);
+
         });
 
         $('#lowlatencyCheck, #liveDelayInput').on('change', function () {
@@ -391,6 +404,7 @@ player = OvenPlayer.create("player", {
             sources: preSources || [],
             sourceId: 0,
             errorMessage: "",
+            loadButtonText: "Load Player",
             exportUrl: preSources ? getExportUrl(preSources, getParameterByName("lowLatency"), getParameterByName("liveDelay")) : ""
         },
         methods: {
@@ -513,59 +527,82 @@ player = OvenPlayer.create("player", {
                 }
             },
             loadSources: function () {
-                if (this.sources && this.sources.length > 0) {
 
-                    var playerOption = {
-                        autoStart: false,
-                        sources: JSON.parse(JSON.stringify(this.sources))
-                    };
+                if (!playerLoaded) {
 
-                    var lowLatencyChecked = $('#lowlatencyCheck').prop('checked');
+                    $('.dummy_player').remove();
 
-                    for (var i = 0; i < playerOption.sources.length; i++) {
+                    if (this.sources && this.sources.length > 0) {
 
-                        playerOption.sources[i].lowLatency = lowLatencyChecked;
+                        var playerOption = {
+                            autoStart: false,
+                            sources: JSON.parse(JSON.stringify(this.sources))
+                        };
+
+                        var lowLatencyChecked = $('#lowlatencyCheck').prop('checked');
+
+                        for (var i = 0; i < playerOption.sources.length; i++) {
+
+                            playerOption.sources[i].lowLatency = lowLatencyChecked;
+                        }
+
+                        if ($.trim($('#liveDelayInput').val()) !== '') {
+                            playerOption.lowLatencyMpdLiveDelay = parseInt($.trim($('#liveDelayInput').val()))
+                        }
+
+                        var playerState = player.getState();
+
+                        if (playerState === 'playing' || playerState === 'stalled' || playerState === 'loading' || playerState === 'error') {
+                            playerOption.autoStart = true;
+                        }
+
+                        player.remove();
+
+                        player = OvenPlayer.create("player", playerOption);
+
+                        player.on("ready", function () {
+                            errorOccured = false;
+                            playerLoaded = true;
+                            navigation.loadButtonText = 'Unload Player';
+                        });
+
+                        player.on("error", function (error) {
+
+                            errorOccured = true;
+                            console.log(error);
+                            // navigation.errorMessage = error.message;
+
+                            if (errorRetryer) {
+                                clearTimeout(errorRetryer);
+                                errorRetryer = null;
+                            }
+
+                            errorRetryer = setTimeout(function () {
+                                playerLoaded = false;
+                                navigation.loadSources();
+                            }, 2000);
+
+                        });
+
+                        this.errorMessage = "";
+                    } else {
+                        this.errorMessage = "Please add a playback info.";
                     }
+                } else {
 
-                    if ($.trim($('#liveDelayInput').val()) !== '') {
-                        playerOption.lowLatencyMpdLiveDelay = parseInt($.trim($('#liveDelayInput').val()))
-                    }
-
-                    var playerState = player.getState();
-
-                    if (playerState === 'playing' || playerState === 'stalled' || playerState === 'loading' || playerState === 'error') {
-                        playerOption.autoStart = true;
+                    if (errorRetryer) {
+                        clearTimeout(errorRetryer);
+                        errorRetryer = null;
                     }
 
                     player.remove();
+                    playerLoaded = false;
 
-                    player = OvenPlayer.create("player", playerOption);
+                    $('.player_area').append('<div class="dummy_player"></div>');
 
-                    player.on("ready", function (error) {
-                        errorOccured = false;
-                    });
-
-                    player.on("error", function (error) {
-                        errorOccured = true;
-                        console.log(error);
-                        // navigation.errorMessage = error.message;
-
-                        if (errorRetryer) {
-                            clearTimeout(errorRetryer);
-                            errorRetryer = null;
-                        }
-
-                        errorRetryer = setTimeout(function () {
-
-                            navigation.loadSources();
-                        }, 2000);
-                    });
-
-
-                    this.errorMessage = "";
-                } else {
-                    this.errorMessage = "Please add a playback info.";
+                    this.loadButtonText = 'Load Player';
                 }
+
             },
             getSources: function () {
                 return this.sources.length ? this.sources.map(function (source) {
