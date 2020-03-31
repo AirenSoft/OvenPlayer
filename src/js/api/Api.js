@@ -402,7 +402,7 @@ const Api = function(container){
         OvenPlayerConsole.log("API : setCurrentQuality() isSameProvider", isSameProvider);
 
         //switching between streams on HLS. wth? https://video-dev.github.io/hls.js/latest/docs/API.html#final-step-destroying-switching-between-streams
-        if(!isSameProvider || currentProvider.getName() === PROVIDER_HLS){
+        if(!isSameProvider || currentProvider.getName() === PROVIDER_HLS || currentProvider.getName() === PROVIDER_DASH || currentProvider.getName() === PROVIDER_HTML5){
             lazyQueue = LazyCommandExecutor(that, ['play','seek']);
             initProvider(lastPlayPosition);
         }

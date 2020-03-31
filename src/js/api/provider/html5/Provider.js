@@ -88,8 +88,11 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
                     elVideo.load();
                 }
 
-            }else if(lastPlayPosition === 0 && elVideo.currentTime > 0){
-                that.seek(lastPlayPosition);
+
+                if(lastPlayPosition && lastPlayPosition > 0){
+                    that.seek(lastPlayPosition);
+                }
+
             }
 
             if(lastPlayPosition > 0){
