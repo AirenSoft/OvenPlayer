@@ -311,6 +311,13 @@ player = OvenPlayer.create("player", {
             }
         });
 
+        player.on("sourceChanged", function () {
+            if (errorRetryer) {
+                clearTimeout(errorRetryer);
+                errorRetryer = null;
+            }
+        });
+
         player.on("error", function (error) {
             errorOccured = true;
             console.log(error);
@@ -489,6 +496,9 @@ player = OvenPlayer.create("player", {
 
                 this.choicedProtocol = "Protocol";
                 this.url = "";
+                this.loadButtonText = "Load Player";
+                playerLoaded = false;
+
 
                 if (this.sources) {
 
@@ -522,6 +532,9 @@ player = OvenPlayer.create("player", {
                     if ($.trim($('#liveDelayInput').val()) !== '') {
                         liveDelay = $.trim($('#liveDelayInput').val());
                     }
+
+                    this.loadButtonText = "Load Player";
+                    playerLoaded = false;
 
                     this.exportUrl = getExportUrl(this.sources, lowLatency, liveDelay);
                 }
@@ -564,6 +577,13 @@ player = OvenPlayer.create("player", {
                             errorOccured = false;
                             playerLoaded = true;
                             navigation.loadButtonText = 'Unload Player';
+                        });
+
+                        player.on("sourceChanged", function () {
+                            if (errorRetryer) {
+                                clearTimeout(errorRetryer);
+                                errorRetryer = null;
+                            }
                         });
 
                         player.on("error", function (error) {
