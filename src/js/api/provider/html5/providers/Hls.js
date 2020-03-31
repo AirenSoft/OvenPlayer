@@ -88,7 +88,7 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
                 if (data.details.live) {
                     spec.isLive = true;
                 } else {
-                    if (lastPlayPosition > 0) {
+                    if (lastPlayPosition && lastPlayPosition >= 0) {
                         that.seek(lastPlayPosition);
                     }
                 }
@@ -142,7 +142,12 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
                         } else if (data && data.networkDetails && data.networkDetails.status === 406) {
                             errorType = PLAYER_NOT_ACCEPTABLE_ERROR;
                         } else if (data.type === Hls.ErrorTypes.MEDIA_ERROR) {
+
                             errorType = PLAYER_UNKNWON_DECODE_ERROR;
+
+                            if (!data.fatal) {
+                                return;
+                            }
                         }
 
                         let tempError = ERRORS.codes[errorType];
