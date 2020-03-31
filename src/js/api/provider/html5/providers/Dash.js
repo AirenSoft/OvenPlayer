@@ -296,6 +296,10 @@ const Dash = function (element, playerConfig, adTagUrl) {
 
             if (dash.isDynamic()) {
                 spec.isLive = true;
+            } else {
+
+                if (seekPosition_sec && typeof seekPosition_sec === 'number' && seekPosition_sec >= 0)
+                dash.seek(seekPosition_sec);
             }
 
         });
