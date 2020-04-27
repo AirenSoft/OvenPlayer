@@ -53,6 +53,10 @@ const Manager = function(provider){
             source.type = extractExtension(source.file);
         }
 
+        if (source.lowLatency) {
+            source.lowLatency = source.lowLatency;
+        }
+
         if (!source.type) {
             return;
         }
@@ -186,7 +190,6 @@ const Manager = function(provider){
                     'default': false
                 }, track);
             }).filter(track => !!track);
-
             return playlistItem;
         }).filter(function(item){return item.sources && item.sources.length > 0;})||[];
         spec.playlist = prettiedPlaylist;

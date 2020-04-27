@@ -36,27 +36,29 @@ const Helpers = function($container, api){
     let bigButton = "", messageBox = "",  captionViewer = "", spinner = "", thumbnail;
     let mutedMessage = null;
     let hasThumbnail = api.getConfig().image || api.getConfig().title;
+    let dont_show_message = false;
 
     const onRendered = function($current, template){
         let qualityLevelChanging = false, newQualityLevel = -1;
         function createBigButton(state){
+
             if(bigButton){
                 bigButton.destroy();
             }
             bigButton = BigButton($current, api, state);
-        };
-        function createMessage(message, description ,withTimer, iconClass){
+        }
+        function createMessage(message, description ,withTimer, iconClass, clickCallback, dontClose){
             if(messageBox){
                 messageBox.destroy();
             }
-            messageBox = MessageBox($current, api, message, description, withTimer, iconClass);
-        };
+            messageBox = MessageBox($current, api, message, description, withTimer, iconClass, clickCallback, dontClose);
+        }
         function createThumbnail(){
             if(thumbnail){
                 thumbnail.destroy();
             }
             thumbnail = Thumbnail($current, api, api.getConfig());
-        };
+        }
 
         spinner = Spinner($current, api);
 
@@ -84,7 +86,7 @@ const Helpers = function($container, api){
                 if(messageBox){
                     messageBox.destroy();
                 }
-                mutedMessage = MessageBox($current, api, data.message, null, data.timer, data.iconClass, data.onClickCallback);
+                mutedMessage = MessageBox($current, api, data.message, null, data.timer, data.iconClass, data.onClickCallback, false);
 
                 //When the volume is turned on by an external something.
                 api.once(CONTENT_MUTE, function(data){
@@ -98,8 +100,22 @@ const Helpers = function($container, api){
         api.on(PLAYER_STATE, function(data){
             if(data && data.newstate){
 
+                if (data.newstate === STATE_IDLE) {
+                    if(messageBox){
+                        messageBox.destroy();
+                    }
+                }
+
                 if(data.newstate === STATE_PLAYING ||  data.newstate === STATE_AD_PLAYING){
-                    bigButton.destroy();
+
+                    dont_show_message = false;
+
+                    if (messageBox) {
+                        messageBox.destroy();
+                    }
+                    if (bigButton) {
+                        bigButton.destroy();
+                    }
                     if(thumbnail){
                         thumbnail.destroy();
                     }
@@ -110,6 +126,11 @@ const Helpers = function($container, api){
                 }else{
                     createBigButton(data.newstate);
                     if(data.newstate === STATE_STALLED || data.newstate === STATE_LOADING || data.newstate === STATE_AD_LOADING){
+
+                        dont_show_message = false;
+                        if(messageBox){
+                            messageBox.destroy();
+                        }
                         spinner.show(true);
                     }else{
                         if(!qualityLevelChanging){
@@ -117,6 +138,7 @@ const Helpers = function($container, api){
                         }
                     }
                 }
+
             }
         }, template);
 
@@ -142,7 +164,17 @@ const Helpers = function($container, api){
 
          }, template);
         api.on(ERROR, function(error) {
+
+            if (error.code === 510) {
+                dont_show_message = true;
+            }
+
+            if (dont_show_message) {
+                return;
+            }
+
             let message = "", description = "";
+
             if(bigButton){
                 bigButton.destroy();
             }
@@ -155,8 +187,10 @@ const Helpers = function($container, api){
                 message = "Can not play due to unknown reasons.";
             }
             OvenPlayerConsole.log("error occured : ", error);
-            createMessage(message, description, null, UI_ICONS.op_warning);
+
+            createMessage(message, description, null, UI_ICONS.op_warning , null, true);
         }, template);
+
 
         api.on(NETWORK_UNSTABLED, function(event){
             let message = "Because the network connection is unstable, the following media source will be played.";
@@ -164,6 +198,7 @@ const Helpers = function($container, api){
             if(api.getCurrentSource()+1 ===  api.getQualityLevels().length){
                 message = "Network connection is unstable. Check the network connection.";
             }
+
             OvenPlayerConsole.log(message);
             //createMessage(message, null,5000);
         }, template);

@@ -52,6 +52,7 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
     elVideo.playbackRate = elVideo.defaultPlaybackRate = playerConfig.getPlaybackRate();
 
     const _load = (lastPlayPosition) =>{
+
         const source =  spec.sources[spec.currentSource];
         spec.framerate = source.framerate;
 
@@ -65,12 +66,15 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
             onExtendedLoad(source, lastPlayPosition);
 
         }else{
-            OvenPlayerConsole.log("source loaded : ", source, "lastPlayPosition : "+ lastPlayPosition);
-            let previousSource = elVideo.src;
-            const sourceElement = document.createElement('source');
 
-            sourceElement.src = source.file;
-            const sourceChanged = (sourceElement.src !== previousSource);
+            OvenPlayerConsole.log("source loaded : ", source, "lastPlayPosition : "+ lastPlayPosition);
+
+            let previousSource = elVideo.src;
+
+            // const sourceElement = document.createElement('source');
+            // sourceElement.src = source.file;
+
+            const sourceChanged = (source.file !== previousSource);
             if (sourceChanged) {
 
                 elVideo.src = source.file;
@@ -79,16 +83,20 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
                 //elVideo.append(sourceElement);
 
                 // Do not call load if src was not set. load() will cancel any active play promise.
-                if (previousSource) {
+                if (previousSource || previousSource === '') {
+
                     elVideo.load();
                 }
-            }else if(lastPlayPosition === 0 && elVideo.currentTime > 0){
-                that.seek(lastPlayPosition);
+
+
+                if(lastPlayPosition && lastPlayPosition > 0){
+                    that.seek(lastPlayPosition);
+                }
+
             }
 
-
             if(lastPlayPosition > 0){
-                that.seek(lastPlayPosition);
+                // that.seek(lastPlayPosition);
                 if(!playerConfig.isAutoStart()){
                     that.play();
                 }
@@ -96,6 +104,7 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
             }
 
             if(playerConfig.isAutoStart()){
+
                 that.play();
             }
             /*that.trigger(CONTENT_SOURCE_CHANGED, {
@@ -122,10 +131,10 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
     };
     that.setMetaLoaded = () => {
         spec.isLoaded = true;
-    }
+    };
     that.metaLoaded = () => {
         return spec.isLoaded;
-    }
+    };
 
     that.setState = (newState) => {
         if(spec.state !== newState){
@@ -256,12 +265,14 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
     };
 
     that.preload = (sources, lastPlayPosition) =>{
+
         spec.sources = sources;
 
         spec.currentSource = pickCurrentSource(sources, spec.currentSource, playerConfig);
         _load(lastPlayPosition || 0);
 
         return new Promise(function (resolve, reject) {
+
             if(playerConfig.isMute()){
                 that.setMute(true);
             }
@@ -274,21 +285,23 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
 
     };
     that.load = (sources) =>{
+
         spec.sources = sources;
         spec.currentSource = pickCurrentSource(sources, spec.currentSource, playerConfig);
         _load(spec.sources.starttime || 0);
     };
 
     that.play = () =>{
+
         OvenPlayerConsole.log("Provider : play()");
         if(!elVideo){
             return false;
         }
 
-        //ToDo : Test it thoroughly and remove isPlayingProcessing. Most of the hazards have been removed. a lot of nonblocking play() way -> blocking play()
-        if(isPlayingProcessing){
-            return false;
-        }
+        //Test it thoroughly and remove isPlayingProcessing. Most of the hazards have been removed. a lot of nonblocking play() way -> blocking play()
+        // if(isPlayingProcessing){
+        //     return false;
+        // }
 
         isPlayingProcessing = true;
         if(that.getState() !== STATE_PLAYING){
@@ -342,8 +355,9 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
 
         }
 
-    }
+    };
     that.pause = () =>{
+
         OvenPlayerConsole.log("Provider : pause()");
         if(!elVideo){
             return false;
@@ -381,21 +395,25 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
         }
 
         return spec.sources.map(function(source, index) {
-            return {
+
+            var obj = {
                 file: source.file,
                 type: source.type,
                 label: source.label,
                 index : index
-            };
+            }
+
+            if (source.lowLatency) {
+                obj.lowLatency = source.lowLatency;
+            }
+
+            return obj;
         });
     };
     that.getCurrentSource = () =>{
         return spec.currentSource;
     };
     that.setCurrentSource = (sourceIndex, needProviderChange) => {
-            if(spec.currentSource === sourceIndex){
-            return false;
-        }
 
         if(sourceIndex > -1){
             if(spec.sources && spec.sources.length > sourceIndex){
@@ -465,13 +483,16 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
             return false;
         }
         OvenPlayerConsole.log("CORE : stop() ");
+
         elVideo.removeAttribute('preload');
         elVideo.removeAttribute('src');
         while (elVideo.firstChild) {
             elVideo.removeChild(elVideo.firstChild);
         }
+
         that.pause();
         that.setState(STATE_IDLE);
+        isPlayingProcessing = false;
     };
 
     that.destroy = () =>{

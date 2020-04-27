@@ -8,6 +8,7 @@ import {
     STATE_COMPLETE,
     STATE_PAUSED
 } from "api/constants";
+import {STATE_ERROR} from "../../../api/constants";
 
 const BigButton = function($container, api, playerState){
 
@@ -27,7 +28,9 @@ const BigButton = function($container, api, playerState){
 
             if (currentState === STATE_IDLE || currentState === STATE_PAUSED) {
                 api.play();
-            }else if(currentState === STATE_COMPLETE){
+            } else if (currentState === STATE_ERROR) {
+                api.setCurrentSource(api.getCurrentSource());
+            } else if(currentState === STATE_COMPLETE){
                 if(playlist.length === (currentPlaylistIndex+1)){
                     api.setCurrentPlaylist(0);
                 }

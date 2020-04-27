@@ -83,16 +83,20 @@ export const INIT_DASH_NOTFOUND = 105;
 export const INIT_HLSJS_NOTFOUND = 106;
 export const PLAYER_UNKNWON_ERROR = 300;
 export const PLAYER_UNKNWON_OPERATION_ERROR = 301;
-export const PLAYER_UNKNWON_NEWWORK_ERROR = 302;
+export const PLAYER_UNKNWON_NETWORK_ERROR = 302;
 export const PLAYER_UNKNWON_DECODE_ERROR = 303;
 export const PLAYER_FILE_ERROR = 304;
 export const PLAYER_CAPTION_ERROR = 305;
+export const PLAYER_BAD_REQUEST_ERROR = 306;
+export const PLAYER_AUTH_FAILED_ERROR = 307;
+export const PLAYER_NOT_ACCEPTABLE_ERROR = 308;
 export const PLAYER_WEBRTC_WS_ERROR = 501;
 export const PLAYER_WEBRTC_ADD_ICECANDIDATE_ERROR = 502;
 export const PLAYER_WEBRTC_SET_REMOTE_DESC_ERROR = 503;
 export const PLAYER_WEBRTC_CREATE_ANSWER_ERROR = 504;
 export const PLAYER_WEBRTC_SET_LOCAL_DESC_ERROR = 505;
 export const PLAYER_WEBRTC_NETWORK_SLOW = 510;
+export const PLAYER_WEBRTC_UNEXPECTED_DISCONNECT = 511;
 
 export const WARN_MSG_MUTEDPLAY = "Please touch here to turn on the sound.";
 
@@ -196,6 +200,21 @@ export const SYSTEM_TEXT = [
                     "message": "Can not load captions due to unknown reasons.",
                     "reason": "Can not load captions due to unknown reasons."
                 },
+                306: {
+                    "code": 306,
+                    "message": "Unable to load media. This may be due to a server or network error, or due to an unsupported format.",
+                    "reason": "The server cannot or will not process the request."
+                },
+                307: {
+                    "code": 307,
+                    "message": "Unable to load media. This may be due to a server or network error, or due to an unsupported format.",
+                    "reason": "The server refused the request."
+                },
+                308: {
+                    "code": 308,
+                    "message": "Unable to load media. This may be due to a server or network error, or due to an unsupported format.",
+                    "reason": "The server do not accept the request."
+                },
                 501: {
                     "code": 501,
                     "message": "Connection with low-latency(OME) server failed.",
@@ -225,6 +244,11 @@ export const SYSTEM_TEXT = [
                     "code": 510,
                     "message": "Network connection is unstable. Check the network connection.",
                     "reason": "Network is slow."
+                },
+                511: {
+                    "code": 511,
+                    "message": "Connection with low-latency(OME) terminated unexpectedly.",
+                    "reason": "Unexpected end of connection."
                 }
             }
         }
@@ -305,7 +329,7 @@ export const SYSTEM_TEXT = [
                 },
                 303: {
                     "code": 303,
-                    "message": "미디어를로드 할 수 없습니다. 서버 또는 네트워크 오류 또는 지원되지 않는 형식으로 인해 발생할 수 있습니다.",
+                    "message": "미디어를 로드 할 수 없습니다. 서버 또는 네트워크 오류 또는 지원되지 않는 형식으로 인해 발생할 수 있습니다.",
                     "reason": "Error occurred when decoding."
                 },
                 304: {
@@ -317,6 +341,21 @@ export const SYSTEM_TEXT = [
                     "code": 305,
                     "message": "알 수 없는 이유로 자막을 로드 할 수 없습니다.",
                     "reason": "Can not load captions due to unknown reasons."
+                },
+                306: {
+                    "code": 306,
+                    "message": "미디어를 로드 할 수 없습니다. 서버 또는 네트워크 오류 또는 지원되지 않는 형식으로 인해 발생할 수 있습니다.",
+                    "reason": "The server cannot or will not process the request."
+                },
+                307: {
+                    "code": 307,
+                    "message": "미디어를 로드 할 수 없습니다. 서버 또는 네트워크 오류 또는 지원되지 않는 형식으로 인해 발생할 수 있습니다.",
+                    "reason": "The server refused the request."
+                },
+                308: {
+                    "code": 308,
+                    "message": "미디어를 로드 할 수 없습니다. 서버 또는 네트워크 오류 또는 지원되지 않는 형식으로 인해 발생할 수 있습니다.",
+                    "reason": "The server do not accept the request."
                 },
                 501: {
                     "code": 501,

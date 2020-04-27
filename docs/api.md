@@ -16,13 +16,14 @@ player = OvenPlayer.create("player", {
     currentProtocolOnly : true, 
     title : "Hi. This is ovenplayer.",
     image : "https://path.to/your_video_thumbnail.jpeg",    
-    adClient : "googleima",    
+    adClient : "googleima",
+    hidePlaylistIcon : true,
+    loadingRetryCount: 3,
     playlist : [
         {
                 title : "01. I drive slow.",
                 image : "https://path.to/your_video_thumbnail.jpeg",
                 duration : 7343,
-                hidePlaylistIcon : true,
                 sources: [{
                         type : "mpd", 
                         file :  "https://path.to/your_video.mpd", 
@@ -62,6 +63,13 @@ type|default
 boolean|false
 
 When the source is loaded, it plays automatically.
+
+#### loadingRetryCount
+type|default
+------|------
+number|0
+
+If set, HLS and DASH retries reload when initial load fail.
  
 #### playbackRate 
 type|default
@@ -132,6 +140,13 @@ Enter the URLs of the diverse protocols to play.
         file :  "https://path.to/your_video.mpd", 
         framerate : 30,
         label: "360P DASH"
+    },
+    {
+        type : "mpd", 
+        file :  "https://path.to/your_video.mpd", 
+        framerate : 30,
+        label: "360P DASH",
+        lowLatency: true // Enable or disable low latency mode (optional)
     },
     {
         type : "hls", 
@@ -237,6 +252,14 @@ boolean|false
 
 Sets whether to show or hide the playlist button when playlist initialized.
 
+#### expandFullScreenUI 
+type|default
+------|------
+boolean|false
+
+Enables user to enter or exit full screen with double click.
+
+
 #### tracks 
 type|default
 ------|------
@@ -278,6 +301,32 @@ Number| 3
 
 Specifies a maximum buffer length for live streaming content, in seconds.
 (*optional when using rtmp protocol.)
+
+#### lowLatencyMpdLiveDelay 
+type|default
+------|------
+Number| null
+
+Lowering this value will lower latency but may decrease the player's ability to build a stable buffer.
+(*optional when using low latancy mpeg dash protocol.)
+
+
+#### webrtcConfig.iceServers
+type|default
+------|------
+Object| null
+
+Specifies STUN / TURN server
+(*optional when using WebRTC protocol.)
+
+
+#### webrtcConfig.iceTransportPolicy
+type|default
+------|------
+String| null
+
+Specifies Ice Transport Policy. "all", "public", "relay"
+(*optional when using WebRTC protocol.)
 
 
 #### currentProtocolOnly 

@@ -27,7 +27,7 @@ import {
     CONTENT_META,
     PLAYER_UNKNWON_ERROR,
     PLAYER_UNKNWON_OPERATION_ERROR,
-    PLAYER_UNKNWON_NEWWORK_ERROR,
+    PLAYER_UNKNWON_NETWORK_ERROR,
     PLAYER_UNKNWON_DECODE_ERROR,
     PLAYER_FILE_ERROR,
     PLAYER_STATE,
@@ -114,14 +114,8 @@ const Listener = function(adsManager, provider, adsSpec, OnAdError){
     };
     lowLevelEvents[LOADED] = (adEvent) => {
         OvenPlayerConsole.log(adEvent.type);
-        console.log(adEvent.getAd());
-        console.log(adEvent.getAdData());
         let remainingTime = adsManager.getRemainingTime();
         let ad = adEvent.getAd();
-        /*var metadata = {
-            duration: remainingTime,
-            type :"ad"
-        };*/
         provider.trigger(STATE_AD_LOADED, {remaining : remainingTime, isLinear : ad.isLinear() });
 
     };

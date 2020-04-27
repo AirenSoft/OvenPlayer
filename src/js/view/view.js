@@ -174,9 +174,21 @@ const View = function($container){
                 //togglePlayPause();
             }
         },
+        "dblclick .ovenplayer" : function(event, $current, template){
+
+            if (api) {
+
+                if (api.getConfig().expandFullScreenUI && api.toggleFullScreen) {
+
+                    if(!(LA$(event.target).closest(".op-controls-container") || LA$(event.target).closest(".op-setting-panel") )){
+                        api.toggleFullScreen();
+                    }
+                }
+            }
+        },
         //For iOS safari
         "touchstart .ovenplayer" : function(event, $current, template){
-            if (playerState === STATE_PLAYING || (playerState === STATE_AD_PLAYING && screenSize === "xsmall")) {
+            if (playerState === STATE_PLAYING || playerState === STATE_IDLE  || playerState === STATE_LOADING || (playerState === STATE_AD_PLAYING && screenSize === "xsmall")) {
                 setHide(false, true);
             } else {
                 setHide(false);
@@ -186,7 +198,7 @@ const View = function($container){
             event.preventDefault();
 
             //small screen with STATE_AD_PLAYING setHide too. becuase mobile hide ad ui.
-            if (playerState === STATE_PLAYING || (playerState === STATE_AD_PLAYING && screenSize === "xsmall")) {
+            if (playerState === STATE_PLAYING || playerState === STATE_IDLE || playerState === STATE_LOADING || (playerState === STATE_AD_PLAYING && screenSize === "xsmall")) {
                 setHide(false, true);
             } else {
                 setHide(false);
@@ -195,7 +207,7 @@ const View = function($container){
         "mousemove .ovenplayer" : function(event, $current, template){
             event.preventDefault();
 
-            if (playerState === STATE_PLAYING || (playerState === STATE_AD_PLAYING && screenSize === "xsmall")) {
+            if (playerState === STATE_PLAYING || playerState === STATE_IDLE || playerState === STATE_LOADING || (playerState === STATE_AD_PLAYING && screenSize === "xsmall")) {
                 setHide(false, true);
             } else {
                 setHide(false);
@@ -204,7 +216,7 @@ const View = function($container){
         "mouseleave .ovenplayer" : function(event, $current, template){
             event.preventDefault();
 
-            if(playerState === STATE_PLAYING  || (playerState === STATE_AD_PLAYING && screenSize === "xsmall")){
+            if(playerState === STATE_PLAYING  || playerState === STATE_IDLE || playerState === STATE_LOADING || (playerState === STATE_AD_PLAYING && screenSize === "xsmall")){
                 setHide(true);
             }
         },
@@ -273,12 +285,6 @@ const View = function($container){
 
     that.setApi = (playerInstance) => {
         api = playerInstance;
-        let showControlBar = api.getConfig() && api.getConfig().controls;
-
-        helper = Helpers($playerRoot.find(".op-ui"), playerInstance);
-        if(showControlBar){
-            controls = Controls($playerRoot.find(".op-ui"), playerInstance);
-        }
 
         api.on(READY, function(data) {
             if(!controls && showControlBar){
@@ -290,8 +296,8 @@ const View = function($container){
             if(api){
                 let sources = api.getSources()||[];
                 if(controls && (sources.length <= 1)){
-                    controls.destroy();
-                    controls = null;
+                    // controls.destroy();
+                    // controls = null;
                 }
             }
 
@@ -299,6 +305,12 @@ const View = function($container){
 
         api.on(DESTROY, function(data) {
             viewTemplate.destroy();
+        });
+
+        api.on(PLAYER_PLAY, function (data) {
+            if(!controls && showControlBar){
+                controls = Controls($playerRoot.find(".op-ui"), playerInstance);
+            }
         });
 
         api.on(PLAYER_STATE, function(data){
@@ -311,6 +323,20 @@ const View = function($container){
                 }
             }
         });
+
+        let showControlBar = api.getConfig() && api.getConfig().controls;
+
+        helper = Helpers($playerRoot.find(".op-ui"), playerInstance);
+        if(showControlBar){
+            controls = Controls($playerRoot.find(".op-ui"), playerInstance);
+        } else {
+
+            // to use full screen api
+            if (api.getConfig() && api.getConfig().expandFullScreenUI) {
+                controls = Controls($playerRoot.find(".op-ui"), playerInstance);
+                controls.destroy();
+            }
+        }
     };
 
 

@@ -5,7 +5,7 @@ import LazyCommandExecutor from "api/LazyCommandExecutor";
 import MediaManager from "api/media/Manager";
 import PlaylistManager from "api/playlist/Manager";
 import ProviderController from "api/provider/Controller";
-import {READY, ERRORS, ERROR, CONTENT_TIME_MODE_CHANGED, INIT_UNKNWON_ERROR, INIT_UNSUPPORT_ERROR, DESTROY, NETWORK_UNSTABLED,
+import {READY, ERRORS, ERROR, CONTENT_TIME_MODE_CHANGED, INIT_UNKNWON_ERROR, INIT_UNSUPPORT_ERROR, DESTROY, PLAYER_PLAY, NETWORK_UNSTABLED, PLAYER_WEBRTC_NETWORK_SLOW, PLAYER_WEBRTC_UNEXPECTED_DISCONNECT,
     PLAYER_FILE_ERROR, PROVIDER_DASH, PROVIDER_HLS, PROVIDER_WEBRTC, PROVIDER_HTML5, PROVIDER_RTMP, ALL_PLAYLIST_ENDED} from "api/constants";
 import {version} from 'version';
 import {ApiRtmpExpansion} from 'api/ApiExpansions';
@@ -34,6 +34,12 @@ const Api = function(container){
     let playerConfig = "";
     let lazyQueue = "";
     let captionManager = "";
+
+    let webrtcRetry = false;
+    const WEBRTC_RETRY_COUNT = 3;
+    let webrtcRetryCount = WEBRTC_RETRY_COUNT;
+    let webrtcRetryInterval = 1000;
+    let webrtcRetryTimer = null;
 
 
     const runNextPlaylist = function(index){
@@ -83,6 +89,7 @@ const Api = function(container){
         };
 
         return providerController.loadProviders(playlistManager.getCurrentPlayList()).then(Providers => {
+
             if(Providers.length < 1){
                 throw ERRORS.codes[INIT_UNSUPPORT_ERROR];
             }
@@ -108,8 +115,6 @@ const Api = function(container){
                 playlistManager.getCurrentAdTag()
             );
 
-
-
             if(providerName === PROVIDER_RTMP){
                 //If provider type is RTMP, we accepts RtmpExpansion.
                 Object.assign(that, ApiRtmpExpansion(currentProvider));
@@ -120,15 +125,49 @@ const Api = function(container){
 
                 that.trigger(name, data);
 
-                if(name === "complete"){
-                    runNextPlaylist(playlistManager.getCurrentPlaylistIndex() + 1);
+                if(name === PLAYER_PLAY) {
+                    clearInterval(webrtcRetryTimer);
+                    webrtcRetry = false;
+                    webrtcRetryCount = WEBRTC_RETRY_COUNT;
                 }
 
                 //Auto switching next source when player load failed by amiss source.
                 //data.code === PLAYER_FILE_ERROR
                 if( name === ERROR || name === NETWORK_UNSTABLED ){
-                    //let currentSourceIndex = that.getCurrentSource();
-                    if(playerConfig.getSourceIndex()+1 < that.getSources().length){
+
+                    if (data.code === PLAYER_WEBRTC_UNEXPECTED_DISCONNECT
+                        || (!playerConfig.getConfig().autoFallback && data.code === PLAYER_WEBRTC_NETWORK_SLOW)) {
+
+                        webrtcRetry = true;
+                        webrtcRetryCount = WEBRTC_RETRY_COUNT;
+                        webrtcRetryTimer = setTimeout(function () {
+
+                            that.setCurrentSource(playerConfig.getSourceIndex());
+                            webrtcRetryCount --;
+                        }, webrtcRetryInterval);
+
+                        return;
+                    }
+
+                    if (webrtcRetry && webrtcRetryCount > 0) {
+
+                        webrtcRetryTimer = setTimeout(function () {
+
+                            that.setCurrentSource(playerConfig.getSourceIndex());
+                            webrtcRetryCount --;
+                        }, webrtcRetryInterval);
+
+                        return;
+                    }
+
+                    if (webrtcRetry && webrtcRetryCount <= 0) {
+
+                        clearInterval(webrtcRetryTimer);
+                        webrtcRetry = false;
+                        webrtcRetryCount = WEBRTC_RETRY_COUNT;
+                    }
+
+                    if(playerConfig.getConfig().autoFallback && playerConfig.getSourceIndex()+1 < that.getSources().length){
                         //this sequential has available source.
                         that.pause();
                         that.setCurrentSource(playerConfig.getSourceIndex()+1);
@@ -140,6 +179,7 @@ const Api = function(container){
 
             //provider's preload() have to made Promise. Cuz it overcomes 'flash loading timing problem'.
             currentProvider.preload(playlistManager.getCurrentSources(), lastPlayPosition).then(function(){
+
                 that.trigger(READY);
 
                 lazyQueue.flush();
@@ -342,6 +382,7 @@ const Api = function(container){
         return currentProvider.getCurrentSource();
     };
     that.setCurrentSource = (index) =>{
+
         if(!currentProvider){return null;}
 
         OvenPlayerConsole.log("API : setCurrentSource() ", index);
@@ -360,9 +401,8 @@ const Api = function(container){
 
         OvenPlayerConsole.log("API : setCurrentQuality() isSameProvider", isSameProvider);
 
-
         //switching between streams on HLS. wth? https://video-dev.github.io/hls.js/latest/docs/API.html#final-step-destroying-switching-between-streams
-        if(!isSameProvider || currentProvider.getName() === PROVIDER_HLS){
+        if(!isSameProvider || currentProvider.getName() === PROVIDER_HLS || currentProvider.getName() === PROVIDER_DASH || currentProvider.getName() === PROVIDER_HTML5){
             lazyQueue = LazyCommandExecutor(that, ['play','seek']);
             initProvider(lastPlayPosition);
         }
@@ -465,13 +505,14 @@ const Api = function(container){
             mediaManager.destroy();
             mediaManager = null;
         }
+
+        that.trigger(DESTROY);
+        that.off();
+
         providerController = null;
         playlistManager = null;
         playerConfig = null;
         lazyQueue = null;
-
-        that.trigger(DESTROY);
-        that.off();
 
         OvenPlayerConsole.log("API : remove() - lazyQueue, currentProvider, providerController, playlistManager, playerConfig, api event destroed. ");
         OvenPlayerSDK.removePlayer(that.getContainerId());

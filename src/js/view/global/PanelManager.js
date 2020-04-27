@@ -18,6 +18,7 @@ const PanelManager = function(){
     };
     that.clear = () => {
         //clear all SettingPanelTemplate
+
         _.each(settingPanelList, function(settingPanel){
             settingPanel.destroy();
         });

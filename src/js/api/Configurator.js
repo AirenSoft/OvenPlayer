@@ -21,6 +21,7 @@ const Configurator = function(options, provider){
             loop : false,
             controls : true,
             autoStart : false,
+            autoFallback: true,
             timecode : true,
             sourceIndex : 0,
             browser : "",
@@ -30,7 +31,9 @@ const Configurator = function(options, provider){
             adClient : "googleima",
             currentProtocolOnly : false,
             systemText : null,
-            lang : "en"
+            lang : "en",
+            loadingRetryCount: 0,
+            expandFullScreenUI: false
         };
         const serialize = function (val) {
             if (val === undefined) {
@@ -61,14 +64,26 @@ const Configurator = function(options, provider){
 
         deserialize(options);
         let config = Object.assign({}, Defaults, options);
-
-        let systemText = _.findWhere(config.systemText || SYSTEM_TEXT, {"lang": config.lang});
-
-        if(!systemText){
-            config.lang = "en";
-            systemText = _.findWhere(SYSTEM_TEXT, {"lang": config.lang});
+        let userCustumSystemText = [];
+        if(config.systemText){
+            userCustumSystemText = _.isArray(config.systemText) ? config.systemText : [config.systemText];
         }
-        config.systemText = systemText;
+
+        for(let i = 0; i < userCustumSystemText.length; i ++){
+            if(userCustumSystemText[i].lang){
+                let currentSystemText = _.findWhere(SYSTEM_TEXT , {"lang": userCustumSystemText[i].lang});
+                if(currentSystemText){
+                    //validate & update
+                    Object.assign(currentSystemText, userCustumSystemText[i]);
+                }else{
+                    //create
+                    currentSystemText = _.findWhere(SYSTEM_TEXT , {"lang": "en"});
+                    currentSystemText.lang = userCustumSystemText[i].lang;
+                    SYSTEM_TEXT.push(Object.assign(userCustumSystemText[i], currentSystemText));
+                }
+            }
+        }
+        config.systemText = _.findWhere(SYSTEM_TEXT , {"lang": config.lang});
 
         let playbackRates = config.playbackRates;
 

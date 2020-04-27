@@ -9,13 +9,14 @@ import {
     STATE_PAUSED
 } from "api/constants";
 
-const MessageBox = function($container, api, message, description, withTimer, iconClass, clickCallback){
+const MessageBox = function($container, api, message, description, withTimer, iconClass, clickCallback, dontClose){
 
     let autoDestroyTimer = "";
     let data = {
         message : message,
         description : description,
-        iconClass : iconClass
+        iconClass : iconClass,
+        dontClose: dontClose
     };
 
 
@@ -32,6 +33,10 @@ const MessageBox = function($container, api, message, description, withTimer, ic
         "click .op-message-text" : function(event, $current, template){
             //event.preventDefault();
             event.stopPropagation();
+
+            if (dontClose) {
+                return;
+            }
             if(autoDestroyTimer){
                 clearTimeout(autoDestroyTimer);
             }
@@ -42,6 +47,11 @@ const MessageBox = function($container, api, message, description, withTimer, ic
         },
         "click .op-con" : function(event, $current, template){
             event.preventDefault();
+
+            if (dontClose) {
+                return;
+            }
+
             if(autoDestroyTimer){
                 clearTimeout(autoDestroyTimer);
             }
