@@ -10,7 +10,7 @@ import {
     INIT_HLSJS_NOTFOUND
 } from "api/constants";
 import _ from "utils/underscore";
-import {PLAYER_UNKNWON_NETWORK_ERROR, PLAYER_UNKNWON_DECODE_ERROR, PLAYER_BAD_REQUEST_ERROR, PLAYER_AUTH_FAILED_ERROR, PLAYER_NOT_ACCEPTABLE_ERROR} from "../../../constants";
+import {PLAYER_UNKNWON_ERROR, PLAYER_UNKNWON_NETWORK_ERROR, PLAYER_UNKNWON_DECODE_ERROR, PLAYER_BAD_REQUEST_ERROR, PLAYER_AUTH_FAILED_ERROR, PLAYER_NOT_ACCEPTABLE_ERROR} from "../../../constants";
 
 /**
  * @brief   hlsjs provider extended core.
@@ -39,6 +39,8 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
         });
 
         hls.attachMedia(element);
+
+        window.op_hls = hls;
 
         let spec = {
             name: PROVIDER_HLS,
@@ -109,11 +111,23 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
                     }
 
                     loadRetryer = setTimeout(function () {
+                        that.stop();
                         hls.stopLoad();
-                        hls.loadSource(source.file);
+                        hls.startLoad();
+                        that.play();
                     }, 1000);
 
                 } else {
+
+                    if (data.type === Hls.ErrorTypes.MEDIA_ERROR) {
+
+                        if (!data.fatal) {
+
+                            hls.recoverMediaError();
+                            that.play();
+                            return;
+                        }
+                    }
 
                     if (loadingRetryCount > 0) {
 
@@ -126,11 +140,33 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
 
                         loadingRetryCount = loadingRetryCount - 1;
 
-                        loadRetryer = setTimeout(function () {
+                        if (data.type === Hls.ErrorTypes.NETWORK_ERROR) {
 
-                            hls.stopLoad();
-                            hls.loadSource(source.file);
-                        }, 1000);
+                            loadRetryer = setTimeout(function () {
+
+                                that.stop();
+                                hls.stopLoad();
+                                hls.startLoad();
+                                that.play();
+                            }, 1000);
+                        } else if (data.type === Hls.ErrorTypes.MEDIA_ERROR) {
+
+                            loadRetryer = setTimeout(function () {
+
+                                hls.recoverMediaError();
+                                that.play();
+                            }, 1000);
+                        } else {
+
+                            loadRetryer = setTimeout(function () {
+
+                                that.stop();
+                                hls.stopLoad();
+                                hls.startLoad();
+                                that.play();
+                            }, 1000);
+                        }
+
                     } else {
 
                         let errorType = PLAYER_UNKNWON_NETWORK_ERROR;
@@ -141,13 +177,6 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
                             errorType = PLAYER_AUTH_FAILED_ERROR;
                         } else if (data && data.networkDetails && data.networkDetails.status === 406) {
                             errorType = PLAYER_NOT_ACCEPTABLE_ERROR;
-                        } else if (data.type === Hls.ErrorTypes.MEDIA_ERROR) {
-
-                            errorType = PLAYER_UNKNWON_DECODE_ERROR;
-
-                            if (!data.fatal) {
-                                return;
-                            }
                         }
 
                         let tempError = ERRORS.codes[errorType];
