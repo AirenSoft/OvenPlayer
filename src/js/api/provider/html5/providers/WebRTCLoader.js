@@ -350,9 +350,10 @@ const WebRTCLoader = function (provider, webSocketUrl, loadCallback, errorTrigge
 
         let newDomain = generateDomainFromUrl(webSocketUrl);
         let ip = findIp(cloneCandidate.candidate);
-        if(ip === newDomain){
+        if(ip === '' || ip === newDomain){
             return null;
         }
+
         //cloneCandidate.candidate.replace(cloneCandidate.address, newDomain);
         cloneCandidate.candidate = cloneCandidate.candidate.replace(ip, newDomain);
         //cloneCandidate.candidate = cloneCandidate.candidate.replace(new RegExp("\\b(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b", 'gi'), newDomain)
@@ -369,7 +370,7 @@ const WebRTCLoader = function (provider, webSocketUrl, loadCallback, errorTrigge
 
                 let cloneCandidate = copyCandidate(basicCandidate);
 
-                peerConnection.addIceCandidate(new RTCIceCandidate(basicCandidate)).then(function (e) {
+                peerConnection.addIceCandidate(new RTCIceCandidate(basicCandidate)).then(function () {
                     OvenPlayerConsole.log("addIceCandidate : success");
                 }).catch(function (error) {
                     let tempError = ERRORS.codes[PLAYER_WEBRTC_ADD_ICECANDIDATE_ERROR];
@@ -379,7 +380,7 @@ const WebRTCLoader = function (provider, webSocketUrl, loadCallback, errorTrigge
 
                 if(cloneCandidate){
                     peerConnection.addIceCandidate(new RTCIceCandidate(cloneCandidate)).then(function () {
-                        // console.log("cloneCandidate addIceCandidate : success");
+                        OvenPlayerConsole.log("cloned addIceCandidate : success");
                     }).catch(function (error) {
                         let tempError = ERRORS.codes[PLAYER_WEBRTC_ADD_ICECANDIDATE_ERROR];
                         tempError.error = error;

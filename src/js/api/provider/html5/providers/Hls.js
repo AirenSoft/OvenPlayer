@@ -10,7 +10,7 @@ import {
     INIT_HLSJS_NOTFOUND
 } from "api/constants";
 import _ from "utils/underscore";
-import {PLAYER_UNKNWON_NETWORK_ERROR, PLAYER_UNKNWON_DECODE_ERROR, PLAYER_BAD_REQUEST_ERROR, PLAYER_AUTH_FAILED_ERROR, PLAYER_NOT_ACCEPTABLE_ERROR} from "../../../constants";
+import {PLAYER_UNKNWON_ERROR, PLAYER_UNKNWON_NETWORK_ERROR, PLAYER_UNKNWON_DECODE_ERROR, PLAYER_BAD_REQUEST_ERROR, PLAYER_AUTH_FAILED_ERROR, PLAYER_NOT_ACCEPTABLE_ERROR} from "../../../constants";
 
 /**
  * @brief   hlsjs provider extended core.
@@ -28,15 +28,30 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
     let isManifestLoaded = false;
     let firstLoaded = false;
 
+
     try {
-        hls = new Hls({
+
+        let hlsConfig = {
             debug: false,
             maxBufferLength: 20,
             maxMaxBufferLength: 30,
             fragLoadingMaxRetry: 0,
             manifestLoadingMaxRetry: 0,
             levelLoadingMaxRetry: 0
-        });
+        };
+
+        let hlsConfigFromPlayerConfig = playerConfig.getConfig().hlsConfig;
+
+        if (hlsConfigFromPlayerConfig) {
+
+            for (let key in hlsConfigFromPlayerConfig) {
+                hlsConfig[key] = hlsConfigFromPlayerConfig[key];
+            }
+        }
+
+        hls = new Hls(hlsConfig);
+
+        window.op_hls = hls;
 
         hls.attachMedia(element);
 
@@ -109,11 +124,21 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
                     }
 
                     loadRetryer = setTimeout(function () {
+                        that.stop();
                         hls.stopLoad();
-                        hls.loadSource(source.file);
+                        hls.startLoad();
+                        that.play();
                     }, 1000);
 
                 } else {
+
+                    if (data.type === Hls.ErrorTypes.MEDIA_ERROR) {
+
+                        if (!data.fatal) {
+                            // do nothing when non fatal media error. hlsjs will recover it automatically.
+                            return;
+                        }
+                    }
 
                     if (loadingRetryCount > 0) {
 
@@ -126,11 +151,33 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
 
                         loadingRetryCount = loadingRetryCount - 1;
 
-                        loadRetryer = setTimeout(function () {
+                        if (data.type === Hls.ErrorTypes.NETWORK_ERROR) {
 
-                            hls.stopLoad();
-                            hls.loadSource(source.file);
-                        }, 1000);
+                            loadRetryer = setTimeout(function () {
+
+                                that.stop();
+                                hls.stopLoad();
+                                hls.startLoad();
+                                that.play();
+                            }, 1000);
+                        } else if (data.type === Hls.ErrorTypes.MEDIA_ERROR) {
+
+                            loadRetryer = setTimeout(function () {
+
+                                hls.recoverMediaError();
+                                that.play();
+                            }, 1000);
+                        } else {
+
+                            loadRetryer = setTimeout(function () {
+
+                                that.stop();
+                                hls.stopLoad();
+                                hls.startLoad();
+                                that.play();
+                            }, 1000);
+                        }
+
                     } else {
 
                         let errorType = PLAYER_UNKNWON_NETWORK_ERROR;
@@ -141,13 +188,6 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
                             errorType = PLAYER_AUTH_FAILED_ERROR;
                         } else if (data && data.networkDetails && data.networkDetails.status === 406) {
                             errorType = PLAYER_NOT_ACCEPTABLE_ERROR;
-                        } else if (data.type === Hls.ErrorTypes.MEDIA_ERROR) {
-
-                            errorType = PLAYER_UNKNWON_DECODE_ERROR;
-
-                            if (!data.fatal) {
-                                return;
-                            }
                         }
 
                         let tempError = ERRORS.codes[errorType];
@@ -179,6 +219,7 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
 
             if (!isManifestLoaded) {
                 let source = that.getSources()[that.getCurrentSource()].file;
+
                 hls.loadSource(source);
             } else {
                 superPlay_func();
