@@ -28,19 +28,32 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
     let isManifestLoaded = false;
     let firstLoaded = false;
 
+
     try {
-        hls = new Hls({
+
+        let hlsConfig = {
             debug: false,
             maxBufferLength: 20,
             maxMaxBufferLength: 30,
             fragLoadingMaxRetry: 0,
             manifestLoadingMaxRetry: 0,
             levelLoadingMaxRetry: 0
-        });
+        };
 
-        hls.attachMedia(element);
+        let hlsConfigFromPlayerConfig = playerConfig.getConfig().hlsConfig;
+
+        if (hlsConfigFromPlayerConfig) {
+
+            for (let key in hlsConfigFromPlayerConfig) {
+                hlsConfig[key] = hlsConfigFromPlayerConfig[key];
+            }
+        }
+
+        hls = new Hls(hlsConfig);
 
         window.op_hls = hls;
+
+        hls.attachMedia(element);
 
         let spec = {
             name: PROVIDER_HLS,
@@ -122,9 +135,7 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
                     if (data.type === Hls.ErrorTypes.MEDIA_ERROR) {
 
                         if (!data.fatal) {
-
-                            hls.recoverMediaError();
-                            that.play();
+                            // do nothing when non fatal media error. hlsjs will recover it automatically.
                             return;
                         }
                     }
@@ -208,6 +219,7 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
 
             if (!isManifestLoaded) {
                 let source = that.getSources()[that.getCurrentSource()].file;
+
                 hls.loadSource(source);
             } else {
                 superPlay_func();
