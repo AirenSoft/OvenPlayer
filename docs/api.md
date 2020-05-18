@@ -965,6 +965,10 @@ Returns currently OvenPlayer version.
 |`version`|String| String of player version 
 
 
+#### player.remove()
+Destroys the player instance. Stops playback and cleans up all resources.
+
+
 ## Events
 
 ```javascript
