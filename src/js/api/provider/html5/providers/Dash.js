@@ -98,7 +98,7 @@ const Dash = function (element, playerConfig, adTagUrl) {
         dash = dashjs.MediaPlayer().create();
         dash.initialize(element, null, playerConfig.getConfig().autoStart);
 
-        window.dash = dash;
+        window.op_dash = dash;
 
         let spec = {
             name: PROVIDER_DASH,
