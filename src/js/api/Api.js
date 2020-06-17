@@ -138,15 +138,12 @@ const Api = function(container){
                     if (data.code === PLAYER_WEBRTC_UNEXPECTED_DISCONNECT
                         || (!playerConfig.getConfig().autoFallback && data.code === PLAYER_WEBRTC_NETWORK_SLOW)) {
 
-                        webrtcRetry = true;
-                        webrtcRetryCount = WEBRTC_RETRY_COUNT;
-                        webrtcRetryTimer = setTimeout(function () {
+                        if (!webrtcRetry) {
 
-                            that.setCurrentSource(playerConfig.getSourceIndex());
-                            webrtcRetryCount --;
-                        }, webrtcRetryInterval);
+                            webrtcRetry = true;
+                            webrtcRetryCount = WEBRTC_RETRY_COUNT;
+                        }
 
-                        return;
                     }
 
                     if (webrtcRetry && webrtcRetryCount > 0) {

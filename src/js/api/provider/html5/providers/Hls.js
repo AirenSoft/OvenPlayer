@@ -23,6 +23,7 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
     let that = {};
     let hls = null;
     let superPlay_func = null;
+    let superStop_func = null;
     let superDestroy_func = null;
     let loadRetryer = null;
     let isManifestLoaded = false;
@@ -103,8 +104,11 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
                 if (data.details.live) {
                     spec.isLive = true;
                 } else {
+
                     if (lastPlayPosition && lastPlayPosition >= 0) {
                         that.seek(lastPlayPosition);
+                    } else if (source.sectionStart && source.sectionStart > 0) {
+                        that.seek(source.sectionStart);
                     }
                 }
                 if (playerConfig.isAutoStart()) {
@@ -215,6 +219,8 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
         superDestroy_func = that.super('destroy');
         OvenPlayerConsole.log("HLS PROVIDER LOADED.");
 
+        superStop_func = that.super('stop');
+
         that.play = () => {
 
             if (!isManifestLoaded) {
@@ -227,8 +233,21 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
 
         };
 
+        that.stop = () => {
+
+            if (hls) {
+                hls.stopLoad();
+            }
+
+            superStop_func();
+        };
+
         that.destroy = () => {
-            hls.destroy();
+
+            if (hls) {
+                hls.destroy();
+            }
+
             hls = null;
             OvenPlayerConsole.log("HLS : PROVIDER DESTROUYED.");
             superDestroy_func();

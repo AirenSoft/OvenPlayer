@@ -324,9 +324,10 @@ const WebRTCLoader = function (provider, webSocketUrl, loadCallback, errorTrigge
         };
     }
 
-    //This is temporary function. we can't build STRUN server.
     let copyCandidate = function(basicCandidate){
+
         let cloneCandidate = _.clone(basicCandidate);
+
         function generateDomainFromUrl(url) {
             let result;
             let match;
@@ -339,8 +340,10 @@ const WebRTCLoader = function (provider, webSocketUrl, loadCallback, errorTrigge
             return result;
         }
         function findIp (candidate){
+
             let result = "";
             let match = "";
+
             if(match = candidate.match(new RegExp("\\b(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b", 'gi'))){
                 result = match[0];
             }
@@ -350,13 +353,13 @@ const WebRTCLoader = function (provider, webSocketUrl, loadCallback, errorTrigge
 
         let newDomain = generateDomainFromUrl(webSocketUrl);
         let ip = findIp(cloneCandidate.candidate);
+
         if(ip === '' || ip === newDomain){
+
             return null;
         }
 
-        //cloneCandidate.candidate.replace(cloneCandidate.address, newDomain);
         cloneCandidate.candidate = cloneCandidate.candidate.replace(ip, newDomain);
-        //cloneCandidate.candidate = cloneCandidate.candidate.replace(new RegExp("\\b(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b", 'gi'), newDomain)
 
         return cloneCandidate;
     };
@@ -381,7 +384,9 @@ const WebRTCLoader = function (provider, webSocketUrl, loadCallback, errorTrigge
                 if(cloneCandidate){
                     peerConnection.addIceCandidate(new RTCIceCandidate(cloneCandidate)).then(function () {
                         OvenPlayerConsole.log("cloned addIceCandidate : success");
+
                     }).catch(function (error) {
+
                         let tempError = ERRORS.codes[PLAYER_WEBRTC_ADD_ICECANDIDATE_ERROR];
                         tempError.error = error;
                         closePeer(tempError);

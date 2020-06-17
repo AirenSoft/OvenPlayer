@@ -10,7 +10,10 @@ export default (uiText) => {
             `<div class="op-progressbar-knob-container">` +
                 `<div class="op-progressbar-knob op-play-background-color"></div>` +
             `</div>` +
+            `<span class="op-progressbar-preview"></span>` +
             `<span class="op-progressbar-time">00:00</span>` +
+            `<span class="op-progressbar-section-start"></span>` +
+            `<span class="op-progressbar-section-end"></span>` +
         `</div>`
     );
 };

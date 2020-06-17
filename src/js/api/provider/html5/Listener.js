@@ -71,7 +71,7 @@ const Listener = function(element, provider, videoEndedCallback){
         //Fires when the current playlist is ended
         OvenPlayerConsole.log("EventListener : on ended");
 
-        if(provider.getState() !== STATE_IDLE && provider.getState() !== STATE_COMPLETE){
+        if(provider.getState() !== STATE_IDLE && provider.getState() !== STATE_COMPLETE && provider.getState() !== STATE_ERROR) {
             if(videoEndedCallback){
                 videoEndedCallback(function(){
                     provider.setState(STATE_COMPLETE);
@@ -172,6 +172,15 @@ const Listener = function(element, provider, videoEndedCallback){
         let position = elVideo.currentTime;
         let duration = elVideo.duration;
         if (isNaN(duration)) {
+            return;
+        }
+
+        let sectionEnd = provider.getSources()[provider.getCurrentSource()].sectionEnd;
+
+        if (sectionEnd && position >= sectionEnd && provider.getState() === STATE_PLAYING) {
+
+            provider.stop();
+            provider.setState(STATE_COMPLETE);
             return;
         }
 
