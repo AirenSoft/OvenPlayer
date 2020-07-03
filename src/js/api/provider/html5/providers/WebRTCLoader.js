@@ -1,5 +1,6 @@
 import adapter from 'utils/adapter';
 import _ from "utils/underscore";
+import {analUserAgent} from "utils/browser";
 import {
     ERRORS,
     PLAYER_WEBRTC_WS_ERROR,
@@ -55,6 +56,8 @@ const WebRTCLoader = function (provider, webSocketUrl, loadCallback, errorTrigge
     let wsClosedByPlayer = false;
 
     let statisticsTimer = null;
+
+    let currentBrowser = analUserAgent();
 
     (function () {
         let existingHandler = window.onbeforeunload;
@@ -115,7 +118,9 @@ const WebRTCLoader = function (provider, webSocketUrl, loadCallback, errorTrigge
                 }
 
                 if (playerConfig.getConfig().autoFallback && stats) {
+
                     stats.forEach(function (state) {
+
                         if (state.type === "inbound-rtp" && state.kind === 'video' && !state.isRemote) {
 
                             //(state.packetsLost - prevPacketsLost) is real current lost.
@@ -303,7 +308,7 @@ const WebRTCLoader = function (provider, webSocketUrl, loadCallback, errorTrigge
         }
 
         function handleCreateOfferError(event) {
-            // console.log('createOffer() error: ', event);
+
         }
 
         peerConnection.onicecandidate = function (e) {
@@ -324,23 +329,24 @@ const WebRTCLoader = function (provider, webSocketUrl, loadCallback, errorTrigge
         };
     }
 
-    //This is temporary function. we can't build STRUN server.
     let copyCandidate = function(basicCandidate){
+
         let cloneCandidate = _.clone(basicCandidate);
+
         function generateDomainFromUrl(url) {
-            let result;
+            let result = '';
             let match;
             if (match = url.match(/^(?:wss?:\/\/)?(?:[^@\n]+@)?(?:www\.)?([^:\/\n\?\=]+)/im)) {
                 result = match[1];
-                /*if (match = result.match(/^[^\.]+\.(.+\..+)$/)) {
-                 result = match[1]
-                 }*/
             }
             return result;
         }
+
         function findIp (candidate){
-            let result = "";
-            let match = "";
+
+            let result = '';
+            let match;
+
             if(match = candidate.match(new RegExp("\\b(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b", 'gi'))){
                 result = match[0];
             }
@@ -350,15 +356,46 @@ const WebRTCLoader = function (provider, webSocketUrl, loadCallback, errorTrigge
 
         let newDomain = generateDomainFromUrl(webSocketUrl);
         let ip = findIp(cloneCandidate.candidate);
+
         if(ip === '' || ip === newDomain){
+
             return null;
         }
 
-        //cloneCandidate.candidate.replace(cloneCandidate.address, newDomain);
-        cloneCandidate.candidate = cloneCandidate.candidate.replace(ip, newDomain);
-        //cloneCandidate.candidate = cloneCandidate.candidate.replace(new RegExp("\\b(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b", 'gi'), newDomain)
+        return new Promise(function (resolve, reject) {
 
-        return cloneCandidate;
+            // firefox browser throws a candidate parsing exception when a domain name is set at the address property. So we resolve the dns using google dns resolve api.
+            if (currentBrowser.browser === 'Firefox' && !findIp(newDomain)) {
+
+                fetch('https://dns.google.com/resolve?name=' + newDomain)
+                    .then(resp => resp.json())
+                    .then(data => {
+
+                        if (data && data.Answer && data.Answer.length > 0) {
+
+                            if (data.Answer[0].data) {
+
+                                let relsolvedIp = data.Answer[0].data;
+
+                                cloneCandidate.candidate = cloneCandidate.candidate.replace(ip, relsolvedIp);
+                                resolve(cloneCandidate);
+                            } else {
+
+                                return null;
+                            }
+                        } else {
+
+                            return null;
+                        }
+                    });
+
+            } else {
+
+                cloneCandidate.candidate = cloneCandidate.candidate.replace(ip, newDomain);
+                resolve(cloneCandidate);
+            }
+
+        });
     };
 
     function addIceCandidate(peerConnection, candidates) {
@@ -368,7 +405,7 @@ const WebRTCLoader = function (provider, webSocketUrl, loadCallback, errorTrigge
 
                 let basicCandidate = candidates[i];
 
-                let cloneCandidate = copyCandidate(basicCandidate);
+                let cloneCandidatePromise = copyCandidate(basicCandidate);
 
                 peerConnection.addIceCandidate(new RTCIceCandidate(basicCandidate)).then(function () {
                     OvenPlayerConsole.log("addIceCandidate : success");
@@ -378,16 +415,23 @@ const WebRTCLoader = function (provider, webSocketUrl, loadCallback, errorTrigge
                     closePeer(tempError);
                 });
 
-                if(cloneCandidate){
-                    peerConnection.addIceCandidate(new RTCIceCandidate(cloneCandidate)).then(function () {
-                        OvenPlayerConsole.log("cloned addIceCandidate : success");
-                    }).catch(function (error) {
-                        let tempError = ERRORS.codes[PLAYER_WEBRTC_ADD_ICECANDIDATE_ERROR];
-                        tempError.error = error;
-                        closePeer(tempError);
+                if(cloneCandidatePromise){
+                    cloneCandidatePromise.then(function (cloneCandidate) {
+
+                        if (cloneCandidate) {
+
+                            peerConnection.addIceCandidate(new RTCIceCandidate(cloneCandidate)).then(function () {
+                            OvenPlayerConsole.log("cloned addIceCandidate : success");
+
+                            }).catch(function (error) {
+
+                                let tempError = ERRORS.codes[PLAYER_WEBRTC_ADD_ICECANDIDATE_ERROR];
+                                tempError.error = error;
+                                closePeer(tempError);
+                            });
+                        }
                     });
                 }
-
             }
         }
     }

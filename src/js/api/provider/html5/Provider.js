@@ -400,8 +400,11 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
                 file: source.file,
                 type: source.type,
                 label: source.label,
-                index : index
-            }
+                index : index,
+                sectionStart: source.sectionStart,
+                sectionEnd: source.sectionEnd,
+                gridThumbnail: source.gridThumbnail,
+            };
 
             if (source.lowLatency) {
                 obj.lowLatency = source.lowLatency;

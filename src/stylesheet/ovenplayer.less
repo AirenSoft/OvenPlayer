@@ -368,8 +368,8 @@ i.op-con{
   &.op-replay-big{&::before{content: "\e908";}}
   &.op-setting{&::before{content: "\e90A";}}
   &.op-pause{&::before{content: "\e90C";}}
-  &.op-volume-small{&::before{content: "\e90D";}}
-  &.op-volume-mute{&::before{content: "\e90E";}}
+  &.op-volume-small{display:none;&::before{content: "\e90D";}}
+  &.op-volume-mute{display:none;&::before{content: "\e90E";}}
   &.op-volume-max{&::before{content: "\e90F";}}
   &.op-play-big{&::before{content: "\e910";}}
   &.op-warning{&::before{content: "\e912";}}
@@ -615,7 +615,7 @@ i.op-con{
   margin-top: -40px;
   margin-left: -40px;
   text-align: center;
-  z-index : 1008;
+  z-index : 1007;
   .op-bigbutton {
     width: 80px;
     height: 80px;
@@ -781,12 +781,13 @@ i.op-con{
       width: 100%;
       height: 4px;
       cursor: pointer;
+      bottom: 50px;
 
       .op-progressbar-padding {
         position: absolute;
         width: 100%;
-        height: 4px;
-        bottom: 0;
+        height: 15px;
+        bottom: -5px;
       }
     }
 
@@ -988,6 +989,7 @@ i.op-con{
     font-size: 0.8em;
     line-height: 15px;
     user-select: none;
+    opacity: 0.7;
   }
 
 
@@ -1011,7 +1013,25 @@ i.op-con{
   display: none;
 }
 
+.op-progressbar-section-start,
+.op-progressbar-section-end {
+  display: none;
+  position: absolute;
+  width: 3px;
+  height: 14px;
+  bottom: -5px;
+  background-color: #50e3c2;
+}
 
+.op-progressbar-preview {
+  position: absolute;
+  display: none;
+  bottom: 50px;
+  border: 2px solid #fff;
+  border-radius: 2px;
+  background-color: #000;
+  z-index: 1020;
+}
 /**
  * @brief   Play button
  * */
