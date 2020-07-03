@@ -272,7 +272,7 @@ const ProgressBar = function($container, api, isAd){
             let left = -1 * columnNumber * width * scale;
             let top =  -1 * rowNumber * height * scale;
 
-            console.log(thumbnailNumber + ': ' + imageNumber +'('+ rowNumber +', ' + columnNumber + ')');
+            // console.log(thumbnailNumber + ': ' + imageNumber +'('+ rowNumber +', ' + columnNumber + ')');
 
             let thumbnails = api.getSources()[api.getCurrentSource()].gridThumbnail;
             let thumbnail = thumbnails[imageNumber];
