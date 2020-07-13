@@ -210,7 +210,10 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
                         loadRetryer = null;
                     }
 
-                    hls.stopLoad();
+                    if (hls) {
+
+                        hls.stopLoad();
+                    }
                 }
             });
         });
