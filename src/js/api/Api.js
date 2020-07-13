@@ -5,7 +5,7 @@ import LazyCommandExecutor from "api/LazyCommandExecutor";
 import MediaManager from "api/media/Manager";
 import PlaylistManager from "api/playlist/Manager";
 import ProviderController from "api/provider/Controller";
-import {READY, ERRORS, ERROR, CONTENT_TIME_MODE_CHANGED, INIT_UNKNWON_ERROR, INIT_UNSUPPORT_ERROR, DESTROY, PLAYER_PLAY, NETWORK_UNSTABLED, PLAYER_WEBRTC_NETWORK_SLOW, PLAYER_WEBRTC_UNEXPECTED_DISCONNECT,
+import {READY, ERRORS, ERROR, CONTENT_TIME_MODE_CHANGED, INIT_UNKNWON_ERROR, INIT_UNSUPPORT_ERROR, DESTROY, PLAYER_PLAY, NETWORK_UNSTABLED, PLAYER_WEBRTC_NETWORK_SLOW, PLAYER_WEBRTC_UNEXPECTED_DISCONNECT, PLAYER_WEBRTC_SET_LOCAL_DESC_ERROR,
     PLAYER_FILE_ERROR, PROVIDER_DASH, PROVIDER_HLS, PROVIDER_WEBRTC, PROVIDER_HTML5, PROVIDER_RTMP, ALL_PLAYLIST_ENDED} from "api/constants";
 import {version} from 'version';
 import {ApiRtmpExpansion} from 'api/ApiExpansions';
@@ -122,6 +122,24 @@ const Api = function(container){
 
             //This passes the event created by the Provider to API.
             currentProvider.on("all", function(name, data){
+
+                if( name === ERROR) {
+
+                    // Chrome >=80 on Android misses h246 in SDP when first time after web page loaded.
+                    // So wait until browser get h264 capabilities and create answer SDP.
+                    if (userAgentObject.os === 'Android' && userAgentObject.browser === 'Chrome') {
+
+                        if (data && data.code && data.code === PLAYER_WEBRTC_SET_LOCAL_DESC_ERROR) {
+
+                            setTimeout(function () {
+
+                                that.setCurrentSource(that.getCurrentSource());
+                            }, webrtcRetryInterval);
+
+                            return;
+                        }
+                    }
+                }
 
                 that.trigger(name, data);
 

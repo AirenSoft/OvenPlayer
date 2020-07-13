@@ -65,7 +65,9 @@ const WebRTC = function(element, playerConfig, adTagUrl){
 
             that.on(CONTENT_META, function(){
                 if(playerConfig.isAutoStart()){
-                    that.play();
+                    if (that.getState() !== 'error') {
+                        that.play();
+                    }
                 }
             }, that);
         }
