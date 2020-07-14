@@ -160,15 +160,24 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
                             loadRetryer = setTimeout(function () {
 
                                 that.stop();
-                                hls.stopLoad();
-                                hls.startLoad();
+
+                                if (hls) {
+
+                                    hls.stopLoad();
+                                    hls.startLoad();
+                                }
+
                                 that.play();
                             }, 1000);
                         } else if (data.type === Hls.ErrorTypes.MEDIA_ERROR) {
 
                             loadRetryer = setTimeout(function () {
 
-                                hls.recoverMediaError();
+                                if (hls) {
+
+                                    hls.recoverMediaError();
+                                }
+
                                 that.play();
                             }, 1000);
                         } else {
@@ -176,8 +185,13 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
                             loadRetryer = setTimeout(function () {
 
                                 that.stop();
-                                hls.stopLoad();
-                                hls.startLoad();
+
+                                if (hls) {
+
+                                    hls.stopLoad();
+                                    hls.startLoad();
+                                }
+
                                 that.play();
                             }, 1000);
                         }
@@ -238,6 +252,11 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
 
         that.stop = () => {
 
+            if (loadRetryer) {
+                clearTimeout(loadRetryer);
+                loadRetryer = null;
+            }
+
             if (hls) {
                 hls.stopLoad();
             }
@@ -246,6 +265,11 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
         };
 
         that.destroy = () => {
+
+            if (loadRetryer) {
+                clearTimeout(loadRetryer);
+                loadRetryer = null;
+            }
 
             if (hls) {
                 hls.destroy();
