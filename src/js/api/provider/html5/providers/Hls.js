@@ -128,10 +128,15 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
                     }
 
                     loadRetryer = setTimeout(function () {
-                        that.stop();
-                        hls.stopLoad();
-                        hls.startLoad();
-                        that.play();
+
+                        if (hls) {
+
+                            that.stop();
+                            hls.stopLoad();
+                            hls.startLoad();
+                            that.play();
+                        }
+
                     }, 1000);
 
                 } else {
@@ -243,7 +248,10 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
             if (!isManifestLoaded) {
                 let source = that.getSources()[that.getCurrentSource()].file;
 
-                hls.loadSource(source);
+                if (hls) {
+                    hls.loadSource(source);
+                }
+
             } else {
                 superPlay_func();
             }
@@ -253,6 +261,7 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
         that.stop = () => {
 
             if (loadRetryer) {
+
                 clearTimeout(loadRetryer);
                 loadRetryer = null;
             }
@@ -267,11 +276,13 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
         that.destroy = () => {
 
             if (loadRetryer) {
+
                 clearTimeout(loadRetryer);
                 loadRetryer = null;
             }
 
             if (hls) {
+
                 hls.destroy();
             }
 
