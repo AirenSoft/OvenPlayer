@@ -33,7 +33,8 @@ const Configurator = function(options, provider){
             systemText : null,
             lang : "en",
             loadingRetryCount: 0,
-            expandFullScreenUI: false
+            expandFullScreenUI: false,
+            fullscreenOption: null
         };
         const serialize = function (val) {
             if (val === undefined) {

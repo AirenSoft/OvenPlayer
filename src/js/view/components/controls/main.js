@@ -44,12 +44,11 @@ const Controls = function ($container, api) {
 
     hasPlaylist = api.getPlaylist().length > 1;
 
-    if (api.getConfig().hidePlaylistIcon) {
+    if (api.getConfig().hidePlaylistIcon === true) {
         hasPlaylist = false;
     }
 
     let playlistPanel = "";
-
 
     const onRendered = function ($current, template) {
 
@@ -95,6 +94,11 @@ const Controls = function ($container, api) {
         }
 
         function makeControlUI(metadata) {
+
+            if (metadata.duration > 9000000000000000) {
+
+                metadata.duration = Infinity;
+            }
 
             initTimeDisplay(metadata);
             initFullscreenButton();

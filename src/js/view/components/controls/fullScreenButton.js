@@ -149,7 +149,8 @@ const FullScreenButton = function($container, api){
             }
         }else{
             if (rootElement.requestFullscreen) {
-                promise = rootElement.requestFullscreen();
+                var fullScreenOption = api.getConfig().fullscreenOption;
+                promise = rootElement.requestFullscreen(fullScreenOption);
             } else if (rootElement.webkitRequestFullScreen) {
                 promise = rootElement.webkitRequestFullScreen();
             }  else if (rootElement.mozRequestFullScreen) {
