@@ -143,6 +143,10 @@ const Api = function(container){
 
                 that.trigger(name, data);
 
+                if(name === "complete"){
+                    runNextPlaylist(playlistManager.getCurrentPlaylistIndex() + 1);
+                }
+
                 if(name === PLAYER_PLAY) {
                     clearInterval(webrtcRetryTimer);
                     webrtcRetry = false;

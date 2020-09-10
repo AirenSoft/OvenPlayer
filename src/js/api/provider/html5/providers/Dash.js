@@ -39,6 +39,7 @@ const Dash = function (element, playerConfig, adTagUrl) {
     var prevLLLiveDuration = null;
     let loadRetryer = null;
     let sourceOfFile = "";
+    let runedAutoStart = false;
 
     try {
 
@@ -96,7 +97,7 @@ const Dash = function (element, playerConfig, adTagUrl) {
         };
 
         dash = dashjs.MediaPlayer().create();
-        dash.initialize(element, null, playerConfig.getConfig().autoStart);
+        dash.initialize(element, null, false);
 
         window.op_dash = dash;
 
@@ -294,12 +295,22 @@ const Dash = function (element, playerConfig, adTagUrl) {
                 }
             }
 
+            if(seekPosition_sec){
+                dash.seek(seekPosition_sec);
+                if(!playerConfig.isAutoStart()){
+                    that.play();
+                }
+            }
+
             if (dash.isDynamic()) {
                 spec.isLive = true;
-            } else {
+            }
 
-                if (seekPosition_sec && typeof seekPosition_sec === 'number' && seekPosition_sec >= 0)
-                dash.seek(seekPosition_sec);
+            if(playerConfig.isAutoStart() && !runedAutoStart){
+                OvenPlayerConsole.log("DASH : AUTOPLAY()!");
+                that.play();
+
+                runedAutoStart = true;
             }
 
         });
