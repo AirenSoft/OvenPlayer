@@ -1,6 +1,6 @@
 # "HTML5 player for OvenMediaEngine" OvenPlayer
 
-## What is OvenPlayer?[OvenMediaEngine](https://github.com/AirenSoft/OvenMediaEngine)?
+## What is OvenPlayer?
 
 OvenPlayer is <b>Open-Source HTML5 Player</b>.
 OvenPlayer supports <b>WebRTC Signaling</b> from OvenMediaEngine for Sub-Second Latency Streaming. And, it automatically plays and fallbacks using <b>WebRTC</b>, <b>Low Latency HTTP</b> (DASH), <b>MPEG-DASH</b>, <b>HLS</b>, and <b>RTMP</b>.
