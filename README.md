@@ -1,9 +1,10 @@
-# OvenPlayer - HTML5 player for OvenMediaEngine.
+# "HTML5 player for OvenMediaEngine" OvenPlayer
 
-## What is [OvenMediaEngine](https://github.com/AirenSoft/OvenMediaEngine)?
+## What is OvenPlayer?[OvenMediaEngine](https://github.com/AirenSoft/OvenMediaEngine)?
 
-OvenMediaEngine (OME) is Open-Source Streaming Server with Sub-Second Latency.
-OME receives RTMP, MPEG-TS, RTSP from encoders and cameras such as OvenStreamEncoder, OBS, XSplit, and more. And, it transmits media source using WebRTC, Low Latency HTTP (DASH), MPEG-DASH, and HLS.
+OvenPlayer is <b>Open-Source HTML5 Player</b>.
+OvenPlayer supports <b>WebRTC Signaling</b> from OvenMediaEngine for Sub-Second Latency Streaming. And, it automatically plays and fallbacks using <b>WebRTC</b>, <b>Low Latency HTTP</b> (DASH), <b>MPEG-DASH</b>, <b>HLS</b>, and <b>RTMP</b>.
+We also provides [OvenMediaEngine](https://github.com/AirenSoft/OvenMediaEngine), Open-Source Sub-Second Latency Streaming Server.
 
 ![main](dist/02_OvenPlayer.png)
 
@@ -47,9 +48,10 @@ Visit [API and Configuration](docs/api.md) for more details.
 
 Please read [Guidelines](CONTRIBUTING.md) and our [Rules](CODE_OF_CONDUCT.md).
 
-Or we are collecting use cases. Please share your experiences.
+Or we are collecting use cases. Please share with us your experience.
 
 [![Contribute](dist/06_UseCases.png)](mailto:contact@airensoft.com)
+
 
 ## License
 
