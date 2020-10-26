@@ -47,7 +47,7 @@ If you modify the source code, you have to build it manually.
 
 > If you are cloning a project for the first time,  you can find already built files in the `dist/development` and `dist/production` directories.
 
-You can build your modified source code with the following command. The built source code can be found in the `dist/development/openplayer` directory.
+You can build your modified source code with the following command. The built source code can be found in the `dist/development/ovenplayer` directory.
 
 ```bash
 npm run watch
