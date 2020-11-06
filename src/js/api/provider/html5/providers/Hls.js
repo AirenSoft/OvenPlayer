@@ -10,7 +10,14 @@ import {
     INIT_HLSJS_NOTFOUND
 } from "api/constants";
 import _ from "utils/underscore";
-import {PLAYER_UNKNWON_ERROR, PLAYER_UNKNWON_NETWORK_ERROR, PLAYER_UNKNWON_DECODE_ERROR, PLAYER_BAD_REQUEST_ERROR, PLAYER_AUTH_FAILED_ERROR, PLAYER_NOT_ACCEPTABLE_ERROR} from "../../../constants";
+import {
+    PLAYER_UNKNWON_ERROR,
+    PLAYER_UNKNWON_NETWORK_ERROR,
+    PLAYER_UNKNWON_DECODE_ERROR,
+    PLAYER_BAD_REQUEST_ERROR,
+    PLAYER_AUTH_FAILED_ERROR,
+    PLAYER_NOT_ACCEPTABLE_ERROR
+} from "../../../constants";
 
 /**
  * @brief   hlsjs provider extended core.
@@ -118,9 +125,11 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
 
             hls.on(Hls.Events.ERROR, function (event, data) {
 
-                if (data && data.networkDetails && data.networkDetails.status === 202) {
-
+                hls.once(Hls.Events.FRAG_LOADING, function () {
                     that.setState(STATE_LOADING);
+                });
+
+                if (data && data.networkDetails && data.networkDetails.status === 202) {
 
                     if (loadRetryer) {
                         clearTimeout(loadRetryer);

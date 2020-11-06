@@ -142,8 +142,8 @@ export const SYSTEM_TEXT = [
                 },
                 101: {
                     "code": 101,
-                    "message": "Can not load due to unsupported media.",
-                    "reason": "Can not load due to unsupported media."
+                    "message": "Can not load due to playable media not found.",
+                    "reason": "Can not load due to playable media not found."
                 },
                 102: {
                     "code": 102,
@@ -284,8 +284,8 @@ export const SYSTEM_TEXT = [
                 },
                 101: {
                     "code": 101,
-                    "message": "지원되지 않는 미디어로 인해 로드 할 수 없습니다.",
-                    "reason": "Can not load due to unsupported media."
+                    "message": "지원되는 미디어를 찾지 못해 로드 할 수 없습니다.",
+                    "reason": "Can not load due to playable media not found."
                 },
                 102: {
                     "code": 102,

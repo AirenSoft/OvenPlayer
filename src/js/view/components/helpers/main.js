@@ -42,6 +42,10 @@ const Helpers = function($container, api){
         let qualityLevelChanging = false, newQualityLevel = -1;
         function createBigButton(state){
 
+            if(messageBox){
+                messageBox.destroy();
+            }
+
             if(bigButton){
                 bigButton.destroy();
             }
