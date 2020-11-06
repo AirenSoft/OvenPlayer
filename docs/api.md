@@ -185,7 +185,7 @@ type|default
 ------|------
 Number| 0
 
-Cuts the playback after time of sectionStart.
+Cuts the playback after time of sectionEnd.
 
 ```javascript
 sources: [
