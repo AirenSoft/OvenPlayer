@@ -295,6 +295,7 @@ const View = function($container){
         api = playerInstance;
 
         api.on(READY, function(data) {
+
             if(!controls && showControlBar){
                 controls = Controls($playerRoot.find(".op-ui"), playerInstance);
             }
@@ -343,6 +344,21 @@ const View = function($container){
             if (api.getConfig() && api.getConfig().expandFullScreenUI) {
                 controls = Controls($playerRoot.find(".op-ui"), playerInstance);
                 controls.destroy();
+            }
+        }
+
+        let aspectRatio = api.getConfig().aspectRatio;
+
+        if (aspectRatio) {
+
+            if (aspectRatio.split(':').length === 2) {
+
+                let width = aspectRatio.split(':')[0] * 1;
+                let height = aspectRatio.split(':')[1] * 1;
+
+                let ratio = height / width * 100;
+
+                $playerRoot.find('.op-ratio').css('padding-bottom', ratio + '%');
             }
         }
     };

@@ -49,6 +49,14 @@ player = OvenPlayer.create("player", {
       adTagUrl : "https://pubads.g.doubleclick.net/..." 
 });
 ```
+#### aspectRatio
+
+Set the aspect ratio of OvenPlayer. You can set any aspect ratio like "21:9", "4:3", "1:1" and more.
+
+type|default
+------|------
+String|"16:9"
+
 
 #### loop 
 type|default
