@@ -227,25 +227,33 @@ const View = function($container){
                     event.preventDefault();
                     isShiftPressed = true;
                     break;
-                case 32 :   //sapce
+                case 32 :   //space
                     event.preventDefault();
                     togglePlayPause();
                     break;
                 case 37 : //arrow left
                     event.preventDefault();
-                    if(isShiftPressed && frameMode){
-                        api.seekFrame(-1);
-                    }else{
-                        seek(5, true);
+
+                    if (!api.getConfig().disableSeekUI) {
+                        if(isShiftPressed && frameMode){
+                            api.seekFrame(-1);
+                        }else{
+                            seek(5, true);
+                        }
                     }
                     break;
                 case 39 : //arrow right
                     event.preventDefault();
-                    if(isShiftPressed && frameMode){
-                        api.seekFrame(1);
-                    }else{
-                        seek(5, false);
+
+                    if (!api.getConfig().disableSeekUI) {
+
+                        if(isShiftPressed && frameMode){
+                            api.seekFrame(1);
+                        }else{
+                            seek(5, false);
+                        }
                     }
+
                     break;
                 case 38 : //arrow up
                     event.preventDefault();

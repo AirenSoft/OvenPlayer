@@ -163,6 +163,40 @@ Enter the URLs of the diverse protocols to play.
 ] 
 ```
 
+#### sources.sectionStart
+type|default
+------|------
+Number| 0
+
+Cuts the playback before time of sectionStart.
+
+```javascript
+sources: [
+    {
+        type: 'hls',
+        file: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
+        sectionStart: 300
+    }
+]
+```
+
+#### sources.sectionEnd
+type|default
+------|------
+Number| 0
+
+Cuts the playback after time of sectionStart.
+
+```javascript
+sources: [
+    {
+        type: 'hls',
+        file: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
+        sectionEnd: 300
+    }
+]
+```
+
 #### playlist 
 type|default
 ------|------
@@ -258,6 +292,14 @@ type|default
 boolean|false
 
 Enables user to enter or exit full screen with double click.
+
+
+#### disableSeekUI
+type|default
+------|------
+boolean|false
+
+Disables user to seek using progress bar or keyboard interaction.
 
 
 #### tracks 

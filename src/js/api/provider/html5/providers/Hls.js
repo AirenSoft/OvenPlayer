@@ -114,8 +114,6 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
 
                     if (lastPlayPosition && lastPlayPosition >= 0) {
                         that.seek(lastPlayPosition);
-                    } else if (source.sectionStart && source.sectionStart > 0) {
-                        that.seek(source.sectionStart);
                     }
                 }
                 if (playerConfig.isAutoStart()) {

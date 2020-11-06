@@ -12,8 +12,6 @@ export default (uiText) => {
             `</div>` +
             `<span class="op-progressbar-preview"></span>` +
             `<span class="op-progressbar-time">00:00</span>` +
-            `<span class="op-progressbar-section-start"></span>` +
-            `<span class="op-progressbar-section-end"></span>` +
         `</div>`
     );
 };

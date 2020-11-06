@@ -100,6 +100,17 @@ const Controls = function ($container, api) {
                 metadata.duration = Infinity;
             }
 
+            let sectionStart = api.getSources()[api.getCurrentSource()].sectionStart;
+            let sectionEnd = api.getSources()[api.getCurrentSource()].sectionEnd;
+
+            if (sectionEnd) {
+                metadata.duration = sectionEnd;
+            }
+
+            if (sectionStart) {
+                 metadata.duration = metadata.duration - sectionStart;
+            }
+
             initTimeDisplay(metadata);
             initFullscreenButton();
 

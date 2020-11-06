@@ -16,6 +16,10 @@ import {STATE_COMPLETE} from "../../../api/constants";
 const ProgressBar = function($container, api, isAd){
     const $root = LA$("#"+api.getContainerId());
 
+    if (api.getConfig().disableSeekUI) {
+        $container.addClass('op-progressbar-container-disabled');
+    }
+
     let currentPlayingPosition = 0;
     let currentPlayingPercentage = 0;
     let currentLoadedPercentage = 0;
@@ -24,6 +28,7 @@ const ProgressBar = function($container, api, isAd){
     let panelManager = PanelManager();
     let adDuration = 0;
     let lastGridThumbnail = "";
+    let durationForCalc = 0;
 
     let $progressBar = "",
         $progressLoad = "",
@@ -33,8 +38,6 @@ const ProgressBar = function($container, api, isAd){
         $knob = "",
         knobWidth = 0,
         $time = "",
-        $sectionStart = "",
-        $sectionEnd = "",
         $preview = "";
 
     let isMobile = api.getBrowser().os === "iOS" || api.getBrowser().os === "Android";
@@ -44,42 +47,7 @@ const ProgressBar = function($container, api, isAd){
         let progressBarWidth = $progressBar.width();
         let position = progressBarWidth * percentage;
 
-        let drawStartPosition = 0;
-
-        let sectionStart = api.getSources()[api.getCurrentSource()].sectionStart;
-
-        if (sectionStart && sectionStart > 0) {
-
-            let duration = api.getDuration();
-            let startPercentage = sectionStart / duration;
-            drawStartPosition = progressBarWidth * startPercentage;
-
-            $sectionStart.show();
-            $sectionStart.css("left", drawStartPosition - 3 + "px");
-        } else {
-            $sectionStart.hide();
-            $sectionStart.css("left", "-10px");
-        }
-
-        let sectionEnd = api.getSources()[api.getCurrentSource()].sectionEnd;
-
-        let drawEndPosition = 0;
-
-        if (sectionEnd && sectionEnd > 0) {
-
-            let duration = api.getDuration();
-            let endPercentage = sectionEnd / duration;
-            drawEndPosition = progressBarWidth * endPercentage;
-            $sectionEnd.show();
-            $sectionEnd.css("left", drawEndPosition + "px");
-        } else {
-            $sectionEnd.hide();
-            $sectionEnd.css("left", "-10px");
-        }
-
-        $progressPlay.css("width", (position - drawStartPosition) + "px");
-        $progressPlay.css("left", drawStartPosition + "px");
-
+        $progressPlay.css("width", position+ "px");
         $progressHover.css("left", position+ "px");
 
         let knobPostion = (progressBarWidth - knobWidth) * percentage;
@@ -90,111 +58,29 @@ const ProgressBar = function($container, api, isAd){
     }
 
     function drawHoverProgress(percentage) {
+
         let progressBarWidth = $progressBar.width();
         let hoverPosition = progressBarWidth * percentage;
-
-        let drawEndPosition = 0;
-
-        let sectionEnd = api.getSources()[api.getCurrentSource()].sectionEnd;
-
-        if (sectionEnd && sectionEnd > 0) {
-
-            let duration = api.getDuration();
-            let endPercentage = sectionEnd / duration;
-            drawEndPosition = progressBarWidth * endPercentage;
-        }
-
-        let progressHoverWidth = (percentage === 0 ? percentage : (hoverPosition - currentPlayingPosition));
-
-        if (drawEndPosition > 0) {
-
-            if (progressHoverWidth + currentPlayingPosition > drawEndPosition) {
-
-                progressHoverWidth = drawEndPosition - currentPlayingPosition;
-            }
-        }
-
-        $progressHover.css("width", progressHoverWidth + "px");
+        $progressHover.css("width", (percentage === 0 ? percentage : (hoverPosition - currentPlayingPosition))+ "px");
 
     }
 
     function drawLoadProgress(percentage) {
+
         let progressBarWidth = $progressBar.width();
         let loadPosition = progressBarWidth * percentage;
 
-        let drawStartPosition = 0;
-
-        let sectionStart = api.getSources()[api.getCurrentSource()].sectionStart;
-
-        if (sectionStart && sectionStart > 0) {
-
-            let duration = api.getDuration();
-            let startPercentage = sectionStart / duration;
-            drawStartPosition = progressBarWidth * startPercentage;
-        }
-
-        let drawEndPosition = 0;
-
-        let sectionEnd = api.getSources()[api.getCurrentSource()].sectionEnd;
-
-        if (sectionEnd && sectionEnd > 0) {
-
-            let duration = api.getDuration();
-            let endPercentage = sectionEnd / duration;
-            drawEndPosition = progressBarWidth * endPercentage;
-        }
-
-        let progressLoadWidth = loadPosition - drawStartPosition;
-
-        if (drawEndPosition > 0) {
-
-            if (progressLoadWidth + drawStartPosition > drawEndPosition) {
-
-                progressLoadWidth = drawEndPosition - drawStartPosition;
-            }
-        }
-
-        $progressLoad.css("width", progressLoadWidth + "px");
-        $progressLoad.css("left", drawStartPosition + "px");
-
-
-
+        $progressLoad.css("width", loadPosition+ "px");
         currentLoadedPercentage = percentage;
     }
 
     function calculatePercentage(event) {
+
         let progressBarWidth = $progressBar.width();
         let progressBarOffsetX = $progressBar.offset().left;
         let pointerOffsetX =  (event.pageX || event.touches[0].clientX) ;
 
         let percentage = (pointerOffsetX - progressBarOffsetX) / progressBarWidth;
-
-        let sectionStart = api.getSources()[api.getCurrentSource()].sectionStart;
-
-        if (sectionStart && sectionStart > 0) {
-
-            let duration = api.getDuration();
-            let startPercentage = sectionStart / duration;
-
-            if (percentage < startPercentage) {
-
-                return -1;
-            }
-        }
-
-
-        let sectionEnd = api.getSources()[api.getCurrentSource()].sectionEnd;
-
-        if (sectionEnd && sectionEnd > 0) {
-
-            let duration = api.getDuration();
-            let endPercentage = sectionEnd / duration;
-
-            if (percentage > endPercentage) {
-
-                return -1;
-            }
-        }
 
         if (percentage < 0) {
             return 0;
@@ -218,7 +104,7 @@ const ProgressBar = function($container, api, isAd){
        }
 
         //const duration = isAd ? adDuration : api.getDuration();
-        let duration = api.getDuration();
+        let duration = durationForCalc;
         let second = duration * percentage;
 
         if(api.isTimecodeMode()){
@@ -295,7 +181,14 @@ const ProgressBar = function($container, api, isAd){
 
     function seek(percentage) {
 
-        let time = (api.getDuration()||0) * percentage;
+        let time = (durationForCalc||0) * percentage;
+
+
+        let sectionStart = api.getSources()[api.getCurrentSource()].sectionStart;
+
+        if (sectionStart && sectionStart > 0) {
+            time = time + sectionStart;
+        }
 
         api.seek(time);
     }
@@ -311,8 +204,6 @@ const ProgressBar = function($container, api, isAd){
         $knob = $current.find(".op-progressbar-knob");
         knobWidth = $knob.width();
         $time = $current.find(".op-progressbar-time");
-        $sectionStart = $current.find(".op-progressbar-section-start");
-        $sectionEnd = $current.find(".op-progressbar-section-end");
         $preview = $current.find(".op-progressbar-preview");
 
         /*new ResizeSensor($progressBar.get(), function() {
@@ -331,6 +222,7 @@ const ProgressBar = function($container, api, isAd){
         }else{
             api.on(CONTENT_TIME, function(data) {
                 if(data && data.duration && data.position){
+                    durationForCalc = data.duration;
                     positionElements(data.position / data.duration);
                 }
             },template);
@@ -353,7 +245,7 @@ const ProgressBar = function($container, api, isAd){
             api.off(CONTENT_BUFFER, null, template);
         }
     };
-    const events = {
+    let events = {
         "touchstart .op-progressbar" : function(event){
             if(isAd){
                 return false;
@@ -465,6 +357,10 @@ const ProgressBar = function($container, api, isAd){
 
         }
     };
+
+    if (api.getConfig().disableSeekUI) {
+        events = {}
+    }
 
     return OvenTemplate($container, "ProgressBar", api.getConfig(), null, events, onRendered, onDestroyed );
 };

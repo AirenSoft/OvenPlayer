@@ -175,9 +175,16 @@ const Listener = function(element, provider, videoEndedCallback){
             return;
         }
 
+        let sectionStart = provider.getSources()[provider.getCurrentSource()].sectionStart;
+
+        if (sectionStart && position < sectionStart && provider.getState() === STATE_PLAYING) {
+
+            provider.seek(sectionStart);
+        }
+
         let sectionEnd = provider.getSources()[provider.getCurrentSource()].sectionEnd;
 
-        if (sectionEnd && position >= sectionEnd && provider.getState() === STATE_PLAYING) {
+        if (sectionEnd && position > sectionEnd && provider.getState() === STATE_PLAYING) {
 
             provider.stop();
             provider.setState(STATE_COMPLETE);
@@ -193,6 +200,23 @@ const Listener = function(element, provider, videoEndedCallback){
             !compareStalledTime(stalled, position) ){
             stalled = -1;
             provider.setState(STATE_PLAYING);
+        }
+
+        if (sectionStart && sectionStart > 0) {
+
+            position = position - sectionStart;
+
+            if (position < 0) {
+                position = 0;
+            }
+        }
+
+        if (sectionEnd) {
+            duration = sectionEnd;
+        }
+
+        if (sectionStart) {
+            duration = duration - sectionStart;
         }
 
         if (provider.getState() === STATE_PLAYING || provider.isSeeking()) {
