@@ -115,7 +115,7 @@ const Controls = function ($container, api) {
             initFullscreenButton();
 
             if (api.getFramerate && api.getFramerate() > 0) {
-                //initFrameJumpButtons();
+                // initFrameJumpButtons();
             } else {
                 if (frameButtons) {
                     frameButtons.destroy();

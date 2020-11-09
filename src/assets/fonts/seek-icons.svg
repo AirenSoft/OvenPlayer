@@ -1,0 +1,14 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg">
+<metadata>Copyright (C) 2020 by original authors @ fontello.com</metadata>
+<defs>
+<font id="seek-icons" horiz-adv-x="1000" >
+<font-face font-family="seek-icons" font-weight="400" font-stretch="normal" units-per-em="1000" ascent="850" descent="-150" />
+<missing-glyph horiz-adv-x="1000" />
+<glyph glyph-name="op-seek-back" unicode="&#xe920;" d="M523 716v97l-150-138 150-137v111c155-11 277-141 277-299 0-166-134-300-300-300s-300 134-300 300c0 18-15 33-33 33s-34-15-34-33c0-202 165-367 367-367s367 165 367 367c0 194-153 354-344 366z" horiz-adv-x="1000" />
+
+<glyph glyph-name="op-seek-forward" unicode="&#xe921;" d="M833 383c-18 0-33-15-33-33 0-166-134-300-300-300s-300 134-300 300c0 158 123 288 277 299v-111l150 137-150 138v-97c-191-12-344-172-344-366 0-202 165-367 367-367s367 165 367 367c0 18-15 33-34 33z" horiz-adv-x="1000" />
+</font>
+</defs>
+</svg>

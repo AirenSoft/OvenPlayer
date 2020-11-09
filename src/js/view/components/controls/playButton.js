@@ -21,7 +21,12 @@ import {
 const PlayButton = function ($container, api) {
     let $iconPlay = "",
         $iconPause = "",
-        $iconReplay = "";
+        $iconReplay = "",
+        $buttonBack = "",
+        $buttonForward = "",
+        $textBack = "",
+        $textForward = "";
+
 
 
     function setButtonState(state){
@@ -43,15 +48,36 @@ const PlayButton = function ($container, api) {
 
 
     const onRendered = function($current, template){
-        $iconPlay = $current.find( ".op-play");
-        $iconPause = $current.find(".op-pause");
-        $iconReplay = $current.find(".op-replay");
+        $iconPlay = $current.find(".op-play-button .op-play");
+        $iconPause = $current.find(".op-play-button .op-pause");
+        $iconReplay = $current.find(".op-play-button .op-replay");
+        $buttonBack = $current.find('.op-seek-button-back');
+        $buttonForward = $current.find('.op-seek-button-forward');
+        $textBack = $current.find('.op-seek-back-text');
+        $textForward = $current.find('.op-seek-forward-text');
 
         api.on(PLAYER_STATE, function(data){
             if(data && data.newstate){
                 setButtonState(data.newstate);
             }
         }, template);
+
+        if (!api.getConfig().showSeekControl) {
+            $buttonBack.hide();
+            $buttonForward.hide();
+        }
+
+        let seekInterval = api.getConfig().seekControlInterval;
+
+        if (seekInterval) {
+
+            $textBack.text(seekInterval);
+            $textForward.text(seekInterval);
+        } else {
+
+            $textBack.text(10);
+            $textForward.text(10);
+        }
     };
     const onDestroyed = function(template){
         api.off(PLAYER_STATE, null, template);
@@ -78,6 +104,38 @@ const PlayButton = function ($container, api) {
                     api.setCurrentPlaylist(0);
                 }
             }
+        },
+        "click .op-seek-button-back" : function(event, $current, template) {
+
+            let seekInterval = api.getConfig().seekControlInterval;
+
+            if (!seekInterval) {
+                seekInterval = 10;
+            }
+
+            let time = api.getPosition() - seekInterval;
+
+            if (time < 0) {
+                time = 0;
+            }
+
+            api.seek(time);
+        },
+        "click .op-seek-button-forward" : function(event, $current, template) {
+
+            let seekInterval = api.getConfig().seekControlInterval;
+
+            if (!seekInterval) {
+                seekInterval = 10;
+            }
+
+            let time = api.getPosition() + seekInterval;
+
+            if (time > api.getDuration()) {
+                time = api.getDuration();
+            }
+
+            api.seek(time);
         }
     };
 

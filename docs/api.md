@@ -21,32 +21,34 @@ player = OvenPlayer.create("player", {
     loadingRetryCount: 3,
     playlist : [
         {
-                title : "01. I drive slow.",
-                image : "https://path.to/your_video_thumbnail.jpeg",
-                duration : 7343,
-                sources: [{
-                        type : "mpd", 
-                        file :  "https://path.to/your_video.mpd", 
-                        framerate : 30,
-                        label: "360P DASH"
-                    }],
-                tracks: [{
-                        kind : "captions", 
-                        file :  "https://path.to/your_caption.vtt", 
-                        label : "KO vtt"
-                    }],
-                adTagUrl : "https://pubads.g.doubleclick.net/..."    
+            title : "01. I drive slow.",
+            image : "https://path.to/your_video_thumbnail.jpeg",
+            duration : 7343,
+            sources: [{
+                    type : "mpd",
+                    file :  "https://path.to/your_video.mpd",
+                    framerate : 30,
+                    label: "360P DASH"
+                }],
+            tracks: [{
+                    kind : "captions",
+                    file :  "https://path.to/your_caption.vtt",
+                    label : "KO vtt"
+                }],
+            adTagUrl : "https://pubads.g.doubleclick.net/..."
         }
     ]
-... or simple 
- player = OvenPlayer.create("player", {
-      sources: [{
-                              type : "mpd", 
-                              file :  "https://path.to/your_video.mpd", 
-                              framerate : 30,
-                              label: "360P DASH"
-                          }],
-      adTagUrl : "https://pubads.g.doubleclick.net/..." 
+}
+
+... or simple
+
+player = OvenPlayer.create("player", {
+    sources: [{
+        type : "mpd",
+        file :  "https://path.to/your_video.mpd",
+        framerate : 30,
+        label: "360P DASH"
+    }]
 });
 ```
 #### aspectRatio
@@ -77,7 +79,7 @@ type|default
 ------|------
 number|0
 
-If set, HLS and DASH retries reload when initial load fail.
+If set, HLS and DASH retries reload when error occurs.
  
 #### playbackRate 
 type|default
@@ -128,6 +130,27 @@ type|default
 boolean|true
 
 Sets whether to show or hide the player control bar.
+
+#### disableSeekUI
+type|default
+------|------
+boolean|false
+
+Disables user to seek using progress bar or keyboard interaction.
+
+#### showSeekControl
+type|default
+------|------
+boolean|false
+
+Sets whether to show or hide the quick seek buttons.
+
+#### seekControlInterval
+type|default
+------|------
+Number|10
+
+Sets seek interval of quick seek button.
 
 #### sources 
 type|default
@@ -300,14 +323,6 @@ type|default
 boolean|false
 
 Enables user to enter or exit full screen with double click.
-
-
-#### disableSeekUI
-type|default
-------|------
-boolean|false
-
-Disables user to seek using progress bar or keyboard interaction.
 
 
 #### tracks 

@@ -83,6 +83,15 @@
   font-weight: normal;
   font-style: normal;
 }
+@font-face {
+  font-family: 'op-seek-icons';
+  src: url('../assets/fonts/seek-icons.eot?13010392');
+  src: url('../assets/fonts/seek-icons.eot?13010392#iefix') format('embedded-opentype'),
+  url('../assets/fonts/seek-icons.ttf?13010392') format('truetype'),
+  url('../assets/fonts/seek-icons.svg?13010392#fontello') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
 
 /**
  * @brief   common style
@@ -330,7 +339,7 @@
 }
 
 i.op-con{
-  font-family: "op-icons";
+  font-family: "op-icons", "op-seek-icons";
   font-style: normal;
   font-weight: normal;
   speak: none;
@@ -364,11 +373,13 @@ i.op-con{
   &.op-arrow-right{&::before{content: "\e909";}}
   &.op-empty-video{&::before{content: "\e904";}}
   &.op-play{&::before{content: "\e906";}}
+  &.op-seek-back{&::before{content: "\e920";}}
+  &.op-seek-forward{&::before{content: "\e921";}}
   &.op-playlist-icon{&::before{content: "\e907";}}
   &.op-replay-big{&::before{content: "\e908";}}
   &.op-setting{&::before{content: "\e90A";}}
   &.op-pause{&::before{content: "\e90C";}}
-  &.op-volume-small{display:none;&::before{content: "\e90D";}}
+  &.op-volume-small{display:none;margin-top:-1px;&::before{content: "\e90D";}}
   &.op-volume-mute{display:none;&::before{content: "\e90E";}}
   &.op-volume-max{&::before{content: "\e90F";}}
   &.op-play-big{&::before{content: "\e910";}}
@@ -1036,18 +1047,51 @@ i.op-con{
   background-color: #000;
   z-index: 1020;
 }
+
+.op-play-controller {
+  margin-left: 15px;
+}
+
 /**
  * @brief   Play button
  * */
 
 .op-play-button  {
   position: relative;
-  margin-left: 15px;
   .op-play-button-playicon {
     background: url('../assets/images/ic-player-play.svg');
   }
   .op-play-button-pauseicon {
     background: url('../assets/images/ic-player-stop.svg');
+  }
+}
+
+/**
+ * @brief   Seek button
+ * */
+
+.op-seek-button {
+  //display: none;
+  position: relative;
+  top: 0px;
+
+  &.op-seek-button-back {
+    margin-left: 12px;
+  }
+  &.op-seek-button-forward {
+    margin-left: 6px;
+  }
+
+  i {
+    font-size: 26px;
+  }
+
+  span {
+    position: absolute;
+    top: 9px;
+    left: 9px;
+    font-size: 10px;
+    cursor: pointer;
   }
 }
 
