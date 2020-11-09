@@ -286,6 +286,8 @@ player = OvenPlayer.create("player", {
             sources: preSources || defaultSources
         };
 
+        console.log(playerOption)
+
         if (lowLatency && lowLatency !== 'false') {
             $('#lowlatencyCheck').prop('checked', true);
 

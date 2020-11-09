@@ -57,7 +57,7 @@ const WebRTC = function(element, playerConfig, adTagUrl){
             webrtcLoader = WebRTCLoader(that, source.file, loadCallback, errorTrigger, playerConfig);
 
             webrtcLoader.connect(function(){
-                //ToDo : resolve not wokring
+                //ToDo : resolve not workring
             }).catch(function(error){
                 //that.destroy();
                 //Do nothing
@@ -65,9 +65,9 @@ const WebRTC = function(element, playerConfig, adTagUrl){
 
             that.on(CONTENT_META, function(){
                 if(playerConfig.isAutoStart()){
-                    if (that.getState() !== 'error') {
-                        that.play();
-                    }
+                    // if (that.getState() !== 'error') {
+                    //     that.play();
+                    // }
                 }
             }, that);
         }

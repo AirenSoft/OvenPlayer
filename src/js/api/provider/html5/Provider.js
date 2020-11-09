@@ -96,16 +96,16 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
             }
 
             if(lastPlayPosition > 0){
-                // that.seek(lastPlayPosition);
+                that.seek(lastPlayPosition);
                 if(!playerConfig.isAutoStart()){
-                    that.play();
+                    // that.play();
                 }
 
             }
 
             if(playerConfig.isAutoStart()){
 
-                that.play();
+                // that.play();
             }
             /*that.trigger(CONTENT_SOURCE_CHANGED, {
                 currentSource: spec.currentSource

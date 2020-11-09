@@ -298,7 +298,7 @@ const Dash = function (element, playerConfig, adTagUrl) {
             if(seekPosition_sec){
                 dash.seek(seekPosition_sec);
                 if(!playerConfig.isAutoStart()){
-                    that.play();
+                    // that.play();
                 }
             }
 
@@ -308,7 +308,7 @@ const Dash = function (element, playerConfig, adTagUrl) {
 
             if(playerConfig.isAutoStart() && !runedAutoStart){
                 OvenPlayerConsole.log("DASH : AUTOPLAY()!");
-                that.play();
+                // that.play();
 
                 runedAutoStart = true;
             }

@@ -116,9 +116,9 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
                         that.seek(lastPlayPosition);
                     }
                 }
-                if (playerConfig.isAutoStart()) {
-                    that.play();
-                }
+                // if (playerConfig.isAutoStart()) {
+                //     that.play();
+                // }
             });
 
             hls.on(Hls.Events.ERROR, function (event, data) {
