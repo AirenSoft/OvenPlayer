@@ -6,6 +6,7 @@ import BigButton from "view/components/helpers/bigButton";
 import MessageBox from "view/components/helpers/messageBox";
 import CaptionViewer from "view/components/helpers/captionViewer";
 import Thumbnail from "view/components/helpers/thumbnail";
+import WaterMark from "view/components/helpers/waterMark";
 import Spinner from "view/components/helpers/spinner";
 import {
     READY,
@@ -33,9 +34,10 @@ import {
 } from "api/constants";
 
 const Helpers = function($container, api){
-    let bigButton = "", messageBox = "",  captionViewer = "", spinner = "", thumbnail;
+    let bigButton = "", messageBox = "",  captionViewer = "", spinner = "", thumbnail, waterMark;
     let mutedMessage = null;
     let hasThumbnail = api.getConfig().image || api.getConfig().title;
+    let hasWaterMark = api.getConfig().waterMark && api.getConfig().waterMark.image;
     let dont_show_message = false;
 
     const onRendered = function($current, template){
@@ -63,6 +65,14 @@ const Helpers = function($container, api){
             }
             thumbnail = Thumbnail($current, api, api.getConfig());
         }
+        function createWaterMark() {
+
+            if (waterMark) {
+                waterMark.destroy();
+            }
+
+            waterMark = WaterMark($current, api, api.getConfig());
+        }
 
         spinner = Spinner($current, api);
 
@@ -75,6 +85,9 @@ const Helpers = function($container, api){
         api.on(READY, function() {
             if(hasThumbnail){
                 createThumbnail();  //shows when playlist changed.
+            }
+            if(hasWaterMark) {
+                createWaterMark();
             }
             createBigButton(STATE_PAUSED);
         }, template);

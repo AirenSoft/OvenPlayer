@@ -124,6 +124,86 @@ String| ""
 Sets the contents title.
 
 
+#### waterMark
+type|required|default
+------|------|-----
+Object| No| none
+
+Sets the water mark image on the player. See the followings for detailed settings.
+
+```javascript
+// watermark example
+var player = OvenPlayer.create("player", {
+    waterMark: {
+        image: '/path/to/watermark/image.png',
+        position: 'top-left',
+        y: '20px',
+        x: '20px'
+        width: '40px',
+        height: '30px',
+        opacity: 0.7
+    },
+    sources: [...]
+});
+```
+
+##### waterMark.image
+
+type|required|default
+------|------|-----
+String| Yes | none
+
+Sets the path of water mark image.
+
+##### waterMark.position
+
+type|required|default
+------|------|-----
+String| No | top-right
+
+Sets the location where water mark placed. `top-right`, `top-left`, `bottom-right`, `bottom-left` are available.
+
+##### waterMark.y
+
+type|required|default
+------|------|-----
+String| No | 5%
+
+Sets the distance from the top or bottom specified by `waterMark.position`. All CSS value available (e.g. `10px`, `5%`, `1rem`...)
+
+##### waterMark.x
+
+type|required|default
+------|------|-----
+String| No | 2.8125%
+
+Sets the distance from the left or right specified by `waterMark.position`. All CSS value available (e.g. `10px`, `5%`, `1rem`...)
+
+##### waterMark.width
+
+type|required|default
+------|------|-----
+String| No | auto
+
+Sets the width of water mark image. The default value `auto` means set to the original width of the image. All CSS value available (e.g. `10px`, `5%`, `1rem`...)
+
+##### waterMark.height
+
+type|required|default
+------|------|-----
+String| No | auto
+
+Sets the height of water mark image. The default value `auto` means set to the original height of the image. All CSS value available (e.g. `10px`, `5%`, `1rem`...)
+
+##### waterMark.opacity
+
+type|required|default
+------|------|-----
+Number| No | 0.7
+
+Sets the opacity of water mark image. Set a value between 0 and 1.
+
+
 #### controls 
 type|default
 ------|------
