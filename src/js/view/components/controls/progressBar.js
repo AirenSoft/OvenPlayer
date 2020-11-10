@@ -78,7 +78,13 @@ const ProgressBar = function($container, api, isAd){
 
         let progressBarWidth = $progressBar.width();
         let progressBarOffsetX = $progressBar.offset().left;
-        let pointerOffsetX =  (event.pageX || event.touches[0].clientX) ;
+
+        let pointerOffsetX =  event.pageX;
+
+        if (event.touches) {
+
+            pointerOffsetX =  (event.pageX || event.touches[0].clientX) ;
+        }
 
         let percentage = (pointerOffsetX - progressBarOffsetX) / progressBarWidth;
 
@@ -118,7 +124,13 @@ const ProgressBar = function($container, api, isAd){
         let timeElemWidth = $time.width();
         let progressBarWidth = $progressBar.width();
         let position = progressBarWidth * percentage;
-        let positionOfPixel =  (event.pageX || event.touches[0].clientX)  - $progressBar.offset().left;
+
+        let positionOfPixel =  event.pageX - $progressBar.offset().left;
+
+        if (event.touches) {
+            positionOfPixel =  (event.pageX || event.touches[0].clientX)  - $progressBar.offset().left;
+        }
+
 
 
         const calculateMagnetic = function(elementWidth){
