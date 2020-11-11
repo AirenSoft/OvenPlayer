@@ -34,6 +34,7 @@ import {
 } from "api/constants";
 
 const Helpers = function($container, api){
+    let firstRun = false;
     let bigButton = "", messageBox = "",  captionViewer = "", spinner = "", thumbnail, waterMark;
     let mutedMessage = null;
     let hasThumbnail = api.getConfig().image || api.getConfig().title;
@@ -44,6 +45,10 @@ const Helpers = function($container, api){
         let qualityLevelChanging = false, newQualityLevel = -1;
         function createBigButton(state){
 
+            if (!api.getConfig().showBigPlayButton) {
+                return;
+            }
+
             if(messageBox){
                 messageBox.destroy();
             }
@@ -51,12 +56,19 @@ const Helpers = function($container, api){
             if(bigButton){
                 bigButton.destroy();
             }
+
             bigButton = BigButton($current, api, state);
         }
         function createMessage(message, description ,withTimer, iconClass, clickCallback, dontClose){
+
+            if(bigButton){
+                bigButton.destroy();
+            }
+
             if(messageBox){
                 messageBox.destroy();
             }
+
             messageBox = MessageBox($current, api, message, description, withTimer, iconClass, clickCallback, dontClose);
         }
         function createThumbnail(){
@@ -89,7 +101,13 @@ const Helpers = function($container, api){
             if(hasWaterMark) {
                 createWaterMark();
             }
-            createBigButton(STATE_PAUSED);
+
+            if (!firstRun) {
+
+                createBigButton(STATE_PAUSED);
+                firstRun = true;
+            }
+
         }, template);
 
         //So far warning muted play is all!!
@@ -140,8 +158,11 @@ const Helpers = function($container, api){
                     if(!qualityLevelChanging){
                         spinner.show(false);
                     }
-                }else{
+                } else if (data.newstate === STATE_COMPLETE) {
+
                     createBigButton(data.newstate);
+                } else{
+
                     if(data.newstate === STATE_STALLED || data.newstate === STATE_LOADING || data.newstate === STATE_AD_LOADING){
 
                         dont_show_message = false;
@@ -195,6 +216,7 @@ const Helpers = function($container, api){
             if(bigButton){
                 bigButton.destroy();
             }
+
             if (error && error.code && error.code >= 100 && error.code < 1000) {
                 message = error.message;
                 if(error.code === 100){

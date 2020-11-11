@@ -117,8 +117,8 @@ export const SYSTEM_TEXT = [
             "context" : "About OvenPlayer",
             "controls" : {
                 "live" : "live",
-                "low_latency_live" : "low latency live",
-                "low_latency_p2p" : "low latency p2p",
+                "low_latency_live" : "Sub-Second Latency Streaming",
+                "low_latency_p2p" : "Sub-Second Latency P2P",
             },
             "playlist" : "Playlist",
             "setting" : {

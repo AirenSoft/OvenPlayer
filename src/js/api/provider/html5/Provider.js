@@ -48,7 +48,7 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
         }
     }
 
-    listener = EventsListener(elVideo, that, ads ? ads.videoEndedCallback : null);
+    listener = EventsListener(elVideo, that, ads ? ads.videoEndedCallback : null, playerConfig);
     elVideo.playbackRate = elVideo.defaultPlaybackRate = playerConfig.getPlaybackRate();
 
     const _load = (lastPlayPosition) =>{

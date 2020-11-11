@@ -36,7 +36,7 @@ import {extractVideoElement, errorTrigger} from "api/provider/utils";
  * */
 
 
-const Listener = function(element, provider, videoEndedCallback){
+const Listener = function(element, provider, videoEndedCallback, playerConfig){
     const lowLevelEvents = {};
 
     OvenPlayerConsole.log("EventListener loaded.",element ,provider );
@@ -128,6 +128,15 @@ const Listener = function(element, provider, videoEndedCallback){
         OvenPlayerConsole.log("EventListener : on pause");
 
         provider.setState(STATE_PAUSED);
+    };
+
+    lowLevelEvents.loadstart = () => {
+
+        if (playerConfig) {
+            if (!playerConfig.getConfig().showBigPlayButton && playerConfig.getConfig().autoStart) {
+                provider.setState(STATE_LOADING);
+            }
+        }
     };
 
     lowLevelEvents.play = () => {

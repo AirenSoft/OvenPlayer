@@ -211,6 +211,15 @@ boolean|true
 
 Sets whether to show or hide the player control bar.
 
+
+#### showBigPlayButton
+type|default
+------|------
+boolean|true
+
+Sets whether to show or hide the big play button.
+
+
 #### disableSeekUI
 type|default
 ------|------

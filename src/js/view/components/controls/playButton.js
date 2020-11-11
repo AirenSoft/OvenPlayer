@@ -38,11 +38,10 @@ const PlayButton = function ($container, api) {
         }else if(state === STATE_PAUSED || state === STATE_AD_PAUSED){
             $iconPlay.show();
         }else if(state === STATE_COMPLETE){
-            $iconPlay.show();
+            $iconReplay.show();
         }else{
             $iconPlay.show();
         }
-
     };
 
 

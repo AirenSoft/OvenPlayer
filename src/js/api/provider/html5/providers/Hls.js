@@ -123,16 +123,14 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
 
             hls.on(Hls.Events.ERROR, function (event, data) {
 
-                hls.once(Hls.Events.FRAG_LOADING, function () {
-                    that.setState(STATE_LOADING);
-                });
-
                 if (data && data.networkDetails && data.networkDetails.status === 202) {
 
                     if (loadRetryer) {
                         clearTimeout(loadRetryer);
                         loadRetryer = null;
                     }
+
+                    that.setState(STATE_LOADING);
 
                     loadRetryer = setTimeout(function () {
 
@@ -147,6 +145,10 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
                     }, 1000);
 
                 } else {
+
+                    hls.once(Hls.Events.FRAG_LOADING, function () {
+                        that.setState(STATE_LOADING);
+                    });
 
                     if (data.type === Hls.ErrorTypes.MEDIA_ERROR) {
 
