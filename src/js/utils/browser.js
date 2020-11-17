@@ -170,7 +170,8 @@ export const analUserAgent = function(){
         {s:'Sun OS', r:/SunOS/},
         {s:'Linux', r:/(Linux|X11)/},
         {s:'iOS', r:/(iPhone|iPad|iPod)/},
-        {s:'Mac OS X', r:/Mac OS X/},
+        {s:'Mac OS XI', r:/Mac OS X 11/},
+        {s:'Mac OS X', r:/Mac OS X 10/},
         {s:'Mac OS', r:/(MacPPC|MacIntel|Mac_PowerPC|Macintosh)/},
         {s:'QNX', r:/QNX/},
         {s:'UNIX', r:/UNIX/},
@@ -194,6 +195,10 @@ export const analUserAgent = function(){
     }
 
     switch (os) {
+        case 'Mac OS XI':
+            osVersion = /Mac OS X (11[\.\_\d]+)/.exec(nAgt)[1];
+            break;
+
         case 'Mac OS X':
             osVersion = /Mac OS X (10[\.\_\d]+)/.exec(nAgt)[1];
             break;
