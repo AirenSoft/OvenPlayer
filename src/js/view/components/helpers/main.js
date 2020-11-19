@@ -169,6 +169,9 @@ const Helpers = function($container, api){
                         if(messageBox){
                             messageBox.destroy();
                         }
+                        if (bigButton) {
+                            bigButton.destroy();
+                        }
                         spinner.show(true);
                     }else{
                         if(!qualityLevelChanging){
