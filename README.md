@@ -4,7 +4,7 @@
 
 OvenPlayer is <b>Open-Source HTML5 Player</b>.
 OvenPlayer supports <b>WebRTC Signaling</b> from OvenMediaEngine for Sub-Second Latency Streaming. And, it automatically plays and fallbacks using <b>WebRTC</b>, <b>Low Latency HTTP</b> (DASH), <b>MPEG-DASH</b>, <b>HLS</b>, and <b>RTMP</b>.
-We also provides [OvenMediaEngine](https://github.com/AirenSoft/OvenMediaEngine), Open-Source Sub-Second Latency Streaming Server.
+We also provide [OvenMediaEngine](https://github.com/AirenSoft/OvenMediaEngine), Open-Source Sub-Second Latency Streaming Server.
 
 ![main](dist/02_OvenPlayer.png)
 
@@ -26,10 +26,10 @@ Please click on each banner below for details.
 - Ultra-low latency stream playback
 - Full custom support with separate UI and SDK
 - Support for playback regardless of browser and media type
-- Supports all common player functions
-- Supported Protocols : WebRTC (Signalling protocol conforms to the OME specification.), HLS, MPEG-Dash
+- Supports all standard player functions
+- Supported Protocols: WebRTC (Signalling protocol conforms to the OME specification), HLS, and MPEG-Dash
 - Easily create profit by adding Ads in various formats
-- Supports various subtitle formats (SMI, VTT, SRT)
+- Supports multiple subtitle formats (SMI, VTT, and SRT)
 
 
 ## Quick Start
@@ -48,7 +48,7 @@ Visit [API and Configuration](docs/api.md) for more details.
 
 Please read [Guidelines](CONTRIBUTING.md) and our [Rules](CODE_OF_CONDUCT.md).
 
-Or we are collecting use cases. Please share with us your experience.
+Or we are collecting use cases. Please share your experience with [contact@airensoft.com](mailto:contact@airensoft.com). The voices of real-contributors are of great support to our project.
 
 [![Contribute](dist/06_UseCases.png)](mailto:contact@airensoft.com)
 
