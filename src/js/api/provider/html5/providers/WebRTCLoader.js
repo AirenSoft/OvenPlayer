@@ -625,7 +625,11 @@ const WebRTCLoader = function (provider, webSocketUrl, loadCallback, errorTrigge
                 clearTimeout(statisticsTimer);
             }
 
-            mainPeerConnectionInfo.peerConnection.close();
+            if (mainPeerConnectionInfo.peerConnection) {
+
+                mainPeerConnectionInfo.peerConnection.close();
+            }
+
             mainPeerConnectionInfo.peerConnection = null;
             mainPeerConnectionInfo = null;
         }
@@ -636,9 +640,11 @@ const WebRTCLoader = function (provider, webSocketUrl, loadCallback, errorTrigge
 
                 let clientPeerConnection = clientPeerConnections[clientId].peerConnection;
 
-                OvenPlayerConsole.log('Closing client peer connection...');
-                clientPeerConnection.close();
-                clientPeerConnection = null;
+                if (clientPeerConnection) {
+                    OvenPlayerConsole.log('Closing client peer connection...');
+                    clientPeerConnection.close();
+                    clientPeerConnection = null;
+                }
             }
 
             clientPeerConnections = {};

@@ -289,7 +289,11 @@ const Api = function(container){
     };
     that.getFramerate = () => {
         OvenPlayerConsole.log("API : getFramerate()");
-        return currentProvider.getFramerate();
+
+        if (currentProvider) {
+            return currentProvider.getFramerate();
+        }
+
     };
     that.seekFrame = (frameCount) => {
         if(!currentProvider){return null;}
