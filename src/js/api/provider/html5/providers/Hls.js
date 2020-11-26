@@ -43,9 +43,9 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
             debug: false,
             maxBufferLength: 20,
             maxMaxBufferLength: 30,
-            fragLoadingMaxRetry: 0,
-            manifestLoadingMaxRetry: 0,
-            levelLoadingMaxRetry: 0
+            fragLoadingMaxRetry: 2,
+            manifestLoadingMaxRetry: 2,
+            levelLoadingMaxRetry: 2
         };
 
         let hlsConfigFromPlayerConfig = playerConfig.getConfig().hlsConfig;
@@ -103,10 +103,6 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
                     clearTimeout(loadRetryer);
                     loadRetryer = null;
                 }
-
-                hls.config.fragLoadingMaxRetry = 2;
-                hls.config.manifestLoadingMaxRetry = 2;
-                hls.config.levelLoadingMaxRetry = 2;
 
                 if (data.details.live) {
                     spec.isLive = true;
