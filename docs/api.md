@@ -483,6 +483,15 @@ Specifies Ice Transport Policy. "all", "public", "relay"
 (*optional when using WebRTC protocol.)
 
 
+#### hlsConfig
+type|default
+------|------
+Object| null
+
+Specifies hls.js config
+(*optional when using HLS protocol.)
+
+
 #### currentProtocolOnly 
 type|default
 ------|------
