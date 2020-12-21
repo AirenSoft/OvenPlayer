@@ -308,8 +308,7 @@ const Dash = function (element, playerConfig, adTagUrl) {
 
             if(playerConfig.isAutoStart() && !runedAutoStart){
                 OvenPlayerConsole.log("DASH : AUTOPLAY()!");
-                // that.play();
-
+                that.play();
                 runedAutoStart = true;
             }
 

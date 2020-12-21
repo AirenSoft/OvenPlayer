@@ -128,15 +128,17 @@ const Manager = function(container, browserInfo){
             }
             return createFlashVideo(playerConfig.isLoop(), playerConfig.getRtmpBufferTime(), playerConfig.getRtmpBufferTimeMax());
         }else{
-            if(videoElement){
-                //that.empty();
-                //reuse video element.
-                //becuase playlist is auto next playing.
-                //Only same video element does not require User Interaction Error.
-                return videoElement;
-            }else{
-                return createHtmlVideo(playerConfig.isLoop(), playerConfig.isAutoStart());
-            }
+            // if(videoElement){
+            //     // that.empty();
+            //     //reuse video element.
+            //     //because playlist is auto next playing.
+            //     //Only same video element does not require User Interaction Error.
+            //     return videoElement;
+            // }else{
+            //     return createHtmlVideo(playerConfig.isLoop(), playerConfig.isAutoStart());
+            // }
+            that.empty();
+            return createHtmlVideo(playerConfig.isLoop(), playerConfig.isAutoStart());
         }
     }
 

@@ -46,7 +46,8 @@
 
     <script src="lib/vue.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-    <script src="lib/dash.all.debug.js"></script>
+    <!--<script src="lib/dash.all.debug.js"></script>-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dashjs/3.1.3/dash.all.min.js" integrity="sha512-KbtNOWr7e/rlM9utrUc5cO9PeJZO3jFfCjWPe1mHe2sPvIike3IZIH6h4ja6wH7aXNKrecP8zh6/SYDc3t6Jog==" crossorigin="anonymous"></script>
     <script src="lib/clipboard.min.js"></script>
     <script src="lib/jquery-1.12.4.min.js"></script>
     <script src="lib/popper.min.js"></script>
@@ -371,9 +372,9 @@ player = OvenPlayer.create("player", {
                 navigation.loadSources();
             } else {
 
-                if (dash) {
+                if (op_dash) {
 
-                    var prevLiveDelay = dash.getSettings().streaming.liveDelay;
+                    var prevLiveDelay = op_dash.getSettings().streaming.liveDelay;
 
                     if (!prevLiveDelay) {
                         prevLiveDelay = undefined;
@@ -385,7 +386,7 @@ player = OvenPlayer.create("player", {
                         newLiveDelay = undefined;
                     }
 
-                    dash.updateSettings({
+                    op_dash.updateSettings({
                         streaming: {
                             liveDelay: newLiveDelay
                         }
