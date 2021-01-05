@@ -6,8 +6,8 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const GitRevisionPlugin = require('git-revision-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const {BundleAnalyzerPlugin} = require('webpack-bundle-analyzer');
-const banner = packageInfo.name + 'v' + packageInfo.version + ' | ' +
-    '(c)' + new Date().getFullYear() + ' ' + packageInfo.author + ' | MIT license (' +
+const banner = packageInfo.name +  ' | ' +
+    '(c) ' + new Date().getFullYear() + ' ' + packageInfo.author + ' | MIT license (' +
     packageInfo.license + ') | Github : ' +
     packageInfo.homepage;
 
@@ -149,7 +149,8 @@ const extendConfig = function (){
             devtool: false,
             output: {
                 filename: `[name].js`,
-                chunkFilename: `[name]-${packageInfo.version}.js`,
+                hashDigestLength: 7,
+                chunkFilename: `ovenplayer-[chunkhash].js`,
                 path: path.resolve(__dirname, 'dist/production/ovenplayer')
             },
             plugins: [
