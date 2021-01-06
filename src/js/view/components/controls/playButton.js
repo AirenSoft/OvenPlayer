@@ -100,7 +100,8 @@ const PlayButton = function ($container, api) {
                 api.setCurrentSource(api.getCurrentSource());
             } else if (currentState === STATE_COMPLETE) {
                 if(playlist.length === (currentPlaylistIndex+1)){
-                    api.setCurrentPlaylist(0);
+                    api.seek(0);
+                    api.play();
                 }
             }
         },
