@@ -158,20 +158,26 @@ const View = function($container){
             if(api){
                 api.trigger(PLAYER_CLICKED, event);
             }
+
             if(contextPanel){
                 event.preventDefault();
                 contextPanel.destroy();
                 contextPanel = null;
-                //return false;
+                return false;
             }
 
-            if(!(LA$(event.target).closest(".op-controls-container") || LA$(event.target).closest(".op-setting-panel") )){
+            if(!(LA$(event.target).closest(".op-controls-container") || LA$(event.target).closest(".op-setting-panel")  )){
+
                 if(panelManager.size() > 0){
                     event.preventDefault();
                     panelManager.clear();
-                    //return false;
+                    return false;
                 }
-                //togglePlayPause();
+
+                if (api.getDuration() !== Infinity) {
+                    togglePlayPause();
+                }
+
             }
         },
         "dblclick .ovenplayer" : function(event, $current, template){
