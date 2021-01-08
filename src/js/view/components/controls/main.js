@@ -88,7 +88,9 @@ const Controls = function ($container, api) {
 
         function initFullscreenButton() {
             if (fullScreenButton) {
-                fullScreenButton.destroy();
+                // Don't need to destroy.
+                return;
+                // fullScreenButton.destroy();
             }
             fullScreenButton = FullScreenButton($current.find(".fullscreen-holder"), api);
         }
