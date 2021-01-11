@@ -2,6 +2,7 @@
  * Created by Sangwon Oh on 2020. 11. 10..
  */
 import OvenTemplate from 'view/engine/OvenTemplate';
+import _ from 'utils/underscore';
 import {
     STATE_IDLE,
     STATE_PLAYING,
@@ -12,6 +13,7 @@ import {
 const WaterMark = function($container, api, playerState){
 
     let waterMark = null;
+    let textElem = null;
     const defaultPosition = 'top-right';
     const defaultX = '2.8125%';
     const defaultY = '5%';
@@ -22,6 +24,7 @@ const WaterMark = function($container, api, playerState){
     const onRendered = function($current, template){
 
         waterMark = $current.find('.op-watermark');
+        textElem = $current.find('.op-watermark-text');
 
         let waterMarkOption = api.getConfig().waterMark;
 
@@ -41,6 +44,16 @@ const WaterMark = function($container, api, playerState){
 
         let opacity = waterMarkOption.opacity || defaultOpacity;
         waterMark.css('opacity', opacity);
+
+        if (waterMarkOption.text) {
+
+            if (waterMarkOption.font) {
+
+                _.each(waterMarkOption.font, function (value, key) {
+                    textElem.css(key, value);
+                })
+            }
+        }
 
     };
     const onDestroyed = function(){

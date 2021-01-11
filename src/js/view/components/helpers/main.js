@@ -38,7 +38,8 @@ const Helpers = function($container, api){
     let bigButton = "", messageBox = "",  captionViewer = "", spinner = "", thumbnail, waterMark;
     let mutedMessage = null;
     let hasThumbnail = api.getConfig().image || api.getConfig().title;
-    let hasWaterMark = api.getConfig().waterMark && api.getConfig().waterMark.image;
+    let hasWaterMark = api.getConfig().waterMark && api.getConfig().waterMark.image ||
+        api.getConfig().waterMark && api.getConfig().waterMark.text;
     let dont_show_message = false;
 
     const onRendered = function($current, template){
