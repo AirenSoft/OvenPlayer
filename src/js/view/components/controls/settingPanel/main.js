@@ -17,6 +17,7 @@ import {
 
 let PANEL_TITLE = {
     "speed" : "Speed",
+    "speedUnit" : "x",
     "source" : "Source",
     "quality" : "Quality",
     "caption" : "Caption",
@@ -51,7 +52,7 @@ const Panels = function($container, api, data){
             let currentPlaybackRate = api.getPlaybackRate();
             for (let i = 0; i < playBackRates.length; i ++) {
                 let body = {
-                    title : playBackRates[i]+"x", //(playBackRates[i] === 1? "Normal" : playBackRates[i]),
+                    title : playBackRates[i]+PANEL_TITLE.speedUnit, //(playBackRates[i] === 1? "Normal" : playBackRates[i]),
                     isCheck : currentPlaybackRate === playBackRates[i],
                     value : playBackRates[i],
                     description : playBackRates[i],

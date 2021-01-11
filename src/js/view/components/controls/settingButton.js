@@ -10,6 +10,7 @@ import {
 
 let PANEL_TITLE = {
     "speed" : "Speed",
+    "speedUnit" : "x",
     "source" : "Source",
     "quality" : "Quality",
     "caption" : "Caption",
@@ -49,8 +50,8 @@ const SettingButton = function ($container, api) {
         if(api.getDuration() !== Infinity && currentSource && currentSource.type !== PROVIDER_RTMP){
             let body = {
                 title : PANEL_TITLE.speed,
-                value :  api.getPlaybackRate() + "x",
-                description :  api.getPlaybackRate() + "x",
+                value :  api.getPlaybackRate() + PANEL_TITLE.speedUnit,
+                description :  api.getPlaybackRate() + PANEL_TITLE.speedUnit,
                 panelType : "speed",
                 hasNext : true
             };

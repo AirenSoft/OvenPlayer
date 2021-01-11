@@ -124,6 +124,7 @@ export const SYSTEM_TEXT = [
             "setting" : {
                 "title" : "Settings",
                 "speed" : "Speed",
+                "speedUnit" : "x",
                 "source" : "Source",
                 "quality" : "Quality",
                 "caption" : "Caption",
@@ -266,6 +267,7 @@ export const SYSTEM_TEXT = [
             "setting" : {
                 "title" : "설정",
                 "speed" : "재생 속도",
+                "speedUnit" : "x",
                 "source" : "소스",
                 "quality" : "품질",
                 "caption" : "자막",
