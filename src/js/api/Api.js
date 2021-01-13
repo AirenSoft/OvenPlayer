@@ -36,7 +36,7 @@ const Api = function(container){
     let captionManager = "";
 
     let webrtcRetry = false;
-    const WEBRTC_RETRY_COUNT = 3;
+    let WEBRTC_RETRY_COUNT = 3;
     let webrtcRetryCount = WEBRTC_RETRY_COUNT;
     let webrtcRetryInterval = 1000;
     let webrtcRetryTimer = null;
@@ -252,6 +252,10 @@ const Api = function(container){
         playerConfig = Configurator(options, that);
         OvenPlayerConsole.log("API : init()");
         OvenPlayerConsole.log("API : init() config : ", playerConfig);
+
+        if (playerConfig.getConfig().webrtcConfig && playerConfig.getConfig().webrtcConfig.loadingRetryCount !== undefined) {
+            WEBRTC_RETRY_COUNT = playerConfig.getConfig().loadingRetryCount;
+        }
 
         //Not working : SyntaxError: "ERRORS.codes" is read-only
         ERRORS.codes = playerConfig.getSystemText().api.error;
