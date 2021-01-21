@@ -1,10 +1,8 @@
-import adapter from 'utils/adapter';
 import _ from "utils/underscore";
 import {analUserAgent} from "utils/browser";
 import {
     ERRORS,
     PLAYER_WEBRTC_WS_ERROR,
-    PLAYER_WEBRTC_WS_CLOSED,
     PLAYER_WEBRTC_ADD_ICECANDIDATE_ERROR,
     PLAYER_WEBRTC_SET_REMOTE_DESC_ERROR,
     PLAYER_WEBRTC_CREATE_ANSWER_ERROR,
@@ -17,13 +15,7 @@ import {
 
 const WebRTCLoader = function (provider, webSocketUrl, loadCallback, errorTrigger, playerConfig) {
 
-    let defaultConnectionConfig = {
-        'iceServers': [
-            {
-                'urls': 'stun:stun.l.google.com:19302'
-            }
-        ]
-    };
+    let defaultConnectionConfig = {};
 
     let that = {};
 
@@ -444,11 +436,11 @@ const WebRTCLoader = function (provider, webSocketUrl, loadCallback, errorTrigge
                                 resolve(cloneCandidate);
                             } else {
 
-                                return null;
+                                resolve(null);
                             }
                         } else {
 
-                            return null;
+                            resolve(null);
                         }
                     });
 
