@@ -1,4 +1,5 @@
 /node_modules
+/local
 /.idea
-.package-lock.json
+package-lock.json
 .DS_Store
