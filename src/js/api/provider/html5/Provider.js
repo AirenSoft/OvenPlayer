@@ -117,6 +117,9 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
     that.getName = () => {
         return spec.name;
     };
+    that.getMse = () => {
+        return spec.mse;
+    };
     that.canSeek = () => {
         return spec.canSeek;
     };

@@ -274,7 +274,15 @@ const Api = function(container){
             return null;
         }
 
-    }
+    };
+    that.getMseInstance = () => {
+        if(currentProvider){
+            return currentProvider.getMse();
+        }else{
+            return null;
+        }
+
+    };
     that.getConfig = () => {
         OvenPlayerConsole.log("API : getConfig()", playerConfig.getConfig());
         return playerConfig.getConfig();

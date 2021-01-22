@@ -372,7 +372,9 @@ player = OvenPlayer.create("player", {
                 navigation.loadSources();
             } else {
 
-                if (op_dash) {
+                if (player.getProviderName() === 'dash') {
+
+                    var op_dash = player.getMseInstance();
 
                     var prevLiveDelay = op_dash.getSettings().streaming.liveDelay;
 
