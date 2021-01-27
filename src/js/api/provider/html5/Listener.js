@@ -71,6 +71,9 @@ const Listener = function(element, provider, videoEndedCallback, playerConfig){
         //Fires when the current playlist is ended
         OvenPlayerConsole.log("EventListener : on ended");
 
+        // IE doesn't set paused property to true. So force set it.
+        elVideo.pause();
+
         if(provider.getState() !== STATE_IDLE && provider.getState() !== STATE_COMPLETE && provider.getState() !== STATE_ERROR) {
             if(videoEndedCallback){
                 videoEndedCallback(function(){
@@ -181,6 +184,12 @@ const Listener = function(element, provider, videoEndedCallback, playerConfig){
         let position = elVideo.currentTime;
         let duration = elVideo.duration;
         if (isNaN(duration)) {
+            return;
+        }
+
+        if (position > duration) {
+            elVideo.pause();
+            provider.setState(STATE_COMPLETE);
             return;
         }
 

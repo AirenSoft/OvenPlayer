@@ -161,6 +161,7 @@ const Helpers = function($container, api){
                     }
                 } else if (data.newstate === STATE_COMPLETE) {
 
+                    spinner.show(false);
                     createBigButton(data.newstate);
                 } else{
 

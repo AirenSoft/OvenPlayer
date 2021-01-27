@@ -21,6 +21,7 @@ const BigButton = function($container, api, playerState){
     const events = {
         "click .op-bigbutton-container" : function(event){
             event.preventDefault();
+            event.stopPropagation();
 
             const currentState = api.getState();
             let playlist = api.getPlaylist();
@@ -33,6 +34,7 @@ const BigButton = function($container, api, playerState){
             } else if(currentState === STATE_COMPLETE){
                 if(playlist.length === (currentPlaylistIndex+1)){
                     api.seek(0);
+                    api.play();
                 }
             }
         }

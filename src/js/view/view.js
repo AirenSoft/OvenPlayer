@@ -67,6 +67,11 @@ const View = function($container){
         const currentState = playerState;
 
         if (currentState === STATE_IDLE || currentState === STATE_PAUSED || currentState === STATE_COMPLETE) {
+
+            if (currentState === STATE_COMPLETE) {
+                api.seek(0);
+            }
+
             api.play();
         }else if(currentState === STATE_PLAYING){
             api.pause();
