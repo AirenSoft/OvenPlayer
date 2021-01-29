@@ -6,7 +6,7 @@ OvenPlayer is <b>Open-Source HTML5 Player</b>.
 OvenPlayer supports <b>WebRTC Signaling</b> from OvenMediaEngine for Sub-Second Latency Streaming. And, it automatically plays and fallbacks using <b>WebRTC</b>, <b>Low Latency HTTP</b> (DASH), <b>MPEG-DASH</b>, <b>HLS</b>, and <b>RTMP</b>.
 We also provide [OvenMediaEngine](https://github.com/AirenSoft/OvenMediaEngine), Open-Source Sub-Second Latency Streaming Server.
 
-![main](dist/02_OvenPlayer.png)
+![main](docs/assets/images/02_OvenPlayer.png)
 
 
 ## What is the goal of this project?
@@ -16,9 +16,9 @@ So, our projects have the most optimized tools from Encoder to Player for smooth
 
 Please click on each banner below for details.
 
-[![OvenLiveKit](dist/07_OvenLiveKit.png)](https://www.airensoft.com/olk)
-[![OvenMediaEngine](dist/07_OvenMediaEngine.png)](https://www.ovenmediaengine.com/ome)
-[![OvenPlayer](dist/07_OvenPlayer.png)](https://www.ovenmediaengine.com/ovenplayer)
+[![OvenLiveKit](docs/assets/images/07_OvenLiveKit.png)](https://www.airensoft.com/olk)
+[![OvenMediaEngine](docs/assets/images/07_OvenMediaEngine.png)](https://www.ovenmediaengine.com/ome)
+[![OvenPlayer](docs/assets/images/07_OvenPlayer.png)](https://www.ovenmediaengine.com/ovenplayer)
 
 
 ## Features
@@ -50,7 +50,7 @@ Please read [Guidelines](CONTRIBUTING.md) and our [Rules](CODE_OF_CONDUCT.md).
 
 Or we are collecting use cases. Please share your experience with [contact@airensoft.com](mailto:contact@airensoft.com). The voices of real-contributors are of great support to our project.
 
-[![Contribute](dist/06_UseCases.png)](mailto:contact@airensoft.com)
+[![Contribute](docs/assets/images/06_UseCases.png)](mailto:contact@airensoft.com)
 
 
 ## License
