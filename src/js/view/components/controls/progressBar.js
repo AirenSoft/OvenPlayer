@@ -110,7 +110,7 @@ const ProgressBar = function($container, api, isAd){
        }
 
         //const duration = isAd ? adDuration : api.getDuration();
-        let duration = durationForCalc;
+        let duration = api.getDuration();
         let second = duration * percentage;
 
         if(api.isTimecodeMode()){
@@ -170,7 +170,7 @@ const ProgressBar = function($container, api, isAd){
             let left = -1 * columnNumber * width * scale;
             let top =  -1 * rowNumber * height * scale;
 
-            // console.log(thumbnailNumber + ': ' + imageNumber +'('+ rowNumber +', ' + columnNumber + ')');
+            OvenPlayerConsole.log('Grid Thumbnail:', thumbnailNumber + ': ' + imageNumber +'('+ rowNumber +', ' + columnNumber + ')');
 
             let thumbnails = api.getSources()[api.getCurrentSource()].gridThumbnail;
             let thumbnail = thumbnails[imageNumber];
@@ -194,7 +194,6 @@ const ProgressBar = function($container, api, isAd){
     function seek(percentage) {
 
         let time = (durationForCalc||0) * percentage;
-
 
         let sectionStart = api.getSources()[api.getCurrentSource()].sectionStart;
 
@@ -232,6 +231,7 @@ const ProgressBar = function($container, api, isAd){
                 }
             },template);
         }else{
+
             api.on(CONTENT_TIME, function(data) {
                 if(data && data.duration && data.position){
                     durationForCalc = data.duration;
@@ -259,6 +259,7 @@ const ProgressBar = function($container, api, isAd){
     };
     let events = {
         "touchstart .op-progressbar" : function(event){
+
             if(isAd){
                 return false;
             }
@@ -274,6 +275,7 @@ const ProgressBar = function($container, api, isAd){
             seek(percentage);
         },
         "touchmove .op-progressbar" : function(event){
+
             if (mouseDown) {
                 const percentage = calculatePercentage(event);
 
@@ -288,9 +290,12 @@ const ProgressBar = function($container, api, isAd){
             }
         },
         "touchend .op-progressbar" : function(event){
+
             if(mouseDown){
                 mouseDown = false;
                 $root.removeClass("op-progressbar-hover");
+                $time.hide();
+                $preview.hide();
             }
 
         },
