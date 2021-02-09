@@ -40,7 +40,7 @@ const ProgressBar = function($container, api, isAd){
         $time = "",
         $preview = "";
 
-    let isMobile = api.getBrowser().os === "iOS" || api.getBrowser().os === "Android";
+    let isMobile = api.getBrowser().mobile;
 
     function positionElements(percentage) {
 
@@ -293,10 +293,11 @@ const ProgressBar = function($container, api, isAd){
 
             if(mouseDown){
                 mouseDown = false;
-                $root.removeClass("op-progressbar-hover");
-                $time.hide();
-                $preview.hide();
             }
+
+            $root.removeClass("op-progressbar-hover");
+            $time.hide();
+            $preview.hide();
 
         },
         "mouseenter .op-progressbar" : function(event, $current, template){
@@ -325,10 +326,13 @@ const ProgressBar = function($container, api, isAd){
             drawHoverProgress(0);
         },
         "mousedown .op-progressbar" : function(event, $current, template){
+
             event.preventDefault();
-            if(isAd){
+
+            if(isAd || isMobile){
                 return false;
             }
+
             mouseDown = true;
             const percentage = calculatePercentage(event);
 
@@ -341,18 +345,20 @@ const ProgressBar = function($container, api, isAd){
             seek(percentage);
         },
         "mousemove .op-progressbar" : function(event, $current, template){
+
             event.preventDefault();
 
-            if (!mouseDown && !isAd) {
+            if (!mouseDown && !isAd && !isMobile) {
                 const percentage = calculatePercentage(event);
                 drawHoverProgress(percentage);
                 drawTimeIndicator(percentage, event);
             }
         },
         "mousemove document" : function(event, $current, template){
+
             event.preventDefault();
 
-            if (mouseDown) {
+            if (mouseDown && !isMobile) {
                 const percentage = calculatePercentage(event);
 
                 if (percentage === -1) {
@@ -365,9 +371,10 @@ const ProgressBar = function($container, api, isAd){
             }
         },
         "mouseup document" : function(event, $current, template){
+
             event.preventDefault();
 
-            if(mouseDown){
+            if(mouseDown && !isMobile){
                 mouseDown = false;
                 $root.removeClass("op-progressbar-hover");
             }

@@ -179,7 +179,7 @@ const View = function($container){
                     return false;
                 }
 
-                if (api.getDuration() !== Infinity) {
+                if (api.getDuration() !== Infinity && !api.getBrowser().mobile) {
                     togglePlayPause();
                 }
 
