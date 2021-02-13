@@ -17,6 +17,7 @@ import {
     CONTENT_TIME,
     CONTENT_VOLUME,
     CONTENT_META,
+    CONTENT_DURATION_CHANGED,
     PLAYER_UNKNWON_ERROR,
     PLAYER_UNKNWON_OPERATION_ERROR,
     PLAYER_UNKNWON_NETWORK_ERROR,
@@ -65,6 +66,8 @@ const Listener = function(element, provider, videoEndedCallback, playerConfig){
         //Fires when the duration of the audio/video is changed
         lowLevelEvents.progress();
         OvenPlayerConsole.log("EventListener : on durationchange");
+
+        provider.trigger(CONTENT_DURATION_CHANGED);
     };
 
     lowLevelEvents.ended = () => {
