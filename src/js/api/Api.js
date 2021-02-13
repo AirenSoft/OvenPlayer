@@ -10,6 +10,7 @@ import {READY, ERRORS, ERROR, CONTENT_TIME_MODE_CHANGED, INIT_UNKNWON_ERROR, INI
 import {version} from 'version';
 import {ApiRtmpExpansion} from 'api/ApiExpansions';
 import {analUserAgent} from "utils/browser";
+import {pickCurrentSource} from "api/provider/utils";
 import LA$ from 'utils/likeA$';
 
 /**
@@ -105,7 +106,7 @@ const Api = function(container){
             captionManager = CaptionManager(that, playlistManager.getCurrentPlaylistIndex());
             OvenPlayerConsole.log("API : init() captions");
 
-            let currentSourceIndex = pickQualityFromSource(playlistManager.getCurrentSources());
+            let currentSourceIndex = pickCurrentSource(playlistManager.getCurrentSources(), playerConfig);
             let providerName = Providers[currentSourceIndex]["name"];
             OvenPlayerConsole.log("API : init() provider", providerName);
             //Init Provider.
@@ -422,24 +423,27 @@ const Api = function(container){
 
         OvenPlayerConsole.log("API : setCurrentSource() ", index);
 
-        let sources = currentProvider.getSources();
-        let currentSource = sources[currentProvider.getCurrentSource()];
-        let newSource = sources[index];
+        // let sources = currentProvider.getSources();
+        // let currentSource = sources[currentProvider.getCurrentSource()];
+        // let newSource = sources[index];
+
+        // let isSameProvider = providerController.isSameProvider(currentSource, newSource);
+        // // provider.serCurrentQuality -> playerConfig setting -> load
+        // let resultSourceIndex = currentProvider.setCurrentSource(index, isSameProvider);
+        //
+        // if(!newSource){
+        //     return null;
+        // }
+        //
+        // OvenPlayerConsole.log("API : setCurrentQuality() isSameProvider", isSameProvider);
+
         let lastPlayPosition = currentProvider.getPosition();
-        let isSameProvider = providerController.isSameProvider(currentSource, newSource);
-        // provider.serCurrentQuality -> playerConfig setting -> load
-        let resultSourceIndex = currentProvider.setCurrentSource(index, isSameProvider);
-
-        if(!newSource){
-            return null;
-        }
-
-        OvenPlayerConsole.log("API : setCurrentQuality() isSameProvider", isSameProvider);
-
+        playerConfig.setSourceIndex(index);
         lazyQueue = LazyCommandExecutor(that, ['play','seek']);
+
         initProvider(lastPlayPosition);
 
-        return resultSourceIndex;
+        return index;
     };
 
 

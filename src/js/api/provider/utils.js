@@ -35,21 +35,26 @@ export const errorTrigger = function(error, provider){
 
 };
 
-export const pickCurrentSource = (sources, currentSource, playerConfig) => {
-    let sourceIndex = Math.max(0, currentSource);
-    const label ="";
+export const pickCurrentSource = (sources, playerConfig) => {
+
+    let sourceIndex = 0;
+
     if (sources) {
-        for (var i = 0; i < sources.length; i++) {
-            if (sources[i].default) {
-                sourceIndex = i;
+
+        if (playerConfig.getSourceIndex() === -1) {
+
+            for (var i = 0; i < sources.length; i++) {
+                if (sources[i].default) {
+                    sourceIndex = i;
+                    break;
+                }
             }
-            if (playerConfig.getSourceIndex() === i ) {
-                return i;
-            }
-            /*if (playerConfig.getSourceLabel() && sources[i].label === playerConfig.getSourceLabel() ) {
-                return i;
-            }*/
+        } else {
+
+            sourceIndex = playerConfig.getSourceIndex();
         }
+
     }
+
     return sourceIndex;
-};
+}

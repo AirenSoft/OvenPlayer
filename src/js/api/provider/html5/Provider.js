@@ -271,7 +271,7 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
 
         spec.sources = sources;
 
-        spec.currentSource = pickCurrentSource(sources, spec.currentSource, playerConfig);
+        spec.currentSource = pickCurrentSource(sources, playerConfig);
         _load(lastPlayPosition || 0);
 
         return new Promise(function (resolve, reject) {
@@ -290,8 +290,8 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
     that.load = (sources) =>{
 
         spec.sources = sources;
-        spec.currentSource = pickCurrentSource(sources, spec.currentSource, playerConfig);
-        _load(spec.sources.starttime || 0);
+        spec.currentSource = pickCurrentSource(sources, playerConfig);
+        _load(0);
     };
 
     that.play = () =>{

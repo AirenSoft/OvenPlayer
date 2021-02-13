@@ -220,7 +220,7 @@ const Provider = function(spec, playerConfig){
         let retryCount = 0;
 
         spec.sources = sources;
-        spec.currentSource = pickCurrentSource(sources, spec.currentSource, playerConfig);
+        spec.currentSource = pickCurrentSource(sources, playerConfig);
 
         return new Promise(function (resolve, reject) {
             //First : checkSwfIsReady -> It checks swf loading complete by polling.
@@ -270,8 +270,8 @@ const Provider = function(spec, playerConfig){
     };
     that.load = (sources) =>{
         spec.sources = sources;
-        spec.currentSource = pickCurrentSource(sources, spec.currentSource, playerConfig);
-        _load(0);   //spec.sources_.starttime ||
+        spec.currentSource = pickCurrentSource(sources, playerConfig);
+        _load(0);
         _afterLoad(0);
     };
 

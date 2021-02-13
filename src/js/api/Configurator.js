@@ -23,7 +23,7 @@ const Configurator = function(options, provider){
             autoStart : false,
             autoFallback: true,
             timecode : true,
-            sourceIndex : 0,
+            sourceIndex : -1,
             browser : "",
             hidePlaylistIcon : false,
             rtmpBufferTime : 1,
