@@ -9,19 +9,31 @@ import {
     STATE_PAUSED
 } from "api/constants";
 
-const Thumbnail = function($container, api, playerState){
+const Thumbnail = function ($container, api, playerState) {
 
-    const onRendered = function($container, $current, template){
+    const onRendered = function ($current, template) {
+
+        let aspectRatio = api.getConfig().aspectRatio;
+
+        if (aspectRatio) {
+
+            if (aspectRatio.split(':').length === 2) {
+
+                let width = aspectRatio.split(':')[0] * 1;
+                let height = aspectRatio.split(':')[1] * 1;
+
+                let ratio = height / width * 100;
+
+                $current.css('padding-bottom', ratio + '%');
+            }
+        }
+    };
+    const onDestroyed = function () {
         //Do nothing!
     };
-    const onDestroyed = function(){
-        //Do nothing!
-    };
-    const events = {
+    const events = {};
 
-    };
-
-    return OvenTemplate($container, "Thumbnail", api.getConfig(), playerState, events, onRendered, onDestroyed );
+    return OvenTemplate($container, "Thumbnail", api.getConfig(), playerState, events, onRendered, onDestroyed);
 };
 
 export default Thumbnail;
