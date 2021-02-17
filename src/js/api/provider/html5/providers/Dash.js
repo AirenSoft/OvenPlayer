@@ -349,8 +349,15 @@ const Dash = function (element, playerConfig, adTagUrl) {
             coveredSetAutoSwitchQualityFor(isAuto);
         };
         that.destroy = () => {
-            dash.reset();
-            dash.destroy();
+
+            if (dash.destroy) {
+
+                dash.destroy();
+            } else {
+
+                dash.reset();
+            }
+
             dash = null;
             that.trigger(DASH_DESTROYED);
             OvenPlayerConsole.log("DASH : PROVIDER DESTROYED.");
