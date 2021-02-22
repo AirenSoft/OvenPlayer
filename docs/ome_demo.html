@@ -34,9 +34,8 @@
     <script src="lib/popper.min.js"></script>
     <script src="lib/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-    <script src="lib/dash.all.debug.js"></script>
-    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/dashjs/3.1.0/dash.all.min.js" integrity="sha256-W7bio7TmPR6fAHSBMWfXt4ghrN70u+m8japJjCgt2FQ=" crossorigin="anonymous"></script>-->
-    <script src="../dist/development/ovenplayer/ovenplayer.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dashjs/3.1.3/dash.all.min.js" integrity="sha512-KbtNOWr7e/rlM9utrUc5cO9PeJZO3jFfCjWPe1mHe2sPvIike3IZIH6h4ja6wH7aXNKrecP8zh6/SYDc3t6Jog==" crossorigin="anonymous"></script>
+    <script src="../dist/development/ovenplayer/ovenplayer.js?20210222"></script>
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -167,6 +166,11 @@
     $(document).ready(function () {
 
         omeURL = [
+            {
+                type: 'webrtc',
+                file: wsProtocol + '//dev2.airensoft.com' + signallingPort + '/app/stream_o?transport=tcp',
+                label: 'WebRTC/TCP'
+            },
             {
                 type: 'webrtc',
                 file: wsProtocol + '//dev2.airensoft.com' + signallingPort + '/app/stream_o',
