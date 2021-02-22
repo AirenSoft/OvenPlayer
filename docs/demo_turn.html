@@ -52,7 +52,7 @@
     <script src="lib/popper.min.js"></script>
     <script src="lib/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-toast-plugin/1.3.2/jquery.toast.js"></script>
-    <script src="../dist/development/ovenplayer/ovenplayer.js?20210217"></script>
+    <script src="../dist/development/ovenplayer/ovenplayer.js?2021022216"></script>
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -333,7 +333,9 @@ player = OvenPlayer.create("player", {
     }
 
     $(document).ready(function () {
-        // OvenPlayer.debug(true);
+
+        OvenPlayer.debug(true);
+
         var clipboard = new ClipboardJS('.btnExport');
 
         clipboard.on('success', function (e) {

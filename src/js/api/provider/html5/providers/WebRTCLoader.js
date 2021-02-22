@@ -184,6 +184,33 @@ const WebRTCLoader = function (provider, webSocketUrl, loadCallback, errorTrigge
                 let regIceServer = {};
 
                 regIceServer.urls = iceServer.urls;
+
+                let hasWebsocketUrl = false;
+                let socketUrl = generateDomainFromUrl(webSocketUrl);
+
+                for (let j = 0; j < regIceServer.urls.length; j++) {
+
+                    let serverUrl = regIceServer.urls[j];
+
+                    if (serverUrl.indexOf(socketUrl) > -1) {
+                        hasWebsocketUrl = true;
+                        break;
+                    }
+                }
+
+                if (!hasWebsocketUrl) {
+
+                    if (regIceServer.urls.length > 0) {
+
+                        let cloneIceServer = _.clone(regIceServer.urls[0]);
+                        let ip = findIp(cloneIceServer);
+
+                        if (socketUrl && ip) {
+                            regIceServer.urls.push(cloneIceServer.replace(ip, socketUrl));
+                        }
+                    }
+                }
+
                 regIceServer.username = iceServer.user_name;
                 regIceServer.credential = iceServer.credential;
 
@@ -198,7 +225,7 @@ const WebRTCLoader = function (provider, webSocketUrl, loadCallback, errorTrigge
             peerConnectionConfig = defaultConnectionConfig;
         }
 
-        OvenPlayerConsole.log("main peer connection config : ", peerConnectionConfig);
+        OvenPlayerConsole.log("Main Peer Connection Config : ", peerConnectionConfig);
 
         let peerConnection = new RTCPeerConnection(peerConnectionConfig);
 
@@ -256,7 +283,7 @@ const WebRTCLoader = function (provider, webSocketUrl, loadCallback, errorTrigge
         peerConnection.onicecandidate = function (e) {
             if (e.candidate) {
 
-                OvenPlayerConsole.log("WebRTCLoader send candidate to server : " + e.candidate);
+                OvenPlayerConsole.log("WebRTCLoader send candidate to server : " , e.candidate);
 
                 // console.log('Main Peer Connection candidate', e.candidate);
 
@@ -384,30 +411,31 @@ const WebRTCLoader = function (provider, webSocketUrl, loadCallback, errorTrigge
         };
     }
 
-    let copyCandidate = function (basicCandidate) {
+    function generateDomainFromUrl(url) {
+        let result = '';
+        let match;
+        if (match = url.match(/^(?:wss?:\/\/)?(?:[^@\n]+@)?(?:www\.)?([^:\/\n\?\=]+)/im)) {
+            result = match[1];
+        }
+
+        return result;
+    }
+
+    function findIp(string) {
+
+        let result = '';
+        let match;
+
+        if (match = string.match(new RegExp("\\b(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b", 'gi'))) {
+            result = match[0];
+        }
+
+        return result;
+    }
+
+    function copyCandidate(basicCandidate) {
 
         let cloneCandidate = _.clone(basicCandidate);
-
-        function generateDomainFromUrl(url) {
-            let result = '';
-            let match;
-            if (match = url.match(/^(?:wss?:\/\/)?(?:[^@\n]+@)?(?:www\.)?([^:\/\n\?\=]+)/im)) {
-                result = match[1];
-            }
-            return result;
-        }
-
-        function findIp(candidate) {
-
-            let result = '';
-            let match;
-
-            if (match = candidate.match(new RegExp("\\b(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b", 'gi'))) {
-                result = match[0];
-            }
-
-            return result;
-        }
 
         let newDomain = generateDomainFromUrl(webSocketUrl);
         let ip = findIp(cloneCandidate.candidate);
@@ -451,7 +479,7 @@ const WebRTCLoader = function (provider, webSocketUrl, loadCallback, errorTrigge
             }
 
         });
-    };
+    }
 
     function addIceCandidate(peerConnection, candidates) {
 
