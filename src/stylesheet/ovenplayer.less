@@ -149,6 +149,15 @@
     margin: 0;
     position: fixed;
 
+    .op-watermark-container,
+    .op-thumbnail-container {
+      width: 100vw;
+      max-width: calc(100vh * 16 / 9);
+      height: calc(100vw * 9 / 16);
+      max-height: 100vh;
+      padding-bottom: 0;
+    }
+
   }
   &.op-autohide{
     cursor: none;
