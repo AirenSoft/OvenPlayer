@@ -13,20 +13,6 @@ const Thumbnail = function ($container, api, playerState) {
 
     const onRendered = function ($current, template) {
 
-        let aspectRatio = api.getConfig().aspectRatio;
-
-        if (aspectRatio) {
-
-            if (aspectRatio.split(':').length === 2) {
-
-                let width = aspectRatio.split(':')[0] * 1;
-                let height = aspectRatio.split(':')[1] * 1;
-
-                let ratio = height / width * 100;
-
-                $current.css('padding-bottom', ratio + '%');
-            }
-        }
     };
     const onDestroyed = function () {
         //Do nothing!
