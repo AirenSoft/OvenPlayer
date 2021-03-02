@@ -70,7 +70,13 @@ const VolumeButton = function($container, api){
 
 
     const onRendered = function($current, template){
+
         $sliderContainer = $current.find(".op-volume-slider-container");
+
+        if (api.getBrowser().mobile) {
+            $sliderContainer.hide();
+        }
+
         $slider = $current.find(".op-volume-silder");
         $sliderHandle = $current.find(".op-volume-slider-handle");
         $sliderValue = $current.find(".op-volume-slider-value");
@@ -127,35 +133,6 @@ const VolumeButton = function($container, api){
             }
 
         },
-        "touchstart .op-volume-slider-handle" : function(event){
-            mouseDown = true;
-
-        },
-        "touchmove .op-volume-slider-handle" : function(event){
-            if(mouseDown){
-
-                api.setMute(false);
-                api.setVolume(calculatePercentage(event));
-            }
-        },
-        "touchend .op-volume-slider-handle" : function(event){
-
-            if(mouseDown){
-                mouseDown = false;
-            }
-        },
-        "touchstart .op-volume-button" : function(event){
-            if(isMobile && $sliderContainer.hasClass("active")){
-                if (api.getVolume() === 0) {
-                    api.setMute(false);
-                    api.setVolume(100);
-                } else {
-                    api.setMute();
-                }
-            }else{
-                $sliderContainer.addClass("active");
-            }
-        },
         "mouseenter .op-volume-button" : function(event, $current, template){
             event.preventDefault();
 
@@ -185,6 +162,32 @@ const VolumeButton = function($container, api){
             }
 
             api.setVolume(calculatePercentage(event));
+        },
+        // "touchstart .op-volume-slider-handle" : function(event){
+        //     mouseDown = true;
+        //
+        // },
+        // "touchmove .op-volume-slider-handle" : function(event){
+        //     if(mouseDown){
+        //
+        //         api.setMute(false);
+        //         api.setVolume(calculatePercentage(event));
+        //     }
+        // },
+        // "touchend .op-volume-slider-handle" : function(event){
+        //
+        //     if(mouseDown){
+        //         mouseDown = false;
+        //     }
+        // },
+        "touchstart .op-volume-button" : function(event){
+            if(isMobile){
+                if (api.getMute()) {
+                    api.setMute(false);
+                } else {
+                    api.setMute(true);
+                }
+            }
         }
     };
     let that = OvenTemplate($container, "VolumeButton", api.getConfig(), null, events, onRendered, onDestroyed);
