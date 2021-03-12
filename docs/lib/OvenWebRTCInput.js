@@ -6,7 +6,7 @@
 
     window.OvenWebRTCInput = self;
 
-    function errorHandler (instance, error) {
+    function errorHandler(instance, error) {
 
         if (instance.callback.error) {
 
@@ -438,8 +438,15 @@
         addConfig(instance, options);
         addMethod(instance);
 
-        getDevices(instance, function () {
-            getUserMedia(instance);
+        // first get permission
+        navigator.mediaDevices.getUserMedia({audio: true, video: true}).then(function () {
+            getDevices(instance, function () {
+                getUserMedia(instance);
+            });
+        }).catch(function (error) {
+
+            console.error(error);
+            errorHandler(instance, error)
         });
 
         return instance;
