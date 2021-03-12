@@ -20,6 +20,7 @@
             color: gray;
             font-weight: bold;
         }
+
         .input-group-text {
             width: 180px;
         }
@@ -57,7 +58,7 @@
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="../index.html">OVENPLAYER</a>
+    <a class="navbar-brand" href="/">OVENPLAYER</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav">
         <span class="navbar-toggler-icon"></span>
     </button>
@@ -86,7 +87,9 @@
             <a class="nav-link" data-toggle="tab" href="./demo.html" target="_blank">Stream Playback</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link active" data-toggle="tab" href="./demo_input.html" target="_blank">WebRTC Input<span class="badge badge-info ml-2">Beta</span></a>
+            <a class="nav-link active" data-toggle="tab" href="./demo_input.html" target="_blank">WebRTC Input
+                <span class="badge badge-info ml-2">Beta</span>
+            </a>
 
         </li>
     </ul>
@@ -312,6 +315,11 @@
     let input = null;
 
     function createInput(constraint) {
+
+        if (window.location.href.indexOf('localhost') < 0 && window.location.protocol !== 'https:') {
+            $('#errorText').html('Demo is available on https. <a href="https://demo.ovenplayer.com/demo_input.html">https://demo.ovenplayer.com/demo_input.html</a>');
+            return;
+        }
 
         if (input) {
             input.remove();
