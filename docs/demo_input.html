@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <meta name="mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+
+    <title>OvenPlayer</title>
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="lib/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Noto+Sans" rel="stylesheet">
+
+    <style>
+
+        .nav-tabs a {
+            color: gray;
+            font-weight: bold;
+        }
+
+        .input-group-text {
+            width: 180px;
+        }
+
+        .playerWrapper {
+            position: relative;
+            width: 100%;
+            height: 0;
+            padding-bottom: 56.25%;
+            background-color: #000;
+        }
+
+        .previewPlayer {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-40491361-8"></script>
+
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+
+        gtag('js', new Date());
+
+        gtag('config', 'UA-40491361-8');
+    </script>
+
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="/">OVENPLAYER</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <div class="navbar-nav mr-auto">
+        </div>
+        <ul class="navbar-nav my-2 my-lg-0">
+            <li class="nav-item active">
+                <a class="nav-link" href="./demo.html">Player Demo</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="./ome_demo.html">Ultra Low Latency Demo</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="https://github.com/AirenSoft/OvenPlayer" target="_blank">GitHub</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="https://airensoft.gitbook.io/ovenplayer/" target="_blank">Docs</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+<div class="container mt-4">
+    <ul class="nav nav-tabs mb-3">
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="./demo.html" target="_blank">Stream Playback</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link active" data-toggle="tab" href="./demo_input.html" target="_blank">WebRTC Input
+                <span class="badge badge-info ml-2">Beta</span>
+            </a>
+
+        </li>
+    </ul>
+    <div id="demo-navi" class="row">
+        <div class="col-12 mb-4">
+            <div class="playerWrapper">
+                <video controls id="previewPlayer" class="previewPlayer"></video>
+            </div>
+        </div>
+        <div class="col-12 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Input Stream</h5>
+                    <div class="row mb-2">
+                        <div class="col-12">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">WebRTC Input URL</span>
+                                </div>
+                                <input id="webRtcUrlInput" type="text" class="form-control" placeholder="Please enter the OME WebRTC input URL.">
+                            </div>
+                            <small id="errorText" class="form-text text-danger text-center">
+
+                            </small>
+                        </div>
+                    </div>
+                    <div class="mb-2 text-right">
+                        <button id="streamingButton" type="button" class="btn btn-primary">Start Streaming</button>
+                    </div>
+                    <h5 class="card-title">Input Sources</h5>
+
+                    <div class="row mb-2">
+                        <div class="col-12">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <label class="input-group-text" for="videoSourceSelect">Video Source</label>
+                                </div>
+                                <select class="custom-select constraintSelect" id="videoSourceSelect">
+                                    <option selected>Choose...</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-2">
+                        <div class="col-12">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <label class="input-group-text" for="videoResolutionSelect">Video Resolution</label>
+                                </div>
+                                <select class="custom-select constraintSelect" id="videoResolutionSelect">
+                                    <option selected value="">Not Set</option>
+                                    <option value="fhd">Full HD (1920x1080)</option>
+                                    <option value="hd">HD (1280x720)</option>
+                                    <option value="vga">VGA (640x480)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-2">
+                        <div class="col-12">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <label class="input-group-text" for="videoFrameInput">Video Frame Rate</label>
+                                </div>
+                                <input id="videoFrameInput" type="number" class="form-control constraintSelect" placeholder="Not Set">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-2">
+                        <div class="col-12">
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <label class="input-group-text" for="audioSourceSelect">Audio Source</label>
+                                </div>
+                                <select class="custom-select constraintSelect" id="audioSourceSelect">
+                                    <option selected>Choose...</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-12 mb-2">
+            <div class="text-center mt-2">
+                <small>
+                    Powered by <a href="https://github.com/AirenSoft/OvenMediaEngine" class="text-primary" target="_blank">OvenMediaEngine</a> and <a href="https://github.com/AirenSoft/OvenPlayer" class="text-primary" target="_blank">OvenPlayer</a>.
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/underscore@1.12.0/underscore-min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.slim.min.js" integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
+<script src="./lib/OvenWebRTCInput.js"></script>
+
+<script>
+
+    const resolutions = {
+        vga: {
+            width: {exact: 640}, height: {exact: 480}
+        },
+        hd: {
+            width: {exact: 1280}, height: {exact: 720}
+        },
+        fhd: {
+            width: {exact: 1920}, height: {exact: 1080}
+        }
+    };
+
+    let streamingStarted = false;
+
+    let webRtcUrlInput = $('#webRtcUrlInput');
+    let videoSourceSelect = $('#videoSourceSelect');
+    let videoResolutionSelect = $('#videoResolutionSelect');
+    let videoFrameInput = $('#videoFrameInput');
+    let audioSourceSelect = $('#audioSourceSelect');
+
+    let savedWebRtcUrl = localStorage.getItem('savedWebRtcUrl');
+
+    if (savedWebRtcUrl) {
+        webRtcUrlInput.val(savedWebRtcUrl);
+    }
+
+    webRtcUrlInput.on('change', function () {
+        localStorage.setItem('savedWebRtcUrl', $(this).val());
+    });
+
+    let savedVideoSource = localStorage.getItem('savedVideoSource');
+    let savedVideoResolution = localStorage.getItem('savedVideoResolution');
+    let savedVideoFrame = localStorage.getItem('savedVideoFrame');
+    let savedAudioSource = localStorage.getItem('savedAudioSource');
+
+    function getConstraint() {
+
+        let videoDeviceId = videoSourceSelect.val();
+        let videoResolution = videoResolutionSelect.val();
+        let videoFrame = videoFrameInput.val();
+        let audioDeviceId = audioSourceSelect.val();
+
+        localStorage.setItem('savedVideoSource', videoDeviceId);
+        localStorage.setItem('savedVideoResolution', videoResolution);
+        localStorage.setItem('savedVideoFrame', videoFrame);
+        localStorage.setItem('savedAudioSource', audioDeviceId);
+
+        let newConstraint = {};
+
+        if (videoDeviceId) {
+            newConstraint.video = {
+                deviceId: {
+                    exact: videoDeviceId
+                }
+            };
+        }
+
+        if (audioDeviceId) {
+            newConstraint.audio = {
+                deviceId: {
+                    exact: audioDeviceId
+                }
+            };
+        }
+
+        if (videoResolution) {
+
+            const resolution = resolutions[videoResolution];
+
+            newConstraint.video.width = resolution.width;
+            newConstraint.video.height = resolution.height;
+        }
+
+        if (videoFrame) {
+            newConstraint.video.frameRate = {exact: parseInt(videoFrame)};
+        }
+
+        return newConstraint;
+    }
+
+    function setDevice(select, devices) {
+
+        select.empty();
+
+        if (devices.length === 0) {
+
+            select.append('<option value="">No Source Available</option>')
+        } else {
+
+            _.each(devices, function (device) {
+
+                let option = $('<option></option>');
+
+                option.text(device.label);
+                option.val(device.deviceId);
+
+                select.append(option);
+            });
+        }
+
+        select.find('option').eq(0).prop('selected', true);
+    }
+
+    function checkDevice(devices, deviceId) {
+
+        let filtered = _.filter(devices, function (device) {
+
+            return device.deviceId === deviceId;
+        });
+
+        if (filtered.length > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    let allDevices = null;
+
+    let input = null;
+
+    function createInput(constraint) {
+
+        if (window.location.href.indexOf('localhost') < 0 && window.location.protocol !== 'https:') {
+            $('#errorText').html('Demo is available on https. <a href="https://demo.ovenplayer.com/demo_input.html">https://demo.ovenplayer.com/demo_input.html</a>');
+            return;
+        }
+
+        if (input) {
+            input.remove();
+            input = null;
+        }
+
+        input = OvenWebRTCInput.create({
+            videoElement: document.getElementById('previewPlayer'),
+            connectionUrl: webRtcUrlInput.val(),
+            config: {
+                mediaStreamConstraint: constraint,
+                iceServers: null,
+                iceTransportPolicy: null
+            },
+            callback: {
+                gotDevices: function (devices) {
+
+                    if (!allDevices) {
+
+                        allDevices = devices;
+                        setDevice(videoSourceSelect, devices.videoinput);
+                        setDevice(audioSourceSelect, devices.audioinput);
+
+                        if (savedVideoSource && checkDevice(devices.videoinput, savedVideoSource)) {
+                            videoSourceSelect.val(savedVideoSource);
+                        }
+
+                        if (savedVideoResolution) {
+                            videoResolutionSelect.val(savedVideoResolution);
+                        }
+
+                        if (savedVideoFrame) {
+                            videoFrameInput.val(savedVideoFrame);
+                        }
+
+                        if (savedAudioSource && checkDevice(devices.audioinput, savedAudioSource)) {
+                            audioSourceSelect.val(savedAudioSource);
+                        }
+
+                        input.config.mediaStreamConstraint = getConstraint();
+
+                        $('.constraintSelect').on('change', function () {
+
+                            stopStreaming();
+                        });
+                    }
+                },
+                error: function (error) {
+                    $('#errorText').text('An error has occurred. See the details in the console.');
+                }
+            }
+        });
+    }
+
+    createInput();
+
+    let streamingButton = $('#streamingButton');
+
+    function startStreaming() {
+
+        streamingStarted = true;
+        streamingButton.text('Stop Streaming');
+
+        if (input) {
+            input.startStreaming();
+        }
+    }
+
+    function stopStreaming() {
+
+        streamingStarted = false;
+        streamingButton.text('Start Streaming');
+
+        if (input) {
+            createInput(getConstraint());
+        }
+
+    }
+
+    streamingButton.on('click', function () {
+
+        if (!streamingStarted) {
+            startStreaming();
+        } else {
+            stopStreaming();
+        }
+    });
+</script>
+
+</body>
+
+</html>
