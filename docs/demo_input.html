@@ -564,6 +564,7 @@
         streamingButton.text('Stop Streaming');
 
         if (input) {
+            input.connectionUrl = webRtcUrlInput.val();
             input.startStreaming();
             videoBitrateInput.prop('disabled', false);
         }
