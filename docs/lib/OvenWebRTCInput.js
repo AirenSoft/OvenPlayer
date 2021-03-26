@@ -4,13 +4,16 @@
 
     let self = {};
 
+    const logHeader = 'OvenWebRTCInput.js :';
+    const logEventHeader = 'OvenWebRTCInput.js ====';
+
     window.OvenWebRTCInput = self;
 
     function errorHandler(instance, error) {
 
-        if (instance.callback.error) {
+        if (instance.callbacks.error) {
 
-            instance.callback.error(error);
+            instance.callbacks.error(error);
         }
     }
 
@@ -57,6 +60,7 @@
                 };
 
                 for (let i = 0; i !== deviceInfos.length; ++i) {
+
                     const deviceInfo = deviceInfos[i];
 
                     let info = {};
@@ -82,16 +86,16 @@
                     }
                 }
 
-                console.info('navigator.mediaDevices.enumerateDevices', devices);
+                console.info(logHeader, 'All Input Devices', devices);
 
                 instance.devices = devices;
 
-                if (instance.callback.gotDevices) {
-                    instance.callback.gotDevices(devices);
+                if (instance.callbacks.gotDevices) {
+                    instance.callbacks.gotDevices(devices);
+                }
 
-                    if (callback) {
-                        callback();
-                    }
+                if (callback) {
+                    callback();
                 }
             })
             .catch(function (error) {
@@ -123,19 +127,17 @@
             if (devices.videoinput.length > 0) {
 
                 constraints.video = {
-                    deviceId: {
-                        exact: devices.videoinput[0].deviceId
-                    }
+                    deviceId: devices.videoinput[0].deviceId
                 };
             }
         }
 
-        console.info('getUserMedia: constraints', constraints);
+        console.info(logHeader, 'Requested Constraint To Input Devices', constraints);
 
         navigator.mediaDevices.getUserMedia(constraints)
             .then(function (stream) {
 
-                console.info('navigator.mediaDevices.getUserMedia', stream);
+                console.info(logHeader, 'Recived Media Stream From Input Device', stream);
 
                 instance.stream = stream;
 
@@ -146,12 +148,16 @@
                 elem.onloadedmetadata = function (e) {
 
                     elem.play();
-                };
 
+                    if (instance.callbacks.gotStream) {
+
+                        instance.callbacks.gotStream(elem, stream);
+                    }
+                };
             })
             .catch(function (error) {
 
-                console.error('navigator.mediaDevices.getUserMedia', error);
+                console.error(logHeader, 'Can\'t Get Media Stream From Input Device', error);
                 errorHandler(instance, error);
 
             });
@@ -174,8 +180,8 @@
             instance.config = {};
         }
 
-        if (options.callback) {
-            instance.callback = options.callback;
+        if (options.callbacks) {
+            instance.callbacks = options.callbacks;
         }
 
     }
@@ -184,7 +190,16 @@
 
         function initWebSocket() {
 
-            let webSocket = new WebSocket(instance.connectionUrl);
+            let webSocket = null;
+
+            try {
+
+                webSocket = new WebSocket(instance.connectionUrl);
+            } catch (e) {
+
+                errorHandler(instance, e);
+            }
+
 
             instance.webSocket = webSocket;
 
@@ -226,7 +241,12 @@
 
             webSocket.onclose = function (e) {
 
-                // todo(rock):  close all connections.
+                if (!instance.removing) {
+                    if (instance.callbacks.connectionClosed) {
+
+                        instance.callbacks.connectionClosed('websocket', e);
+                    }
+                }
             };
 
         }
@@ -299,7 +319,7 @@
                 }
             }
 
-            console.info('peerConnectionConfig', peerConnectionConfig);
+            console.info(logHeader, 'Create Peer Connection With Config', peerConnectionConfig);
 
             let peerConnection = new RTCPeerConnection(peerConnectionConfig);
 
@@ -308,6 +328,7 @@
             // set local stream
             instance.stream.getTracks().forEach(function (track) {
 
+                console.info(logHeader, 'Add Track To Peer Connection', track);
                 peerConnection.addTrack(track, instance.stream);
             });
 
@@ -358,7 +379,7 @@
             peerConnection.onicecandidate = function (e) {
                 if (e.candidate) {
 
-                    console.info('peerConnection.onicecandidate', e);
+                    console.info(logHeader, 'Candidate Sent', '\n', e.candidate.candidate, '\n', e);
 
                     sendMessage(instance.webSocket, {
                         id: id,
@@ -368,6 +389,32 @@
                     });
                 }
             };
+
+            peerConnection.oniceconnectionstatechange = function (e) {
+
+                if (instance.callbacks.connectionClosed) {
+
+                    let state = peerConnection.iceConnectionState;
+
+                    console.info(logHeader, 'ICE State', state);
+                    instance.callbacks.iceStateChange(state);
+                }
+
+                if (peerConnection.iceConnectionState === "failed" ||
+                    peerConnection.iceConnectionState === "disconnected" ||
+                    peerConnection.iceConnectionState === "closed") {
+
+                    if (instance.callbacks.connectionClosed) {
+
+                        console.error('iceconnection closed', e);
+                        instance.callbacks.connectionClosed('ice', e);
+                    }
+                }
+            }
+
+            // peerConnection.onconnectionstatechange = function (e) {
+            //     console.log('>>>>>>>>>>>>>>>>>>>>>>>>> peerconnection.onconnectionstatechange', peerConnection.connectionState);
+            // }
         }
 
         function addIceCandidate(peerConnection, candidates) {
@@ -394,15 +441,22 @@
 
         instance.startStreaming = function () {
 
+            console.info(logEventHeader, 'Start Streaming');
+
             initWebSocket();
         };
 
         instance.remove = function () {
 
-            console.log(instance);
+            instance.removing = true;
 
             // first release peer connection with ome
             if (instance.peerConnection) {
+
+                // remove tracks from peer connection
+                instance.peerConnection.getSenders().forEach(function (sender) {
+                    instance.peerConnection.removeTrack(sender);
+                });
 
                 instance.peerConnection.close();
                 instance.peerConnection = null;
@@ -410,7 +464,9 @@
 
             // release video, audio stream
             if (instance.stream) {
+
                 instance.stream.getTracks().forEach(track => {
+
                     track.stop();
                     instance.stream.removeTrack(track);
                 });
@@ -427,13 +483,19 @@
                 instance.webSocket = null;
             }
 
+            console.info(logEventHeader, 'Removed');
+
         };
     }
 
     // public methods
     self.create = function (options) {
 
+        console.info(logEventHeader, 'Create WebRTC Input');
+
         let instance = {};
+
+        instance.removing = false;
 
         addConfig(instance, options);
         addMethod(instance);
@@ -445,8 +507,22 @@
             });
         }).catch(function (error) {
 
-            console.error(error);
-            errorHandler(instance, error)
+            navigator.mediaDevices.getUserMedia({audio: false, video: true}).then(function () {
+                getDevices(instance, function () {
+                    getUserMedia(instance);
+                });
+            }).catch(function (error) {
+
+                navigator.mediaDevices.getUserMedia({audio: true, video: false}).then(function () {
+                    getDevices(instance, function () {
+                        getUserMedia(instance);
+                    });
+                }).catch(function (error) {
+
+                    console.error(error);
+                    errorHandler(instance, error)
+                });
+            });
         });
 
         return instance;
