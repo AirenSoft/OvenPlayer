@@ -9,6 +9,15 @@
 
     window.OvenWebRTCInput = self;
 
+    // error handler for OvenWebRTCInput
+    function handleError(error) {
+
+        console.log(error);
+        console.log(error.name);
+        console.log(error.message);
+    }
+
+    // error handler for each instance
     function errorHandler(instance, error) {
 
         if (instance.callbacks.error) {
@@ -47,140 +56,78 @@
         return result;
     }
 
-    function getDevices(instance, callback) {
+    async function getStreamForDeviceCheck() {
 
-        navigator.mediaDevices.enumerateDevices()
-            .then(function (deviceInfos) {
+        // High resolution video constraints makes browser to get maximum resolution of video device.
+        const constraints = {
+            audio: {deviceId: undefined},
+            video: {deviceId: undefined, width: 1920, height: 1080}
+        };
 
-                let devices = {
-                    'audioinput': [],
-                    'audiooutput': [],
-                    'videoinput': [],
-                    'other': [],
-                };
-
-                for (let i = 0; i !== deviceInfos.length; ++i) {
-
-                    const deviceInfo = deviceInfos[i];
-
-                    let info = {};
-
-                    info.deviceId = deviceInfo.deviceId;
-
-                    if (deviceInfo.kind === 'audioinput') {
-
-                        info.label = deviceInfo.label || `microphone ${devices.audioinput.length + 1}`;
-                        devices.audioinput.push(info);
-                    } else if (deviceInfo.kind === 'audiooutput') {
-
-                        info.label = deviceInfo.label || `speaker ${devices.audiooutput.length + 1}`;
-                        devices.audiooutput.push(info);
-                    } else if (deviceInfo.kind === 'videoinput') {
-
-                        info.label = deviceInfo.label || `camera ${devices.videoinput.length + 1}`;
-                        devices.videoinput.push(info);
-                    } else {
-
-                        info.label = deviceInfo.label || `other ${devices.other.length + 1}`;
-                        devices.other.push(info);
-                    }
-                }
-
-                console.info(logHeader, 'All Input Devices', devices);
-
-                instance.devices = devices;
-
-                if (instance.callbacks.gotDevices) {
-                    instance.callbacks.gotDevices(devices);
-                }
-
-                if (callback) {
-                    callback();
-                }
-            })
-            .catch(function (error) {
-                console.error('navigator.mediaDevices.enumerateDevices', error);
-                errorHandler(instance, error);
-            });
+        return await navigator.mediaDevices.getUserMedia(constraints);
     }
 
-    function getUserMedia(instance) {
+    async function getDevices() {
 
-        let devices = instance.devices;
+        return await navigator.mediaDevices.enumerateDevices();
 
-        let constraints = {};
 
-        if (instance.config.mediaStreamConstraint) {
+    }
 
-            constraints = instance.config.mediaStreamConstraint;
-        } else {
+    function gotDevices(deviceInfos) {
 
-            if (devices.audioinput.length > 0) {
+        let devices = {
+            'audioinput': [],
+            'audiooutput': [],
+            'videoinput': [],
+            'other': [],
+        };
 
-                constraints.audio = {
-                    deviceId: {
-                        exact: devices.audioinput[0].deviceId
-                    }
-                };
-            }
+        for (let i = 0; i !== deviceInfos.length; ++i) {
 
-            if (devices.videoinput.length > 0) {
+            const deviceInfo = deviceInfos[i];
 
-                constraints.video = {
-                    deviceId: devices.videoinput[0].deviceId
-                };
+            let info = {};
+
+            info.deviceId = deviceInfo.deviceId;
+
+            if (deviceInfo.kind === 'audioinput') {
+
+                info.label = deviceInfo.label || `microphone ${devices.audioinput.length + 1}`;
+                devices.audioinput.push(info);
+            } else if (deviceInfo.kind === 'audiooutput') {
+
+                info.label = deviceInfo.label || `speaker ${devices.audiooutput.length + 1}`;
+                devices.audiooutput.push(info);
+            } else if (deviceInfo.kind === 'videoinput') {
+
+                info.label = deviceInfo.label || `camera ${devices.videoinput.length + 1}`;
+                devices.videoinput.push(info);
+            } else {
+
+                info.label = deviceInfo.label || `other ${devices.other.length + 1}`;
+                devices.other.push(info);
             }
         }
 
-        console.info(logHeader, 'Requested Constraint To Input Devices', constraints);
-
-        navigator.mediaDevices.getUserMedia(constraints)
-            .then(function (stream) {
-
-                console.info(logHeader, 'Recived Media Stream From Input Device', stream);
-
-                instance.stream = stream;
-
-                let elem = instance.videoElement;
-
-                elem.srcObject = stream;
-
-                elem.onloadedmetadata = function (e) {
-
-                    elem.play();
-
-                    if (instance.callbacks.gotStream) {
-
-                        instance.callbacks.gotStream(elem, stream);
-                    }
-                };
-            })
-            .catch(function (error) {
-
-                console.error(logHeader, 'Can\'t Get Media Stream From Input Device', error);
-                errorHandler(instance, error);
-
-            });
+        return devices;
     }
 
-    function addConfig(instance, options) {
+    function initConfig(instance, options) {
 
         instance.stream = null;
         instance.webSocket = null;
         instance.peerConnection = null;
+        instance.iceServers = null;
+        instance.iceTransportPolicy = null;
 
-        instance.videoElement = options.videoElement;
-        instance.connectionUrl = options.connectionUrl;
+        instance.status = 'creating';
 
-        if (options.config) {
+        instance.videoElement = null;
+        instance.connectionUrl = null;
 
-            instance.config = options.config;
-        } else {
+        if (options && options.callbacks) {
 
-            instance.config = {};
-        }
-
-        if (options.callbacks) {
             instance.callbacks = options.callbacks;
         }
 
@@ -188,13 +135,107 @@
 
     function addMethod(instance) {
 
-        function initWebSocket() {
+        function getUserMedia(constraints) {
+
+            if (!constraints) {
+
+                constraints = {
+                    video: {
+                        deviceId: undefined
+                    },
+                    audio: {
+                        deviceId: undefined
+                    }
+                };
+            }
+
+            console.info(logHeader, 'Requested Constraint To Input Devices', constraints);
+
+            return navigator.mediaDevices.getUserMedia(constraints)
+                .then(function (stream) {
+
+                    console.info(logHeader, 'Received Media Stream From Input Device', stream);
+
+                    instance.stream = stream;
+
+                    let elem = instance.videoElement;
+
+                    // Attach stream to video element when video element is provided.
+                    if (elem) {
+
+                        elem.srcObject = stream;
+
+                        elem.onloadedmetadata = function (e) {
+
+                            elem.play();
+                        };
+                    }
+
+                    return new Promise(function (resolve) {
+
+                        resolve(stream);
+                    });
+                })
+                .catch(function (error) {
+
+                    console.error(logHeader, 'Can\'t Get Media Stream From Input Device', error);
+                    errorHandler(instance, error);
+                });
+        }
+
+        function getDisplayMedia(constraints) {
+
+            if (!constraints) {
+                constraints = {};
+            }
+
+            console.info(logHeader, 'Requested Constraint To Display', constraints);
+
+            return navigator.mediaDevices.getDisplayMedia(constraints)
+                .then(function (stream) {
+
+                    console.info(logHeader, 'Received Media Stream From Display', stream);
+
+                    instance.stream = stream;
+
+                    let elem = instance.videoElement;
+
+                    // Attach stream to video element when video element is provided.
+                    if (elem) {
+
+                        elem.srcObject = stream;
+
+                        elem.onloadedmetadata = function (e) {
+
+                            elem.play();
+                        };
+                    }
+
+                    return new Promise(function (resolve) {
+
+                        resolve(stream);
+                    });
+                })
+                .catch(function (error) {
+
+                    console.error(logHeader, 'Can\'t Get Media Stream From Display', error);
+                    errorHandler(instance, error);
+                });
+        }
+
+        function initWebSocket(connectionUrl) {
+
+            if (!connectionUrl) {
+                // todo: throws error
+            }
+
+            instance.connectionUrl = connectionUrl;
 
             let webSocket = null;
 
             try {
 
-                webSocket = new WebSocket(instance.connectionUrl);
+                webSocket = new WebSocket(connectionUrl);
             } catch (e) {
 
                 errorHandler(instance, e);
@@ -255,14 +296,14 @@
 
             let peerConnectionConfig = {};
 
-            if (instance.config.iceServers) {
+            if (instance.iceServers) {
 
                 // first priority using ice servers from local config.
-                peerConnectionConfig.iceServers = instance.config.iceServers;
+                peerConnectionConfig.iceServers = instance.iceServers;
 
-                if (instance.config.iceTransportPolicy) {
+                if (instance.iceTransportPolicy) {
 
-                    peerConnectionConfig.iceTransportPolicy = instance.config.iceTransportPolicy;
+                    peerConnectionConfig.iceTransportPolicy = instance.iceTransportPolicy;
                 }
             } else if (iceServers) {
 
@@ -313,9 +354,9 @@
             } else {
                 // last priority using default ice servers.
 
-                if (instance.config.iceTransportPolicy) {
+                if (instance.iceTransportPolicy) {
 
-                    peerConnectionConfig.iceTransportPolicy = instance.config.iceTransportPolicy;
+                    peerConnectionConfig.iceTransportPolicy = instance.iceTransportPolicy;
                 }
             }
 
@@ -354,21 +395,18 @@
 
                                     console.error('peerConnection.setLocalDescription', error);
                                     errorHandler(instance, error);
-                                    // todo(rock): cleaning
                                 });
                         })
                         .catch(function (error) {
 
                             console.error('peerConnection.createAnswer', error);
                             errorHandler(instance, error);
-                            // todo(rock): cleaning
                         });
                 })
                 .catch(function (error) {
 
                     console.error('peerConnection.setRemoteDescription', error);
                     errorHandler(instance, error);
-                    // todo(rock): cleaning
                 });
 
             if (candidates) {
@@ -411,10 +449,6 @@
                     }
                 }
             }
-
-            // peerConnection.onconnectionstatechange = function (e) {
-            //     console.log('>>>>>>>>>>>>>>>>>>>>>>>>> peerconnection.onconnectionstatechange', peerConnection.connectionState);
-            // }
         }
 
         function addIceCandidate(peerConnection, candidates) {
@@ -433,17 +467,42 @@
 
                             console.error('peerConnection.addIceCandidate', error);
                             errorHandler(instance, error);
-                            // todo(rock): cleaning
                         });
                 }
             }
         }
 
-        instance.startStreaming = function () {
+        instance.attachMedia = function (videoElement) {
+
+            instance.videoElement = videoElement;
+        };
+
+        instance.getUserMedia = function (constraints) {
+
+            return getUserMedia(constraints);
+        };
+
+        instance.getDisplayMedia = function (constraints) {
+
+            return getDisplayMedia(constraints);
+        };
+
+        instance.startStreaming = function (connectionUrl, connectionConfig) {
 
             console.info(logEventHeader, 'Start Streaming');
 
-            initWebSocket();
+            if (connectionConfig) {
+
+                if (connectionConfig.iceServers) {
+                    instance.iceServers = connectionConfig.iceServers;
+                }
+
+                if (connectionConfig.iceTransportPolicy) {
+                    instance.iceTransportPolicy = connectionConfig.iceTransportPolicy;
+                }
+            }
+
+            initWebSocket(connectionUrl);
         };
 
         instance.remove = function () {
@@ -497,35 +556,17 @@
 
         instance.removing = false;
 
-        addConfig(instance, options);
+        initConfig(instance, options);
         addMethod(instance);
 
-        // first get permission
-        navigator.mediaDevices.getUserMedia({audio: true, video: true}).then(function () {
-            getDevices(instance, function () {
-                getUserMedia(instance);
-            });
-        }).catch(function (error) {
-
-            navigator.mediaDevices.getUserMedia({audio: false, video: true}).then(function () {
-                getDevices(instance, function () {
-                    getUserMedia(instance);
-                });
-            }).catch(function (error) {
-
-                navigator.mediaDevices.getUserMedia({audio: true, video: false}).then(function () {
-                    getDevices(instance, function () {
-                        getUserMedia(instance);
-                    });
-                }).catch(function (error) {
-
-                    console.error(error);
-                    errorHandler(instance, error)
-                });
-            });
-        });
-
         return instance;
+    };
+
+    self.getDevices = async function () {
+
+        await getStreamForDeviceCheck();
+        const deviceInfos = await getDevices();
+        return gotDevices(deviceInfos)
     };
 
 
