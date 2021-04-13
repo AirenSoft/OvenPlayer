@@ -49,7 +49,7 @@
         let result = '';
         let match;
 
-        if (match = string.match(new RegExp("\\b(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b", 'gi'))) {
+        if (match = string.match(new RegExp('\\b(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b', 'gi'))) {
             result = match[0];
         }
 
@@ -248,7 +248,7 @@
 
                 // Request offer at the first time.
                 sendMessage(webSocket, {
-                    command: "request_offer"
+                    command: 'request_offer'
                 });
             };
 
@@ -283,6 +283,7 @@
             webSocket.onclose = function (e) {
 
                 if (!instance.removing) {
+
                     if (instance.callbacks.connectionClosed) {
 
                         instance.callbacks.connectionClosed('websocket', e);
@@ -430,21 +431,28 @@
 
             peerConnection.oniceconnectionstatechange = function (e) {
 
-                if (instance.callbacks.connectionClosed) {
+                let state = peerConnection.iceConnectionState;
 
-                    let state = peerConnection.iceConnectionState;
+                if (instance.callbacks.iceStateChange) {
 
-                    console.info(logHeader, 'ICE State', state);
+                    console.info(logHeader, 'ICE State', '[' + state + ']');
                     instance.callbacks.iceStateChange(state);
                 }
 
-                if (peerConnection.iceConnectionState === "failed" ||
-                    peerConnection.iceConnectionState === "disconnected" ||
-                    peerConnection.iceConnectionState === "closed") {
+                if (state === 'connected') {
+
+                    if (instance.callbacks.connected) {
+
+                        console.info(logHeader, 'Iceconnection Connected', e);
+                        instance.callbacks.connected(state);
+                    }
+                }
+
+                if (state === 'failed' || state === 'disconnected' || state === 'closed') {
 
                     if (instance.callbacks.connectionClosed) {
 
-                        console.error('iceconnection closed', e);
+                        console.error(logHeader, 'Iceconnection Closed', e);
                         instance.callbacks.connectionClosed('ice', e);
                     }
                 }
