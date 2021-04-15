@@ -158,8 +158,7 @@ const Api = function(container){
                 //data.code === PLAYER_FILE_ERROR
                 if( name === ERROR || name === NETWORK_UNSTABLED ){
 
-                    if (data.code === PLAYER_WEBRTC_UNEXPECTED_DISCONNECT
-                        || (!playerConfig.getConfig().autoFallback && data.code === PLAYER_WEBRTC_NETWORK_SLOW)) {
+                    if (!playerConfig.getConfig().autoFallback && data.code === PLAYER_WEBRTC_NETWORK_SLOW) {
 
                         if (!webrtcRetry) {
 
