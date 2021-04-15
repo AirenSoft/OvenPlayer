@@ -538,9 +538,11 @@
                     instance.stream.removeTrack(track);
                 });
 
-                instance.stream = null;
-                instance.videoElement.srcObject = null;
+                if (instance.videoElement) {
+                    instance.videoElement.srcObject = null;
+                }
 
+                instance.stream = null;
             }
 
             // release websocket
