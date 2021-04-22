@@ -207,7 +207,26 @@ const La$ = function(selectorOrElement){
     };
 
     that.closest = (selectorString) => {
+
+        $element.closest = function (s) {
+
+            let el = $element;
+
+            do {
+
+                if (el.matches(s)) {
+                    return el;
+                }
+
+                el = el.parentElement || el.parentNode;
+
+            } while (el !== null && el.nodeType === 1);
+
+            return null;
+        };
+
         let closestElement = $element.closest(selectorString);
+
         if(closestElement){
             return La$(closestElement);
         }else{
