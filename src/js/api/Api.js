@@ -140,58 +140,21 @@ const Api = function(container){
                             return;
                         }
                     }
-                }
 
-                that.trigger(name, data);
+                    if (playerConfig.getConfig().autoFallback && playerConfig.getSourceIndex() + 1 < that.getSources().length) {
+                        //this sequential has available source.
+                        that.pause();
+                        that.setCurrentSource(playerConfig.getSourceIndex() + 1);
+
+                        return;
+                    }
+                }
 
                 if(name === "complete"){
                     runNextPlaylist(playlistManager.getCurrentPlaylistIndex() + 1);
                 }
 
-                if(name === PLAYER_PLAY) {
-                    clearInterval(webrtcRetryTimer);
-                    webrtcRetry = false;
-                    webrtcRetryCount = WEBRTC_RETRY_COUNT;
-                }
-
-                //Auto switching next source when player load failed by amiss source.
-                //data.code === PLAYER_FILE_ERROR
-                if( name === ERROR || name === NETWORK_UNSTABLED ){
-
-                    if (!playerConfig.getConfig().autoFallback && data.code === PLAYER_WEBRTC_NETWORK_SLOW) {
-
-                        if (!webrtcRetry) {
-
-                            webrtcRetry = true;
-                            webrtcRetryCount = WEBRTC_RETRY_COUNT;
-                        }
-
-                    }
-
-                    if (webrtcRetry && webrtcRetryCount > 0) {
-
-                        webrtcRetryTimer = setTimeout(function () {
-
-                            that.setCurrentSource(playerConfig.getSourceIndex());
-                            webrtcRetryCount --;
-                        }, webrtcRetryInterval);
-
-                        return;
-                    }
-
-                    if (webrtcRetry && webrtcRetryCount <= 0) {
-
-                        clearInterval(webrtcRetryTimer);
-                        webrtcRetry = false;
-                        webrtcRetryCount = WEBRTC_RETRY_COUNT;
-                    }
-
-                    if(playerConfig.getConfig().autoFallback && playerConfig.getSourceIndex()+1 < that.getSources().length){
-                        //this sequential has available source.
-                        that.pause();
-                        that.setCurrentSource(playerConfig.getSourceIndex()+1);
-                    }
-                }
+                that.trigger(name, data);
             });
 
         }).then(()=>{
