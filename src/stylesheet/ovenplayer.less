@@ -854,6 +854,7 @@ i.op-con{
     .op-controls {
       position: relative;
       width: 100%;
+      height: 50px;
       text-align: left;
       overflow: hidden;
 
@@ -876,7 +877,9 @@ i.op-con{
         line-height: 30px;
       }
       .op-left-controls {
-        float: left;
+        position: absolute;
+        top: 0;
+        left: 0;
         height: 50px;
         padding: 14px 0 10px 0;
         &:after{
@@ -885,11 +888,11 @@ i.op-con{
         }
       }
       .op-right-controls {
-        float: right;
+        position: absolute;
+        top: 0;
+        right: 0;
         height: 50px;
         padding: 14px 0 10px 0;
-       // display: inline-flex;
-        //margin : 10px 0;
         &:after{
           content: '';
           clear: both;
@@ -1510,6 +1513,18 @@ i.op-con{
       padding: 4px;
       font-size: 14px;
     }
+  }
+}
+
+.op-wrapper.ovenplayer.xxsmall{
+
+  .op-left-controls {
+    max-width: 240px; // for small layout
+    overflow: hidden; // for small layout
+  }
+
+  .op-live-badge-lowlatency {
+    max-width: 75px;
   }
 }
 

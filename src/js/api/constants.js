@@ -119,7 +119,7 @@ export const SYSTEM_TEXT = [
         "ui" : {
             "context" : "About OvenPlayer",
             "controls" : {
-                "live" : "live",
+                "live" : "Live Streaming",
                 "low_latency_live" : "Sub-Second Latency Streaming",
                 "low_latency_p2p" : "Sub-Second Latency P2P",
             },

@@ -114,6 +114,11 @@ const View = function($container){
         if(playerWidth < 576){
             screenSize = "xsmall";
             $playerRoot.addClass("xsmall");
+
+            if (playerWidth < 490) {
+                $playerRoot.addClass("xxsmall");
+            }
+
         }else if(playerWidth < 768){
             screenSize = "small";
             $playerRoot.addClass("small");
@@ -136,6 +141,7 @@ const View = function($container){
             $playerRoot.removeClass("medium");
             $playerRoot.removeClass("small");
             $playerRoot.removeClass("xsmall");
+            $playerRoot.removeClass("xxsmall");
             calcPlayerWidth();
             if(screenSize !== currentPlayerSize){
                 currentPlayerSize = screenSize;
