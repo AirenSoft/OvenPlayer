@@ -118,8 +118,7 @@
         instance.stream = null;
         instance.webSocket = null;
         instance.peerConnection = null;
-        instance.iceServers = null;
-        instance.iceTransportPolicy = null;
+        instance.connectionConfig = {};
 
         instance.status = 'creating';
 
@@ -223,6 +222,49 @@
                 });
         }
 
+        // From https://webrtchacks.com/limit-webrtc-bandwidth-sdp/
+        function setBitrateLimit(sdp, media, bitrate) {
+
+            let lines = sdp.split('\n');
+            let line = -1;
+
+            for (let i = 0; i < lines.length; i++) {
+                if (lines[i].indexOf('m=' + media) === 0) {
+                    line = i;
+                    break;
+                }
+            }
+            if (line === -1) {
+                // Could not find the m line for media
+                return sdp;
+            }
+
+            // Pass the m line
+            line++;
+
+            // Skip i and c lines
+            while (lines[line].indexOf('i=') === 0 || lines[line].indexOf('c=') === 0) {
+
+                line++;
+            }
+
+            // If we're on a b line, replace it
+            if (lines[line].indexOf('b') === 0) {
+
+                lines[line] = 'b=AS:' + bitrate;
+
+                return lines.join('\n');
+            }
+
+            // Add a new b line
+            let newLines = lines.slice(0, line)
+
+            newLines.push('b=AS:' + bitrate)
+            newLines = newLines.concat(lines.slice(line, lines.length))
+
+            return newLines.join('\n')
+        }
+
         function initWebSocket(connectionUrl) {
 
             if (!connectionUrl) {
@@ -293,18 +335,18 @@
 
         }
 
-        function createPeerConnection(id, peerId, sdp, candidates, iceServers) {
+        function createPeerConnection(id, peerId, offer, candidates, iceServers) {
 
             let peerConnectionConfig = {};
 
-            if (instance.iceServers) {
+            if (instance.connectionConfig.iceServers) {
 
                 // first priority using ice servers from local config.
-                peerConnectionConfig.iceServers = instance.iceServers;
+                peerConnectionConfig.iceServers = instance.connectionConfig.iceServers;
 
-                if (instance.iceTransportPolicy) {
+                if (instance.connectionConfig.iceTransportPolicy) {
 
-                    peerConnectionConfig.iceTransportPolicy = instance.iceTransportPolicy;
+                    peerConnectionConfig.iceTransportPolicy = instance.connectionConfig.iceTransportPolicy;
                 }
             } else if (iceServers) {
 
@@ -374,22 +416,26 @@
                 peerConnection.addTrack(track, instance.stream);
             });
 
-            peerConnection.setRemoteDescription(new RTCSessionDescription(sdp))
+            if (instance.connectionConfig.maxVideoBitrate) {
+
+                // if bandwith limit is set. modify sdp from ome to limit acceptable bandwidth of ome
+                offer.sdp = setBitrateLimit(offer.sdp, 'video', instance.connectionConfig.maxVideoBitrate);
+            }
+
+            peerConnection.setRemoteDescription(new RTCSessionDescription(offer))
                 .then(function () {
 
                     peerConnection.createAnswer()
-                        .then(function (desc) {
+                        .then(function (answer) {
 
-                            peerConnection.setLocalDescription(desc)
+                            peerConnection.setLocalDescription(answer)
                                 .then(function () {
-
-                                    let localSDP = peerConnection.localDescription;
 
                                     sendMessage(instance.webSocket, {
                                         id: id,
                                         peer_id: peerId,
                                         command: 'answer',
-                                        sdp: localSDP
+                                        sdp: answer
                                     });
                                 })
                                 .catch(function (error) {
@@ -501,13 +547,7 @@
 
             if (connectionConfig) {
 
-                if (connectionConfig.iceServers) {
-                    instance.iceServers = connectionConfig.iceServers;
-                }
-
-                if (connectionConfig.iceTransportPolicy) {
-                    instance.iceTransportPolicy = connectionConfig.iceTransportPolicy;
-                }
+                instance.connectionConfig = connectionConfig;
             }
 
             initWebSocket(connectionUrl);
