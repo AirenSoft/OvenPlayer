@@ -37,7 +37,6 @@ const Dash = function (element, playerConfig, adTagUrl) {
     let superPlay_func = null;
     let superDestroy_func = null;
     let seekPosition_sec = 0;
-    let isDashMetaLoaded = false;
     let prevLLLiveDuration = null;
     let loadRetryer = null;
     let sourceOfFile = "";
@@ -273,7 +272,6 @@ const Dash = function (element, playerConfig, adTagUrl) {
 
             OvenPlayerConsole.log("DASH : PLAYBACK_METADATA_LOADED  : ", dash.getQualityFor("video"), dash.getBitrateInfoListFor('video'), dash.getBitrateInfoListFor('video')[dash.getQualityFor("video")]);
 
-            isDashMetaLoaded = true;
             let subQualityList = dash.getBitrateInfoListFor('video');
             spec.currentQuality = dash.getQualityFor("video");
             for (let i = 0; i < subQualityList.length; i++) {
@@ -306,28 +304,12 @@ const Dash = function (element, playerConfig, adTagUrl) {
 
         that.play = (mutedPlay) => {
 
-            let retryCount = 0;
             if (that.getState() === STATE_AD_PLAYING || that.getState() === STATE_AD_PAUSED) {
 
             } else {
-                isDashMetaLoaded = false;
-                dash.attachView(element);
-            }
-            //Dash can infinite loading when player is in a paused state for a long time.
-            //Then dash always have to reload(attachView) and wait for MetaLoaded event when resume.
-            (function checkDashMetaLoaded() {
-                retryCount++;
-                if (isDashMetaLoaded) {
-                    superPlay_func(mutedPlay);
-                } else {
 
-                    if (retryCount < 300) {
-                        setTimeout(checkDashMetaLoaded, 100);
-                    } else {
-                        that.play();
-                    }
-                }
-            })();
+                superPlay_func(mutedPlay);
+            }
 
         };
 
