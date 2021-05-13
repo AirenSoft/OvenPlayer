@@ -58,6 +58,21 @@ And we are love to hear about your <b>Experience</b> and <b>Story</b> using Oven
 The voices of real contributors are of great help to our project. We always hope that OvenPlayer will make your project a success.
 
 
+## For more information
+
+* [OvenPlayer Website](https://www.ovenmediaengine.com/ovenplayer) 
+  * Basic Information about OvenPlayer
+* [OvenPlayer Tutorial](https://airensoft.gitbook.io/ovenplayer/)
+  * Quick Start, API Reference, and Examples
+* Test Player
+  * `Without TLS`: [http://demo.ovenplayer.com](http://demo.ovenplayer.com)
+  * `With TLS`: [https://demo.ovenplayer.com](https://demo.ovenplayer.com)
+* [OvenMediaEngine Github](https://github.com/AirenSoft/OvenMediaEngine)
+  * Sub-Second Latency Streaming Server
+* [AirenSoft Website](https://www.airensoft.com/)
+  * AirenSoft's Solutions/Services, and Blog (Tech Journal)
+
+
 ## License
 
 OvenPlayer is licensed under the [MIT license](LICENSE).
