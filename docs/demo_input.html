@@ -97,7 +97,7 @@
             <a class="nav-link" href="./demo.html" target="_blank">Stream Playback</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link active" href="demo_input_old.html" target="_blank">WebRTC Input
+            <a class="nav-link active" href="demo_input.html" target="_blank">WebRTC Input
                 <span class="badge badge-info ml-2">Beta</span>
             </a>
 
@@ -478,22 +478,22 @@
                 select.append(option);
             });
 
-            if (type === 'video') {
-
-                let option = $('<option></option>');
-
-                option.text('Display capture');
-                option.val('displayCapture');
-
-                if (!navigator.mediaDevices.getDisplayMedia) {
-
-                    option.text('Display capture (Not supported)');
-                    option.attr('disabled', 'disabled');
-                }
-
-
-                select.append(option);
-            }
+            // if (type === 'video') {
+            //
+            //     let option = $('<option></option>');
+            //
+            //     option.text('Display capture');
+            //     option.val('displayCapture');
+            //
+            //     if (!navigator.mediaDevices.getDisplayMedia) {
+            //
+            //         option.text('Display capture (Not supported)');
+            //         option.attr('disabled', 'disabled');
+            //     }
+            //
+            //
+            //     select.append(option);
+            // }
         }
 
         select.find('option').eq(0).prop('selected', true);
@@ -641,9 +641,13 @@
 
         if (input) {
 
-            input.startStreaming(webRtcUrlInput.val(), {
-                maxVideoBitrate: parseInt(videoBitrateInput.val())
-            });
+            let connectionConfig = {};
+
+            if (videoBitrateInput.val()) {
+                connectionConfig.maxVideoBitrate = parseInt(videoBitrateInput.val());
+            }
+
+            input.startStreaming(webRtcUrlInput.val(), connectionConfig);
         }
     }
 
@@ -708,7 +712,15 @@
             bitrateSpan.text('-');
             return;
         }
-        const sender = input.peerConnection.getSenders()[1];
+
+        let sender = null;
+
+        input.peerConnection.getSenders().forEach(function (s) {
+
+            if (s.track && s.track.kind === 'video') {
+                sender = s;
+            }
+        });
 
         if (!sender) {
             bitrateSpan.text('-');
@@ -720,10 +732,12 @@
                 let bytes;
                 let headerBytes;
                 let packets;
+
                 if (report.type === 'outbound-rtp') {
                     if (report.isRemote) {
                         return;
                     }
+
                     const now = report.timestamp;
                     bytes = report.bytesSent;
                     headerBytes = report.headerBytesSent;
@@ -740,7 +754,14 @@
 
                         bitrateSpan.text(bitrate.toFixed(2) + 'kbps');
                     }
+
+                    // console.log('framesEncoded', report.framesEncoded, 'keyFramesEncoded', report.keyFramesEncoded, report.framesEncoded / report.keyFramesEncoded + '(' + report.framesPerSecond + 'fps)')
                 }
+
+                if (report.type === 'track') {
+                    // console.log(report)
+                }
+
             });
             lastResult = res;
         });
