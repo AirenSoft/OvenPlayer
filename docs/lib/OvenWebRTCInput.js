@@ -403,6 +403,31 @@
                 }
             }
 
+            let advancedSetting = {
+                optional: [
+                    {
+                        googHighStartBitrate: {
+                            exact: !0
+                        }
+                    },
+                    {
+                        googPayloadPadding: {
+                            exact: !0
+                        }
+                    },
+                    {
+                        googScreencastMinBitrate: {
+                            exact: 500
+                        }
+                    },
+                    {
+                        enableDscp: {
+                            exact: true
+                        }
+                    }
+                ]
+            };
+
             console.info(logHeader, 'Create Peer Connection With Config', peerConnectionConfig);
 
             let peerConnection = new RTCPeerConnection(peerConnectionConfig);
@@ -462,7 +487,8 @@
             }
 
             peerConnection.onicecandidate = function (e) {
-                if (e.candidate) {
+
+                if (e.candidate && e.candidate.candidate) {
 
                     console.info(logHeader, 'Candidate Sent', '\n', e.candidate.candidate, '\n', e);
 
@@ -567,6 +593,7 @@
 
                 instance.peerConnection.close();
                 instance.peerConnection = null;
+                delete instance.peerConnection;
             }
 
             // release video, audio stream
@@ -583,6 +610,7 @@
                 }
 
                 instance.stream = null;
+                delete instance.stream;
             }
 
             // release websocket
@@ -590,7 +618,10 @@
 
                 instance.webSocket.close();
                 instance.webSocket = null;
+                delete instance.webSocket;
             }
+
+            instance.status = 'removed';
 
             console.info(logEventHeader, 'Removed');
 
