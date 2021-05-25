@@ -118,6 +118,7 @@
                                     </div>
                                 </div>
                                 <input type="text" class="form-control" placeholder="Please Enter URL." v-model="url">
+                                <input type="text" class="form-control" placeholder="Label (e.g. 1080p)" v-model="label">
                                 <div class="input-group-append">
                                     <button class="btn btn-outline-success" type="button" v-on:click="addSource">Add Source</button>
                                 </div>
@@ -151,6 +152,7 @@
                         <div class="card-body">
                             <strong>{{ source.type }}</strong>
                             <span>{{ source.file }}</span>
+                            <i>{{ source.label }}</i>
                             <button type="button" class="close" aria-label="Close" v-on:click="removeSource(index)">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -431,6 +433,7 @@ player = OvenPlayer.create("player", {
             choicedProtocol: "Protocol",
             protocols: ["webrtc", "hls", "dash", "http"],
             url: "",
+            label: null,
             sources: preSources || [],
             sourceId: 0,
             errorMessage: "",
@@ -506,6 +509,7 @@ player = OvenPlayer.create("player", {
 
                 var sources1 = {
                     id: this.sourceId++,
+                    label: this.label,
                     file: this.url,
                     type: this.choicedProtocol === "http" ? "mp4" : this.choicedProtocol
                 };
@@ -652,6 +656,7 @@ player = OvenPlayer.create("player", {
 
                     var sourceR = {
                         file: source.file,
+                        label: source.label,
                         type: source.type,
                     };
 
