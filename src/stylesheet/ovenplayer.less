@@ -343,7 +343,6 @@
   text-align: inherit;
   overflow: hidden;
   font-weight: 100;
-  font-size : 30px;
   text-indent: 0 !important;
 
   &:focus, & {
@@ -358,7 +357,8 @@ i.op-con{
   speak: none;
 
   font-size: inherit;
-  width: 30px;
+  width: auto;
+  font-size : 30px;
   line-height: 30px;
 
   display: block;
@@ -635,8 +635,7 @@ i.op-con{
   position: absolute;
   top: 50%;
   left: 50%;
-  margin-top: -40px;
-  margin-left: -40px;
+  transform: translate(-50%, -50%);
   text-align: center;
   z-index : 5;
   .op-bigbutton {
@@ -808,7 +807,6 @@ i.op-con{
     position: absolute;
     left: 0px;
     bottom: 0px;
-    height: 54px;
     width : 100%;
     z-index : 5;
     .op-gradient-bottom {
@@ -880,7 +878,6 @@ i.op-con{
         position: absolute;
         top: 0;
         left: 0;
-        height: 50px;
         padding: 14px 0 10px 0;
         &:after{
           content: '';
@@ -891,7 +888,6 @@ i.op-con{
         position: absolute;
         top: 0;
         right: 0;
-        height: 50px;
         padding: 14px 0 10px 0;
         &:after{
           content: '';
@@ -1459,8 +1455,6 @@ i.op-con{
 .op-wrapper.ovenplayer.xsmall{
   font-size : 10px;
   .op-bigbutton-container {
-    margin-top: -30px;
-    margin-left: -30px;
 
     .op-bigbutton {
       width: 60px;
