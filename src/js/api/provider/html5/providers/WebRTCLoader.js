@@ -159,6 +159,71 @@ const WebRTCLoader = function (provider, webSocketUrl, loadCallback, errorTrigge
 
     }
 
+    // return -1 if no opus;
+    // return opus format number
+    function getOpusFormatNumber(sdp) {
+
+        const lines = sdp.split('\n');
+        let opusFormatNumber = -1;
+
+        for (let i = 0; i < lines.length - 1; i++) {
+
+            lines[i] = lines[i].toLowerCase();
+
+            if (lines[i].indexOf('a=rtpmap') > -1 && lines[i].indexOf('opus') > -1) {
+                // parsing "a=rtpmap:102 OPUS/48000/2" line
+                opusFormatNumber = lines[i].split(' ')[0].split(':')[1];
+                break;
+            }
+        }
+
+        return opusFormatNumber;
+    }
+
+    function checkOpusIsStereo(sdp, opusFormatNumber) {
+
+        const lines = sdp.split('\n');
+
+        let stereo = false;
+
+        for (let i = 0; i < lines.length - 1; i++) {
+
+            lines[i] = lines[i].toLowerCase();
+
+            // check stereo=1 from "a=fmtp:102 sprop-stereo=1;stereo=1;minptime=10;useinbandfec=1"
+            if (lines[i].indexOf('a=fmtp:' + opusFormatNumber) > -1) {
+
+                if (lines[i].indexOf('stereo=1') > -1) {
+                    stereo = true;
+                }
+                break;
+            }
+        }
+
+        return stereo;
+    }
+
+    function mungeSdpForceStereoOpus(sdp, opusFormatNumber) {
+
+        const lines = sdp.split('\n');
+
+        // find this line and modify. "a=fmtp:102 minptime=10;useinbandfec=1"
+        for (let i = 0; i < lines.length - 1; i++) {
+
+            // check stereo=1 from "a=fmtp:102 sprop-stereo=1;stereo=1;minptime=10;useinbandfec=1"
+            if (lines[i].indexOf('a=fmtp:' + opusFormatNumber) > -1) {
+
+                if (lines[i].indexOf('stereo=1') === -1) {
+
+                    lines[i] = lines[i] + ';stereo=1';
+                }
+                break;
+            }
+        }
+
+        return lines.join('\n');
+    }
+
     function createMainPeerConnection(id, peerId, sdp, candidates, iceServers, resolve) {
 
         let peerConnectionConfig = {};
@@ -241,6 +306,18 @@ const WebRTCLoader = function (provider, webSocketUrl, loadCallback, errorTrigge
 
                 peerConnection.createAnswer()
                     .then(function (desc) {
+
+                        const opusFormatNumber = getOpusFormatNumber(sdp.sdp);
+
+                        if (opusFormatNumber > -1) {
+
+                            if (checkOpusIsStereo(sdp.sdp, opusFormatNumber)) {
+
+                                //If offer has opus and if it is stereo, munge local sdp to force stereo=1
+                                //Thanks to community https://github.com/AirenSoft/OvenMediaEngine/issues/203
+                                desc.sdp = mungeSdpForceStereoOpus(desc.sdp, opusFormatNumber);
+                            }
+                        }
 
                         OvenPlayerConsole.log("create Host Answer : success");
 
