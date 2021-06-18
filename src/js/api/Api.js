@@ -319,7 +319,16 @@ const Api = function(container){
             if(currentProvider){
                 currentProvider.setCurrentQuality(0);
             }
-            playlistManager.initPlaylist(playlist, playerConfig);
+
+            if ('sources' in playlist) {
+                playerConfig.setPlaylist(playlist);
+            } else {
+                playerConfig.setPlaylist({
+                    sources: playlist
+                });
+            }
+
+            playlistManager.initPlaylist(playerConfig.getPlaylist(), playerConfig);
         }
         return initProvider();
 

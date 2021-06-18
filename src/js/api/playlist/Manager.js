@@ -1,5 +1,5 @@
 import _ from "utils/underscore";
-import {isRtmp, isWebRTC, isDash } from "utils/validator";
+import {isRtmp, isWebRTC, isDash, isHls } from "utils/validator";
 import {extractExtension ,trim} from "../../utils/strings";
 import SupportChecker from "../SupportChecker";
 import {PLAYLIST_CHANGED} from "api/constants";
@@ -47,6 +47,8 @@ const Manager = function(provider){
             source.type = 'rtmp';
         }else if(isWebRTC(source.file)){
             source.type = 'webrtc';
+        }else if(isHls(source.file, source.type)){
+            source.type = 'hls';
         }else if(isDash(source.file, source.type)){
             source.type = 'dash';
         }else if (!source.type) {
