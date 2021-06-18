@@ -212,6 +212,10 @@ const Helpers = function($container, api){
                 dont_show_message = true;
             }
 
+            if (error.code === 101 && api.getPlaylist().length === 0) {
+                dont_show_message = true;
+            }
+
             if (dont_show_message) {
                 return;
             }

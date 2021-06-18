@@ -494,10 +494,13 @@ const Api = function(container){
         currentProvider.stop();
     };
     that.remove = () => {
-        if(!currentProvider){return null;}
 
         OvenPlayerConsole.log("API : remove() ");
-        lazyQueue.destroy();
+
+        if (lazyQueue) {
+            lazyQueue.destroy();
+        }
+
         if(captionManager){
             captionManager.destroy();
             captionManager = null;

@@ -57,7 +57,7 @@ const SettingButton = function ($container, api) {
             };
             panel.body.push(body);
         }
-        if (sources.length > 0) {
+        if (sources && sources.length > 0) {
 
             let body = {
                 title : PANEL_TITLE.source,
@@ -69,7 +69,7 @@ const SettingButton = function ($container, api) {
 
             panel.body.push(body);
         }
-        if (qualityLevels.length > 0) {
+        if (qualityLevels && qualityLevels.length > 0) {
 
             let body = {
                 title : PANEL_TITLE.quality,
@@ -81,7 +81,7 @@ const SettingButton = function ($container, api) {
 
             panel.body.push(body);
         }
-        if (captions.length > 0) {
+        if (captions && captions.length > 0) {
 
             let body = {
                 title : PANEL_TITLE.caption,
