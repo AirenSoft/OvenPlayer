@@ -7,7 +7,7 @@ In short, OvenPlayer is <b>Open-Source HTML5 Player</b>.
 
 OvenPlayer supports WebRTC Signaling from OvenMediaEngine for Sub-Second Latency Streaming. And, it automatically plays and fallbacks using <b>WebRTC</b>, <b>Low Latency MPEG-DASH</b> (LLDASH), <b>MPEG-DASH</b>, <b>HLS</b>, and <b>RTMP</b>.
 
-See the picture below.
+See the picture below:
 <img src="docs/assets/images/01_OvenPlayer_210512.png" style="max-width: 100%; height: auto;">
 
 We also provide [OvenMediaEngine](https://github.com/AirenSoft/OvenMediaEngine), Open-Source Sub-Second Latency Streaming Server.
@@ -15,10 +15,10 @@ We also provide [OvenMediaEngine](https://github.com/AirenSoft/OvenMediaEngine),
 
 ## What is the goal of this project?
 
-AirenSoft's goal is to make it easier for you to build a stable broadcasting/streaming service with Sub-Second Latency.
+AirenSoft aims to make it easier for you to build a stable broadcasting/streaming service with Sub-Second Latency.
 Therefore, we will continue developing and providing the most optimized tools for smooth Sub-Second Latency Streaming.
 
-Please click on each link below for details.
+Would you mind clicking on each link below for details:
 * ["Live Streaming Encoder for Mobile" <b>OvenLiveKit SDK](https://www.airensoft.com/olk)</b>
 * ["Sub-Second Latency Streaming Server" <b>OvenMediaEngine](https://www.ovenmediaengine.com/ome)</b>
 * ["HTML5 Player" <b>OvenPlayer](https://www.ovenmediaengine.com/ovenplayer)</b>
@@ -26,7 +26,7 @@ Please click on each link below for details.
 
 ## Features
 
-* HTML5 Standard Player 
+* HTML5 Standard Player
 * Streaming Playback with Various Protocols
     * Sub-Second Latency: WebRTC (Signalling Protocol Conforms to the OME Specification)
     * Low Latency: MPEG-DASH (Chunked CMAF)
@@ -51,12 +51,19 @@ Start the [Demo](https://airensoft.github.io/OvenPlayer/docs/demo.html) and see 
 
 ## How to contribute
 
-Please read our [Guidelines](CONTRIBUTING.md) and [Rules](CODE_OF_CONDUCT.md).
+We appreciate your interest in OvenPlayer.
 
-And we are love to hear about your <b>Experience</b> and <b>Story</b> using OvenPlayer. If you are interested, please email us at [contact@airensoft.com](mailto:contact@airensoft.com) to share <u>Why you chose OvenPlayer</u>, <u>How to use it</u>, and more.
+We need your help to keep and develop our open-source project, and we want to tell you that you can contribute in many ways. Please read our [Guidelines](CONTRIBUTING.md), [Rules](CODE_OF_CONDUCT.md), and [Contribute](https://www.ovenmediaengine.com/contribute).
 
-The voices of real contributors are of great help to our project. We always hope that OvenPlayer will make your project a success.
+- [Finding Bugs](https://github.com/AirenSoft/OvenPlayer/blob/master/CONTRIBUTING.md#finding-bugs)
+- [Reviewing Code](https://github.com/AirenSoft/OvenPlayer/blob/master/CONTRIBUTING.md#reviewing-code)
+- [Sharing Ideas](https://github.com/AirenSoft/OvenPlayer/blob/master/CONTRIBUTING.md#sharing-ideas)
+- [Testing](https://github.com/AirenSoft/OvenPlayer/blob/master/CONTRIBUTING.md#testing)
+- [Improving Documentation](https://github.com/AirenSoft/OvenPlayer/blob/master/CONTRIBUTING.md#improving-documentation)
+- [Spreading & Use Cases](https://github.com/AirenSoft/OvenPlayer/blob/master/CONTRIBUTING.md#spreading--use-cases)
+- [Recurring Donations](https://github.com/AirenSoft/OvenPlayer/blob/master/CONTRIBUTING.md#recurring-donations)
 
+We always hope that OvenPlayer will make your project a success.
 
 ## For more information
 
