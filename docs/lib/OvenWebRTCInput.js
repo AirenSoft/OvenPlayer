@@ -60,8 +60,8 @@
 
         // High resolution video constraints makes browser to get maximum resolution of video device.
         const constraints = {
-            audio: {deviceId: undefined},
-            video: {deviceId: undefined, width: 1920, height: 1080}
+            audio: { deviceId: undefined },
+            video: { deviceId: undefined, width: 1920, height: 1080 }
         };
 
         return await navigator.mediaDevices.getUserMedia(constraints);
@@ -179,6 +179,10 @@
 
                     console.error(logHeader, 'Can\'t Get Media Stream From Input Device', error);
                     errorHandler(instance, error);
+
+                    return new Promise(function (resolve, reject) {
+                        reject(error);
+                    });
                 });
         }
 
@@ -211,7 +215,6 @@
                     }
 
                     return new Promise(function (resolve) {
-
                         resolve(stream);
                     });
                 })
@@ -219,6 +222,10 @@
 
                     console.error(logHeader, 'Can\'t Get Media Stream From Display', error);
                     errorHandler(instance, error);
+
+                    return new Promise(function (resolve, reject) {
+                        reject(error);
+                    });
                 });
         }
 
