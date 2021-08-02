@@ -353,10 +353,6 @@ const ProgressBar = function($container, api, isAd){
                 drawHoverProgress(percentage);
                 drawTimeIndicator(percentage, event);
             }
-        },
-        "mousemove document" : function(event, $current, template){
-
-            event.preventDefault();
 
             if (mouseDown && !isMobile) {
                 const percentage = calculatePercentage(event);
@@ -370,7 +366,7 @@ const ProgressBar = function($container, api, isAd){
                 drawTimeIndicator(percentage, event);
             }
         },
-        "mouseup document" : function(event, $current, template){
+        "mouseup .op-progressbar" : function(event, $current, template){
 
             event.preventDefault();
 

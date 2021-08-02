@@ -81,19 +81,26 @@ const OvenTemplate = function (container, templateName, playerConfig, data, even
                 }
             }, true);*/
 
+            let eventOption = null;
+
+            if (eventName.indexOf('touch') > -1) {
+                eventOption = { passive: true };
+            }
+
             //sometimes target is NodeList
             let nodeLength = $target.get().length;
+
             if(nodeLength > 1){
                 let nodeList = $target.get();
                 for(let i = 0; i < nodeLength; i ++){
-                    nodeList[i].addEventListener(eventName, wrappedFunc);
+                    nodeList[i].addEventListener(eventName, wrappedFunc, eventOption);
                 }
                 //IE NodeList doesn't have forEach. It's wack.
                 //$target.get().forEach(function($item){
                 //    $item.addEventListener(eventName, wrappedFunc);
                 //});
             }else{
-                $target.get().addEventListener(eventName, wrappedFunc);
+                $target.get().addEventListener(eventName, wrappedFunc, eventOption);
             }
 
 
