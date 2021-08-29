@@ -11,7 +11,6 @@ import {version} from 'version';
 import {ApiRtmpExpansion} from 'api/ApiExpansions';
 import {analUserAgent} from "utils/browser";
 import {pickCurrentSource} from "api/provider/utils";
-import LA$ from 'utils/likeA$';
 
 /**
  * @brief   This object connects UI to the provider.
@@ -23,8 +22,7 @@ const Api = function(container){
     const that = {};
     EventEmitter(that);
 
-
-    console.log("[[OvenPlayer]] v."+ version);
+    console.log("[OvenPlayer] v."+ version);
     OvenPlayerConsole.log("API loaded.");
 
     let playlistManager = PlaylistManager(that);
@@ -36,12 +34,7 @@ const Api = function(container){
     let lazyQueue = "";
     let captionManager = "";
 
-    let webrtcRetry = false;
-    let WEBRTC_RETRY_COUNT = 3;
-    let webrtcRetryCount = WEBRTC_RETRY_COUNT;
     let webrtcRetryInterval = 1000;
-    let webrtcRetryTimer = null;
-
 
     const runNextPlaylist = function(index){
         OvenPlayerConsole.log("runNextPlaylist");
@@ -99,11 +92,14 @@ const Api = function(container){
                 currentProvider.destroy();
                 currentProvider = null;
             }
+
             if(captionManager){
                 captionManager.destroy();
                 captionManager = null;
             }
+
             captionManager = CaptionManager(that, playlistManager.getCurrentPlaylistIndex());
+
             OvenPlayerConsole.log("API : init() captions");
 
             let currentSourceIndex = pickCurrentSource(playlistManager.getCurrentSources(), playerConfig);
@@ -199,7 +195,6 @@ const Api = function(container){
 
 
     /**
-     * API 초기화 함수
      * init
      * @param      {object} options player initial option value.
      * @returns
@@ -215,10 +210,6 @@ const Api = function(container){
         playerConfig = Configurator(options, that);
         OvenPlayerConsole.log("API : init()");
         OvenPlayerConsole.log("API : init() config : ", playerConfig);
-
-        if (playerConfig.getConfig().webrtcConfig && playerConfig.getConfig().webrtcConfig.loadingRetryCount !== undefined) {
-            WEBRTC_RETRY_COUNT = playerConfig.getConfig().loadingRetryCount;
-        }
 
         //Not working : SyntaxError: "ERRORS.codes" is read-only
         ERRORS.codes = playerConfig.getSystemText().api.error;
@@ -449,33 +440,33 @@ const Api = function(container){
 
         OvenPlayerConsole.log("API : setAutoQuality() ", isAuto);
         return currentProvider.setAutoQuality(isAuto);
-    }
+    };
 
     that.getCaptionList = () => {
         if(!captionManager){return null;}
         OvenPlayerConsole.log("API : getCaptionList() ", captionManager.getCaptionList());
         return captionManager.getCaptionList();
-    }
+    };
     that.getCurrentCaption = () => {
         if(!captionManager){return null;}
         OvenPlayerConsole.log("API : getCurrentCaption() ", captionManager.getCurrentCaption());
         return captionManager.getCurrentCaption();
-    }
+    };
     that.setCurrentCaption = (index) => {
         if(!captionManager){return null;}
         OvenPlayerConsole.log("API : setCurrentCaption() ", index);
         captionManager.setCurrentCaption(index);
-    }
+    };
     that.addCaption = (track) => {
         if(!captionManager){return null;}
         OvenPlayerConsole.log("API : addCaption() ")
         return captionManager.addCaption(track);
-    }
+    };
     that.removeCaption = (index) => {
         if(!captionManager){return null;}
         OvenPlayerConsole.log("API : removeCaption() ", index)
         return captionManager.removeCaption(index);
-    }
+    };
 
     that.getBuffer = () => {
         if(!currentProvider){return null;}

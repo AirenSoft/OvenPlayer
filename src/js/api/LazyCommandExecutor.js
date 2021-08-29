@@ -28,12 +28,12 @@ const LazyCommandExecutor = function (instance, queuedCommands) {
             }
         };
     });
-    var executeQueuedCommands = function () {
+    const executeQueuedCommands = function () {
         while (commandQueue.length > 0) {
             const { command, args } = commandQueue.shift();
             (undecoratedMethods[command] || instance[command]).apply(instance, args);
         }
-    }
+    };
 
     that.setExecuteMode = (mode) => {
         executeMode = mode;
@@ -42,15 +42,15 @@ const LazyCommandExecutor = function (instance, queuedCommands) {
     that.getUndecoratedMethods = function(){
         OvenPlayerConsole.log("LazyCommandExecutor : getUndecoratedMethods()", undecoratedMethods);
         return undecoratedMethods;
-    }
+    };
     that.getQueue = function(){
         OvenPlayerConsole.log("LazyCommandExecutor : getQueue()", getQueue);
         return commandQueue;
-    }
+    };
     that.addQueue = function(command, args){
         OvenPlayerConsole.log("LazyCommandExecutor : addQueue()", command, args);
         commandQueue.push({ command, args });
-    }
+    };
 
     that.flush = function(){
         OvenPlayerConsole.log("LazyCommandExecutor : flush()");

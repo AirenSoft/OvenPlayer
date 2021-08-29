@@ -62,7 +62,7 @@
     <script src="lib/popper.min.js"></script>
     <script src="lib/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-toast-plugin/1.3.2/jquery.toast.js"></script>
-    <script src="../dist/development/ovenplayer/ovenplayer.js?2021022216"></script>
+    <script src="../../dist/ovenplayer.js"></script>
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -78,7 +78,7 @@
                 <a class="nav-link" href="./demo.html">Player Demo</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="./ome_demo.html">Ultra Low Latency Demo</a>
+                <a class="nav-link" href="./ome_demo.html">Sub-Second Latency Demo</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="https://github.com/AirenSoft/OvenPlayer" target="_blank">GitHub</a>
@@ -244,43 +244,21 @@ player = OvenPlayer.create("player", {
     var defaultSources = [
         {
             type: 'mp4',
-            file: '../dist/OCP_480.mp4',
+            file: './assets/OCP_480.mp4',
             label: '480p'
         },
         {
             type: 'mp4',
-            file: '../dist/OCP_720.mp4',
+            file: './assets/OCP_720.mp4',
             label: '720p'
         },
         {
             type: 'mp4',
-            file: '../dist/OCP_1080.mp4',
+            file: './assets/OCP_1080.mp4',
             label: '1080p'
         }
     ];
 
-    var tracks = [
-        {
-            file: '../dist/caption_en.srt',
-            kind: "captions",
-            label: "ENG SRT"
-        },
-        {
-            file: '../dist/caption_en.vtt',
-            kind: "captions",
-            label: "ENG VTT"
-        },
-        {
-            file: '../dist/caption_ko.smi',
-            kind: "captions",
-            label: "KOR SMI"
-        },
-        {
-            file: '../dist/caption_ko.vtt',
-            kind: "captions",
-            label: "KOR VTT"
-        }
-    ];
 
     if (urlSources) {
         preSources = JSON.parse(urlSources);

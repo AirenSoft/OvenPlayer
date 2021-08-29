@@ -38,7 +38,7 @@
     <script src="docs/lib/jquery-1.12.4.min.js"></script>
     <script src="docs/lib/popper.min.js"></script>
     <script src="docs/lib/bootstrap.min.js"></script>
-    <script src="dist/production/ovenplayer/ovenplayer.js"></script>
+    <script src="./dist/ovenplayer.js"></script>
     <style>
         header.masthead {
             position: relative;
@@ -70,7 +70,7 @@
                     <a class="nav-link text-light" href="docs/demo.html">Player Demo</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-light" href="docs/ome_demo.html">Ultra Low Latency Demo</a>
+                    <a class="nav-link text-light" href="docs/ome_demo.html">Sub-Second Latency Demo</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link text-light" href="https://github.com/AirenSoft/OvenPlayer" target="_blank">GitHub</a>
@@ -107,46 +107,46 @@
 
     <script>
 
-        var defaultSources = [{
+        const defaultSources = [{
                 type: 'mp4',
-                file:  '../dist/OCP_480.mp4',
+                file:  './docs/assets/OCP_480.mp4',
                 label: '480p'
             },
             {
                 type: 'mp4',
-                file: '../dist/OCP_720.mp4',
+                file: './docs/assets/OCP_720.mp4',
                 label: '720p'
             },
             {
                 type: 'mp4',
-                file: '../dist/OCP_1080.mp4',
+                file: './docs/assets/OCP_1080.mp4',
                 label: '1080p'
             }];
-        var tracks = [
+        const tracks = [
             {
-                file: '../dist/caption_en.srt',
+                file: './docs/assets/caption_en.srt',
                 kind: "captions",
                 label: "ENG SRT"
             },
             {
-                file: '../dist/caption_en.vtt',
+                file: './docs/assets/caption_en.vtt',
                 kind: "captions",
                 label: "ENG VTT"
             },
             {
-                file: '../dist/caption_ko.smi',
+                file: './docs/assets/caption_ko.smi',
                 kind: "captions",
                 label: "KOR SMI"
             },
             {
-                file: '../dist/caption_ko.vtt',
+                file: './docs/assets/caption_ko.vtt',
                 kind: "captions",
                 label: "KOR VTT"
             }
         ];
         $( document ).ready(function() {
 
-            var player = OvenPlayer.create("player", {
+            const player = OvenPlayer.create("player", {
                 image : "docs/lib/thumbnail.png",
                 title : "OvenPlayer Demo",
                 sources: defaultSources,

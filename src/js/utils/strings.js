@@ -1,4 +1,4 @@
-import _ from './underscore';
+import _ from 'utils/underscore';
 
 export function trim(string) {
     return string ? string.replace(/^\s+|\s+$/g, '') : "";

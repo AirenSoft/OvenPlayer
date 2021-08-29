@@ -7,6 +7,7 @@ import Controls from 'view/components/controls/main';
 import PanelManager from "view/global/PanelManager";
 import ContextPanel from 'view/components/helpers/contextPanel';
 import LA$ from 'utils/likeA$';
+import ResizeSensor from "utils/resize-sensor";
 import {
     READY,
     DESTROY,
@@ -25,9 +26,8 @@ import {
     PLAYER_CLICKED,
     ERROR
 } from "api/constants";
-import ResizeSensor from "resize-sensor";
 
-require('../../stylesheet/ovenplayer.less');
+import '../../stylesheet/ovenplayer.less';
 
 const View = function($container){
     let viewTemplate = "", controls = "", helper = "", $playerRoot, contextPanel = "", api = "", autoHideTimer = "", playerState = STATE_IDLE;
@@ -62,7 +62,7 @@ const View = function($container){
                 }, 3000);
             }
         }
-    };
+    }
     function togglePlayPause() {
         const currentState = playerState;
 
@@ -76,7 +76,7 @@ const View = function($container){
         }else if(currentState === STATE_PLAYING){
             api.pause();
         }
-    };
+    }
     function seek(seconds, isRewind) {
 
         const duration = api.getDuration();
@@ -90,7 +90,7 @@ const View = function($container){
         }
 
         api.seek(position);
-    };
+    }
     function volume(isUp){
         const currentVolumn = api.getVolume();
         let newVolume = 0;
@@ -100,14 +100,14 @@ const View = function($container){
             newVolume = Math.max(currentVolumn - 5, 0);
         }
         api.setVolume(newVolume);
-    };
+    }
     function createContextPanel(pageX, pageY){
         if(contextPanel){
             contextPanel.destroy();
             contextPanel = null;
         }
         contextPanel = ContextPanel($playerRoot, api, {pageX : pageX, pageY : pageY});
-    };
+    }
 
     function calcPlayerWidth(){
         let playerWidth = $playerRoot.width();
@@ -129,7 +129,7 @@ const View = function($container){
             screenSize = "large";
             $playerRoot.addClass("large");
         }
-    };
+    }
 
     const onRendered = function($current, template){
         $playerRoot = $current;
@@ -148,7 +148,6 @@ const View = function($container){
                 if(api){
                     api.trigger(PLAYER_RESIZED, currentPlayerSize);
                 }
-
             }
         });
 

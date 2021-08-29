@@ -1,5 +1,9 @@
 import SupportChecker from "api/SupportChecker";
-import {ApiRtmpExpansion} from 'api/ApiExpansions';
+import HTML5 from "api/provider/html5/providers/Html5";
+import WebRTC from "api/provider/html5/providers/WebRTC";
+import Dash from "api/provider/html5/providers/Dash";
+import Hls from "api/provider/html5/providers/Hls";
+
 import {
     PROVIDER_HTML5, PROVIDER_WEBRTC, PROVIDER_DASH, PROVIDER_HLS, PROVIDER_RTMP, ERRORS, INIT_UNSUPPORT_ERROR
 } from "api/constants";
@@ -25,54 +29,28 @@ const Controller = function () {
 
     const ProviderLoader = {
         html5: function () {
-            return require.ensure(['api/provider/html5/providers/Html5'], function (require) {
-                    const provider = require('api/provider/html5/providers/Html5').default;
-                    registeProvider(PROVIDER_HTML5, provider);
-                    return {name: PROVIDER_HTML5, provider: provider};
-                }, function (err) {
-                    throw new Error('Network error');
-                }, 'ovenplayer.provider.Html5'
-            );
+
+            const provider = HTML5;
+            registeProvider(PROVIDER_HTML5, provider);
+            return {name: PROVIDER_HTML5, provider: provider};
         },
         webrtc: function () {
-            return require.ensure(['api/provider/html5/providers/WebRTC'], function (require) {
-                    const provider = require('api/provider/html5/providers/WebRTC').default;
-                    registeProvider(PROVIDER_WEBRTC, provider);
-                    return {name: PROVIDER_WEBRTC, provider: provider};
-                }, function (err) {
-                    throw new Error('Network error');
-                }, 'ovenplayer.provider.WebRTCProvider'
-            );
+
+            const provider = WebRTC;
+            registeProvider(PROVIDER_WEBRTC, provider);
+            return {name: PROVIDER_WEBRTC, provider: provider};
         },
         dash: function () {
-            return require.ensure(['api/provider/html5/providers/Dash'], function (require) {
-                    const provider = require('api/provider/html5/providers/Dash').default;
-                    registeProvider(PROVIDER_DASH, provider);
-                    return {name: PROVIDER_DASH, provider: provider};
-                }, function (err) {
-                    throw new Error('Network error');
-                }, 'ovenplayer.provider.DashProvider'
-            );
+
+            const provider = Dash;
+            registeProvider(PROVIDER_DASH, provider);
+            return {name: PROVIDER_DASH, provider: provider};
         },
         hls: function () {
-            return require.ensure(['api/provider/html5/providers/Hls'], function (require) {
-                    const provider = require('api/provider/html5/providers/Hls').default;
-                    registeProvider(PROVIDER_HLS, provider);
-                    return {name: PROVIDER_HLS, provider: provider};
-                }, function (err) {
-                    throw new Error('Network error');
-                }, 'ovenplayer.provider.HlsProvider'
-            );
-        },
-        rtmp: function () {
-            return require.ensure(['api/provider/flash/providers/Rtmp'], function (require) {
-                    const provider = require('api/provider/flash/providers/Rtmp').default;
-                    registeProvider(PROVIDER_RTMP, provider);
-                    return {name: PROVIDER_RTMP, provider: provider};
-                }, function (err) {
-                    throw new Error('Network error');
-                }, 'ovenplayer.provider.RtmpProvider'
-            );
+
+            const provider = Hls;
+            registeProvider(PROVIDER_HLS, provider);
+            return {name: PROVIDER_HLS, provider: provider};
         }
     };
 

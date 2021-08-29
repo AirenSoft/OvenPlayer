@@ -11,7 +11,6 @@ import {
     AD_TIME
 } from "api/constants";
 import {STATE_COMPLETE} from "../../../api/constants";
-//import ResizeSensor from "resize-sensor";
 
 const ProgressBar = function($container, api, isAd){
     const $root = LA$("#"+api.getContainerId());
@@ -216,12 +215,6 @@ const ProgressBar = function($container, api, isAd){
         knobWidth = $knob.width();
         $time = $current.find(".op-progressbar-time");
         $preview = $current.find(".op-progressbar-preview");
-
-        /*new ResizeSensor($progressBar.get(), function() {
-            console.log('Changed  $progressBar' );
-            positionElements(currentPlayingPercentage);
-            drawLoadProgress(currentLoadedPercentage);
-        });*/
 
         if(isAd){
             api.on(AD_TIME, function(data) {
