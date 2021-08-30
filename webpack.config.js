@@ -1,7 +1,5 @@
 const webpack = require('webpack');
-const {merge} = require('webpack-merge');
 const path = require('path');
-const {BundleAnalyzerPlugin} = require('webpack-bundle-analyzer');
 const packageInfo = require('./package.json');
 
 const config = {
@@ -81,10 +79,6 @@ const config = {
     plugins: [
         new webpack.DefinePlugin({
             __VERSION__: `'${packageInfo.version}'`
-        }),
-        new BundleAnalyzerPlugin({
-            analyzerMode: 'static',
-            defaultSizes: 'stat'
         })
     ]
 };
