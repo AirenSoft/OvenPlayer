@@ -3,11 +3,9 @@ const path = require('path');
 const packageInfo = require('./package.json');
 
 const config = {
-
     mode: 'production',
     entry: {
         'ovenplayer': ['core-js/stable', 'whatwg-fetch', './src/js/ovenplayer.js']
-
     },
     target: ['web', 'es5'],
     resolve: {
@@ -42,7 +40,7 @@ const config = {
                                     {
                                         'useBuiltIns': 'entry',
                                         'corejs': 3,
-                                        'targets': {'ie': '11'}
+                                        'targets': { 'ie': '11' }
                                     }
                                 ]
                             ]
@@ -83,7 +81,4 @@ const config = {
     ]
 };
 
-module.exports = (env, args) => {
-
-    return config;
-};
+module.exports = config;
