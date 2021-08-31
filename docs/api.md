@@ -1289,7 +1289,7 @@ Attribute|Type|Memo
 ------|------|-------
 `currentSource`|Number|index of the new quality level in the getSources() array
 
-#### player.on('qualityChanged')
+#### player.on('qualityLevelChanged')
 
 Fired when the active quality level is changed. Happens in response to e.g. a user clicking an option in the quality menu or a script calling `setCurrentQuality`.
 
