@@ -34,12 +34,12 @@ const WebRTCLoader = function (provider, webSocketUrl, loadCallback, errorTrigge
     //closed websocket by ome or client.
     let wsClosedByPlayer = false;
 
-    let recorverPacketLoss = true;
+    let recorverPacketLoss = false;
 
     if (playerConfig.getConfig().webrtcConfig &&
-        playerConfig.getConfig().webrtcConfig.recorverPacketLoss === false) {
+        playerConfig.getConfig().webrtcConfig.recorverPacketLoss === true) {
 
-        recorverPacketLoss = playerConfig.getConfig().webrtcConfig.recorverPacketLoss;
+        recorverPacketLoss = true;
     }
 
     let generatePublicCandidate = true;
