@@ -189,11 +189,6 @@ const Dash = function (element, playerConfig, adTagUrl) {
                 dash.updateSettings({
                     debug: {
                         logLevel: dashjs.Debug.LOG_LEVEL_NONE
-                    },
-                    streaming: {
-                        retryAttempts: {
-                            MPD: 0
-                        }
                     }
                 });
 
