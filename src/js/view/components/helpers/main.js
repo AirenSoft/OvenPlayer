@@ -50,15 +50,18 @@ const Helpers = function($container, api){
                 return;
             }
 
-            if(messageBox){
-                messageBox.destroy();
-            }
+            if (api.getState() === STATE_IDLE || api.getState() === STATE_COMPLETE) {
 
-            if(bigButton){
-                bigButton.destroy();
-            }
+                if (messageBox) {
+                    messageBox.destroy();
+                }
 
-            bigButton = BigButton($current, api, state);
+                if (bigButton) {
+                    bigButton.destroy();
+                }
+
+                bigButton = BigButton($current, api, state);
+            }
         }
         function createMessage(message, description ,withTimer, iconClass, clickCallback, dontClose){
 
