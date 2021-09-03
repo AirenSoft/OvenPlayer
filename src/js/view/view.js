@@ -135,6 +135,7 @@ const View = function($container){
         $playerRoot = $current;
         viewTemplate = template;
         calcPlayerWidth();
+        currentPlayerSize = screenSize;
         new ResizeSensor($playerRoot.get(), function() {
 
             $playerRoot.removeClass("large");
