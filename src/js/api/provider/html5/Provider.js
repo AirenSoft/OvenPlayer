@@ -15,6 +15,7 @@ import {
     AD_CLIENT_GOOGLEIMA, AD_CLIENT_VAST,
     PLAYBACK_RATE_CHANGED, CONTENT_MUTE, PROVIDER_HTML5, PROVIDER_WEBRTC, PROVIDER_DASH, PROVIDER_HLS
 } from "api/constants";
+import {CONTENT_META} from "../../constants";
 
 /**
  * @brief   Core For Html5 Video.
@@ -75,6 +76,7 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
             // sourceElement.src = source.file;
 
             const sourceChanged = (source.file !== previousSource);
+
             if (sourceChanged) {
 
                 elVideo.src = source.file;
@@ -88,28 +90,13 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
                     elVideo.load();
                 }
 
+            }
 
-                if(lastPlayPosition && lastPlayPosition > 0){
+            that.on(CONTENT_META, function () {
+                if (lastPlayPosition > 0) {
                     that.seek(lastPlayPosition);
                 }
-
-            }
-
-            if(lastPlayPosition > 0){
-                that.seek(lastPlayPosition);
-                if(!playerConfig.isAutoStart()){
-                    // that.play();
-                }
-
-            }
-
-            if(playerConfig.isAutoStart()){
-
-                // that.play();
-            }
-            /*that.trigger(CONTENT_SOURCE_CHANGED, {
-                currentSource: spec.currentSource
-            });*/
+            });
         }
 
     };
@@ -166,7 +153,6 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
             //}
 
             OvenPlayerConsole.log("Provider : triggerSatatus", newState);
-
             switch (newState) {
                 case STATE_COMPLETE :
                     that.trigger(PLAYER_COMPLETE);
@@ -188,6 +174,7 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
                         prevState: spec.state,
                         newstate: STATE_PLAYING
                     });
+                    break;
                 case STATE_AD_PLAYING :
                     that.trigger(PLAYER_PLAY, {
                         prevState: spec.state,
@@ -353,9 +340,7 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
                     OvenPlayerConsole.log("Provider : video play success (ie)");
                     isPlayingProcessing = false;
                 }
-
             }
-
         }
 
     };

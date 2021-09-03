@@ -40,7 +40,6 @@ const Dash = function (element, playerConfig, adTagUrl) {
     let prevLLLiveDuration = null;
     let loadRetryer = null;
     let sourceOfFile = "";
-    let runedAutoStart = false;
 
     try {
 
@@ -289,11 +288,11 @@ const Dash = function (element, playerConfig, adTagUrl) {
                 dash.seek(seekPosition_sec);
             }
 
-            if (playerConfig.isAutoStart() && !runedAutoStart) {
-                OvenPlayerConsole.log("DASH : AUTOPLAY()!");
-                that.play();
-                runedAutoStart = true;
-            }
+            // if (playerConfig.isAutoStart() && !runedAutoStart) {
+            //     OvenPlayerConsole.log("DASH : AUTOPLAY()!");
+            //     that.play();
+            //     runedAutoStart = true;
+            // }
 
         });
 

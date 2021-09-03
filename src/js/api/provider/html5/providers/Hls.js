@@ -29,7 +29,6 @@ import {
 const HlsProvider = function (element, playerConfig, adTagUrl) {
     let that = {};
     let hls = null;
-    let superPlay_func = null;
     let superStop_func = null;
     let superDestroy_func = null;
     let loadRetryer = null;
@@ -109,9 +108,6 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
                         that.seek(lastPlayPosition);
                     }
                 }
-                // if (playerConfig.isAutoStart()) {
-                //     that.play();
-                // }
             });
 
             hls.on(Hls.Events.ERROR, function (event, data) {
@@ -131,8 +127,7 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
 
                             that.stop();
                             hls.stopLoad();
-                            hls.startLoad();
-                            that.play();
+                            hls.loadSource(source.file);
                         }
 
                     }, 1000);
@@ -239,26 +234,10 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
             });
         });
 
-        superPlay_func = that.super('play');
         superDestroy_func = that.super('destroy');
         OvenPlayerConsole.log("HLS PROVIDER LOADED.");
 
         superStop_func = that.super('stop');
-
-        that.play = () => {
-
-            if (!isManifestLoaded) {
-                let source = that.getSources()[that.getCurrentSource()].file;
-
-                if (hls) {
-                    hls.loadSource(source);
-                }
-
-            } else {
-                superPlay_func();
-            }
-
-        };
 
         that.stop = () => {
 

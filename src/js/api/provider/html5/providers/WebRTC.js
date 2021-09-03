@@ -62,14 +62,6 @@ const WebRTC = function(element, playerConfig, adTagUrl){
                 //that.destroy();
                 //Do nothing
             });
-
-            that.on(CONTENT_META, function(){
-                if(playerConfig.isAutoStart()){
-                    // if (that.getState() !== 'error') {
-                    //     that.play();
-                    // }
-                }
-            }, that);
         }
     });
     superDestroy_func = that.super('destroy');
@@ -83,7 +75,7 @@ const WebRTC = function(element, playerConfig, adTagUrl){
             element.srcObject = null;
             webrtcLoader = null;
         }
-        that.off(CONTENT_META, null, that);
+
         OvenPlayerConsole.log("WEBRTC :  PROVIDER DESTROYED.");
 
         superDestroy_func();

@@ -6,7 +6,7 @@ import LazyCommandExecutor from "api/LazyCommandExecutor";
 import MediaManager from "api/media/Manager";
 import PlaylistManager from "api/playlist/Manager";
 import ProviderController from "api/provider/Controller";
-import {READY, ERRORS, ERROR, CONTENT_TIME_MODE_CHANGED, INIT_UNKNWON_ERROR, INIT_UNSUPPORT_ERROR, DESTROY, PLAYER_PLAY, NETWORK_UNSTABLED, PLAYER_WEBRTC_NETWORK_SLOW, PLAYER_WEBRTC_UNEXPECTED_DISCONNECT, PLAYER_WEBRTC_SET_LOCAL_DESC_ERROR,
+import {READY, ERRORS, ERROR, CONTENT_COMPLETE, CONTENT_META, INIT_UNKNWON_ERROR, INIT_UNSUPPORT_ERROR, DESTROY, PLAYER_PLAY, NETWORK_UNSTABLED, PLAYER_WEBRTC_NETWORK_SLOW, PLAYER_WEBRTC_UNEXPECTED_DISCONNECT, PLAYER_WEBRTC_SET_LOCAL_DESC_ERROR,
     PLAYER_FILE_ERROR, PROVIDER_DASH, PROVIDER_HLS, PROVIDER_WEBRTC, PROVIDER_HTML5, PROVIDER_RTMP, ALL_PLAYLIST_ENDED} from "api/constants";
 import {version} from 'version';
 import {ApiRtmpExpansion} from 'api/ApiExpansions';
@@ -54,34 +54,12 @@ const Api = function(container){
             playlistManager.setCurrentPlaylist(nextPlaylistIndex);
             initProvider();
 
-
-            if(!playerConfig.isAutoStart()){
-                //Anyway nextplaylist runs autoStart!.
-                that.play();
-            }
         }else{
             //All Playlist Ended.
             that.trigger(ALL_PLAYLIST_ENDED, null);
         }
     };
     const initProvider = function(lastPlayPosition){
-        const pickQualityFromSource = (sources) =>{
-            var quality = 0;
-            if (sources) {
-                for (var i = 0; i < sources.length; i++) {
-                    if (sources[i].default) {
-                        quality = i;
-                    }
-                    if (playerConfig.getSourceIndex() === i ) {
-                        return i;
-                    }
-                    /*if (playerConfig.getSourceLabel() && sources[i].label === playerConfig.getSourceLabel() ) {
-                        return i;
-                    }*/
-                }
-            }
-            return quality;
-        };
 
         return providerController.loadProviders(playlistManager.getCurrentPlayList()).then(Providers => {
 
@@ -138,17 +116,23 @@ const Api = function(container){
                         }
                     }
 
-                    if (playerConfig.getConfig().autoFallback && playerConfig.getSourceIndex() + 1 < that.getSources().length) {
-                        //this sequential has available source.
+                    if (playerConfig.getConfig().autoFallback && that.getCurrentSource() + 1 < that.getSources().length) {
+
                         that.pause();
-                        that.setCurrentSource(playerConfig.getSourceIndex() + 1);
+                        that.setCurrentSource(that.getCurrentSource() + 1);
 
                         return;
                     }
                 }
 
-                if(name === "complete"){
+                if(name === CONTENT_COMPLETE){
                     runNextPlaylist(playlistManager.getCurrentPlaylistIndex() + 1);
+                }
+
+                if (name === CONTENT_META) {
+                    if (playerConfig.isAutoStart()) {
+                        that.play();
+                    }
                 }
 
                 that.trigger(name, data);
@@ -158,8 +142,6 @@ const Api = function(container){
 
             //provider's preload() have to made Promise. Cuz it overcomes 'flash loading timing problem'.
             currentProvider.preload(playlistManager.getCurrentSources(), lastPlayPosition).then(function(){
-
-                that.trigger(READY);
 
                 lazyQueue.flush();
                 //This is no reason to exist anymore.
@@ -201,6 +183,11 @@ const Api = function(container){
      * @returns
      **/
     that.init = (options) =>{
+
+        if (!options) {
+            options = {};
+        }
+
         //It collects the commands and executes them at the time when they are executable.
         lazyQueue = LazyCommandExecutor(that, [
             'load','play','pause','seek','stop', 'getDuration', 'getPosition', 'getVolume'
@@ -221,6 +208,10 @@ const Api = function(container){
         OvenPlayerConsole.log("API : init() sources : " , playlistManager.getCurrentSources());
 
         initProvider();
+
+        setTimeout(function () {
+            that.trigger(READY);
+        });
     };
     that.getProviderName = () => {
         if(currentProvider){
@@ -308,6 +299,9 @@ const Api = function(container){
         lazyQueue = LazyCommandExecutor(that, ['play','seek','stop']);
 
         if(playlist){
+
+            playerConfig.setSourceIndex(0);
+
             if(currentProvider){
                 currentProvider.setCurrentQuality(0);
             }
@@ -328,8 +322,15 @@ const Api = function(container){
     that.play = () => {
         if(!currentProvider){return null;}
         OvenPlayerConsole.log("API : play() ");
-        currentProvider.play();
-    }
+
+        if (!currentProvider.metaLoaded() && !playerConfig.isAutoStart()) {
+            that.once(CONTENT_META, function () {
+                currentProvider.play();
+            });
+        } else {
+            currentProvider.play();
+        }
+    };
     that.pause = () => {
         if(!currentProvider){return null;}
 
