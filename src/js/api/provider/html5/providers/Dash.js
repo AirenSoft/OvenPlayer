@@ -153,6 +153,12 @@ const Dash = function (element, playerConfig, adTagUrl) {
                 }
             });
 
+            let dashConfigFromPlayerConfig = playerConfig.getConfig().dashConfig;
+
+            if (dashConfigFromPlayerConfig) {
+                dash.updateSettings(dashConfigFromPlayerConfig);
+            }
+
             that.trigger(DASH_PREPARED, dash);
 
             dash.attachSource(sourceOfFile);
