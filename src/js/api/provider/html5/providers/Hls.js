@@ -82,8 +82,6 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
 
             OvenPlayerConsole.log("HLS : onExtendedLoad : ", source, "lastPlayPosition : " + lastPlayPosition);
 
-            let loadingRetryCount = playerConfig.getConfig().loadingRetryCount;
-
             hls.loadSource(source.file);
 
             hls.once(Hls.Events.MANIFEST_LOADED, function (event, data) {
@@ -132,89 +130,27 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
 
                     }, 1000);
 
-                } else {
-
-                    hls.once(Hls.Events.FRAG_LOADING, function () {
-                        that.setState(STATE_LOADING);
-                    });
-
-                    if (data.type === Hls.ErrorTypes.MEDIA_ERROR) {
-
-                        if (!data.fatal) {
-                            // do nothing when non fatal media error. hlsjs will recover it automatically.
-                            return;
-                        }
-                    }
-
-                    if (loadingRetryCount > 0) {
-
-                        that.setState(STATE_LOADING);
-
-                        if (loadRetryer) {
-                            clearTimeout(loadRetryer);
-                            loadRetryer = null;
-                        }
-
-                        loadingRetryCount = loadingRetryCount - 1;
-
-                        if (data.type === Hls.ErrorTypes.NETWORK_ERROR) {
-
-                            loadRetryer = setTimeout(function () {
-
-                                that.stop();
-
-                                if (hls) {
-
-                                    hls.stopLoad();
-                                    hls.startLoad();
-                                }
-
-                                that.play();
-                            }, 1000);
-                        } else if (data.type === Hls.ErrorTypes.MEDIA_ERROR) {
-
-                            loadRetryer = setTimeout(function () {
-
-                                if (hls) {
-
-                                    hls.recoverMediaError();
-                                }
-
-                                that.play();
-                            }, 1000);
-                        } else {
-
-                            loadRetryer = setTimeout(function () {
-
-                                that.stop();
-
-                                if (hls) {
-
-                                    hls.stopLoad();
-                                    hls.startLoad();
-                                }
-
-                                that.play();
-                            }, 1000);
-                        }
-
-                    } else {
-
-                        let errorType = PLAYER_UNKNWON_NETWORK_ERROR;
-
-                        if (data && data.networkDetails && data.networkDetails.status === 400) {
-                            errorType = PLAYER_BAD_REQUEST_ERROR;
-                        } else if (data && data.networkDetails && data.networkDetails.status === 403) {
-                            errorType = PLAYER_AUTH_FAILED_ERROR;
-                        } else if (data && data.networkDetails && data.networkDetails.status === 406) {
-                            errorType = PLAYER_NOT_ACCEPTABLE_ERROR;
-                        }
-
-                        let tempError = ERRORS.codes[errorType];
-                        tempError.error = data.details;
-                        errorTrigger(tempError, that);
-                    }
+                    return;
                 }
+
+                if (!data.fatal) {
+                    // do nothing when non fatal error. hlsjs will recover it automatically.
+                    return;
+                }
+
+                let errorType = PLAYER_UNKNWON_NETWORK_ERROR;
+
+                if (data && data.networkDetails && data.networkDetails.status === 400) {
+                    errorType = PLAYER_BAD_REQUEST_ERROR;
+                } else if (data && data.networkDetails && data.networkDetails.status === 403) {
+                    errorType = PLAYER_AUTH_FAILED_ERROR;
+                } else if (data && data.networkDetails && data.networkDetails.status === 406) {
+                    errorType = PLAYER_NOT_ACCEPTABLE_ERROR;
+                }
+
+                let tempError = ERRORS.codes[errorType];
+                tempError.error = data.details;
+                errorTrigger(tempError, that);
             });
 
             that.on(PLAYER_STATE, function (data) {
