@@ -1,5 +1,6 @@
+import {version} from 'version'
 import OvenPlayerSDK from './ovenplayer.sdk'
-import {checkAndGetContainerElement} from 'utils/validator';
+import {checkAndGetContainerElement} from 'utils/validator'
 import View from './view/view';
 
 function ovenPlayerFactory() {
@@ -9,6 +10,8 @@ function ovenPlayerFactory() {
     Object.assign(OvenPlayer, OvenPlayerSDK);
 
     OvenPlayer.create = function (container, options) {
+
+        console.log("[OvenPlayer] v."+ version);
 
         let containerElement = checkAndGetContainerElement(container);
 
