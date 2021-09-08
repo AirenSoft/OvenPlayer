@@ -97,18 +97,18 @@ const Api = function(container){
 
                     // Chrome >=80 on Android misses h246 in SDP when first time after web page loaded.
                     // So wait until browser get h264 capabilities and create answer SDP.
-                    if (userAgentObject.os === 'Android' && userAgentObject.browser === 'Chrome') {
-
-                        if (data && data.code && data.code === PLAYER_WEBRTC_SET_LOCAL_DESC_ERROR) {
-
-                            setTimeout(function () {
-
-                                that.setCurrentSource(that.getCurrentSource());
-                            }, webrtcRetryInterval);
-
-                            return;
-                        }
-                    }
+                    // if (userAgentObject.os === 'Android' && userAgentObject.browser === 'Chrome') {
+                    //
+                    //     if (data && data.code && data.code === PLAYER_WEBRTC_SET_LOCAL_DESC_ERROR) {
+                    //
+                    //         setTimeout(function () {
+                    //
+                    //             that.setCurrentSource(that.getCurrentSource());
+                    //         }, webrtcRetryInterval);
+                    //
+                    //         return;
+                    //     }
+                    // }
 
                     if (playerConfig.getConfig().autoFallback && that.getCurrentSource() + 1 < that.getSources().length) {
 
