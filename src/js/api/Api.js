@@ -2,7 +2,7 @@ import OvenPlayerSDK from "ovenplayer.sdk"
 import CaptionManager from "api/caption/Manager";
 import Configurator from "api/Configurator";
 import EventEmitter from "api/EventEmitter";
-import LazyCommandExecutor from "api/LazyCommandExecutor";
+// import LazyCommandExecutor from "api/LazyCommandExecutor";
 import MediaManager from "api/media/Manager";
 import PlaylistManager from "api/playlist/Manager";
 import ProviderController from "api/provider/Controller";
@@ -32,10 +32,7 @@ const Api = function(container){
     let mediaManager = MediaManager(container, userAgentObject);
     let currentProvider = "";
     let playerConfig = "";
-    let lazyQueue = "";
     let captionManager = "";
-
-    let webrtcRetryInterval = 1000;
 
     const runNextPlaylist = function(index){
         OvenPlayerConsole.log("runNextPlaylist");
@@ -49,8 +46,7 @@ const Api = function(container){
         playerConfig.setVolume(currentProvider.getVolume());
 
         if(hasNextPlaylist){
-            //that.pause();
-            lazyQueue = LazyCommandExecutor(that, ['play','seek','stop']);
+
             playlistManager.setCurrentPlaylist(nextPlaylistIndex);
             initProvider();
 
@@ -143,12 +139,9 @@ const Api = function(container){
             //provider's preload() have to made Promise. Cuz it overcomes 'flash loading timing problem'.
             currentProvider.preload(playlistManager.getCurrentSources(), lastPlayPosition).then(function(){
 
-                lazyQueue.flush();
-                //This is no reason to exist anymore.
-                lazyQueue.destroy();
 
             }).catch((error) => {
-                lazyQueue.off();
+
                 if(error && error.code && ERRORS.codes[error.code]){
                     that.trigger(ERROR, ERRORS.codes[error.code]);
                 }else {
@@ -166,13 +159,6 @@ const Api = function(container){
                 tempError.error = error;
                 that.trigger(ERROR, tempError);
             }
-
-            //xxx : If you init empty sources. (I think this is strange case.)
-            //This works for this case.
-            //player = OvenPlayer.create("elId", {});
-            //player.load(soruces);
-            lazyQueue.off();
-            //lazyQueue.removeAndExcuteOnce("load");
         });
     };
 
@@ -188,11 +174,6 @@ const Api = function(container){
             options = {};
         }
 
-        //It collects the commands and executes them at the time when they are executable.
-        lazyQueue = LazyCommandExecutor(that, [
-            'load','play','pause','seek','stop', 'getDuration', 'getPosition', 'getVolume'
-            , 'getMute', 'getBuffer', 'getState' , 'getQualityLevels'
-        ]);
         options.mediaContainer = container;
         options.browser = userAgentObject;
         playerConfig = Configurator(options, that);
@@ -296,7 +277,6 @@ const Api = function(container){
     };
     that.load = (playlist) => {
         OvenPlayerConsole.log("API : load() ", playlist);
-        lazyQueue = LazyCommandExecutor(that, ['play','seek','stop']);
 
         if(playlist){
 
@@ -387,23 +367,8 @@ const Api = function(container){
 
         OvenPlayerConsole.log("API : setCurrentSource() ", index);
 
-        // let sources = currentProvider.getSources();
-        // let currentSource = sources[currentProvider.getCurrentSource()];
-        // let newSource = sources[index];
-
-        // let isSameProvider = providerController.isSameProvider(currentSource, newSource);
-        // // provider.serCurrentQuality -> playerConfig setting -> load
-        // let resultSourceIndex = currentProvider.setCurrentSource(index, isSameProvider);
-        //
-        // if(!newSource){
-        //     return null;
-        // }
-        //
-        // OvenPlayerConsole.log("API : setCurrentQuality() isSameProvider", isSameProvider);
-
         let lastPlayPosition = currentProvider.getPosition();
         playerConfig.setSourceIndex(index);
-        lazyQueue = LazyCommandExecutor(that, ['play','seek']);
 
         initProvider(lastPlayPosition);
 
@@ -490,10 +455,6 @@ const Api = function(container){
 
         OvenPlayerConsole.log("API : remove() ");
 
-        if (lazyQueue) {
-            lazyQueue.destroy();
-        }
-
         if(captionManager){
             captionManager.destroy();
             captionManager = null;
@@ -515,9 +476,8 @@ const Api = function(container){
         providerController = null;
         playlistManager = null;
         playerConfig = null;
-        lazyQueue = null;
 
-        OvenPlayerConsole.log("API : remove() - lazyQueue, currentProvider, providerController, playlistManager, playerConfig, api event destroed. ");
+        OvenPlayerConsole.log("API : remove() - currentProvider, providerController, playlistManager, playerConfig, api event destroed. ");
         OvenPlayerSDK.removePlayer(that.getContainerId());
         if(OvenPlayerSDK.getPlayerList().length  === 0){
             OvenPlayerConsole.log("OvenPlayerSDK.playerList",  OvenPlayerSDK.getPlayerList());
