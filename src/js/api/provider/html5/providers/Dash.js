@@ -43,40 +43,26 @@ const Dash = function (element, playerConfig, adTagUrl) {
 
     try {
 
-        if (dashjs.Version < "2.6.5") {
+        if (dashjs.Version < "3.0.0") {
             throw ERRORS.codes[INIT_DASH_UNSUPPORT];
         }
 
         const coveredSetAutoSwitchQualityFor = function (isAuto) {
 
-            if (dashjs.Version >= '3.0.0') {
-                dash.updateSettings({
-                    streaming: {
-                        abr: {
-                            autoSwitchBitrate: {
-                                video: isAuto
-                            }
+            dash.updateSettings({
+                streaming: {
+                    abr: {
+                        autoSwitchBitrate: {
+                            video: isAuto
                         }
                     }
-                });
-            } else if (dashjs.Version > "2.9.0") {
-                dash.setAutoSwitchQualityFor("video", isAuto);
-            } else {
-                dash.setAutoSwitchQualityFor(isAuto);
-            }
+                }
+            });
         };
 
         const coveredGetAutoSwitchQualityFor = function () {
-            let result = "";
 
-            if (dashjs.Version >= '3.0.0') {
-                result = dash.getSettings().streaming.abr.autoSwitchBitrate.video;
-            } else if (dashjs.Version > "2.9.0") {
-                result = dash.getAutoSwitchQualityFor("video");
-            } else {
-                result = dash.getAutoSwitchQualityFor();
-            }
-            return result;
+            return dash.getSettings().streaming.abr.autoSwitchBitrate.video;
         };
 
         const liveDelayReducingCallback = function () {
@@ -133,66 +119,39 @@ const Dash = function (element, playerConfig, adTagUrl) {
 
                 prevLLLiveDuration = null;
 
-                if (dashjs.Version >= '3.0.0') {
-
-                    dash.updateSettings({
-                        streaming: {
-                            lowLatencyEnabled: source.lowLatency
-                        }
-                    });
-
-                } else {
-
-                    dash.setLowLatencyEnabled(source.lowLatency);
-                }
+                dash.updateSettings({
+                    streaming: {
+                        lowLatencyEnabled: source.lowLatency
+                    }
+                });
 
                 if (playerConfig.getConfig().lowLatencyMpdLiveDelay && typeof(playerConfig.getConfig().lowLatencyMpdLiveDelay) === 'number') {
 
-                    if (dashjs.Version >= '3.0.0') {
-
-                        dash.updateSettings({
-                            streaming: {
-                                liveDelay: playerConfig.getConfig().lowLatencyMpdLiveDelay
-                            }
-                        });
-                    } else {
-                        dash.setLiveDelay(playerConfig.getConfig().lowLatencyMpdLiveDelay);
-                    }
+                    dash.updateSettings({
+                        streaming: {
+                            liveDelay: playerConfig.getConfig().lowLatencyMpdLiveDelay
+                        }
+                    });
                 }
 
                 // dash.on(dashjs.MediaPlayer.events.PLAYBACK_PLAYING, liveDelayReducingCallback);
 
             } else {
 
-                if (dashjs.Version >= '3.0.0') {
-
-                    dash.updateSettings({
-                        streaming: {
-                            lowLatencyEnabled: false,
-                            liveDelay: undefined
-                        }
-                    });
-
-                } else {
-
-                    dash.setLowLatencyEnabled(false);
-                    dash.setLiveDelay();
-                }
-
-            }
-
-            if (dashjs.Version >= '3.0.0') {
-
                 dash.updateSettings({
-                    debug: {
-                        logLevel: dashjs.Debug.LOG_LEVEL_NONE
+                    streaming: {
+                        lowLatencyEnabled: false,
+                        liveDelay: undefined
                     }
                 });
 
-            } else {
-
-                dash.getDebug().setLogToBrowserConsole(false);
             }
+
+            dash.updateSettings({
+                debug: {
+                    logLevel: dashjs.Debug.LOG_LEVEL_NONE
+                }
+            });
 
             that.trigger(DASH_PREPARED, dash);
 
