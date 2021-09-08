@@ -124,12 +124,10 @@ const Dash = function (element, playerConfig, adTagUrl) {
 
             OvenPlayerConsole.log("DASH : Attach File : ", source, "lastPlayPosition : " + lastPlayPosition);
 
-            that.trigger(DASH_PREPARED, dash);
-
             coveredSetAutoSwitchQualityFor(true);
             sourceOfFile = source.file;
 
-            dash.off(dashjs.MediaPlayer.events.PLAYBACK_PLAYING, liveDelayReducingCallback);
+            // dash.off(dashjs.MediaPlayer.events.PLAYBACK_PLAYING, liveDelayReducingCallback);
 
             if (source.lowLatency === true) {
 
@@ -162,7 +160,7 @@ const Dash = function (element, playerConfig, adTagUrl) {
                     }
                 }
 
-                dash.on(dashjs.MediaPlayer.events.PLAYBACK_PLAYING, liveDelayReducingCallback);
+                // dash.on(dashjs.MediaPlayer.events.PLAYBACK_PLAYING, liveDelayReducingCallback);
 
             } else {
 
@@ -196,50 +194,22 @@ const Dash = function (element, playerConfig, adTagUrl) {
                 dash.getDebug().setLogToBrowserConsole(false);
             }
 
+            that.trigger(DASH_PREPARED, dash);
+
             dash.attachSource(sourceOfFile);
 
             seekPosition_sec = lastPlayPosition;
-
         });
 
         superPlay_func = that.super('play');
         superDestroy_func = that.super('destroy');
         OvenPlayerConsole.log("DASH PROVIDER LOADED.");
 
-        let loadingRetryCount = playerConfig.getConfig().loadingRetryCount;
-
         dash.on(dashjs.MediaPlayer.events.ERROR, function (error) {
 
-            // Handle mpd load error.
-            if (error &&
-                (
-                    error.error.code === dashjs.MediaPlayer.errors.DOWNLOAD_ERROR_ID_MANIFEST_CODE ||
-                    error.error.code === dashjs.MediaPlayer.errors.MANIFEST_LOADER_LOADING_FAILURE_ERROR_CODE
-                )) {
-
-                if (loadingRetryCount > 0) {
-
-                    that.setState(STATE_LOADING);
-
-                    if (loadRetryer) {
-                        clearTimeout(loadRetryer);
-                        loadRetryer = null;
-                    }
-
-                    loadingRetryCount = loadingRetryCount - 1;
-
-                    loadRetryer = setTimeout(function () {
-
-
-                        dash.attachSource(sourceOfFile);
-                    }, 1000);
-                } else {
-
-                    let tempError = ERRORS.codes[PLAYER_UNKNWON_NETWORK_ERROR];
-                    tempError.error = error;
-                    errorTrigger(tempError, that);
-                }
-            }
+            let tempError = ERRORS.codes[PLAYER_UNKNWON_NETWORK_ERROR];
+            tempError.error = error;
+            errorTrigger(tempError, that);
         });
 
         dash.on(dashjs.MediaPlayer.events.QUALITY_CHANGE_REQUESTED, function (event) {
@@ -287,12 +257,6 @@ const Dash = function (element, playerConfig, adTagUrl) {
             if (seekPosition_sec && !spec.isLive) {
                 dash.seek(seekPosition_sec);
             }
-
-            // if (playerConfig.isAutoStart() && !runedAutoStart) {
-            //     OvenPlayerConsole.log("DASH : AUTOPLAY()!");
-            //     that.play();
-            //     runedAutoStart = true;
-            // }
 
         });
 
