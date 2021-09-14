@@ -276,7 +276,7 @@ const WebRTCLoader = function (provider, webSocketUrl, loadCallback, errorTrigge
                     }
                 }
 
-                regIceServer.username = iceServer.user_name;
+                regIceServer.username = iceServer.username || iceServer.user_name;
                 regIceServer.credential = iceServer.credential;
 
                 peerConnectionConfig.iceServers.push(regIceServer);
@@ -649,7 +649,9 @@ const WebRTCLoader = function (provider, webSocketUrl, loadCallback, errorTrigge
 
                 if (message.command === 'offer') {
 
-                    createMainPeerConnection(message.id, message.peer_id, message.sdp, message.candidates, message.ice_servers, resolve);
+                    let iceServers =  message.iceServers || message.ice_servers;
+
+                    createMainPeerConnection(message.id, message.peer_id, message.sdp, message.candidates, iceServers, resolve);
                     if (message.peer_id === 0) {
                         provider.trigger(OME_P2P_MODE, false);
                     } else {
