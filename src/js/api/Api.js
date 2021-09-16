@@ -11,6 +11,7 @@ import {READY, ERRORS, ERROR, CONTENT_COMPLETE, CONTENT_META, INIT_UNKNWON_ERROR
 import {ApiRtmpExpansion} from 'api/ApiExpansions';
 import {analUserAgent} from "utils/browser";
 import {pickCurrentSource} from "api/provider/utils";
+import {version} from "../version";
 
 /**
  * @brief   This object connects UI to the provider.
@@ -483,7 +484,7 @@ const Api = function(container){
     };
 
     that.getVersion = () => {
-        return "v."+version;
+        return version;
     };
 
     return that;
