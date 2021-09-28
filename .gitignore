@@ -1,6 +1,7 @@
 # this is local development directory
 local
 dev
+publish.bat
 
 # Created by https://www.toptal.com/developers/gitignore/api/node,intellij,pycharm,phpstorm,visualstudiocode
 # Edit at https://www.toptal.com/developers/gitignore?templates=node,intellij,pycharm,phpstorm,visualstudiocode
