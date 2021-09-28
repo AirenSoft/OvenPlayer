@@ -313,9 +313,14 @@ const View = function($container){
 
         api.on(READY, function(data) {
 
-            if(!controls && showControlBar){
+            if(!controls){
                 controls = Controls($playerRoot.find(".op-ui"), playerInstance);
             }
+
+            if (!showControlBar) {
+                $playerRoot.addClass("op-no-controls");
+            }
+
         });
 
         api.on(ERROR, function(error) {
@@ -378,6 +383,15 @@ const View = function($container){
                 $playerRoot.find('.op-ratio').css('padding-bottom', ratio + '%');
             }
         }
+
+        api.showControls = function (show) {
+            if (show) {
+                $playerRoot.removeClass("op-no-controls");
+                setHide(false, true);
+            } else {
+                $playerRoot.addClass("op-no-controls");
+            }
+        };
     };
 
 
