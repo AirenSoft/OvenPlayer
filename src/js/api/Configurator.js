@@ -203,7 +203,9 @@ const Configurator = function(options, provider){
     that.getRtmpBufferTimeMax = () => {
         return spec.rtmpBufferTimeMax;
     };
-
+    that.setMute = (mute) =>{
+        spec.mute = mute;
+    };
     that.isMute = () =>{
         return spec.mute;
     };

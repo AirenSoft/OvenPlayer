@@ -96,9 +96,6 @@ const VolumeButton = function($container, api){
         api.on(READY, function() {
             setVolumeUI(api.getVolume());
         }, template);
-        api.on(PLAYER_PLAY, function (data) {
-            setVolumeUI(data.volume);
-        }, template);
         api.on(CONTENT_VOLUME, function(data) {
 
             setVolumeUI(data.volume);

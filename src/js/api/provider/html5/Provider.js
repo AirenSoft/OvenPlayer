@@ -218,12 +218,11 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
             return false;
         }
         elVideo.volume = volume/100;
+        playerConfig.setVolume(volume);
     };
     that.getVolume = () =>{
-        if(!elVideo){
-            return 0;
-        }
-        return elVideo.volume*100;
+
+        return playerConfig.getVolume();
     };
     that.setMute = (state) =>{
         if(!elVideo){
@@ -231,27 +230,29 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
         }
         if (typeof state === 'undefined') {
 
-            elVideo.muted = !elVideo.muted;
+            const muted = playerConfig.isMute();
+
+            elVideo.muted = !muted;
+            playerConfig.setMute(!muted);
 
             that.trigger(CONTENT_MUTE, {
-                mute: elVideo.muted
+                mute: playerConfig.isMute()
             });
 
         } else {
 
             elVideo.muted = state;
+            playerConfig.setMute(state);
 
             that.trigger(CONTENT_MUTE, {
-                mute: elVideo.muted
+                mute: playerConfig.isMute()
             });
         }
         return elVideo.muted;
     };
     that.getMute = () =>{
-        if(!elVideo){
-            return false;
-        }
-        return elVideo.muted;
+
+        return playerConfig.isMute();
     };
 
     that.preload = (sources, lastPlayPosition) =>{
