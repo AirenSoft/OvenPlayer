@@ -52,6 +52,9 @@ const WebRTC = function(element, playerConfig, adTagUrl){
                 }
 
                 element.srcObject = stream;
+
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                audioCtx = new AudioContext();
             };
 
             webrtcLoader = WebRTCLoader(that, source.file, loadCallback, errorTrigger, playerConfig);
