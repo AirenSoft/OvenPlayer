@@ -18,6 +18,8 @@ const WebRTC = function(element, playerConfig, adTagUrl){
     let webrtcLoader = null;
     let superDestroy_func  = null;
 
+    let audioCtx = null;
+
     let spec = {
         name : PROVIDER_WEBRTC,
         element : element,
