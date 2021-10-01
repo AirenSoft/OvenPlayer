@@ -62,7 +62,7 @@
     <script src="lib/popper.min.js"></script>
     <script src="lib/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-toast-plugin/1.3.2/jquery.toast.js"></script>
-    <script src="../../dist/ovenplayer.js?0000"></script>
+    <script src="../../dist/ovenplayer.js"></script>
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -99,8 +99,11 @@
         </li>
     </ul>
     <div id="demo-navi" class="row">
-        <div class="col-12 mb-4 player_area">
+        <div class="col-12 mb-2 player_area">
             <div id="player"></div>
+        </div>
+        <div class="col-12 mb-4 text-right">
+            <span class="small" id="playerVersion"></span>
         </div>
         <div class="col-12 mb-4">
             <div class="card">
@@ -310,6 +313,8 @@ player = OvenPlayer.create("player", {
                 playerLoaded = true;
                 navigation.loadButtonText = 'Unload Player';
             }
+
+            $('#playerVersion').text('v' + player.getVersion());
         });
 
         player.on("sourceChanged", function () {
@@ -582,6 +587,7 @@ player = OvenPlayer.create("player", {
                             errorOccured = false;
                             playerLoaded = true;
                             navigation.loadButtonText = 'Unload Player';
+                            $('#playerVersion').text('v' + player.getVersion());
                         });
 
                         player.on("sourceChanged", function () {
