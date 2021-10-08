@@ -87,6 +87,10 @@
  * @brief   common style
  * */
 
+ :root {
+  --op-accent-color: #50e3c2;
+   }
+
 .op-wrapper.ovenplayer {
   position: relative;
   max-height: 100%;
@@ -498,9 +502,9 @@ i.op-con{
         cursor: pointer;
 
         &.active {
-          color : #50e3c2;
+          color : var(--op-accent-color);
           .op-playlist-card-thumbnail{
-            border-color : #50e3c2;
+            border-color : var(--op-accent-color);
           }
         }
 
@@ -964,7 +968,7 @@ i.op-con{
   margin-top : 10px;
 
   .op-play-background-color {
-    background-color: #50e3c2;
+    background-color: var(--op-accent-color);
   }
 
   .op-progress-list {
@@ -1074,7 +1078,7 @@ i.op-con{
   width: 3px;
   height: 14px;
   bottom: -5px;
-  background-color: #50e3c2;
+  background-color: var(--op-accent-color);
 }
 
 .op-progressbar-preview {
@@ -1188,7 +1192,7 @@ i.op-con{
       }
       .op-volume-slider-value {
         width: 100%;
-        background: #50e3c2;
+        background: var(--op-accent-color);
         border-radius: 10px 0 0 10px;
         //-moz-transition: width .2s cubic-bezier(0.0,0.0,0.2,1);
         //-webkit-transition: width .2s cubic-bezier(0.0,0.0,0.2,1);
@@ -1345,7 +1349,7 @@ i.op-con{
     height: 64px;
 
     border: 4px solid transparent;
-    border-top: 4px solid #50e3c2;
+    border-top: 4px solid var(--op-accent-color);
     border-radius: 50%;
 
     animation: spin 1.2s  cubic-bezier(0.5, 0, 0.5, 1)  infinite;
