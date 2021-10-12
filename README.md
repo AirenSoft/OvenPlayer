@@ -46,7 +46,12 @@ Please read the [Quick Start](https://airensoft.gitbook.io/ovenplayer/#quick-sta
 
 ## API and Configuration
 
-Start the [Demo](https://airensoft.github.io/OvenPlayer/docs/demo.html) and see [API and Configuration](docs/api.md) for more details.
+Start the [Demo](https://airensoft.github.io/OvenPlayer/docs/demo.html) and see [API and Configuration](https://airensoft.gitbook.io/ovenplayer/initialization) for more details.
+
+
+## Build the source code
+
+Check out [Build](https://airensoft.gitbook.io/ovenplayer/builds) section how to create `ovenplayer.js` for deployment or development after modifying the source code.
 
 
 ## How to contribute
