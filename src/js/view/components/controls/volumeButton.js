@@ -93,6 +93,8 @@ const VolumeButton = function($container, api){
 
         $sliderHandle.css("left", maxRange+ "px");
 
+        setVolumeUI(api.getVolume());
+
         api.on(READY, function() {
             setVolumeUI(api.getVolume());
         }, template);
