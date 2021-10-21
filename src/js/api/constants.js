@@ -35,6 +35,8 @@ export const PLAYLIST_CHANGED = "playlistChanged";
 export const CONTENT_SEEKED = "seeked";
 export const ALL_PLAYLIST_ENDED = "allPlaylistEnded";
 export const NETWORK_UNSTABLED = "unstableNetwork";
+export const HLS_PREPARED = "hlsPrepared";
+export const HLS_DESTROYED = "hlsDestroyed";
 export const DASH_PREPARED = "dashPrepared";
 export const DASH_DESTROYED = "dashDestroyed";
 
