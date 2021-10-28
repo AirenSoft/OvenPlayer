@@ -7,7 +7,9 @@ import {
     PROVIDER_HLS,
     PLAYER_STATE, STATE_IDLE, STATE_LOADING,
     INIT_DASH_UNSUPPORT, ERRORS,
-    INIT_HLSJS_NOTFOUND
+    INIT_HLSJS_NOTFOUND,
+    HLS_PREPARED,
+    HLS_DESTROYED
 } from "api/constants";
 import _ from "utils/underscore";
 import {
@@ -16,7 +18,7 @@ import {
     PLAYER_UNKNWON_DECODE_ERROR,
     PLAYER_BAD_REQUEST_ERROR,
     PLAYER_AUTH_FAILED_ERROR,
-    PLAYER_NOT_ACCEPTABLE_ERROR
+    PLAYER_NOT_ACCEPTABLE_ERROR, DASH_PREPARED, DASH_DESTROYED
 } from "../../../constants";
 
 /**
@@ -81,6 +83,8 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
         that = Provider(spec, playerConfig, function (source, lastPlayPosition) {
 
             OvenPlayerConsole.log("HLS : onExtendedLoad : ", source, "lastPlayPosition : " + lastPlayPosition);
+
+            that.trigger(HLS_PREPARED, hls);
 
             hls.loadSource(source.file);
 
@@ -201,6 +205,8 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
             if (hls) {
 
                 hls.destroy();
+
+                that.trigger(HLS_DESTROYED);
             }
 
             hls = null;
