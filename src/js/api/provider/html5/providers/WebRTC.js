@@ -81,16 +81,21 @@ const WebRTC = function(element, playerConfig, adTagUrl){
 
                 element.srcObject = stream;
 
-                // Add some weird code to avoid the audio delay bug in Safari.
-                // We don't even know why this code solves the audio delay.
-                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                if (stream.getAudioTracks().length > 0) {
 
-                // This code resolves audio delay in MacOS not IOS.
-                audioCtx = new AudioContext();
-                unlockAudio(audioCtx);
+                    // Add some weird code to avoid the audio delay bug in Safari.
+                    // We don't even know why this code solves the audio delay.
+                    const AudioContext = window.AudioContext || window.webkitAudioContext;
 
-                // This code resolves audio delay in IOS.
-                audioCtx.createMediaStreamSource(stream);
+                    // This code resolves audio delay in MacOS not IOS.
+                    audioCtx = new AudioContext();
+                    unlockAudio(audioCtx);
+
+
+                    // This code resolves audio delay in IOS.
+                    audioCtx.createMediaStreamSource(stream);
+                }
+
             };
 
             webrtcLoader = WebRTCLoader(that, source.file, loadCallback, errorTrigger, playerConfig);
