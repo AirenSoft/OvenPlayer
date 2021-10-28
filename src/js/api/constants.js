@@ -100,6 +100,7 @@ export const PLAYER_WEBRTC_ADD_ICECANDIDATE_ERROR = 502;
 export const PLAYER_WEBRTC_SET_REMOTE_DESC_ERROR = 503;
 export const PLAYER_WEBRTC_CREATE_ANSWER_ERROR = 504;
 export const PLAYER_WEBRTC_SET_LOCAL_DESC_ERROR = 505;
+export const PLAYER_WEBRTC_INTERNAL_ERROR = 506;
 export const PLAYER_WEBRTC_NETWORK_SLOW = 510;
 export const PLAYER_WEBRTC_UNEXPECTED_DISCONNECT = 511;
 
@@ -246,6 +247,11 @@ export const SYSTEM_TEXT = [
                     "message": "Connection with low-latency(OME) server failed.",
                     "reason": "WebRTC setLocalDescription failed."
                 },
+                506: {
+                    "code": 506,
+                    "message": "Connection with low-latency(OME) server failed.",
+                    "reason": "WebRTC internal error."
+                },
                 510: {
                     "code": 510,
                     "message": "Network connection is unstable. Check the network connection.",
@@ -389,6 +395,11 @@ export const SYSTEM_TEXT = [
                     "message": "저지연(OME) 서버와 연결에 실패했습니다.",
                     "reason": "WebRTC setLocalDescription failed."
                 },
+                506: {
+                    "code": 506,
+                    "message": "저지연(OME) 서버와 연결에 실패했습니다.",
+                    "reason": "WebRTC internal error."
+                },
                 510: {
                     "code": 510,
                     "message": "네트워크 연결이 불안정합니다. 네트워크 연결을 확인하십시오.",
@@ -526,6 +537,11 @@ export const SYSTEM_TEXT = [
                     "code": 505,
                     "message": "Połączenie z serwerem niskiego opóźnienia (OME) nie powiodło się.",
                     "reason": "WebRTC setLocalDescription failed."
+                },
+                506: {
+                    "code": 506,
+                    "message": "Połączenie z serwerem niskiego opóźnienia (OME) nie powiodło się.",
+                    "reason": "WebRTC internal error."
                 },
                 510: {
                     "code": 510,

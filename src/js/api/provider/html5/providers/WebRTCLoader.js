@@ -9,6 +9,7 @@ import {
     PLAYER_WEBRTC_SET_LOCAL_DESC_ERROR,
     PLAYER_WEBRTC_NETWORK_SLOW,
     PLAYER_WEBRTC_UNEXPECTED_DISCONNECT,
+    PLAYER_WEBRTC_INTERNAL_ERROR,
     OME_P2P_MODE
 } from "api/constants";
 
@@ -292,7 +293,18 @@ const WebRTCLoader = function (provider, webSocketUrl, loadCallback, errorTrigge
 
         OvenPlayerConsole.log("Main Peer Connection Config : ", peerConnectionConfig);
 
-        let peerConnection = new RTCPeerConnection(peerConnectionConfig);
+        let peerConnection = null;
+
+        try {
+
+            peerConnection = new RTCPeerConnection(peerConnectionConfig);
+
+        } catch (error) {
+            let tempError = ERRORS.codes[PLAYER_WEBRTC_INTERNAL_ERROR];
+            tempError.error = error;
+            closePeer(tempError);
+            return;
+        }
 
         mainPeerConnectionInfo = {
             id: id,
