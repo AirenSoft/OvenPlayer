@@ -424,13 +424,25 @@ const WebRTCLoader = function (provider, webSocketUrl, loadCallback, errorTrigge
 
                 let hint = playerConfig.getConfig().webrtcConfig.playoutDelayHint;
 
+                console.log('Set playoutDelayHint to ' + hint);
+
                 const receivers = mainPeerConnectionInfo.peerConnection.getReceivers();
 
                 for (let i = 0; i < receivers.length; i++) {
 
                     let receiver = receivers[i];
 
-                    receiver.playoutDelayHint = hint;
+                    if (receiver.track.kind === 'audio') {
+
+                        receiver.playoutDelayHint = hint;
+                        receiver.jitterBufferDelayHint = hint;
+                        console.log(receiver);
+                    } else {
+
+                        receiver.playoutDelayHint = hint;
+                        console.log(receiver);
+                    }
+
                     OvenPlayerConsole.log("WebRTC playoutDelayHint", receiver, hint);
                 }
 
