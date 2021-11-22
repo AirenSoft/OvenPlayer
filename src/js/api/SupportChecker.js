@@ -47,8 +47,10 @@ const SupportChecker = function(){
                 if(!type){return false;}
                 const mimeType = source.mimeType || MimeTypes[type];
 
-                if(isHls(file, type) && userAgentObject.browser === "Microsoft Edge" ){
-                    //Edge supports hls native but that's sucks.
+                // Latest Edge browser returns "Chrome" from userAgentObject.browser
+                // Make sure to use hls.js Android devices
+                if(isHls(file, type) && (userAgentObject.browser === "Microsoft Edge" || userAgentObject.os === "Android")) {
+
                     return false;
                 }
 
