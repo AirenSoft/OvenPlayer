@@ -483,6 +483,11 @@ const Api = function(container){
         }
     };
 
+    that.getMediaElement = () => {
+
+        return currentProvider.getMediaElement();
+    };
+
     that.getVersion = () => {
         return version;
     };
