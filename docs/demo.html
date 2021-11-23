@@ -10,10 +10,9 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
 
     <title>OvenPlayer</title>
-    <link rel="icon" href="data:,">
+    <link rel="icon" href="./assets/images/00_OvenPlayer_Favicon.svg">
     <link rel="stylesheet" href="lib/bootstrap.min.css">
     <link href="https://fonts.googleapis.com/css?family=Noto+Sans" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-toast-plugin/1.3.2/jquery.toast.css">
 
     <style>
 
@@ -52,16 +51,10 @@
     </script>
 
     <script src="lib/vue.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-    <!--<script src="lib/dash.all.debug.js"></script>-->
-    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/dashjs/3.2.0/dash.all.min.js" integrity="sha512-wFaKU7BcXbvVVGi0vDUKv4GXc9Hrp4RjGZorG8KlpRurhpvgCXiLhcafCj3y/gKY5CKAuyu00b+BvJ+vyRD0Pg==" crossorigin="anonymous"></script>-->
-    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/dashjs/3.1.3/dash.all.min.js" integrity="sha512-KbtNOWr7e/rlM9utrUc5cO9PeJZO3jFfCjWPe1mHe2sPvIike3IZIH6h4ja6wH7aXNKrecP8zh6/SYDc3t6Jog==" crossorigin="anonymous"></script>-->
+    <script src="https://cdn.jsdelivr.net/npm/hls.js/dist/hls.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dashjs/3.2.1/dash.all.min.js" integrity="sha512-K8ychE2luu1+zrt4MiDhr8L8B6zPB+x/EofroMF6LygAn+Oh/EadU18WgChXuOeCAan0y5/IQGS06izToR8xnQ==" crossorigin="anonymous"></script>
     <script src="lib/clipboard.min.js"></script>
     <script src="lib/jquery-1.12.4.min.js"></script>
-    <script src="lib/popper.min.js"></script>
-    <script src="lib/bootstrap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-toast-plugin/1.3.2/jquery.toast.js"></script>
     <script src="../dist/ovenplayer.js"></script>
 </head>
 <body>
@@ -134,31 +127,66 @@
                     <div class="mb-2 text-right" v-if="sources.length">
                         <button type="button" class="btn btn-primary" v-on:click="loadSources">{{loadButtonText}}</button>
                     </div>
-                    <div class="row mb-2">
-                        <div class="col-12">
-                            <div class="form-check mt-3 mb-3">
-                                <input type="checkbox" class="form-check-input" id="lowlatencyCheck">
-                                <label class="form-check-label" for="lowlatencyCheck">Enable Low Latency MPEG DASH</label>
-                            </div>
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text" id="inputGroup-sizing-default">LL-DASH Live Delay (optional)</span>
-                                </div>
-                                <input id="liveDelayInput" type="number" class="form-control text-right" aria-label="Default" aria-describedby="inputGroup-sizing-default">
-                                <div class="input-group-append">
-                                    <button type="button" id="applyLiveDelayButton" class="btn btn-outline-success">Apply</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <h5 class="card-title">Sources</h5>
                     <div class="card mb-2" v-for="(source, index) in sources">
                         <div class="card-body">
                             <strong>{{ source.type }}</strong>
                             <span>{{ source.file }}</span>
-                            <i>({{ source.label }})</i>
+                            <i v-if="source.label">({{ source.label }})</i>
                             <button type="button" class="close" aria-label="Close" v-on:click="removeSource(index)">
                                 <span aria-hidden="true">&times;</span>
                             </button>
+                        </div>
+                    </div>
+                    <h5 class="card-title mt-4">Settings</h5>
+                    <div class="card mb-2">
+                        <div class="card-body">
+                            <h6 class="card-title">WebRTC</h6>
+                            <div class="row">
+                                <div class="col">
+                                    <div class="input-group input-group-sm">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">WebRTC Playout Delay Hint</span>
+                                        </div>
+                                        <input id="playoutDelayHintInput" type="number" class="form-control text-right" aria-label="Default" aria-describedby="inputGroup-sizing-default">
+                                        <div class="input-group-append">
+                                            <button type="button" id="applyPlayoutDelayHintButton" class="btn btn-outline-success">Apply</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-body">
+                            <h6 class="card-title">Low Latency DASH</h6>
+                            <div class="row">
+                                <div class="col">
+                                    <div class="input-group input-group-sm">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <input type="checkbox" id="lowlatencyCheck">
+                                            </div>
+                                        </div>
+                                        <div class="input-group-append flex-grow-1">
+                                            <div class="input-group-text bg-white w-100">
+                                                Enable Low Latency MPEG DASH
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="input-group input-group-sm">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">Live Delay (optional)</span>
+                                        </div>
+                                        <input id="liveDelayInput" type="number" class="form-control text-right" aria-label="Default">
+                                        <div class="input-group-append">
+                                            <button type="button" id="applyLiveDelayButton" class="btn btn-outline-success">Apply</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -168,7 +196,7 @@
                     <h5 class="card-title">Usage</h5>
                     <div class="card bg-light">
                         <div class="card-body">
-                                <pre>
+<pre>
 player = OvenPlayer.create("player", {
     sources: {{getSources()}}
 });
@@ -207,6 +235,11 @@ player = OvenPlayer.create("player", {
         var exportUrl = window.location.protocol + "//" + location.host + location.pathname + "#sources=" + encodeURIComponent(JSON.stringify(sources)) +
             '&lowLatency=' + lowLatency + '&liveDelay=' + liveDelay;
 
+        var delayHint = parseInt($.trim($('#playoutDelayHintInput').val()));
+        if(delayHint) {
+            exportUrl += '&delayHint=' + delayHint;
+        }
+
         exportUrl = exportUrl.replace('%2C%22lowLatency%22%3Atrue', '');
         location.href = exportUrl;
         return exportUrl;
@@ -224,6 +257,8 @@ player = OvenPlayer.create("player", {
             url = window.location.href;
         }
 
+        console.log(name, url)
+
         name = name.replace(/[\[\]]/g, '\\$&');
 
         var regex = new RegExp('[#&]' + name + '(=([^&#]*)|&|#|$)');
@@ -231,7 +266,7 @@ player = OvenPlayer.create("player", {
 
         if (!results) {
 
-            return 'false';
+            return false;
         }
 
         if (!results[2]) {
@@ -271,24 +306,13 @@ player = OvenPlayer.create("player", {
 
         var clipboard = new ClipboardJS('.btnExport');
 
-        clipboard.on('success', function (e) {
-            $('.btnExport').tooltip('show');
-            setTimeout(function () {
-                $('.btnExport').tooltip('hide');
-            }, 3000);
-
-            e.clearSelection();
-        });
-
-        var lowLatency = getParameterByName("lowLatency");
-        var liveDelay = getParameterByName("liveDelay");
-
         var playerOption = {
             autoStart: true,
             sources: preSources || defaultSources
         };
 
-        console.log(playerOption)
+        var lowLatency = getParameterByName("lowLatency");
+        var liveDelay = getParameterByName("liveDelay");
 
         if (lowLatency && lowLatency !== 'false') {
             $('#lowlatencyCheck').prop('checked', true);
@@ -304,7 +328,21 @@ player = OvenPlayer.create("player", {
             playerOption.lowLatencyMpdLiveDelay = liveDelay;
         }
 
+        var delayHint = getParameterByName("delayHint");
+
+        console.log(delayHint);
+
+        if (delayHint) {
+
+            $('#playoutDelayHintInput').val(delayHint);
+
+            playerOption.webrtcConfig = {};
+            playerOption.webrtcConfig.playoutDelayHint = parseInt(delayHint);
+        }
+
         player = OvenPlayer.create("player", playerOption);
+
+        console.log("playerOption", playerOption);
 
         player.on("ready", function (error) {
             errorOccured = false;
@@ -340,7 +378,7 @@ player = OvenPlayer.create("player", {
 
         });
 
-        $('#lowlatencyCheck, #liveDelayInput').on('change', function () {
+        $('#lowlatencyCheck, #liveDelayInput, #playoutDelayHintInput').on('change', function () {
 
             if (navigation.sources) {
 
@@ -361,6 +399,11 @@ player = OvenPlayer.create("player", {
         });
 
         $('#lowlatencyCheck').on('change', function () {
+
+            navigation.loadSources();
+        });
+
+        $('#applyPlayoutDelayHintButton').on('click', function () {
 
             navigation.loadSources();
         });
@@ -396,14 +439,6 @@ player = OvenPlayer.create("player", {
                             liveDelay: newLiveDelay
                         }
                     });
-
-                    $.toast({
-                        text: 'Live delay updated from ' + prevLiveDelay + ' to ' + newLiveDelay + '.',
-                        bgColor: '#e9ecef',
-                        textColor: '#495057',
-                        loader: false,
-                        icon: 'info'
-                    });
                 }
             }
 
@@ -431,6 +466,8 @@ player = OvenPlayer.create("player", {
                 var isMixedContentProblem = false;
 
                 const findProtocol = function (url) {
+
+                    url = $.trim(url);
 
                     var protocol = "Protocol";
 
@@ -558,7 +595,7 @@ player = OvenPlayer.create("player", {
                     if (this.sources && this.sources.length > 0) {
 
                         var playerOption = {
-                            autoStart: false,
+                            autoStart: true,
                             sources: JSON.parse(JSON.stringify(this.sources))
                         };
 
@@ -573,6 +610,12 @@ player = OvenPlayer.create("player", {
                             playerOption.lowLatencyMpdLiveDelay = parseInt($.trim($('#liveDelayInput').val()))
                         }
 
+                        if ($.trim($('#playoutDelayHintInput').val()) !== '') {
+
+                            playerOption.webrtcConfig = {};
+                            playerOption.webrtcConfig.playoutDelayHint = parseInt($.trim($('#playoutDelayHintInput').val()));
+                        }
+
                         var playerState = player.getState();
 
                         if (playerState === 'playing' || playerState === 'stalled' || playerState === 'loading' || playerState === 'error') {
@@ -582,6 +625,8 @@ player = OvenPlayer.create("player", {
                         player.remove();
 
                         player = OvenPlayer.create("player", playerOption);
+
+                        console.log("playerOption", playerOption);
 
                         player.on("ready", function () {
                             errorOccured = false;
