@@ -331,19 +331,19 @@ const WebRTCLoader = function (provider, webSocketUrl, loadCallback, errorTrigge
                             }
                         }
 
+                        OvenPlayerConsole.log('Local SDP', desc);
+
+                        sendMessage(ws, {
+                            id: id,
+                            peer_id: peerId,
+                            command: 'answer',
+                            sdp: desc
+                        });
+
                         OvenPlayerConsole.log("create Host Answer : success");
 
                         peerConnection.setLocalDescription(desc).then(function () {
-                            // my SDP created.
-                            let localSDP = peerConnection.localDescription;
-                            OvenPlayerConsole.log('Local SDP', localSDP);
 
-                            sendMessage(ws, {
-                                id: id,
-                                peer_id: peerId,
-                                command: 'answer',
-                                sdp: localSDP
-                            });
 
                         }).catch(function (error) {
 
