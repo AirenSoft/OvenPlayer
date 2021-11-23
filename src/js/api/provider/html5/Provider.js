@@ -107,6 +107,9 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
     that.getMse = () => {
         return spec.mse;
     };
+    that.getMediaElement = () => {
+        return spec.element;
+    };
     that.canSeek = () => {
         return spec.canSeek;
     };
