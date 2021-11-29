@@ -205,7 +205,7 @@
 
                 <ul class="list-group">
                     <li class="list-group-item bg-light d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0">Sources</h5>
+                        <h5 class="mb-0 fs-6">Sources</h5>
                         <small v-if="playerVersion">OvenPlayer
                             <span class="badge badge-info ms-1">{{playerVersion}}</span>
                         </small>
@@ -250,7 +250,7 @@
             <div class="col">
                 <ul class="list-group">
                     <li class="list-group-item bg-light">
-                        <h5 class="mb-0">Player Options</h5>
+                        <h5 class="mb-0 fs-6">Player Options</h5>
                     </li>
                     <li class="list-group-item">
 
@@ -354,7 +354,7 @@
                         </div>
                     </li>
                     <li class="list-group-item bg-light">
-                        <h5 class="mb-0">Demo Options</h5>
+                        <h5 class="mb-0 fs-6">Demo Options</h5>
                     </li>
                     <li class="list-group-item">
                         <div class="row">
@@ -391,7 +391,7 @@
             <div v-show="createScriptHTML" class="col">
                 <ul class="list-group">
                     <li class="list-group-item bg-light">
-                        <h5 class="mb-0">Usage</h5>
+                        <h5 class="mb-0 fs-6">Usage</h5>
                     </li>
                     <li class="list-group-item position-relative">
                         <div v-html="createScriptHTML"
@@ -400,7 +400,7 @@
                         </div>
                         <button
                                 ref="copyCodeButton"
-                                class="btn btn-light text-dark position-absolute"
+                                class="btn btn-light text-dark position-absolute px-2 px-md-4"
                                 style="top: 0.5rem; right: 1rem"
                                 :data-clipboard-text="createScript">
                             <i class="far fa-copy me-1"></i>COPY
@@ -411,7 +411,7 @@
             <div class="col">
                 <ul class="list-group">
                     <li class="list-group-item bg-light">
-                        <h5 class="mb-0">Export permanent link</h5>
+                        <h5 class="mb-0 fs-6">Export permanent link</h5>
                     </li>
                     <li class="list-group-item">
 
