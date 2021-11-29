@@ -1,0 +1,657 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <meta name="mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+
+    <title>OvenPlayer</title>
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="lib/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Noto+Sans" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-toast-plugin/1.3.2/jquery.toast.css">
+
+    <style>
+
+        .nav-tabs a {
+            color: gray;
+            font-weight: bold;
+        }
+
+        .jq-toast-wrap {
+            width: auto;
+        }
+
+        .jq-toast-single {
+            padding-right: 25px;
+        }
+
+        .dummy_player {
+            padding-bottom: 56.25%;
+            background: #000;
+        }
+    </style>
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-40491361-8"></script>
+
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+
+        gtag('js', new Date());
+
+        gtag('config', 'UA-40491361-8');
+    </script>
+
+    <script src="lib/vue.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <!--<script src="lib/dash.all.debug.js"></script>-->
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/dashjs/3.2.0/dash.all.min.js" integrity="sha512-wFaKU7BcXbvVVGi0vDUKv4GXc9Hrp4RjGZorG8KlpRurhpvgCXiLhcafCj3y/gKY5CKAuyu00b+BvJ+vyRD0Pg==" crossorigin="anonymous"></script>-->
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/dashjs/3.1.3/dash.all.min.js" integrity="sha512-KbtNOWr7e/rlM9utrUc5cO9PeJZO3jFfCjWPe1mHe2sPvIike3IZIH6h4ja6wH7aXNKrecP8zh6/SYDc3t6Jog==" crossorigin="anonymous"></script>-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dashjs/3.2.1/dash.all.min.js" integrity="sha512-K8ychE2luu1+zrt4MiDhr8L8B6zPB+x/EofroMF6LygAn+Oh/EadU18WgChXuOeCAan0y5/IQGS06izToR8xnQ==" crossorigin="anonymous"></script>
+    <script src="lib/clipboard.min.js"></script>
+    <script src="lib/jquery-1.12.4.min.js"></script>
+    <script src="lib/popper.min.js"></script>
+    <script src="lib/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-toast-plugin/1.3.2/jquery.toast.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/ovenplayer/dist/ovenplayer.js"></script>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="/">OVENPLAYER</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <div class="navbar-nav mr-auto">
+        </div>
+        <ul class="navbar-nav my-2 my-lg-0">
+            <li class="nav-item active">
+                <a class="nav-link" href="./demo.html">Player Demo</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="./ome_demo.html">Sub-Second Latency Demo</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="https://github.com/AirenSoft/OvenPlayer" target="_blank">GitHub</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="https://airensoft.gitbook.io/ovenplayer/" target="_blank">Docs</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+<div class="container mt-4">
+    <ul class="nav nav-tabs mb-3">
+        <li class="nav-item">
+            <a class="nav-link active" data-toggle="" href="./demo.html" target="_blank">Stream Playback</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="" href="demo_input.html" target="_blank">WebRTC Input<span class="badge badge-info ml-2">Beta</span></a>
+        </li>
+    </ul>
+    <div id="demo-navi" class="row">
+        <div class="col-12 mb-2 player_area">
+            <div id="player"></div>
+        </div>
+        <div class="col-12 mb-4 text-right">
+            <span class="small" id="playerVersion"></span>
+        </div>
+        <div class="col-12 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Test Stream</h5>
+                    <div class="row mb-2">
+                        <div class="col-12">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ choicedProtocol }}</button>
+                                    <div class="dropdown-menu">
+                                        <a v-for="protocol in protocols" class="dropdown-item" v-bind:data-value="protocol" v-on:click="setProtocol(protocol)">
+                                            {{ protocol }}
+                                        </a>
+                                    </div>
+                                </div>
+                                <input type="text" class="form-control" placeholder="Please Enter URL." v-model="url">
+                                <input type="text" class="form-control d-none d-sm-none d-md-block flex-grow-0 w-25" placeholder="Label (e.g. 1080p)" v-model="label">
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-success" type="button" v-on:click="addSource">Add Source</button>
+                                </div>
+                            </div>
+                            <small v-if="errorMessage" class="form-text text-danger text-center">
+                                {{errorMessage}}
+                            </small>
+                        </div>
+                    </div>
+                    <div class="mb-2 text-right" v-if="sources.length">
+                        <button type="button" class="btn btn-primary" v-on:click="loadSources">{{loadButtonText}}</button>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-12">
+                            <div class="form-check mt-3 mb-3">
+                                <input type="checkbox" class="form-check-input" id="lowlatencyCheck">
+                                <label class="form-check-label" for="lowlatencyCheck">Enable Low Latency MPEG DASH</label>
+                            </div>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="inputGroup-sizing-default">LL-DASH Live Delay (optional)</span>
+                                </div>
+                                <input id="liveDelayInput" type="number" class="form-control text-right" aria-label="Default" aria-describedby="inputGroup-sizing-default">
+                                <div class="input-group-append">
+                                    <button type="button" id="applyLiveDelayButton" class="btn btn-outline-success">Apply</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card mb-2" v-for="(source, index) in sources">
+                        <div class="card-body">
+                            <strong>{{ source.type }}</strong>
+                            <span>{{ source.file }}</span>
+                            <i>({{ source.label }})</i>
+                            <button type="button" class="close" aria-label="Close" v-on:click="removeSource(index)">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card mt-2">
+                <div class="card-body ">
+                    <h5 class="card-title">Usage</h5>
+                    <div class="card bg-light">
+                        <div class="card-body">
+                                <pre>
+player = OvenPlayer.create("player", {
+    sources: {{getSources()}}
+});
+</pre>
+                        </div>
+                    </div>
+                    <div v-if="sources.length">
+                        <h5 class="card-title mt-4">Export</h5>
+                        <div class="input-group">
+                            <input type="text" id="exportURL" v-model="exportUrl" readonly class="form-control">
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-danger btnExport" type="button" data-clipboard-target="#exportURL" data-trigger="manual" data-placement="top" title="Copied to clipboard.">Export Source</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 mb-2">
+            <div class="text-center mt-2">
+                <small>
+                    Powered by <a href="https://github.com/AirenSoft/OvenMediaEngine" class="text-primary" target="_blank">OvenMediaEngine</a> and <a href="https://github.com/AirenSoft/OvenPlayer" class="text-primary" target="_blank">OvenPlayer</a>.
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+
+    var playerLoaded = false;
+
+    var errorRetryer = null;
+
+    var getExportUrl = function (sources, lowLatency, liveDelay) {
+
+        var exportUrl = window.location.protocol + "//" + location.host + location.pathname + "#sources=" + encodeURIComponent(JSON.stringify(sources)) +
+            '&lowLatency=' + lowLatency + '&liveDelay=' + liveDelay;
+
+        exportUrl = exportUrl.replace('%2C%22lowLatency%22%3Atrue', '');
+        location.href = exportUrl;
+        return exportUrl;
+    };
+
+    var player = "",
+        preSources = "",
+        errorOccured = false,
+        isSSL = window.location.protocol === "https:";
+
+    var getParameterByName = function (name, url) {
+
+        if (!url) {
+
+            url = window.location.href;
+        }
+
+        name = name.replace(/[\[\]]/g, '\\$&');
+
+        var regex = new RegExp('[#&]' + name + '(=([^&#]*)|&|#|$)');
+        var results = regex.exec(url);
+
+        if (!results) {
+
+            return 'false';
+        }
+
+        if (!results[2]) {
+
+            return '';
+        }
+
+        return decodeURIComponent(results[2].replace(/\+/g, ' '));
+    };
+
+    var urlSources = getParameterByName("sources");
+
+    var defaultSources = [
+        {
+            type: 'mp4',
+            file: './assets/OCP_480.mp4',
+            label: '480p'
+        },
+        {
+            type: 'mp4',
+            file: './assets/OCP_720.mp4',
+            label: '720p'
+        },
+        {
+            type: 'mp4',
+            file: './assets/OCP_1080.mp4',
+            label: '1080p'
+        }
+    ];
+
+
+    if (urlSources) {
+        preSources = JSON.parse(urlSources);
+    }
+
+    $(document).ready(function () {
+
+        var clipboard = new ClipboardJS('.btnExport');
+
+        clipboard.on('success', function (e) {
+            $('.btnExport').tooltip('show');
+            setTimeout(function () {
+                $('.btnExport').tooltip('hide');
+            }, 3000);
+
+            e.clearSelection();
+        });
+
+        var lowLatency = getParameterByName("lowLatency");
+        var liveDelay = getParameterByName("liveDelay");
+
+        var playerOption = {
+            autoStart: true,
+            sources: preSources || defaultSources
+        };
+
+        console.log(playerOption)
+
+        if (lowLatency && lowLatency !== 'false') {
+            $('#lowlatencyCheck').prop('checked', true);
+
+            for (var i = 0; i < preSources.length; i++) {
+
+                preSources[i].lowLatency = true;
+            }
+        }
+
+        if (liveDelay && liveDelay !== 'false') {
+            $('#liveDelayInput').val(liveDelay);
+            playerOption.lowLatencyMpdLiveDelay = liveDelay;
+        }
+
+        player = OvenPlayer.create("player", playerOption);
+
+        player.on("ready", function (error) {
+            errorOccured = false;
+
+            if (preSources) {
+                playerLoaded = true;
+                navigation.loadButtonText = 'Unload Player';
+            }
+
+            $('#playerVersion').text('v' + player.getVersion());
+        });
+
+        player.on("sourceChanged", function () {
+            if (errorRetryer) {
+                clearTimeout(errorRetryer);
+                errorRetryer = null;
+            }
+        });
+
+        player.on("error", function (error) {
+            errorOccured = true;
+            console.log(error);
+
+            if (errorRetryer) {
+                clearTimeout(errorRetryer);
+                errorRetryer = null;
+            }
+
+            errorRetryer = setTimeout(function () {
+                playerLoaded = false;
+                navigation.loadSources();
+            }, 2000);
+
+        });
+
+        $('#lowlatencyCheck, #liveDelayInput').on('change', function () {
+
+            if (navigation.sources) {
+
+                var lowLatencyCheck = false;
+
+                if ($('#lowlatencyCheck').prop('checked')) {
+                    lowLatencyCheck = true;
+                }
+
+                var liveDelayValue = false;
+
+                if ($.trim($('#liveDelayInput').val()) !== '') {
+                    liveDelayValue = $.trim($('#liveDelayInput').val());
+                }
+
+                navigation.exportUrl = getExportUrl(navigation.sources, lowLatencyCheck, liveDelayValue);
+            }
+        });
+
+        $('#lowlatencyCheck').on('change', function () {
+
+            navigation.loadSources();
+        });
+
+        $('#applyLiveDelayButton').on('click', function () {
+
+            var isLowLatencyOn = $('#lowlatencyCheck').prop('checked');
+
+            if (!isLowLatencyOn) {
+
+                $('#lowlatencyCheck').prop('checked', true);
+                navigation.loadSources();
+            } else {
+
+                if (player.getProviderName() === 'dash') {
+
+                    var op_dash = player.getMseInstance();
+
+                    var prevLiveDelay = op_dash.getSettings().streaming.liveDelay;
+
+                    if (!prevLiveDelay) {
+                        prevLiveDelay = undefined;
+                    }
+
+                    var newLiveDelay = parseInt($.trim($('#liveDelayInput').val()));
+
+                    if (!newLiveDelay) {
+                        newLiveDelay = undefined;
+                    }
+
+                    op_dash.updateSettings({
+                        streaming: {
+                            liveDelay: newLiveDelay
+                        }
+                    });
+
+                    $.toast({
+                        text: 'Live delay updated from ' + prevLiveDelay + ' to ' + newLiveDelay + '.',
+                        bgColor: '#e9ecef',
+                        textColor: '#495057',
+                        loader: false,
+                        icon: 'info'
+                    });
+                }
+            }
+
+        });
+    });
+
+    var navigation = new Vue({
+        el: '#demo-navi',
+        data: {
+            choicedProtocol: "Protocol",
+            protocols: ["webrtc", "hls", "dash", "http"],
+            url: "",
+            label: null,
+            sources: preSources || [],
+            sourceId: 0,
+            errorMessage: "",
+            loadButtonText: "Load Player",
+            exportUrl: preSources ? getExportUrl(preSources, getParameterByName("lowLatency"), getParameterByName("liveDelay")) : ""
+        },
+        methods: {
+            setProtocol: function (protocol) {
+                this.choicedProtocol = protocol;
+            },
+            addSource: function () {
+                var isMixedContentProblem = false;
+
+                const findProtocol = function (url) {
+
+                    var protocol = "Protocol";
+
+                    if (url.indexOf('rtmp:') === 0) {
+                        protocol = "rtmp";
+                    } else if (url.indexOf('ws:') === 0 || url.indexOf('wss:') === 0) {
+                        protocol = "webrtc";
+                    } else if (url.indexOf('http:') === 0 || url.indexOf('https:') === 0) {
+                        if (url.indexOf('.m3u8') > 0) {
+                            protocol = "hls";
+                        } else if (url.indexOf('.mpd') > 0) {
+                            protocol = "dash";
+                        } else if (url.indexOf('.mp4') > 0) {
+                            protocol = "http";
+                        }
+                    }
+
+                    if (protocol === 'Protocol') {
+
+                        protocol = navigation.choicedProtocol;
+                    }
+
+                    return protocol;
+                };
+
+                this.choicedProtocol = findProtocol(this.url);
+
+                if (this.choicedProtocol === "Protocol") {
+
+                    this.errorMessage = "Please enter a protocol.";
+                    return;
+                }
+
+                if (!this.url) {
+
+                    this.errorMessage = "Please enter a playback url.";
+                    return;
+                }
+
+                if (this.choicedProtocol === "webrtc" && (this.url.indexOf('ws:') !== 0 && this.url.indexOf('wss:') !== 0)) {
+
+                    this.errorMessage = "Please enter a correct OME URL. ex) ws://dev2.airensoft.com:3333/app/stream_o";
+                    return;
+                }
+
+                if (isSSL) {
+
+                    isMixedContentProblem = false;
+
+                    if (this.choicedProtocol === "webrtc" && this.url.indexOf('wss:') < 0) {
+                        isMixedContentProblem = true;
+                    } else if ((this.choicedProtocol === "http" || this.choicedProtocol === "hls" || this.choicedProtocol === "dash") && this.url.indexOf('https:') < 0) {
+                        isMixedContentProblem = true;
+                    }
+                    if (isMixedContentProblem) {
+                        // this.errorMessage = "Please check the protocol. Mixed content error! HTTP sources on HTTPS.";
+                    }
+                }
+
+                var sources1 = {
+                    id: this.sourceId++,
+                    label: this.label,
+                    file: this.url,
+                    type: this.choicedProtocol === "http" ? "mp4" : this.choicedProtocol
+                };
+
+                this.sources.push(sources1);
+
+                if (!isMixedContentProblem) {
+
+                    this.errorMessage = "";
+                }
+
+                this.choicedProtocol = "Protocol";
+                this.url = "";
+                this.loadButtonText = "Load Player";
+                playerLoaded = false;
+
+
+                if (this.sources) {
+
+                    var lowLatency = false;
+
+                    if ($('#lowlatencyCheck').prop('checked')) {
+                        lowLatency = true;
+                    }
+
+                    var liveDelay = false;
+
+                    if ($.trim($('#liveDelayInput').val()) !== '') {
+                        liveDelay = $.trim($('#liveDelayInput').val());
+                    }
+
+                    this.exportUrl = getExportUrl(this.sources, lowLatency, liveDelay);
+                }
+            },
+            removeSource: function (index) {
+                this.sources.splice(index, 1);
+
+                if (this.sources) {
+                    var lowLatency = false;
+
+                    if ($('#lowlatencyCheck').prop('checked')) {
+                        lowLatency = true;
+                    }
+
+                    var liveDelay = false;
+
+                    if ($.trim($('#liveDelayInput').val()) !== '') {
+                        liveDelay = $.trim($('#liveDelayInput').val());
+                    }
+
+                    this.loadButtonText = "Load Player";
+                    playerLoaded = false;
+
+                    this.exportUrl = getExportUrl(this.sources, lowLatency, liveDelay);
+                }
+            },
+            loadSources: function () {
+
+                if (!playerLoaded) {
+
+                    $('.dummy_player').remove();
+
+                    if (this.sources && this.sources.length > 0) {
+
+                        var playerOption = {
+                            autoStart: false,
+                            sources: JSON.parse(JSON.stringify(this.sources))
+                        };
+
+                        var lowLatencyChecked = $('#lowlatencyCheck').prop('checked');
+
+                        for (var i = 0; i < playerOption.sources.length; i++) {
+
+                            playerOption.sources[i].lowLatency = lowLatencyChecked;
+                        }
+
+                        if ($.trim($('#liveDelayInput').val()) !== '') {
+                            playerOption.lowLatencyMpdLiveDelay = parseInt($.trim($('#liveDelayInput').val()))
+                        }
+
+                        var playerState = player.getState();
+
+                        if (playerState === 'playing' || playerState === 'stalled' || playerState === 'loading' || playerState === 'error') {
+                            playerOption.autoStart = true;
+                        }
+
+                        player.remove();
+
+                        player = OvenPlayer.create("player", playerOption);
+
+                        player.on("ready", function () {
+                            errorOccured = false;
+                            playerLoaded = true;
+                            navigation.loadButtonText = 'Unload Player';
+                            $('#playerVersion').text('v' + player.getVersion());
+                        });
+
+                        player.on("sourceChanged", function () {
+                            if (errorRetryer) {
+                                clearTimeout(errorRetryer);
+                                errorRetryer = null;
+                            }
+                        });
+
+                        player.on("error", function (error) {
+
+                            errorOccured = true;
+                            console.log(error);
+                            // navigation.errorMessage = error.message;
+
+                            if (errorRetryer) {
+                                clearTimeout(errorRetryer);
+                                errorRetryer = null;
+                            }
+
+                            errorRetryer = setTimeout(function () {
+                                playerLoaded = false;
+                                navigation.loadSources();
+                            }, 2000);
+
+                        });
+
+                        this.errorMessage = "";
+                    } else {
+                        this.errorMessage = "Please add a playback info.";
+                    }
+                } else {
+
+                    if (errorRetryer) {
+                        clearTimeout(errorRetryer);
+                        errorRetryer = null;
+                    }
+
+                    player.remove();
+                    playerLoaded = false;
+
+                    $('.player_area').append('<div class="dummy_player"></div>');
+
+                    this.loadButtonText = 'Load Player';
+                }
+
+            },
+            getSources: function () {
+                return this.sources.length ? this.sources.map(function (source) {
+
+                    var sourceR = {
+                        file: source.file,
+                        label: source.label,
+                        type: source.type,
+                    };
+
+                    return sourceR;
+
+                }) : defaultSources;
+            }
+        }
+    });
+</script>
+</body>
+
+</html>

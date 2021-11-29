@@ -3,35 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
-    <meta name="mobile-web-app-capable" content="yes"/>
-    <meta name="apple-mobile-web-app-capable" content="yes"/>
-    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
 
     <title>OvenPlayer</title>
     <link rel="icon" href="./assets/images/00_OvenPlayer_Favicon.svg">
-    <link rel="stylesheet" href="lib/bootstrap.min.css">
-    <link href="https://fonts.googleapis.com/css?family=Noto+Sans" rel="stylesheet">
 
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet"/>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet"/>
+    <!-- MDB -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.10.0/mdb.min.css" rel="stylesheet"/>
+    <!-- highlightjs -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.3.1/styles/github.css">
     <style>
 
-        .nav-tabs a {
-            color: gray;
-            font-weight: bold;
+        .navbar-toggler-icon {
+            background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Cpath stroke='rgba(0, 0, 0, 0.55)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E") !important;
         }
 
-        .jq-toast-wrap {
-            width: auto;
+        .btn {
+            min-width: 0 !important;
         }
 
-        .jq-toast-single {
-            padding-right: 25px;
+        fieldset {
+            padding-left: 0.5rem;
+            padding-bottom: 0.5rem;
         }
 
-        .dummy_player {
+        .list-group-item {
+            padding: 0.5rem 1rem;
+        }
+
+        .list-group-item h6 {
+            margin-top: 0.5rem;
+        }
+
+        .dummyPlayer {
             padding-bottom: 56.25%;
             background: #000;
+        }
+
+        .source-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .source-protocol {
+
+        }
+
+        .source-url {
+            margin-top: 0.25rem;
+        }
+
+        .source-control {
+
+        }
+
+        .player-area {
+            position: relative;
+        }
+
+        .player-wrapper {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
         }
     </style>
 
@@ -50,652 +94,781 @@
         gtag('config', 'UA-40491361-8');
     </script>
 
-    <script src="lib/vue.min.js"></script>
+    <!-- VUE -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@3.2.23/dist/vue.global.prod.min.js"></script>
+
+    <!-- underscore -->
+    <script src="https://cdn.jsdelivr.net/npm/underscore@1.13.1/underscore-umd-min.js"></script>
+
+    <!-- highlightjs -->
+    <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.3.1/build/highlight.min.js"></script>
+
+    <!-- js-beautify -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.0/beautify.min.js"></script>
+
+    <!-- clipboard -->
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js"></script>
+
+    <!-- popperjs -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+
+    <!-- hls.js -->
     <script src="https://cdn.jsdelivr.net/npm/hls.js/dist/hls.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/dashjs/3.2.1/dash.all.min.js" integrity="sha512-K8ychE2luu1+zrt4MiDhr8L8B6zPB+x/EofroMF6LygAn+Oh/EadU18WgChXuOeCAan0y5/IQGS06izToR8xnQ==" crossorigin="anonymous"></script>
-    <script src="lib/clipboard.min.js"></script>
-    <script src="lib/jquery-1.12.4.min.js"></script>
-    <script src="../dist/ovenplayer.js"></script>
+
+    <!-- dash.js -->
+    <script src="https://cdn.jsdelivr.net/npm/dashjs@3.2.1/dist/dash.all.min.js"></script>
+
+    <!-- OvenPlayer -->
+    <script src="https://cdn.jsdelivr.net/npm/ovenplayer/dist/ovenplayer.js"></script>
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="/">OVENPLAYER</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-        <div class="navbar-nav mr-auto">
+<div id="app">
+    <nav class="navbar navbar-expand-md navbar-light bg-light">
+        <div class="container-lg">
+            <a class="navbar-brand" href="/">OVENPLAYER</a>
+            <button class="navbar-toggler" type="button" data-mdb-toggle="collapse" data-mdb-target="#navbarNav" aria-controls="navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="./demo.html">Player Demo</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="./ome_demo.html">Sub-Second Latency Demo</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://github.com/AirenSoft/OvenPlayer" target="_blank">GitHub</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://airensoft.gitbook.io/ovenplayer/" target="_blank">Docs</a>
+                    </li>
+                </ul>
+            </div>
         </div>
-        <ul class="navbar-nav my-2 my-lg-0">
-            <li class="nav-item active">
-                <a class="nav-link" href="./demo.html">Player Demo</a>
+
+    </nav>
+    <div class="container-lg mt-4">
+        <ul class="nav nav-pills mb-3">
+            <li class="nav-item">
+                <a class="nav-link active" href="demo.html" target="_blank">Player</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="./ome_demo.html">Sub-Second Latency Demo</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="https://github.com/AirenSoft/OvenPlayer" target="_blank">GitHub</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="https://airensoft.gitbook.io/ovenplayer/" target="_blank">Docs</a>
+                <a class="nav-link position-relative" href="demo_input.html" target="_blank">
+                <span>
+                    WebRTC Input
+                </span>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-info">Beta</span>
+                </a>
             </li>
         </ul>
-    </div>
-</nav>
-<div class="container mt-4">
-    <ul class="nav nav-tabs mb-3">
-        <li class="nav-item">
-            <a class="nav-link active" data-toggle="" href="./demo.html" target="_blank">Stream Playback</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" data-toggle="" href="demo_input.html" target="_blank">WebRTC Input<span class="badge badge-info ml-2">Beta</span></a>
-        </li>
-    </ul>
-    <div id="demo-navi" class="row">
-        <div class="col-12 mb-2 player_area">
-            <div id="player"></div>
+
+
+        <div class="row g-3 mb-3">
+            <div class="col-12">
+                <div class="input-group">
+                    <div class="form-outline flex-grow-1">
+                        <input type="text" id="playbackUrl" class="form-control bg-white"
+                               v-model="source"
+                               @keyup.enter="addSource"/>
+                        <label class="form-label" for="playbackUrl">Playback URL</label>
+                    </div>
+                    <button class="btn btn-primary px-2 px-md-4" type="button"
+                            @click="addSource">
+                        ADD SOURCE
+                    </button>
+                </div>
+            </div>
+            <div class="col-12 col-md-6">
+                <div class="player-area rounded shadow overflow-hidden mb-2">
+                    <div class="dummyPlayer d-flex justify-content-center text-center">
+                        <span v-if="playerMessage"
+                              class="text-white position-absolute"
+                              style="left: 1rem; right: 1rem; bottom: 28.125%">
+                            <i class="fas fa-info-circle me-1 text-info"></i>
+                            {{playerMessage}}
+                        </span>
+                    </div>
+                    <div class="player-wrapper">
+                        <div id="player">
+
+                        </div>
+                    </div>
+                </div>
+                <button class="btn btn-primary w-100" type="button" @click="reloadPlayer">
+                    <i class="fas me-2" :class="loadButtonIcon"></i>
+                    {{loadButtonMsg}}
+                </button>
+            </div>
+            <div class="col-12 col-md-6">
+
+                <ul class="list-group">
+                    <li class="list-group-item bg-light d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Sources</h5>
+                        <small v-if="playerVersion">OvenPlayer
+                            <span class="badge badge-info ms-1">{{playerVersion}}</span>
+                        </small>
+                    </li>
+                    <div class="list-group-item" v-if="playerOption.sources.length === 0">
+                        <p class="lead">Test various streams with OvenPlayer</p>
+
+                        <ul>
+                            <li>
+                                <strong>Sub-Second Latency</strong>: WebRTC (Signalling Protocol Conforms to the OME Specification)
+                            </li>
+                            <li>
+                                Legacy: MPEG-DASH, HLS
+                            </li>
+                        </ul>
+                        <p class="mt-4">To play the stream of OvenMediaEngine, please refer to the following documents.</p>
+                        <ul class="mb-2">
+                            <li>
+                                WebRTC <a href="https://airensoft.gitbook.io/ovenmediaengine/streaming/webrtc-publishing#playback" class="ms-1" target="_blank">
+                                <i class="fas fa-external-link-alt"></i>
+                            </a>
+                            </li>
+                            <li>
+                                Dash& HLS <a href="https://airensoft.gitbook.io/ovenmediaengine/streaming/hls-mpeg-dash#streaming" class="ms-1" target="_blank">
+                                <i class="fas fa-external-link-alt"></i>
+                            </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <source-item
+                            v-for="(source, index) in playerOption.sources"
+                            :source="source"
+                            :index="index"
+                            @remove-source="removeSource(index)"
+                    >
+                    </source-item>
+                </ul>
+            </div>
         </div>
-        <div class="col-12 mb-4 text-right">
-            <span class="small" id="playerVersion"></span>
-        </div>
-        <div class="col-12 mb-4">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Test Stream</h5>
-                    <div class="row mb-2">
-                        <div class="col-12">
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ choicedProtocol }}</button>
-                                    <div class="dropdown-menu">
-                                        <a v-for="protocol in protocols" class="dropdown-item" v-bind:data-value="protocol" v-on:click="setProtocol(protocol)">
-                                            {{ protocol }}
+
+        <div class="row row-cols-1 g-3">
+            <div class="col">
+                <ul class="list-group">
+                    <li class="list-group-item bg-light">
+                        <h5 class="mb-0">Player Options</h5>
+                    </li>
+                    <li class="list-group-item">
+
+                        <div class="row">
+                            <div class="col-lg-4 border-start border-2 mb-3 mb-lg-0">
+                                <!--General Config -->
+                                <h6>General Options</h6>
+                                <fieldset>
+                                    <div class="form-check">
+                                        <input
+                                                class="form-check-input"
+                                                type="checkbox"
+                                                value=""
+                                                id="autoStart"
+                                                v-model="playerOption.autoStart"
+                                                @change="changeOptions"
+                                        />
+                                        <label class="form-check-label" for="autoStart">
+                                            autoStart
+                                        </label>
+                                        <a href="https://airensoft.gitbook.io/ovenplayer/initialization#autostart" class="ms-1" target="_blank">
+                                            <i class="fas fa-external-link-alt"></i>
                                         </a>
                                     </div>
-                                </div>
-                                <input type="text" class="form-control" placeholder="Please Enter URL." v-model="url">
-                                <input type="text" class="form-control d-none d-sm-none d-md-block flex-grow-0 w-25" placeholder="Label (e.g. 1080p)" v-model="label">
-                                <div class="input-group-append">
-                                    <button class="btn btn-outline-success" type="button" v-on:click="addSource">Add Source</button>
-                                </div>
+                                    <div class="form-check">
+                                        <input
+                                                class="form-check-input"
+                                                type="checkbox"
+                                                value=""
+                                                id="autoFallback"
+                                                v-model="playerOption.autoFallback"
+                                                @change="changeOptions"
+                                        />
+                                        <label class="form-check-label" for="autoFallback">
+                                            autoFallback
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input
+                                                class="form-check-input"
+                                                type="checkbox"
+                                                value=""
+                                                id="mute"
+                                                v-model="playerOption.mute"
+                                                @change="changeOptions"
+                                        />
+                                        <label class="form-check-label" for="mute">
+                                            mute
+                                        </label>
+                                        <a href="https://airensoft.gitbook.io/ovenplayer/initialization#mute" class="ms-1" target="_blank">
+                                            <i class="fas fa-external-link-alt"></i>
+                                        </a>
+                                    </div>
+                                </fieldset>
                             </div>
-                            <small v-if="errorMessage" class="form-text text-danger text-center">
-                                {{errorMessage}}
-                            </small>
+                            <div class="col-lg-4 border-start border-2 mb-3 mb-lg-0">
+                                <!--WebRTC Config -->
+                                <h6>WebRTC Options</h6>
+                                <fieldset>
+                                    <div class="form-check mb-2">
+                                        <input
+                                                class="form-check-input"
+                                                type="checkbox"
+                                                value=""
+                                                id="playoutDelayHintCheck"
+                                                v-model="playoutDelayHintCheck"
+                                        />
+                                        <label class="form-check-label" for="playoutDelayHintCheck">
+                                            Enable Playout delay hint
+                                        </label>
+                                    </div>
+                                    <div class="form-outline ms-4">
+                                        <input :disabled="!playoutDelayHintCheck" type="number" id="playoutDelayHintInput" class="form-control active"
+                                               v-model="playoutDelayHintInput">
+                                        <label class="form-label" for="playoutDelayHintInput">Delay (Second)</label>
+                                    </div>
+                                </fieldset>
+                            </div>
+                            <div class="col-lg-4 border-start border-2 mb-3 mb-lg-0">
+                                <!--LLDash Config -->
+                                <h6>Low-Latency DASH Options</h6>
+                                <fieldset>
+                                    <div class="form-check mb-2">
+                                        <input
+                                                class="form-check-input"
+                                                type="checkbox"
+                                                value=""
+                                                id="llDashCheck"
+                                                disabled
+                                        />
+                                        <label class="form-check-label" for="llDashCheck">
+                                            Enable Low Latency MPEG DASH
+                                        </label>
+                                    </div>
+                                    <div class="form-outline ms-4">
+                                        <input disabled type="number" id="llDashLiveDelayInput" class="form-control">
+                                        <label class="form-label" for="llDashLiveDelayInput">Live Delay (Optional, second)</label>
+                                    </div>
+                                </fieldset>
+                            </div>
                         </div>
-                    </div>
-                    <div class="mb-2 text-right" v-if="sources.length">
-                        <button type="button" class="btn btn-primary" v-on:click="loadSources">{{loadButtonText}}</button>
-                    </div>
-                    <h5 class="card-title">Sources</h5>
-                    <div class="card mb-2" v-for="(source, index) in sources">
-                        <div class="card-body">
-                            <strong>{{ source.type }}</strong>
-                            <span>{{ source.file }}</span>
-                            <i v-if="source.label">({{ source.label }})</i>
-                            <button type="button" class="close" aria-label="Close" v-on:click="removeSource(index)">
-                                <span aria-hidden="true">&times;</span>
+                    </li>
+                    <li class="list-group-item bg-light">
+                        <h5 class="mb-0">Demo Options</h5>
+                    </li>
+                    <li class="list-group-item">
+                        <div class="row">
+                            <div class="col border-start border-2">
+                                <h6>Reload the player when error occurred</h6>
+                                <fieldset>
+                                    <div class="form-check mb-2">
+                                        <input
+                                                class="form-check-input"
+                                                type="checkbox"
+                                                value=""
+                                                id="autoReload"
+                                                v-model="demoOption.autoReload"
+                                                @change="changeOptions"
+                                        />
+                                        <label class="form-check-label" for="autoReload">
+                                            Enable auto reload
+                                        </label>
+                                    </div>
+                                    <div class="form-outline ms-4">
+                                        <input type="text" id="playerReloadInterval" class="form-control" :class="demoOption.autoReloadInterval ? 'active': ''"
+                                               v-model="demoOption.autoReloadInterval"
+                                               @change="changeOptions">
+                                        <label class="form-label" for="playerReloadInterval">
+                                            Reload interval (millisecond)
+                                        </label>
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div v-show="createScriptHTML" class="col">
+                <ul class="list-group">
+                    <li class="list-group-item bg-light">
+                        <h5 class="mb-0">Usage</h5>
+                    </li>
+                    <li class="list-group-item position-relative">
+                        <div v-html="createScriptHTML"
+                             class="my-2 small font-monospace w-100 overflow-auto"
+                             style="white-space: pre;">
+                        </div>
+                        <button
+                                ref="copyCodeButton"
+                                class="btn btn-light text-dark position-absolute"
+                                style="top: 0.5rem; right: 1rem"
+                                :data-clipboard-text="createScript">
+                            <i class="far fa-copy me-1"></i>COPY
+                        </button>
+                    </li>
+                </ul>
+            </div>
+            <div class="col">
+                <ul class="list-group">
+                    <li class="list-group-item bg-light">
+                        <h5 class="mb-0">Export permanent link</h5>
+                    </li>
+                    <li class="list-group-item">
+
+                        <div class="input-group">
+                            <div class="form-outline flex-grow-1">
+                                <input type="text"
+                                       id="permanentLinkInput"
+                                       readonly
+                                       class="form-control bg-white"
+                                       v-model="permanentLink"/>
+                            </div>
+                            <button id="exportButton"
+                                    ref="exportButton"
+                                    data-clipboard-target="#permanentLinkInput"
+                                    class="btn btn-primary px-2 px-md-4"
+                                    type="button">
+                                <i class="far fa-copy me-1"></i>COPY
                             </button>
                         </div>
-                    </div>
-                    <h5 class="card-title mt-4">Settings</h5>
-                    <div class="card mb-2">
-                        <div class="card-body">
-                            <h6 class="card-title">WebRTC</h6>
-                            <div class="row">
-                                <div class="col">
-                                    <div class="input-group input-group-sm">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text">WebRTC Playout Delay Hint</span>
-                                        </div>
-                                        <input id="playoutDelayHintInput" type="number" class="form-control text-right" aria-label="Default" aria-describedby="inputGroup-sizing-default">
-                                        <div class="input-group-append">
-                                            <button type="button" id="applyPlayoutDelayHintButton" class="btn btn-outline-success">Apply</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="card-body">
-                            <h6 class="card-title">Low Latency DASH</h6>
-                            <div class="row">
-                                <div class="col">
-                                    <div class="input-group input-group-sm">
-                                        <div class="input-group-prepend">
-                                            <div class="input-group-text">
-                                                <input type="checkbox" id="lowlatencyCheck">
-                                            </div>
-                                        </div>
-                                        <div class="input-group-append flex-grow-1">
-                                            <div class="input-group-text bg-white w-100">
-                                                Enable Low Latency MPEG DASH
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col">
-                                    <div class="input-group input-group-sm">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text">Live Delay (optional)</span>
-                                        </div>
-                                        <input id="liveDelayInput" type="number" class="form-control text-right" aria-label="Default">
-                                        <div class="input-group-append">
-                                            <button type="button" id="applyLiveDelayButton" class="btn btn-outline-success">Apply</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="card mt-2">
-                <div class="card-body ">
-                    <h5 class="card-title">Usage</h5>
-                    <div class="card bg-light">
-                        <div class="card-body">
-<pre>
-player = OvenPlayer.create("player", {
-    sources: {{getSources()}}
-});
-</pre>
-                        </div>
-                    </div>
-                    <div v-if="sources.length">
-                        <h5 class="card-title mt-4">Export</h5>
-                        <div class="input-group">
-                            <input type="text" id="exportURL" v-model="exportUrl" readonly class="form-control">
-                            <div class="input-group-append">
-                                <button class="btn btn-outline-danger btnExport" type="button" data-clipboard-target="#exportURL" data-trigger="manual" data-placement="top" title="Copied to clipboard.">Export Source</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+
+                    </li>
+                </ul>
             </div>
         </div>
-        <div class="col-12 mb-2">
-            <div class="text-center mt-2">
-                <small>
-                    Powered by <a href="https://github.com/AirenSoft/OvenMediaEngine" class="text-primary" target="_blank">OvenMediaEngine</a> and <a href="https://github.com/AirenSoft/OvenPlayer" class="text-primary" target="_blank">OvenPlayer</a>.
-                </small>
-            </div>
+    </div>
+    <div class="bg-light border-top mt-5">
+        <div class="container-lg mt-3">
+            <footer class="text-center text-lg-start">
+                <section class="">
+                    <div class="row">
+                        <div class="col-md-5 col-lg-5 col-xl-5 mx-auto mt-3">
+                            <h6 class="text-uppercase mb-4 font-weight-bold">
+                                AirenSoft
+                            </h6>
+                            <p class="lead">
+                                Media Technology Expert Group
+                            </p>
+                            <p>
+                                Our mission is to build a powerful media world by making it easier for everyone to use all the complex and demanding media technologies of the world.
+                            </p>
+                        </div>
+
+                        <hr class="w-100 clearfix d-lg-none"/>
+
+                        <div class="col-md-5 col-lg-2 col-xl-2 mx-auto mt-3">
+                            <h6 class="text-uppercase mb-4 font-weight-bold">OPEN SOURCE PROJECTS</h6>
+                            <p>
+                                <a class="" target="_blank" href="https://github.com/AirenSoft/OvenMediaEngine">OvenMediaEngine</a>
+                            </p>
+                            <p>
+                                <a class="" target="_blank" href="https://github.com/AirenSoft/OvenPlayer">OvenPlayer</a>
+                            </p>
+                            <p>
+                                <a class="" target="_blank" href="https://github.com/AirenSoft/OvenLiveKit-Web">OvenLiveKit-Web</a>
+                            </p>
+                            <p>
+                                <a class="" target="_blank" href="https://github.com/AirenSoft/OvenSpace">OvenSpace</a>
+                            </p>
+                        </div>
+
+                        <hr class="w-100 clearfix d-lg-none"/>
+
+                        <div class="col-md-5 col-lg-3 col-xl-3 mx-auto mt-3">
+                            <h6 class="text-uppercase mb-4 font-weight-bold">Contact</h6>
+                            <p><i class="fas fa-home mr-3"></i> #1203, Twenty First Valley, 157, Yangpyeong-ro, Yeongdeungpo-gu, Seoul, 07207 Republic of Korea</p>
+                            <p><i class="fas fa-envelope mr-3"></i> contact@airensoft.com</p>
+                            <p><i class="fas fa-phone mr-3"></i> +82-2-6378-5227</p>
+                        </div>
+                    </div>
+
+                </section>
+
+                <hr class="my-3">
+
+                <section class="p-3 pt-0">
+                    <div class="row d-flex align-items-center">
+                        <div class="col-md-7 col-lg-8 text-center text-md-start">
+                            <div class="p-3">
+                                © 2021 Copyright:
+                                <a class="" href="https://www.airensoft.com">AirenSoft</a>
+                                Co., Ltd. All rights reserved.
+                            </div>
+                        </div>
+
+                        <div class="col-md-5 col-lg-4 ml-lg-0 text-center text-md-end">
+                            <!-- Facebook -->
+                            <a
+                                    class="btn btn-floating m-1"
+                                    class=""
+                                    role="button"
+                                    target="_blank"
+                                    href="https://www.facebook.com/airensoft/"
+                            ><i class="fab fa-facebook-f"></i
+                            ></a>
+
+                            <!-- Twitter -->
+                            <a
+                                    class="btn btn-floating m-1"
+                                    class=""
+                                    role="button"
+                                    target="_blank"
+                                    href="https://twitter.com/AirenSoft"
+                            ><i class="fab fa-twitter"></i
+                            ></a>
+
+                            <!-- Instagram -->
+                            <a
+                                    class="btn btn-floating m-1"
+                                    class=""
+                                    role="button"
+                                    target="_blank"
+                                    href="https://www.instagram.com/airensoft"
+                            ><i class="fab fa-instagram"></i
+                            ></a>
+                        </div>
+                    </div>
+                </section>
+            </footer>
         </div>
     </div>
 </div>
+
+<script id="source-item" type="text/template">
+    <li class="list-group-item">
+        <div class="source-item">
+            <div class="source-header">
+                <div class="source-protocol">
+                    <span class="badge bg-warning text-dark">{{source.type}}</span>
+                </div>
+                <div class="source-control">
+                    <button
+                            ref="copyButton"
+                            class="btn btn-light btn-floating btn-sm text-dark"
+                            :data-clipboard-text="source.file">
+                        <i class="far fa-copy"></i>
+                    </button>
+                    <button class="btn btn-light btn-floating btn-sm text-dark ms-2"
+                            @click="$emit('removeSource')">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="source-url">
+                {{source.file}}
+            </div>
+        </div>
+    </li>
+</script>
+
+<!-- MDB -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.10.0/mdb.min.js"></script>
+
 <script>
 
-    var playerLoaded = false;
+    const hash = location.hash;
 
-    var errorRetryer = null;
+    let urlOption = null;
 
-    var getExportUrl = function (sources, lowLatency, liveDelay) {
-
-        var exportUrl = window.location.protocol + "//" + location.host + location.pathname + "#sources=" + encodeURIComponent(JSON.stringify(sources)) +
-            '&lowLatency=' + lowLatency + '&liveDelay=' + liveDelay;
-
-        var delayHint = parseInt($.trim($('#playoutDelayHintInput').val()));
-        if(delayHint) {
-            exportUrl += '&delayHint=' + delayHint;
-        }
-
-        exportUrl = exportUrl.replace('%2C%22lowLatency%22%3Atrue', '');
-        location.href = exportUrl;
-        return exportUrl;
-    };
-
-    var player = "",
-        preSources = "",
-        errorOccured = false,
-        isSSL = window.location.protocol === "https:";
-
-    var getParameterByName = function (name, url) {
-
-        if (!url) {
-
-            url = window.location.href;
-        }
-
-        console.log(name, url)
-
-        name = name.replace(/[\[\]]/g, '\\$&');
-
-        var regex = new RegExp('[#&]' + name + '(=([^&#]*)|&|#|$)');
-        var results = regex.exec(url);
-
-        if (!results) {
-
-            return false;
-        }
-
-        if (!results[2]) {
-
-            return '';
-        }
-
-        return decodeURIComponent(results[2].replace(/\+/g, ' '));
-    };
-
-    var urlSources = getParameterByName("sources");
-
-    var defaultSources = [
-        {
-            type: 'mp4',
-            file: './assets/OCP_480.mp4',
-            label: '480p'
-        },
-        {
-            type: 'mp4',
-            file: './assets/OCP_720.mp4',
-            label: '720p'
-        },
-        {
-            type: 'mp4',
-            file: './assets/OCP_1080.mp4',
-            label: '1080p'
-        }
-    ];
-
-
-    if (urlSources) {
-        preSources = JSON.parse(urlSources);
+    if (hash) {
+        urlOption = JSON.parse(decodeURIComponent(hash.replace('#', '')));
     }
 
-    $(document).ready(function () {
+    let playerOption = {
+        autoStart: true,
+        autoFallback: true,
+        mute: false,
+        sources: []
+    };
 
-        var clipboard = new ClipboardJS('.btnExport');
+    if (urlOption && urlOption.playerOption) {
 
-        var playerOption = {
-            autoStart: true,
-            sources: preSources || defaultSources
-        };
+        playerOption = _.extend(playerOption, urlOption.playerOption);
+    }
 
-        var lowLatency = getParameterByName("lowLatency");
-        var liveDelay = getParameterByName("liveDelay");
+    let demoOption = {
+        autoReload: true,
+        autoReloadInterval: 2000
+    };
 
-        if (lowLatency && lowLatency !== 'false') {
-            $('#lowlatencyCheck').prop('checked', true);
+    if (urlOption && urlOption.demoOption) {
 
-            for (var i = 0; i < preSources.length; i++) {
+        demoOption = _.extend(demoOption, urlOption.demoOption);
+    }
 
-                preSources[i].lowLatency = true;
-            }
-        }
+    function makeCopyButton(element) {
 
-        if (liveDelay && liveDelay !== 'false') {
-            $('#liveDelayInput').val(liveDelay);
-            playerOption.lowLatencyMpdLiveDelay = liveDelay;
-        }
+        const tooltip = new mdb.Tooltip(element, {
+            placement: 'bottom',
+            title: 'copied!',
+            trigger: 'manual'
+        });
 
-        var delayHint = getParameterByName("delayHint");
+        tooltip.timer = null;
 
-        console.log(delayHint);
+        const clipboard = new ClipboardJS(element);
 
-        if (delayHint) {
+        clipboard.on('success', function () {
 
-            $('#playoutDelayHintInput').val(delayHint);
-
-            playerOption.webrtcConfig = {};
-            playerOption.webrtcConfig.playoutDelayHint = parseInt(delayHint);
-        }
-
-        player = OvenPlayer.create("player", playerOption);
-
-        console.log("playerOption", playerOption);
-
-        player.on("ready", function (error) {
-            errorOccured = false;
-
-            if (preSources) {
-                playerLoaded = true;
-                navigation.loadButtonText = 'Unload Player';
+            if (tooltip.timer) {
+                clearTimeout(tooltip.timer);
             }
 
-            $('#playerVersion').text('v' + player.getVersion());
-        });
+            tooltip.show();
 
-        player.on("sourceChanged", function () {
-            if (errorRetryer) {
-                clearTimeout(errorRetryer);
-                errorRetryer = null;
+            tooltip.timer = setTimeout(function () {
+                tooltip.hide();
+            }, 1000);
+        });
+    }
+
+    const app = {
+        data: function () {
+            return {
+                reloadTimer: null,
+                player: null,
+                source: null,
+                loadButtonMsg: 'LOAD PLAYER',
+                loadButtonColor: 'btn-primary',
+                loadButtonIcon: 'fa-play',
+                playerMessage: null,
+                playerOption: playerOption,
+                demoOption: demoOption,
+                permanentLink: location.href,
+                createScript: null,
+                createScriptHTML: null,
+                playerVersion: null
             }
-        });
-
-        player.on("error", function (error) {
-            errorOccured = true;
-            console.log(error);
-
-            if (errorRetryer) {
-                clearTimeout(errorRetryer);
-                errorRetryer = null;
-            }
-
-            errorRetryer = setTimeout(function () {
-                playerLoaded = false;
-                navigation.loadSources();
-            }, 2000);
-
-        });
-
-        $('#lowlatencyCheck, #liveDelayInput, #playoutDelayHintInput').on('change', function () {
-
-            if (navigation.sources) {
-
-                var lowLatencyCheck = false;
-
-                if ($('#lowlatencyCheck').prop('checked')) {
-                    lowLatencyCheck = true;
-                }
-
-                var liveDelayValue = false;
-
-                if ($.trim($('#liveDelayInput').val()) !== '') {
-                    liveDelayValue = $.trim($('#liveDelayInput').val());
-                }
-
-                navigation.exportUrl = getExportUrl(navigation.sources, lowLatencyCheck, liveDelayValue);
-            }
-        });
-
-        $('#lowlatencyCheck').on('change', function () {
-
-            navigation.loadSources();
-        });
-
-        $('#applyPlayoutDelayHintButton').on('click', function () {
-
-            navigation.loadSources();
-        });
-
-        $('#applyLiveDelayButton').on('click', function () {
-
-            var isLowLatencyOn = $('#lowlatencyCheck').prop('checked');
-
-            if (!isLowLatencyOn) {
-
-                $('#lowlatencyCheck').prop('checked', true);
-                navigation.loadSources();
-            } else {
-
-                if (player.getProviderName() === 'dash') {
-
-                    var op_dash = player.getMseInstance();
-
-                    var prevLiveDelay = op_dash.getSettings().streaming.liveDelay;
-
-                    if (!prevLiveDelay) {
-                        prevLiveDelay = undefined;
-                    }
-
-                    var newLiveDelay = parseInt($.trim($('#liveDelayInput').val()));
-
-                    if (!newLiveDelay) {
-                        newLiveDelay = undefined;
-                    }
-
-                    op_dash.updateSettings({
-                        streaming: {
-                            liveDelay: newLiveDelay
-                        }
-                    });
-                }
-            }
-
-        });
-    });
-
-    var navigation = new Vue({
-        el: '#demo-navi',
-        data: {
-            choicedProtocol: "Protocol",
-            protocols: ["webrtc", "hls", "dash", "http"],
-            url: "",
-            label: null,
-            sources: preSources || [],
-            sourceId: 0,
-            errorMessage: "",
-            loadButtonText: "Load Player",
-            exportUrl: preSources ? getExportUrl(preSources, getParameterByName("lowLatency"), getParameterByName("liveDelay")) : ""
         },
         methods: {
-            setProtocol: function (protocol) {
-                this.choicedProtocol = protocol;
-            },
             addSource: function () {
-                var isMixedContentProblem = false;
 
-                const findProtocol = function (url) {
+                if (!this.source) {
+                    return;
+                }
 
-                    url = $.trim(url);
+                const url = this.source.trim();
 
-                    var protocol = "Protocol";
+                let protocol = null;
 
-                    if (url.indexOf('rtmp:') === 0) {
-                        protocol = "rtmp";
-                    } else if (url.indexOf('ws:') === 0 || url.indexOf('wss:') === 0) {
-                        protocol = "webrtc";
-                    } else if (url.indexOf('http:') === 0 || url.indexOf('https:') === 0) {
-                        if (url.indexOf('.m3u8') > 0) {
-                            protocol = "hls";
-                        } else if (url.indexOf('.mpd') > 0) {
-                            protocol = "dash";
-                        } else if (url.indexOf('.mp4') > 0) {
-                            protocol = "http";
-                        }
+                if (url.indexOf('ws:') === 0 || url.indexOf('wss:') === 0) {
+
+                    protocol = "webrtc";
+                } else if (url.indexOf('http:') === 0 || url.indexOf('https:') === 0) {
+
+                    if (url.indexOf('.m3u8') > 0) {
+
+                        protocol = "hls";
+                    } else if (url.indexOf('.mpd') > 0) {
+
+                        protocol = "dash";
+                    } else if (url.indexOf('.mp4') > 0) {
+
+                        protocol = "http";
                     }
+                }
 
-                    if (protocol === 'Protocol') {
+                if (!protocol) {
 
-                        protocol = navigation.choicedProtocol;
-                    }
+                    this.unLoadPlayer();
+                    this.playerMessage = "Invalid playback url";
 
-                    return protocol;
+                    return;
+                }
+
+                const source = {
+                    type: protocol,
+                    file: url
                 };
 
-                this.choicedProtocol = findProtocol(this.url);
+                this.playerOption.sources.push(source);
+                this.source = null;
 
-                if (this.choicedProtocol === "Protocol") {
-
-                    this.errorMessage = "Please enter a protocol.";
-                    return;
-                }
-
-                if (!this.url) {
-
-                    this.errorMessage = "Please enter a playback url.";
-                    return;
-                }
-
-                if (this.choicedProtocol === "webrtc" && (this.url.indexOf('ws:') !== 0 && this.url.indexOf('wss:') !== 0)) {
-
-                    this.errorMessage = "Please enter a correct OME URL. ex) ws://dev2.airensoft.com:3333/app/stream_o";
-                    return;
-                }
-
-                if (isSSL) {
-
-                    isMixedContentProblem = false;
-
-                    if (this.choicedProtocol === "webrtc" && this.url.indexOf('wss:') < 0) {
-                        isMixedContentProblem = true;
-                    } else if ((this.choicedProtocol === "http" || this.choicedProtocol === "hls" || this.choicedProtocol === "dash") && this.url.indexOf('https:') < 0) {
-                        isMixedContentProblem = true;
-                    }
-                    if (isMixedContentProblem) {
-                        // this.errorMessage = "Please check the protocol. Mixed content error! HTTP sources on HTTPS.";
-                    }
-                }
-
-                var sources1 = {
-                    id: this.sourceId++,
-                    label: this.label,
-                    file: this.url,
-                    type: this.choicedProtocol === "http" ? "mp4" : this.choicedProtocol
-                };
-
-                this.sources.push(sources1);
-
-                if (!isMixedContentProblem) {
-
-                    this.errorMessage = "";
-                }
-
-                this.choicedProtocol = "Protocol";
-                this.url = "";
-                this.loadButtonText = "Load Player";
-                playerLoaded = false;
-
-
-                if (this.sources) {
-
-                    var lowLatency = false;
-
-                    if ($('#lowlatencyCheck').prop('checked')) {
-                        lowLatency = true;
-                    }
-
-                    var liveDelay = false;
-
-                    if ($.trim($('#liveDelayInput').val()) !== '') {
-                        liveDelay = $.trim($('#liveDelayInput').val());
-                    }
-
-                    this.exportUrl = getExportUrl(this.sources, lowLatency, liveDelay);
-                }
+                this.unLoadPlayer(true);
+                this.makePermanentLink();
             },
             removeSource: function (index) {
-                this.sources.splice(index, 1);
 
-                if (this.sources) {
-                    var lowLatency = false;
+                this.playerOption.sources.splice(index, 1);
 
-                    if ($('#lowlatencyCheck').prop('checked')) {
-                        lowLatency = true;
-                    }
+                this.unLoadPlayer(true);
+                this.makePermanentLink();
+            },
+            loadPlayer: function () {
 
-                    var liveDelay = false;
+                if (this.player) {
+                    this.player.remove();
+                    this.player = null;
+                }
 
-                    if ($.trim($('#liveDelayInput').val()) !== '') {
-                        liveDelay = $.trim($('#liveDelayInput').val());
-                    }
+                if (this.playerOption.sources.length === 0) {
+                    this.playerMessage = 'Please add the playback sources.';
+                    return;
+                }
 
-                    this.loadButtonText = "Load Player";
-                    playerLoaded = false;
+                const playerOption = JSON.parse(JSON.stringify(this.playerOption));
 
-                    this.exportUrl = getExportUrl(this.sources, lowLatency, liveDelay);
+                this.player = OvenPlayer.create('player', playerOption);
+
+                this.playerVersion = this.player.getVersion();
+
+                this.player.on('ready', function () {
+                    vm.loadButtonMsg = 'UNLOAD PLAYER';
+                    vm.loadButtonColor = 'btn-success';
+                    vm.loadButtonIcon = 'fa-stop';
+                    vm.playerMessage = null;
+                });
+
+                if (this.demoOption.autoReload && this.demoOption.autoReloadInterval > 0) {
+
+                    this.player.once('error', function () {
+
+                        if (this.reloadTimer) {
+                            clearInterval(this.reloadTimer);
+                            this.reloadTimer = null;
+                        }
+
+                        vm.reloadTimer = setTimeout(function () {
+
+                            vm.unLoadPlayer();
+                            vm.loadPlayer();
+                        }, vm.demoOption.autoReloadInterval);
+                    });
                 }
             },
-            loadSources: function () {
+            unLoadPlayer: function (optionChanged) {
 
-                if (!playerLoaded) {
+                if (this.reloadTimer) {
+                    clearInterval(this.reloadTimer);
+                    this.reloadTimer = null;
+                }
 
-                    $('.dummy_player').remove();
+                if (this.player) {
 
-                    if (this.sources && this.sources.length > 0) {
+                    this.player.remove();
+                    this.player = null;
+                    this.loadButtonMsg = 'LOAD PLAYER';
+                    this.loadButtonColor = 'btn-primary';
+                    this.loadButtonIcon = 'fa-play';
+                }
 
-                        var playerOption = {
-                            autoStart: true,
-                            sources: JSON.parse(JSON.stringify(this.sources))
-                        };
+                if (optionChanged) {
+                    this.playerMessage = 'The options have changed. Please reload the player.';
+                }
+            },
+            reloadPlayer: function () {
 
-                        var lowLatencyChecked = $('#lowlatencyCheck').prop('checked');
+                if (this.player) {
 
-                        for (var i = 0; i < playerOption.sources.length; i++) {
-
-                            playerOption.sources[i].lowLatency = lowLatencyChecked;
-                        }
-
-                        if ($.trim($('#liveDelayInput').val()) !== '') {
-                            playerOption.lowLatencyMpdLiveDelay = parseInt($.trim($('#liveDelayInput').val()))
-                        }
-
-                        if ($.trim($('#playoutDelayHintInput').val()) !== '') {
-
-                            playerOption.webrtcConfig = {};
-                            playerOption.webrtcConfig.playoutDelayHint = parseInt($.trim($('#playoutDelayHintInput').val()));
-                        }
-
-                        var playerState = player.getState();
-
-                        if (playerState === 'playing' || playerState === 'stalled' || playerState === 'loading' || playerState === 'error') {
-                            playerOption.autoStart = true;
-                        }
-
-                        player.remove();
-
-                        player = OvenPlayer.create("player", playerOption);
-
-                        console.log("playerOption", playerOption);
-
-                        player.on("ready", function () {
-                            errorOccured = false;
-                            playerLoaded = true;
-                            navigation.loadButtonText = 'Unload Player';
-                            $('#playerVersion').text('v' + player.getVersion());
-                        });
-
-                        player.on("sourceChanged", function () {
-                            if (errorRetryer) {
-                                clearTimeout(errorRetryer);
-                                errorRetryer = null;
-                            }
-                        });
-
-                        player.on("error", function (error) {
-
-                            errorOccured = true;
-                            console.log(error);
-                            // navigation.errorMessage = error.message;
-
-                            if (errorRetryer) {
-                                clearTimeout(errorRetryer);
-                                errorRetryer = null;
-                            }
-
-                            errorRetryer = setTimeout(function () {
-                                playerLoaded = false;
-                                navigation.loadSources();
-                            }, 2000);
-
-                        });
-
-                        this.errorMessage = "";
-                    } else {
-                        this.errorMessage = "Please add a playback info.";
-                    }
+                    this.unLoadPlayer();
                 } else {
 
-                    if (errorRetryer) {
-                        clearTimeout(errorRetryer);
-                        errorRetryer = null;
+                    this.loadPlayer();
+                }
+            },
+            makePermanentLink: function () {
+
+                const link = {};
+                link.playerOption = this.playerOption;
+                link.demoOption = this.demoOption;
+
+                location.hash = encodeURIComponent(JSON.stringify(link));
+                this.permanentLink = location.href;
+
+                let script = 'const player = OvenPlayer.create("player_el_id", '
+                    + JSON.stringify(this.playerOption) + ');';
+                this.createScript = js_beautify(script);
+                this.createScriptHTML = hljs.highlight(this.createScript, {
+                    language: 'javascript'
+                }).value;
+            },
+            changeOptions: function () {
+
+                this.unLoadPlayer(true);
+                this.makePermanentLink();
+            }
+        },
+        computed: {
+            playoutDelayHintCheck: {
+                get: function () {
+
+                    if (this.playerOption.webrtcConfig &&
+                        this.playerOption.webrtcConfig.playoutDelayHint > -1) {
+
+                        return true;
+                    } else {
+                        return false;
+                    }
+                },
+                set: function (value) {
+
+                    if (value) {
+                        if (!this.playerOption.webrtcConfig) {
+                            this.playerOption.webrtcConfig = {};
+                        }
+                        this.playerOption.webrtcConfig.playoutDelayHint = 0;
+                    } else {
+                        delete this.playerOption.webrtcConfig.playoutDelayHint;
+
+                        if (_.isEmpty(this.playerOption.webrtcConfig)) {
+
+                            delete this.playerOption.webrtcConfig;
+                        }
                     }
 
-                    player.remove();
-                    playerLoaded = false;
-
-                    $('.player_area').append('<div class="dummy_player"></div>');
-
-                    this.loadButtonText = 'Load Player';
+                    this.unLoadPlayer(true);
+                    this.makePermanentLink();
                 }
-
             },
-            getSources: function () {
-                return this.sources.length ? this.sources.map(function (source) {
+            playoutDelayHintInput: {
+                get: function () {
 
-                    var sourceR = {
-                        file: source.file,
-                        label: source.label,
-                        type: source.type,
-                    };
+                    if (this.playoutDelayHintCheck) {
 
-                    return sourceR;
+                        return this.playerOption.webrtcConfig.playoutDelayHint;
+                    } else {
+                        return 0;
+                    }
+                },
+                set: function (value) {
+                    if (value > 0) {
 
-                }) : defaultSources;
+                        this.playerOption.webrtcConfig.playoutDelayHint = value;
+                        this.unLoadPlayer(true);
+                        this.makePermanentLink();
+                    }
+                }
             }
+        },
+        mounted: function () {
+
+            this.loadPlayer();
+
+            if (urlOption) {
+                this.makePermanentLink();
+            }
+
+            makeCopyButton(this.$refs.copyCodeButton);
+            makeCopyButton(this.$refs.exportButton);
+        }
+    };
+
+    const demo = Vue.createApp(app);
+
+    demo.component('source-item', {
+        props: ['source', 'index'],
+        emits: ['removeSource'],
+        template: document.getElementById('source-item').innerText,
+        mounted: function () {
+            makeCopyButton(this.$refs.copyButton);
         }
     });
+
+    const vm = demo.mount('#app');
+
+
 </script>
+
 </body>
 
 </html>
