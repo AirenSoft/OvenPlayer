@@ -164,7 +164,7 @@ const WebRTCLoader = function (provider, webSocketUrl, loadCallback, errorTrigge
     // return opus format number
     function getOpusFormatNumber(sdp) {
 
-        const lines = sdp.split('\n');
+        const lines = sdp.split('\r\n');
         let opusFormatNumber = -1;
 
         for (let i = 0; i < lines.length - 1; i++) {
@@ -183,7 +183,7 @@ const WebRTCLoader = function (provider, webSocketUrl, loadCallback, errorTrigge
 
     function checkOpusIsStereo(sdp, opusFormatNumber) {
 
-        const lines = sdp.split('\n');
+        const lines = sdp.split('\r\n');
 
         let stereo = false;
 
@@ -206,7 +206,7 @@ const WebRTCLoader = function (provider, webSocketUrl, loadCallback, errorTrigge
 
     function mungeSdpForceStereoOpus(sdp, opusFormatNumber) {
 
-        const lines = sdp.split('\n');
+        const lines = sdp.split('\r\n');
 
         // find this line and modify. "a=fmtp:102 minptime=10;useinbandfec=1"
         for (let i = 0; i < lines.length - 1; i++) {
@@ -222,7 +222,7 @@ const WebRTCLoader = function (provider, webSocketUrl, loadCallback, errorTrigge
             }
         }
 
-        return lines.join('\n');
+        return lines.join('\r\n');
     }
 
     function createMainPeerConnection(id, peerId, sdp, candidates, iceServers, resolve) {
