@@ -120,7 +120,8 @@
     <script src="https://cdn.jsdelivr.net/npm/dashjs@3.2.1/dist/dash.all.min.js"></script>
 
     <!-- OvenPlayer -->
-    <script src="https://cdn.jsdelivr.net/npm/ovenplayer/dist/ovenplayer.js"></script>
+    <!--<script src="https://cdn.jsdelivr.net/npm/ovenplayer/dist/ovenplayer.js"></script>-->
+    <script src="../dev/ovenplayer.js"></script>
 </head>
 <body>
 <div id="app">
@@ -288,6 +289,9 @@
                                         <label class="form-check-label" for="autoFallback">
                                             autoFallback
                                         </label>
+                                        <a href="https://airensoft.gitbook.io/ovenplayer/initialization#autofallback" class="ms-1" target="_blank">
+                                            <i class="fas fa-external-link-alt"></i>
+                                        </a>
                                     </div>
                                     <div class="form-check">
                                         <input
@@ -316,12 +320,42 @@
                                                 class="form-check-input"
                                                 type="checkbox"
                                                 value=""
+                                                id="reloadOnConnectionTimeoutCheck"
+                                                v-model="reloadOnConnectionTimeoutCheck"
+                                        />
+                                        <label class="form-check-label" for="reloadOnConnectionTimeoutCheck">
+                                            Reload On Connection Timeout
+                                        </label>
+                                        <a href="https://airensoft.gitbook.io/ovenplayer/initialization#webrtcconfig.timeoutmaxretry-and-webrtcconfig.connectiontimeout" class="ms-1" target="_blank">
+                                            <i class="fas fa-external-link-alt"></i>
+                                        </a>
+                                    </div>
+                                    <div class="form-outline ms-4 mb-3">
+                                        <input :disabled="!reloadOnConnectionTimeoutCheck" type="number" id="webrtcLoadingTimeout" class="form-control active"
+                                               v-model="webrtcLoadingTimeout">
+                                        <label class="form-label" for="webrtcLoadingTimeout">Timeout (Millisecond)</label>
+                                    </div>
+                                    <div class="form-outline ms-4">
+                                        <input :disabled="!reloadOnConnectionTimeoutCheck" type="number" id="webrtcLoadingRetryCount" class="form-control active"
+                                               v-model="webrtcLoadingRetryCount">
+                                        <label class="form-label" for="webrtcLoadingRetryCount">Retry count</label>
+                                    </div>
+                                </fieldset>
+                                <fieldset>
+                                    <div class="form-check mb-2">
+                                        <input
+                                                class="form-check-input"
+                                                type="checkbox"
+                                                value=""
                                                 id="playoutDelayHintCheck"
                                                 v-model="playoutDelayHintCheck"
                                         />
                                         <label class="form-check-label" for="playoutDelayHintCheck">
-                                            Enable Playout delay hint
+                                            Enable Playout Delay Hint
                                         </label>
+                                        <a href="https://airensoft.gitbook.io/ovenplayer/initialization#webrtcconfig.playoutdelayhint" class="ms-1" target="_blank">
+                                            <i class="fas fa-external-link-alt"></i>
+                                        </a>
                                     </div>
                                     <div class="form-outline ms-4">
                                         <input :disabled="!playoutDelayHintCheck" type="number" id="playoutDelayHintInput" class="form-control active"
@@ -722,7 +756,9 @@
 
                 if (this.demoOption.autoReload && this.demoOption.autoReloadInterval > 0) {
 
-                    this.player.once('error', function () {
+                    this.player.once('error', function (e) {
+
+                        console.log(e);
 
                         if (this.reloadTimer) {
                             clearInterval(this.reloadTimer);
@@ -807,7 +843,7 @@
                         if (!this.playerOption.webrtcConfig) {
                             this.playerOption.webrtcConfig = {};
                         }
-                        this.playerOption.webrtcConfig.playoutDelayHint = 0;
+                        this.playerOption.webrtcConfig.playoutDelayHint = 3;
                     } else {
                         delete this.playerOption.webrtcConfig.playoutDelayHint;
 
@@ -827,8 +863,6 @@
                     if (this.playoutDelayHintCheck) {
 
                         return this.playerOption.webrtcConfig.playoutDelayHint;
-                    } else {
-                        return 0;
                     }
                 },
                 set: function (value) {
@@ -838,6 +872,79 @@
                         this.unLoadPlayer(true);
                         this.makePermanentLink();
                     }
+                }
+            },
+            reloadOnConnectionTimeoutCheck: {
+                get: function () {
+
+                    if (this.playerOption.webrtcConfig &&
+                        (_.isNumber(this.playerOption.webrtcConfig.connectionTimeout)
+                            || _.isNumber(this.playerOption.webrtcConfig.timeoutMaxRetry))) {
+
+                        return true;
+                    } else {
+                        return false;
+                    }
+                },
+                set: function (value) {
+
+                    if (value) {
+                        if (!this.playerOption.webrtcConfig) {
+                            this.playerOption.webrtcConfig = {};
+                        }
+                        this.playerOption.webrtcConfig.timeoutMaxRetry = 4;
+                        this.playerOption.webrtcConfig.connectionTimeout = 10000;
+                    } else {
+
+                        delete this.playerOption.webrtcConfig.timeoutMaxRetry;
+                        delete this.playerOption.webrtcConfig.connectionTimeout;
+
+                        if (_.isEmpty(this.playerOption.webrtcConfig)) {
+
+                            delete this.playerOption.webrtcConfig;
+                        }
+                    }
+
+                    this.unLoadPlayer(true);
+                    this.makePermanentLink();
+                }
+            },
+            webrtcLoadingRetryCount: {
+                get: function () {
+
+                    if (this.playerOption.webrtcConfig &&
+                        _.isNumber(this.playerOption.webrtcConfig.timeoutMaxRetry)) {
+
+                        return this.playerOption.webrtcConfig.timeoutMaxRetry;
+                    }
+                },
+                set: function (value) {
+                    if (!this.playerOption.webrtcConfig) {
+                        this.playerOption.webrtcConfig = {};
+                    }
+
+                    this.playerOption.webrtcConfig.timeoutMaxRetry = value;
+                    this.unLoadPlayer(true);
+                    this.makePermanentLink();
+                }
+            },
+            webrtcLoadingTimeout: {
+                get: function () {
+
+                    if (this.playerOption.webrtcConfig &&
+                        _.isNumber(this.playerOption.webrtcConfig.connectionTimeout)) {
+
+                        return this.playerOption.webrtcConfig.connectionTimeout;
+                    }
+                },
+                set: function (value) {
+                    if (!this.playerOption.webrtcConfig) {
+                        this.playerOption.webrtcConfig = {};
+                    }
+
+                    this.playerOption.webrtcConfig.connectionTimeout = value;
+                    this.unLoadPlayer(true);
+                    this.makePermanentLink();
                 }
             }
         },

@@ -103,6 +103,7 @@ export const PLAYER_WEBRTC_SET_LOCAL_DESC_ERROR = 505;
 export const PLAYER_WEBRTC_INTERNAL_ERROR = 506;
 export const PLAYER_WEBRTC_NETWORK_SLOW = 510;
 export const PLAYER_WEBRTC_UNEXPECTED_DISCONNECT = 511;
+export const PLAYER_WEBRTC_TIMEOUT = 512;
 
 export const WARN_MSG_MUTEDPLAY = "Please touch here to turn on the sound.";
 
@@ -261,6 +262,11 @@ export const SYSTEM_TEXT = [
                     "code": 511,
                     "message": "Connection with low-latency(OME) terminated unexpectedly.",
                     "reason": "Unexpected end of connection."
+                },
+                512: {
+                    "code": 512,
+                    "message": "Connection with low-latency(OME) server failed.",
+                    "reason": "Connection timeout."
                 }
             }
         }
@@ -404,6 +410,16 @@ export const SYSTEM_TEXT = [
                     "code": 510,
                     "message": "네트워크 연결이 불안정합니다. 네트워크 연결을 확인하십시오.",
                     "reason": "Network is slow."
+                },
+                511: {
+                    "code": 511,
+                    "message": "저지연(OME) 서버와 연결에 실패했습니다.",
+                    "reason": "Unexpected end of connection."
+                },
+                512: {
+                    "code": 512,
+                    "message": "저지연(OME) 서버와 연결에 실패했습니다.",
+                    "reason": "Connection timeout."
                 }
             }
         }
@@ -552,6 +568,11 @@ export const SYSTEM_TEXT = [
                     "code": 511,
                     "message": "Połączenie z serwerem niskiego opóźnienia (OME) nieoczekiwanie zakończone.",
                     "reason": "Unexpected end of connection."
+                },
+                512: {
+                    "code": 512,
+                    "message": "Połączenie z serwerem niskiego opóźnienia (OME) nie powiodło się.",
+                    "reason": "Connection timeout."
                 }
             }
         }

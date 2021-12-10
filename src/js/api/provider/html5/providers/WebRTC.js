@@ -5,7 +5,8 @@ import Provider from "api/provider/html5/Provider";
 import WebRTCLoader from "api/provider/html5/providers/WebRTCLoader";
 import {isWebRTC} from "utils/validator";
 import {errorTrigger} from "api/provider/utils";
-import {PROVIDER_WEBRTC, STATE_IDLE, CONTENT_META, STATE_PLAYING} from "api/constants";
+import {PROVIDER_WEBRTC, ERROR, PLAYER_STATE, STATE_IDLE, STATE_LOADING} from "api/constants";
+import {ERRORS, PLAYER_WEBRTC_TIMEOUT} from "../../../constants";
 
 /**
  * @brief   webrtc provider extended core.
@@ -13,31 +14,41 @@ import {PROVIDER_WEBRTC, STATE_IDLE, CONTENT_META, STATE_PLAYING} from "api/cons
  * @param   playerConfig    config.
  * */
 
-const WebRTC = function(element, playerConfig, adTagUrl){
+const WebRTC = function (element, playerConfig, adTagUrl) {
     let that = {};
     let webrtcLoader = null;
-    let superDestroy_func  = null;
+    let superDestroy_func = null;
+    let superPlay_func = null;
+
+    let sourceFile = null;
 
     let audioCtx = null;
 
     let spec = {
-        name : PROVIDER_WEBRTC,
-        element : element,
-        mse : null,
-        listener : null,
-        isLoaded : false,
-        canSeek : false,
-        isLive : false,
-        seeking : false,
-        state : STATE_IDLE,
-        buffer : 0,
-        framerate : 0,
-        currentQuality : -1,
-        currentSource : -1,
-        qualityLevels : [],
-        sources : [],
-        adTagUrl : adTagUrl
+        name: PROVIDER_WEBRTC,
+        element: element,
+        mse: null,
+        listener: null,
+        isLoaded: false,
+        canSeek: false,
+        isLive: false,
+        seeking: false,
+        state: STATE_IDLE,
+        buffer: 0,
+        framerate: 0,
+        currentQuality: -1,
+        currentSource: -1,
+        qualityLevels: [],
+        sources: [],
+        adTagUrl: adTagUrl
     };
+
+    let connectionTimeout = 10000;
+    let timeoutMaxRetry = 0;
+    let connectionCheckTimer = null;
+    let connected = false;
+    let connectionStartTime = null;
+    let connectedTime = null;
 
     const device = () => {
         return {
@@ -60,15 +71,20 @@ const WebRTC = function(element, playerConfig, adTagUrl){
         }
     };
 
-    that = Provider(spec, playerConfig, function(source){
-        if(isWebRTC(source.file, source.type)){
-            OvenPlayerConsole.log("WEBRTC : onBeforeLoad : ", source);
-            if(webrtcLoader){
+    function loadWebRTCLoader() {
+
+        if (isWebRTC(sourceFile.file, sourceFile.type)) {
+
+            clearTimeout(connectionCheckTimer);
+
+            OvenPlayerConsole.log("WEBRTC : onBeforeLoad : ", sourceFile);
+
+            if (webrtcLoader) {
                 webrtcLoader.destroy();
                 webrtcLoader = null;
             }
 
-            let loadCallback = function(stream){
+            const loadCallback = function (stream) {
 
                 if (element.srcObject) {
                     element.srcObject = null;
@@ -98,33 +114,139 @@ const WebRTC = function(element, playerConfig, adTagUrl){
 
             };
 
-            webrtcLoader = WebRTCLoader(that, source.file, loadCallback, errorTrigger, playerConfig);
+            let internalErrorCallback = null;
+            let connectedCallback = null;
 
-            webrtcLoader.connect(function(){
-                //ToDo : resolve not workring
-            }).catch(function(error){
-                //that.destroy();
-                //Do nothing
-            });
+            // add callback to check time out
+            if (timeoutMaxRetry > 0) {
+
+                internalErrorCallback = function () {
+
+                    clearTimeout(connectionCheckTimer);
+                };
+
+                connectedCallback = function () {
+
+                    clearTimeout(connectionCheckTimer);
+                    connectedTime = performance.now();
+                    connected = true;
+                };
+            }
+
+            webrtcLoader = WebRTCLoader(
+                that,
+                sourceFile.file,
+                loadCallback,
+                connectedCallback,
+                internalErrorCallback,
+                errorTrigger,
+                playerConfig
+            );
+
+            that.setState(STATE_LOADING);
+
+            connectionStartTime = performance.now();
+            webrtcLoader.connect();
+
+            // add connection time out checker
+            if (timeoutMaxRetry > 0) {
+
+                that.once(PLAYER_STATE, function (e) {
+
+                    if (!connected) {
+                        if (e.newstate === STATE_IDLE) {
+
+                            clearTimeout(connectionCheckTimer);
+                            destroyWebRtcLoader();
+                        }
+                    }
+                });
+
+                that.once(ERROR, function () {
+
+                    connected = false;
+                });
+
+                connectionCheckTimer = setTimeout(function () {
+
+                    if (timeoutMaxRetry > 0) {
+                        if (!connected) {
+
+                            destroyWebRtcLoader();
+                            loadWebRTCLoader();
+                        }
+                    } else {
+                        destroyWebRtcLoader();
+                        let error = ERRORS.codes[PLAYER_WEBRTC_TIMEOUT];
+                        errorTrigger(error, that);
+                    }
+
+                    timeoutMaxRetry--;
+
+                }, connectionTimeout);
+            }
         }
+    }
+
+    function destroyWebRtcLoader() {
+
+        if (webrtcLoader) {
+            webrtcLoader.destroy();
+            webrtcLoader = null;
+            element.srcObject = null;
+        }
+    }
+
+    that = Provider(spec, playerConfig, function (source) {
+
+        const config = playerConfig.getConfig();
+
+        if (config.webrtcConfig) {
+
+            if (config.webrtcConfig.connectionTimeout) {
+
+                connectionTimeout = config.webrtcConfig.connectionTimeout;
+            }
+
+            if (config.webrtcConfig.timeoutMaxRetry ||
+                config.webrtcConfig.timeoutMaxRetry === 0) {
+
+                timeoutMaxRetry = config.webrtcConfig.timeoutMaxRetry;
+            }
+        }
+
+        sourceFile = source;
+        loadWebRTCLoader();
     });
+
     superDestroy_func = that.super('destroy');
+    superPlay_func = that.super('play');
 
     OvenPlayerConsole.log("WEBRTC PROVIDER LOADED.");
 
 
-    that.destroy = () =>{
-        if(webrtcLoader){
-            webrtcLoader.destroy();
-            element.srcObject = null;
-            webrtcLoader = null;
-        }
+    that.destroy = () => {
+
+        clearTimeout(connectionCheckTimer);
+
+        destroyWebRtcLoader();
 
         OvenPlayerConsole.log("WEBRTC :  PROVIDER DESTROYED.");
 
         superDestroy_func();
 
     };
+
+    that.play = () => {
+
+        if (timeoutMaxRetry > 0 && !connected) {
+
+            loadWebRTCLoader();
+        }
+
+        superPlay_func();
+    };
+
     return that;
 };
 
