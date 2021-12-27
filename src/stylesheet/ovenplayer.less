@@ -87,9 +87,9 @@
  * @brief   common style
  * */
 
- :root {
+:root {
   --op-accent-color: #50e3c2;
-   }
+}
 
 .op-wrapper.ovenplayer {
   position: relative;
@@ -502,8 +502,10 @@ i.op-con{
         cursor: pointer;
 
         &.active {
+          color: #50e3c2;
           color : var(--op-accent-color);
           .op-playlist-card-thumbnail{
+            border-color : #50e3c2;
             border-color : var(--op-accent-color);
           }
         }
@@ -968,6 +970,7 @@ i.op-con{
   margin-top : 10px;
 
   .op-play-background-color {
+    background-color: #50e3c2; // for ie 11
     background-color: var(--op-accent-color);
   }
 
@@ -984,23 +987,13 @@ i.op-con{
       bottom: 0;
       width: 100%;
       height: 100%;
-      -moz-transform-origin: 0 0;
-      -ms-transform-origin: 0 0;
-      -webkit-transform-origin: 0 0;
-      transform-origin: 0 0
     }
     .op-play-progress {
       width: 0;
-      -moz-transform-origin: 0 0;
-      -ms-transform-origin: 0 0;
-      -webkit-transform-origin: 0 0;
-      transform-origin: 0 0
     }
     .op-load-progress {
       width: 0;
       background-color: rgba(255,255,255,.5);
-      -webkit-transition: width 0.5s ease;
-      transition: width 0.5s ease;
     }
     .op-hover-progress {
       left: 0;
@@ -1013,26 +1006,13 @@ i.op-con{
   .op-progressbar-knob-container {
     position: absolute;
     top: -5px;
-    left: 0px;
-
-    /*-moz-transition: -moz-transform .1s cubic-bezier(0.4,0.0,1,1);
-    -webkit-transition: -webkit-transform .1s cubic-bezier(0.4,0.0,1,1);
-    -ms-transition: -ms-transform .1s cubic-bezier(0.4,0.0,1,1);
-    transition: transform .1s cubic-bezier(0.4,0.0,1,1);
-    -moz-transform: scale(0);
-    -ms-transform: scale(0);
-    -webkit-transform: scale(0);
-    transform: scale(0);*/
+    left: 0;
 
     .op-progressbar-knob {
       width: 14px;
       height: 14px;
       border-radius: 7px;
-      -webkit-transition: width 0.1s ease;
-      transition: width 0.1s ease;
     }
-
-
   }
 
   .op-progressbar-time {
@@ -1053,14 +1033,7 @@ i.op-con{
 
 }
 .op-progressbar-hover .op-progressbar-knob-container {
-  -moz-transform: none;
-  -ms-transform: none;
-  -webkit-transform: none;
-  transform: none;
-  -moz-transition: -moz-transform .1s cubic-bezier(0.0,0.0,0.2,1);
-  -webkit-transition: -webkit-transform .1s cubic-bezier(0.0,0.0,0.2,1);
-  -ms-transition: -ms-transform .1s cubic-bezier(0.0,0.0,0.2,1);
-  transition: transform .1s cubic-bezier(0.0,0.0,0.2,1)
+
 }
 
 .op-progressbar-hover .op-progressbar-time {
@@ -1078,6 +1051,7 @@ i.op-con{
   width: 3px;
   height: 14px;
   bottom: -5px;
+  background-color: #50e3c2;
   background-color: var(--op-accent-color);
 }
 
@@ -1192,6 +1166,7 @@ i.op-con{
       }
       .op-volume-slider-value {
         width: 100%;
+        background: #50e3c2;
         background: var(--op-accent-color);
         border-radius: 10px 0 0 10px;
         //-moz-transition: width .2s cubic-bezier(0.0,0.0,0.2,1);
@@ -1349,6 +1324,7 @@ i.op-con{
     height: 64px;
 
     border: 4px solid transparent;
+    border-top: 4px solid #50e3c2;
     border-top: 4px solid var(--op-accent-color);
     border-radius: 50%;
 
