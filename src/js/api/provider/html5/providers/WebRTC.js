@@ -143,8 +143,6 @@ const WebRTC = function (element, playerConfig, adTagUrl) {
                 playerConfig
             );
 
-            that.setState(STATE_LOADING);
-
             connectionStartTime = performance.now();
             webrtcLoader.connect();
 
