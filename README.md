@@ -46,7 +46,7 @@ Please read the [Quick Start](https://airensoft.gitbook.io/ovenplayer/#quick-sta
 
 ## API and Configuration
 
-Start the [Demo](https://airensoft.github.io/OvenPlayer/docs/demo.html) and see [API and Configuration](https://airensoft.gitbook.io/ovenplayer/initialization) for more details.
+Start the [Demo](https://demo.ovenplayer.com) and see [API and Configuration](https://airensoft.gitbook.io/ovenplayer/initialization) for more details.
 
 
 ## Build the source code
