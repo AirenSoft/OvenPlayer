@@ -11,16 +11,16 @@
 
     <meta name="author" content="airensoft">
     <meta name="title" content="OvenPlayer - HTML5 Video Player">
-    <meta name="keywords" content="html5-player,ultra-low-latency,webrtc,oven-media-engine">
-    <meta name="description" content="The OvenPlayer is a HTML5 player designed to make it easier to play Ultra-low latency streams from the OvenMediaEngine.">
+    <meta name="keywords" content="Sub-Second Latency Streaming, WebRTC, OvenMediaEngine, Low Latency HTTP, MPEG-DASH, HLS, HTML5, Video, Player">
+    <meta name="description" content="The OvenPlayer is a HTML5 player designed to make it easier to play Sub Second Latency streams from the OvenMediaEngine.">
     <meta property="og:title" content="OvenPlayer">
-    <meta property="og:description" content="The OvenPlayer is a HTML5 player designed to make it easier to play Ultra-low latency streams from the OvenMediaEngine.">
+    <meta property="og:description" content="The OvenPlayer is a HTML5 player designed to make it easier to play Sub Second Latency streams from the OvenMediaEngine.">
 
 
     <title>OvenPlayer - HTML5 Video Player</title>
-    <link rel="stylesheet" href="docs/lib/bootstrap.min.css">
+    <link rel="stylesheet" href="demo/lib/bootstrap.min.css">
     <link href="https://fonts.googleapis.com/css?family=Noto+Sans" rel="stylesheet">
-    <link href="docs/lib/new-age.min.css" rel="stylesheet">
+    <link href="demo/lib/new-age.min.css" rel="stylesheet">
 
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-40491361-8"></script>
@@ -32,12 +32,12 @@
         gtag('config', 'UA-40491361-8');
     </script>
 
-    <script src="docs/lib/vue.min.js"></script>
-    <script src="docs/lib/dash.all.min.js"></script>
-    <script src="docs/lib/clipboard.min.js"></script>
-    <script src="docs/lib/jquery-1.12.4.min.js"></script>
-    <script src="docs/lib/popper.min.js"></script>
-    <script src="docs/lib/bootstrap.min.js"></script>
+    <script src="demo/lib/vue.min.js"></script>
+    <script src="demo/lib/dash.all.min.js"></script>
+    <script src="demo/lib/clipboard.min.js"></script>
+    <script src="demo/lib/jquery-1.12.4.min.js"></script>
+    <script src="demo/lib/popper.min.js"></script>
+    <script src="demo/lib/bootstrap.min.js"></script>
     <script src="./dist/ovenplayer.js"></script>
     <style>
         header.masthead {
@@ -46,9 +46,9 @@
             padding-top: 150px;
             padding-bottom: 100px;
             color: #fff;
-            background: url(docs/lib/bg_landing.png),#3a3552;
-            background: url(docs/lib/bg_landing.png),-webkit-gradient(linear,right top,left top,from(#3a3552),to(#221d39));
-            background: url(docs/lib/bg_landing.png),linear-gradient(to left,#3a3552,#221d39);
+            background: url(demo/lib/bg_landing.png),#3a3552;
+            background: url(demo/lib/bg_landing.png),-webkit-gradient(linear,right top,left top,from(#3a3552),to(#221d39));
+            background: url(demo/lib/bg_landing.png),linear-gradient(to left,#3a3552,#221d39);
         }
         .btn:hover{
             border : 1px solid  #50e3c2;
@@ -67,10 +67,10 @@
             </div>
             <ul class="navbar-nav   my-2 my-lg-0 ">
                 <li class="nav-item active">
-                    <a class="nav-link text-light" href="docs/demo.html">Player Demo</a>
+                    <a class="nav-link text-light" href="demo/demo.html">Player Demo</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-light" href="docs/ome_demo.html">Sub-Second Latency Demo</a>
+                    <a class="nav-link text-light" href="demo/ome_demo.html">Sub-Second Latency Demo</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link text-light" href="https://github.com/AirenSoft/OvenPlayer" target="_blank">GitHub</a>
@@ -87,7 +87,7 @@
             <div class="row h-100">
                 <div class="col-lg-5 my-auto">
                     <div class="header-content mx-auto">
-                        <h4 class="mb-5">The OvenPlayer is a HTML5 player designed to make it easier to play Ultra-low latency streams from the OvenMediaEngine.</h4>
+                        <h4 class="mb-5">The OvenPlayer is a HTML5 player designed to make it easier to play Sub-Second Latency streams from the OvenMediaEngine.</h4>
                         <a href="https://github.com/AirenSoft/OvenPlayer" class="btn btn-outline btn-xl">Download on GitHub</a>
                     </div>
                 </div>
@@ -109,37 +109,37 @@
 
         const defaultSources = [{
                 type: 'mp4',
-                file:  './docs/assets/OCP_480.mp4',
+                file:  './demo/assets/OCP_480.mp4',
                 label: '480p'
             },
             {
                 type: 'mp4',
-                file: './docs/assets/OCP_720.mp4',
+                file: './demo/assets/OCP_720.mp4',
                 label: '720p'
             },
             {
                 type: 'mp4',
-                file: './docs/assets/OCP_1080.mp4',
+                file: './demo/assets/OCP_1080.mp4',
                 label: '1080p'
             }];
         const tracks = [
             {
-                file: './docs/assets/caption_en.srt',
+                file: './demo/assets/caption_en.srt',
                 kind: "captions",
                 label: "ENG SRT"
             },
             {
-                file: './docs/assets/caption_en.vtt',
+                file: './demo/assets/caption_en.vtt',
                 kind: "captions",
                 label: "ENG VTT"
             },
             {
-                file: './docs/assets/caption_ko.smi',
+                file: './demo/assets/caption_ko.smi',
                 kind: "captions",
                 label: "KOR SMI"
             },
             {
-                file: './docs/assets/caption_ko.vtt',
+                file: './demo/assets/caption_ko.vtt',
                 kind: "captions",
                 label: "KOR VTT"
             }
@@ -147,7 +147,7 @@
         $( document ).ready(function() {
 
             const player = OvenPlayer.create("player", {
-                image : "docs/lib/thumbnail.png",
+                image : "./demo/lib/thumbnail.png",
                 title : "OvenPlayer Demo",
                 sources: defaultSources,
                 tracks : tracks
