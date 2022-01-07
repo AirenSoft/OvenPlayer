@@ -392,10 +392,11 @@ const WebRTCLoader = function (provider,
             //ConnectionState
             OvenPlayerConsole.log("[on connection state change]", peerConnection.connectionState, e);
 
+            // firefox and opera do not support onconnectionstatechange (Jan 07, 2021)
+            // double check with oniceconnectionstatechange
             if (peerConnection.connectionState === 'connected') {
 
                 if (connectedCallback) {
-
                     connectedCallback();
                 }
             }
@@ -412,6 +413,12 @@ const WebRTCLoader = function (provider,
         peerConnection.oniceconnectionstatechange = function (e) {
             OvenPlayerConsole.log("[on ice connection state change]", peerConnection.iceConnectionState, e);
 
+            if (peerConnection.iceConnectionState === 'connected') {
+
+                if (connectedCallback) {
+                    connectedCallback();
+                }
+            }
             /*
             * https://developer.mozilla.org/en-US/docs/Web/API/RTCPeerConnection/iceConnectionState
             * Checks to ensure that components are still connected failed for at least one component of the RTCPeerConnection. This is a less stringent test than "failed" and may trigger intermittently and resolve just as spontaneously on less reliable networks, or during temporary disconnections. When the problem resolves, the connection may return to the "connected" state.

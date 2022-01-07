@@ -201,13 +201,14 @@ const WebRTC = function (element, playerConfig, adTagUrl) {
 
         if (config.webrtcConfig) {
 
-            if (config.webrtcConfig.connectionTimeout) {
+            if (typeof config.webrtcConfig.connectionTimeout === 'number'
+                    && config.webrtcConfig.connectionTimeout > 0) {
 
                 connectionTimeout = config.webrtcConfig.connectionTimeout;
             }
 
-            if (config.webrtcConfig.timeoutMaxRetry ||
-                config.webrtcConfig.timeoutMaxRetry === 0) {
+            if (typeof config.webrtcConfig.timeoutMaxRetry === 'number'
+                    && config.webrtcConfig.timeoutMaxRetry > 0) {
 
                 timeoutMaxRetry = config.webrtcConfig.timeoutMaxRetry;
             }
