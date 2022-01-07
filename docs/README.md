@@ -96,7 +96,7 @@ Below is a list of simple OvenPlayer initialization methods for each situation. 
 You need an HTML element where the OvenPlayer will be initialized.
 
 ```markup
-<div id="player_id" class=""></div>
+<div id="player_id"></div>
 ```
 
 Specifying the size or position of the player is possible by changing the style of the wrapper element.
