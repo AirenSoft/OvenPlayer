@@ -13,7 +13,7 @@ import {
 import {STATE_COMPLETE} from "../../../api/constants";
 
 const ProgressBar = function($container, api, isAd){
-    const $root = LA$("#"+api.getContainerId());
+    const $root = LA$(api.getContainerElement());
 
     if (api.getConfig().disableSeekUI) {
         $container.addClass('op-progressbar-container-disabled');

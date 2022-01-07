@@ -65,7 +65,6 @@ const Manager = function(container, browserInfo){
         $container.removeChild();
         $container = null;
         videoElement = null;
-        rootId = null;
     };
 
     return that;

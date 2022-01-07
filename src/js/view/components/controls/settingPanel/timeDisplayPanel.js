@@ -7,7 +7,7 @@ import LA$ from 'utils/likeA$';
 
 
 const TimeDisplayPanel = function($container, api, data){
-    const $root = LA$("#"+api.getContainerId());
+    const $root = LA$(api.getContainerElement());
     let panelManager = PanelManager();
 
     data.setFront = function(isFront){

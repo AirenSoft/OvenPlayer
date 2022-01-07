@@ -26,7 +26,7 @@ let PANEL_TITLE = {
 
 const Panels = function($container, api, data){
 
-    const $root = LA$("#"+api.getContainerId());
+    const $root = LA$(api.getContainerElement());
     let panelManager = PanelManager();
 
     let playerConfig = api.getConfig();

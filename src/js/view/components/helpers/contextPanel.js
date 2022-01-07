@@ -5,7 +5,7 @@ import OvenTemplate from 'view/engine/OvenTemplate';
 import LA$ from 'utils/likeA$';
 
 const ContextPanel = function($container, api, position){
-    const $root = LA$("#"+api.getContainerId());
+    const $root = LA$(api.getContainerElement());
 
     const onRendered = function($current, template){
         const panelWidth = $current.width();
