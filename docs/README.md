@@ -27,8 +27,6 @@ There are several ways to install OvenPlayer. Use the one you are comfortable wi
 
 You can download it from [OvenPlayer GitHub](https://github.com/AirenSoft/OvenPlayer).
 
-{% embed url="https://github.com/AirenSoft/OvenPlayer" %}
-
 If you have access to [OvenPlayer GitHub](https://github.com/AirenSoft/OvenPlayer), you can download the latest version in development by pressing the Clone or Download button and clicking Download ZIP in the menu that appears.
 
 > You can also download specific version of OvenPlayer by from [OvenPlayer GitHub Release](https://github.com/AirenSoft/OvenPlayer/releases).
