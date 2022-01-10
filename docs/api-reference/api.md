@@ -1035,7 +1035,7 @@ This API can show or hide the player's control area.
 ### remove()
 
 ```
-playerInstance.stop()
+playerInstance.remove()
 ```
 
 This command removes the player and releases all resources.
