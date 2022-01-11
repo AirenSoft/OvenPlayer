@@ -13,6 +13,9 @@ import dom from 'utils/polyfills/dom.js';
 
 const La$ = function(selectorOrElement){
     const that = {};
+
+    let $element = null;
+
     const returnNode = function($element , selector){
         let nodeList =  $element.querySelectorAll(selector);
         if(nodeList.length > 1){
@@ -22,8 +25,6 @@ const La$ = function(selectorOrElement){
         }
 
     };
-
-    let $element = "";
 
     if( _.isElement(selectorOrElement) || _.every(selectorOrElement, function(item){return _.isElement(item)})){
         $element = selectorOrElement;
@@ -158,7 +159,7 @@ const La$ = function(selectorOrElement){
     };
 
     that.offset = () =>{    //IE8+
-        var rect = $element.getBoundingClientRect();
+        const rect = $element.getBoundingClientRect();
 
         return {
             top: rect.top + document.body.scrollTop,

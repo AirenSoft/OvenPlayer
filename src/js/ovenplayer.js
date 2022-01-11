@@ -19,15 +19,6 @@ function ovenPlayerFactory() {
 
         const playerInstance = OvenPlayerSDK.create(player.getMediaElementContainer(), options);
 
-        Object.assign(playerInstance, {
-            getContainerElement: function () {
-                return containerElement;
-            },
-            getContainerId: function () {
-                return containerElement.id;
-            }
-        });
-
         player.setApi(playerInstance);
 
         return playerInstance;
