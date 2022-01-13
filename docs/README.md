@@ -1,8 +1,7 @@
 ---
 description: >-
-  OvenPlayer is Open-Source HTML5 Player. OvenPlayer supports WebRTC Signaling
-  from OvenMediaEngine for Sub-Second Latency Streaming and supports various
-  streaming protocols.
+  OvenPlayer is an Open-Source and JavaScript-based WebRTC Player for
+  OvenMediaEngine.
 ---
 
 # Introduction
@@ -15,7 +14,7 @@ description: >-
 * Supports streaming regardless of browser and media type
 * Receives the Signaling Protocol from OME (Signaling Protocol conforms to the OME specification)
 * Automatically Fallback using HLS, MPEG-DASH
-* Easily create profit by adding Ads in various formats&#x20;
+* Easily create profit by adding Ads in various formats
 * Supports various subtitle formats: SMI, VTT, SRT
 * Responsive player regardless of screen size
 
@@ -69,7 +68,7 @@ You can also download the `ovenplayer.js` and source map via [CDN](https://www.j
 
 ### Install via npm
 
-&#x20;For more advanced workflows, installing via [npm](https://www.npmjs.com/package/ovenplayer) is recommended.
+For more advanced workflows, installing via [npm](https://www.npmjs.com/package/ovenplayer) is recommended.
 
 #### Latest version
 
@@ -319,7 +318,7 @@ You need to place the `hls.js` first, and then `ovenplayer.js` as shown below:
 
 If you want to use Ads in OvenPlayer, you need the [Google IMA](https://developers.google.com/interactive-media-ads/docs/sdks/html5/client-side).
 
-You need to set the `IMA`  first, and then `ovenplayer.js`, as shown below:
+You need to set the `IMA` first, and then `ovenplayer.js`, as shown below:
 
 ```markup
 <!DOCTYPE html>
