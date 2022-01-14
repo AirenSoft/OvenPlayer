@@ -85,7 +85,7 @@
                         <div class="form-group row mb-0">
                             <label class="col-sm-3 col-form-label">URL</label>
                             <div class="col-sm-9">
-                                <div class="form-control-plaintext">rtmp://dev2.airensoft.com/app</div>
+                                <div class="form-control-plaintext">rtmp://demo.ovenplayer.com/app</div>
                             </div>
                         </div>
                         <div class="form-group row">
@@ -105,7 +105,7 @@
                                         <li>Select the "Stream" tab and make the following settings:</li>
                                         <ul>
                                             <li>Stream Type: Custom Streaming Server</li>
-                                            <li>URL: rtmp://dev2.airensoft.com/app (This address is mentioned above.)</li>
+                                            <li>URL: rtmp://demo.ovenplayer.com/app (This address is mentioned above.)</li>
                                             <li>Stream key: stream</li>
                                         </ul>
                                         <li> Go to the "Output" tab and set the following entries:</li>
@@ -170,27 +170,27 @@
         omeURL = [
             {
                 type: 'webrtc',
-                file: wsProtocol + '//dev2.airensoft.com' + signallingPort + '/app/stream_o?transport=tcp',
+                file: wsProtocol + '//dev2.airensoft.com' + signallingPort + '/app/stream?transport=tcp',
                 label: 'WebRTC/TCP'
             },
             {
                 type: 'webrtc',
-                file: wsProtocol + '//dev2.airensoft.com' + signallingPort + '/app/stream_o',
+                file: wsProtocol + '//dev2.airensoft.com' + signallingPort + '/app/stream',
                 label: 'WebRTC'
             },
             {
                 type: 'hls',
-                file: httpProtocol + '//dev2.airensoft.com' + httpStreamingPort + '/app/stream_o/playlist.m3u8',
+                file: httpProtocol + '//dev2.airensoft.com' + httpStreamingPort + '/app/stream/playlist.m3u8',
                 label: 'HLS'
             },
             {
                 type: 'dash',
-                file: httpProtocol + '//dev2.airensoft.com' + httpStreamingPort + '/app/stream_o/manifest.mpd',
+                file: httpProtocol + '//dev2.airensoft.com' + httpStreamingPort + '/app/stream/manifest.mpd',
                 label: 'MPEG-DASH'
             },
             {
                 type: 'dash',
-                file: httpProtocol + '//dev2.airensoft.com' + httpStreamingPort + '/app/stream_o/manifest_ll.mpd',
+                file: httpProtocol + '//dev2.airensoft.com' + httpStreamingPort + '/app/stream/manifest_ll.mpd',
                 label: 'LL MPEG-DASH',
                 lowLatency: true
             },
