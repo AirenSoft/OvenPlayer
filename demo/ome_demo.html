@@ -152,13 +152,13 @@
     var wsProtocol = 'ws:';
     var httpProtocol = 'http:';
     var signallingPort = ':3332';
-    var httpStreamingPort = ':80';
+    var httpStreamingPort = ':8080';
 
     if (navProtocol === 'https:') {
         wsProtocol = 'wss:';
         httpProtocol = 'https:';
         signallingPort = ':3333';
-        httpStreamingPort = ':443';
+        httpStreamingPort = ':8443';
     }
 
     var player = "", errorOccured = false;
