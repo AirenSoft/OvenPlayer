@@ -11,7 +11,7 @@ import {
 } from "api/constants";
 
 const PlaylistPanel = function($container, api){
-    const $root = LA$("#"+api.getContainerId());
+    const $root = LA$(api.getContainerElement());
 
     let $playlistPanel = "";
     let playlist = api.getPlaylist();

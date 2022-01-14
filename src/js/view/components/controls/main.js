@@ -39,7 +39,7 @@ const Controls = function ($container, api) {
     let isAndroid = browser.os === "Android";
     let isIOS = browser.os === "iOS";
 
-    const $root = LA$("#" + api.getContainerId());
+    const $root = LA$(api.getContainerElement());
     let lastContentMeta = {};
 
     hasPlaylist = api.getPlaylist().length > 1;

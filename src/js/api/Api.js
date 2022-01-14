@@ -477,10 +477,8 @@ const Api = function(container){
         playerConfig = null;
 
         OvenPlayerConsole.log("API : remove() - currentProvider, providerController, playlistManager, playerConfig, api event destroed. ");
-        OvenPlayerSDK.removePlayer(that.getContainerId());
-        if(OvenPlayerSDK.getPlayerList().length  === 0){
-            OvenPlayerConsole.log("OvenPlayerSDK.playerList",  OvenPlayerSDK.getPlayerList());
-        }
+        OvenPlayerSDK.removePlayer(that);
+
     };
 
     that.getMediaElement = () => {

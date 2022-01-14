@@ -84,20 +84,19 @@ function ovenPlayerFactory() {
     };
 
     /**
-     * Remove the player instance by playerId.
+     * Remove the player instance by playerInstance.
      *
-     * @param      {playerId}  id
+     * @param      {playerInstance}  playerInstance
      * @return     {null}
      */
-    OvenPlayerSDK.removePlayer = function (playerId) {
+    OvenPlayerSDK.removePlayer = function (playerInstance) {
+
         for (let i = 0; i < playerList.length; i++) {
 
-            if (playerList[i].getContainerId() === playerId) {
-
+            if (playerList[i] === playerInstance) {
                 playerList.splice(i, 1);
             }
         }
-
     };
 
     /**

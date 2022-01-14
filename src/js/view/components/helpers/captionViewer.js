@@ -14,7 +14,7 @@ import LA$ from 'utils/likeA$';
 
 
 const CaptionViewer = function($container, api, playerState){
-    const $root = LA$("#"+api.getContainerId());
+    const $root = LA$(api.getContainerElement());
 
     const onRendered = function($container, $current, template){
         let isDisable = false;
