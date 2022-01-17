@@ -1,16 +1,16 @@
-# "HTML5 player for OvenMediaEngine" OvenPlayer
+# "JavaScript-based WebRTC Player for OvenMediaEngine" OvenPlayer
 
 
 ## What is OvenPlayer?
 
-In short, OvenPlayer is <b>Open-Source HTML5 Player</b>.
+In short, OvenPlayer is an <b>Open-Source</b> and <b>JavaScript-based WebRTC Player</b> for OvenMediaEngine.
 
 OvenPlayer supports WebRTC Signaling from OvenMediaEngine for Sub-Second Latency Streaming. And, it automatically plays and fallbacks using <b>WebRTC</b>, <b>Low Latency MPEG-DASH</b> (LLDASH), <b>MPEG-DASH</b>, <b>HLS</b>, and <b>RTMP</b>.
 
 See the picture below:
-<img src="demo/assets/images/01_OvenPlayer_210512.png" style="max-width: 100%; height: auto;">
+<img src="demo/assets/images/OvenPlayer_Overview_GitHub_220117.svg" style="max-width: 100%; height: auto;">
 
-We also provide [OvenMediaEngine](https://github.com/AirenSoft/OvenMediaEngine), Open-Source Sub-Second Latency Streaming Server.
+We also provide [OvenMediaEngine](https://github.com/AirenSoft/OvenMediaEngine), an Open-Source Streaming Server that enables Large-Scale and Sub-Second Latency Live Streaming.
 
 
 ## What is the goal of this project?
@@ -19,24 +19,24 @@ AirenSoft aims to make it easier for you to build a stable broadcasting/streamin
 Therefore, we will continue developing and providing the most optimized tools for smooth Sub-Second Latency Streaming.
 
 Would you mind clicking on each link below for details:
-* ["Live Streaming Encoder for Mobile" <b>OvenLiveKit SDK](https://www.airensoft.com/olk)</b>
-* ["Sub-Second Latency Streaming Server" <b>OvenMediaEngine](https://www.ovenmediaengine.com/ome)</b>
-* ["HTML5 Player" <b>OvenPlayer](https://www.ovenmediaengine.com/ovenplayer)</b>
+* ["Live Streaming Encoder for Mobile" <b>OvenLiveKit](https://www.ovenmediaengine.com/olk)</b>
+* ["Large-Scale Streaming Server with Sub-Second Latency" <b>OvenMediaEngine](https://www.ovenmediaengine.com/ome)</b>
+* ["JavaScript-based WebRTC Player" <b>OvenPlayer](https://www.ovenmediaengine.com/ovenplayer)</b>
 
 
 ## Features
 
 * HTML5 Standard Player
-* Streaming Playback with Various Protocols
-    * Sub-Second Latency: WebRTC (Signalling Protocol Conforms to the OME Specification)
+* Streaming with Various Protocols
+    * Sub-Second Latency Streaming: WebRTC (Signalling Protocol Conforms to the OvenMediaEngine Specification)
     * Low Latency: MPEG-DASH (Chunked CMAF)
     * Legacy: MPEG-DASH, HLS
-* Automatic Fallback
+* Automatic Fallback Play
 * Fully Customizable UI and SDK
 * Insert ADs with Various Formats
     * VAST4, VAST3, VAST2, VPAID2 (HTML5), VMAP1.0.1
 * Support Multiple Subtitle Formats
-    * SMI, VTT, SRT
+    * SMI, VTT, SRT<
 
 
 ## Quick Start
@@ -80,9 +80,9 @@ We always hope that OvenPlayer will make your project a success.
   * `Without TLS`: [http://demo.ovenplayer.com](http://demo.ovenplayer.com)
   * `With TLS`: [https://demo.ovenplayer.com](https://demo.ovenplayer.com)
 * [OvenMediaEngine Github](https://github.com/AirenSoft/OvenMediaEngine)
-  * Sub-Second Latency Streaming Server
+  * Large-Scale Streaming Server with Sub-Second Latency
 * [AirenSoft Website](https://www.airensoft.com/)
-  * AirenSoft's Solutions/Services, and Blog (Tech Journal)
+  * AirenSoft's Solutions/Services, and AirenBlog (Tech Journal)
 
 
 ## License
