@@ -3,7 +3,7 @@
 
 ## What is OvenPlayer?
 
-In short, OvenPlayer is an <b>Open-Source</b> and <b>JavaScript-based WebRTC Player</b> for OvenMediaEngine.
+In short, OvenPlayer is an <b>Open-Source</b> and <b>JavaScript-based WebRTC Player</b> for OvenMediaEngine (OME).
 
 OvenPlayer supports WebRTC Signaling from OvenMediaEngine for Sub-Second Latency Streaming. And, it automatically plays and fallbacks using <b>WebRTC</b>, <b>Low Latency MPEG-DASH</b> (LLDASH), <b>MPEG-DASH</b>, <b>HLS</b>, and <b>RTMP</b>.
 
@@ -26,17 +26,17 @@ Would you mind clicking on each link below for details:
 
 ## Features
 
-* HTML5 Standard Player
-* Streaming with Various Protocols
-    * Sub-Second Latency Streaming: WebRTC (Signalling Protocol Conforms to the OvenMediaEngine Specification)
+* <b>HTML5 Standard Video Player</b>
+* <b>Live Streaming with Various Protocols</b>
+    * Sub-Second Latency: WebRTC (Signalling Protocol Conforms to the OME Specification)
     * Low Latency: MPEG-DASH (Chunked CMAF)
     * Legacy: MPEG-DASH, HLS
-* Automatic Fallback Play
-* Fully Customizable UI and SDK
-* Insert ADs with Various Formats
+* <b>Automatic Fallback Streaming</b>
+* <b>Fully Customizable UI and SDK</b>
+* <b>Insert ADs with Various Formats</b>
     * VAST4, VAST3, VAST2, VPAID2 (HTML5), VMAP1.0.1
-* Support Multiple Subtitle Formats
-    * SMI, VTT, SRT<
+* <b>Support Multiple Subtitle Formats</b>
+    * SMI, VTT, SRT
 
 
 ## Quick Start
