@@ -40,12 +40,12 @@ const WebRTCLoader = function (provider,
     //closed websocket by ome or client.
     let wsClosedByPlayer = false;
 
-    let recorverPacketLoss = false;
+    let recoverPacketLoss = false;
 
     if (playerConfig.getConfig().webrtcConfig &&
-        playerConfig.getConfig().webrtcConfig.recorverPacketLoss === true) {
+        playerConfig.getConfig().webrtcConfig.recoverPacketLoss === true) {
 
-        recorverPacketLoss = true;
+        recoverPacketLoss = true;
     }
 
     let generatePublicCandidate = true;
@@ -439,9 +439,9 @@ const WebRTCLoader = function (provider,
 
             OvenPlayerConsole.log("stream received.");
 
-            OvenPlayerConsole.log('Recovery On Packet Loss :', recorverPacketLoss);
+            OvenPlayerConsole.log('Recovery On Packet Loss :', recoverPacketLoss);
 
-            if (recorverPacketLoss) {
+            if (recoverPacketLoss) {
                 extractLossPacketsOnNetworkStatus(mainPeerConnectionInfo);
             }
 
