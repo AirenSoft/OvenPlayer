@@ -40,7 +40,20 @@ const FullScreenButton = function($container, api){
     api.toggleFullScreen = toggleFullScreen;
 
     function checkFullScreen(){
-        return document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement;
+
+        let fullScreen = false;
+
+        const fullScreenElement = document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement;
+
+        if (fullScreenElement) {
+
+            if ($root.get() === fullScreenElement) {
+                fullScreen = true;
+            }
+        }
+
+        return fullScreen;
+
     };
 
     function resetFullscreenButtonState(){
