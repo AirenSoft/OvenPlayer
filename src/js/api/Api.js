@@ -12,6 +12,7 @@ import {ApiRtmpExpansion} from 'api/ApiExpansions';
 import {analUserAgent} from "utils/browser";
 import {pickCurrentSource} from "api/provider/utils";
 import {version} from "../version";
+import {CONTENT_SOURCE_CHANGED} from "./constants";
 
 /**
  * @brief   This object connects UI to the provider.
@@ -370,6 +371,10 @@ const Api = function(container){
         playerConfig.setSourceIndex(index);
 
         initProvider(lastPlayPosition);
+
+        that.trigger(CONTENT_SOURCE_CHANGED, {
+            currentSource: index
+        });
 
         return index;
     };
