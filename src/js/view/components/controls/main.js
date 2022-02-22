@@ -22,6 +22,7 @@ import {
     STATE_AD_PLAYING,
     STATE_AD_PAUSED,
     STATE_AD_COMPLETE,
+    CONTENT_SOURCE_CHANGED,
     OME_P2P_MODE,
     PROVIDER_RTMP,
     ERROR
@@ -140,17 +141,18 @@ const Controls = function ($container, api) {
         }
 
         function resetControlUI() {
-            initTimeDisplay(lastContentMeta);
+
+            if (timeDisplay) {
+                timeDisplay.destroy();
+            }
+
+            if (progressBar) {
+                progressBar.destroy();
+            }
+
             initSettingButton();
             initFullscreenButton();
 
-            if (!isLiveMode) {
-                initProgressBar(false);
-            } else {
-                if (progressBar) {
-                    progressBar.destroy();
-                }
-            }
             $root.removeClass("linear-ad");
         }
 
@@ -264,6 +266,9 @@ const Controls = function ($container, api) {
             resetControlUI();
         }, template);
 
+        api.on(CONTENT_SOURCE_CHANGED, function () {
+            resetControlUI();
+        }, template);
     };
 
     const onDestroyed = function (template) {
@@ -274,6 +279,7 @@ const Controls = function ($container, api) {
         api.off(OME_P2P_MODE, null, template);
         api.off(STATE_AD_ERROR, null, template);
         api.off(PLAYER_RESIZED, null, template);
+        api.off(CONTENT_SOURCE_CHANGED, null, template);
         if (timeDisplay) {
             timeDisplay.destroy();
         }
