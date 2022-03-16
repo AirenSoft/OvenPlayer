@@ -120,6 +120,7 @@
             </a>
         </li>
     </ul>
+
     <div class="row g-3 mb-3">
         <div class="col-12">
             <div class="input-group">
@@ -132,12 +133,13 @@
                 </button>
             </div>
         </div>
-        <div class="col12 col-md-6">
+
+        <div class="col-lg-6">
             <div class="playerWrapper rounded overflow-hidden">
                 <video controls id="previewPlayer" class="previewPlayer"></video>
             </div>
         </div>
-        <div class="col12 col-md-6">
+        <div class="col-lg-6">
             <ul class="list-group">
                 <li class="list-group-item bg-light hstack">
                     <h5 class="mb-0 fs-6">Stream information</h5>
@@ -183,9 +185,13 @@
                     </div>
                 </li>
             </ul>
+
+            <div id="testPlaybackButtonArea" class="mt-2" style="display: none;">
+                <button id="playStreamButton" class="btn btn-info w-100">Play stream with test player</button>
+            </div>
         </div>
 
-        <div class="col12">
+        <div class="col-12">
             <ul class="list-group">
                 <li class="list-group-item bg-light">
                     <h5 class="mb-0 fs-6">Input stream settings</h5>
@@ -391,6 +397,9 @@
     let iceStateSpan = $('#iceStateSpan');
     let bitrateSpan = $('#bitrateSpan');
 
+    let testPlaybackButtonArea = $('#testPlaybackButtonArea');
+    let playStreamButton = $('#playStreamButton');
+
     let savedWebRtcUrl = localStorage.getItem('savedWebRtcUrl');
     let savedVideoSource = localStorage.getItem('savedVideoSource');
     let savedVideoResolution = localStorage.getItem('savedVideoResolution');
@@ -573,26 +582,6 @@
             select.append('<option value="">No Source Available</option>')
         } else {
 
-            if (type === 'video') {
-
-                let option = $('<option></option>');
-
-                option.text('Without video');
-                option.val('no');
-
-                select.append(option);
-            }
-
-            if (type === 'audio') {
-
-                let option = $('<option></option>');
-
-                option.text('Without audio');
-                option.val('no');
-
-                select.append(option);
-            }
-
             _.each(devices, function (device) {
 
                 let option = $('<option></option>');
@@ -619,6 +608,26 @@
             //
             //     select.append(option);
             // }
+        }
+
+        if (type === 'video') {
+
+            let option = $('<option></option>');
+
+            option.text('Without video');
+            option.val('no');
+
+            select.append(option);
+        }
+
+        if (type === 'audio') {
+
+            let option = $('<option></option>');
+
+            option.text('Without audio');
+            option.val('no');
+
+            select.append(option);
         }
 
         select.find('option').eq(0).prop('selected', true);
@@ -656,6 +665,7 @@
 
     function createInput() {
 
+        testPlaybackButtonArea.hide();
         streamingButton.prop('disabled', true);
 
         if (input) {
@@ -731,6 +741,9 @@
                 },
                 iceStateChange: function (state) {
                     iceStateSpan.text(state);
+                    if (state === 'connected') {
+                        testPlaybackButtonArea.show();
+                    }
                 }
             }
         });
@@ -797,6 +810,34 @@
         } else {
             stopStreaming();
         }
+    });
+
+    playStreamButton.on('click', function () {
+        const link = {};
+
+        const inputUrl = webRtcUrlInput.val();
+
+        const url = new URL(inputUrl);
+
+        let playbackUrl = url.protocol + url.host + url.pathname;
+
+        if (url.searchParams.get('transport')) {
+
+            playbackUrl += '?transport=' + url.searchParams.get('transport');
+        }
+
+        link.playerOption = {
+            autoStart: true,
+            sources: [
+                {
+                    type: 'webrtc',
+                    file: playbackUrl
+                }
+            ]
+        };
+
+        window.open('https://demo.ovenplayer.com#' + encodeURIComponent(JSON.stringify(link)));
+
     });
 
     // videoBitrateInput.on('change', function () {
