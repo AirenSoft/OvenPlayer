@@ -30,6 +30,7 @@
         fieldset {
             padding-left: 0.5rem;
             padding-bottom: 0.5rem;
+            font-size: 0.85rem;
         }
 
         .list-group-item {
@@ -77,6 +78,10 @@
             bottom: 0;
             width: 100%;
             height: 100%;
+        }
+
+        footer {
+            font-size: 0.85rem;
         }
     </style>
 
@@ -148,7 +153,6 @@
                 </ul>
             </div>
         </div>
-
     </nav>
     <div class="container-lg mt-4">
         <ul class="nav nav-pills mb-3">
@@ -164,8 +168,6 @@
                 </a>
             </li>
         </ul>
-
-
         <div class="row g-3 mb-3">
             <div class="col-12">
                 <div class="input-group">
@@ -208,7 +210,7 @@
                     <li class="list-group-item bg-light d-flex justify-content-between align-items-center">
                         <h5 class="mb-0 fs-6">Sources</h5>
                         <small v-if="playerVersion">OvenPlayer
-                            <span class="badge badge-info ms-1">{{playerVersion}}</span>
+                            <span class="badge badge-info ms-1 align-middle">{{playerVersion}}</span>
                         </small>
                     </li>
                     <div class="list-group-item" v-if="playerOption.sources.length === 0">
@@ -524,7 +526,7 @@
                     <div class="row d-flex align-items-center">
                         <div class="col-md-7 col-lg-8 text-center text-md-start">
                             <div class="p-3">
-                                © 2021 Copyright:
+                                © 2022 Copyright:
                                 <a class="" href="https://www.airensoft.com">AirenSoft</a>
                                 Co., Ltd. All rights reserved.
                             </div>
