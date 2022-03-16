@@ -3,30 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
-    <meta name="mobile-web-app-capable" content="yes"/>
-    <meta name="apple-mobile-web-app-capable" content="yes"/>
-    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
 
     <title>OvenPlayer</title>
     <link rel="icon" href="./assets/images/00_OvenPlayer_Favicon.svg">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
-    <link href="https://fonts.googleapis.com/css?family=Noto+Sans" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet"/>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet"/>
+    <!-- MDB -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.10.0/mdb.min.css" rel="stylesheet"/>
+    <!-- highlightjs -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.3.1/styles/github.css">
 
     <style>
 
-        .nav-tabs a {
-            color: gray;
-            font-weight: bold;
-        }
-
-        .input-group-prepend .input-group-text {
-            width: 180px;
-        }
-
-        .input-group-append .input-group-text {
-            width: 60px;
+        .navbar-toggler-icon {
+            background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Cpath stroke='rgba(0, 0, 0, 0.55)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E") !important;
         }
 
         .playerWrapper {
@@ -42,6 +37,25 @@
             width: 100%;
             height: 100%;
         }
+
+        fieldset {
+            padding-left: 0.5rem;
+            padding-bottom: 0.5rem;
+            font-size: 0.85rem;
+        }
+
+        .list-group-item {
+            padding: 0.5rem 1rem;
+        }
+
+        .list-group-item h6 {
+            margin-top: 0.5rem;
+        }
+
+        footer {
+            font-size: 0.85rem;
+        }
+
     </style>
 
     <script>
@@ -67,187 +81,260 @@
 
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="/">OVENPLAYER</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-        <div class="navbar-nav mr-auto">
+<nav class="navbar navbar-expand-md navbar-light bg-light">
+    <div class="container-lg">
+        <a class="navbar-brand" href="/">OVENPLAYER</a>
+        <button class="navbar-toggler" type="button" data-mdb-toggle="collapse" data-mdb-target="#navbarNav" aria-controls="navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link active" href="./demo.html">Player Demo</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="./ome_demo.html">Sub-Second Latency Demo</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="https://github.com/AirenSoft/OvenPlayer" target="_blank">GitHub</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="https://airensoft.gitbook.io/ovenplayer/" target="_blank">Docs</a>
+                </li>
+            </ul>
         </div>
-        <ul class="navbar-nav my-2 my-lg-0">
-            <li class="nav-item active">
-                <a class="nav-link" href="./demo.html">Player Demo</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="./ome_demo.html">Sub-Second Latency Demo</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="https://github.com/AirenSoft/OvenPlayer" target="_blank">GitHub</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="https://airensoft.gitbook.io/ovenplayer/" target="_blank">Docs</a>
-            </li>
-        </ul>
     </div>
 </nav>
-<div class="container mt-4">
-    <ul class="nav nav-tabs mb-3">
+<div class="container-lg mt-4">
+    <ul class="nav nav-pills mb-3">
         <li class="nav-item">
-            <a class="nav-link" href="./demo.html" target="_blank">Stream Playback</a>
+            <a class="nav-link" href="demo.html" target="_blank">Player</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link active" href="demo_input.html" target="_blank">WebRTC Input
-                <span class="badge badge-info ml-2">Beta</span>
+            <a class="nav-link active position-relative" href="demo_input.html" target="_blank">
+                <span>
+                    WebRTC Input
+                </span>
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-info">Beta</span>
             </a>
-
         </li>
     </ul>
-    <div id="demo-navi" class="row">
-        <div class="col-12 mb-4">
-            <div class="playerWrapper">
+    <div class="row g-3 mb-3">
+        <div class="col-12">
+            <div class="input-group">
+                <div class="form-outline flex-grow-1">
+                    <input type="text" id="webRtcUrlInput" class="form-control bg-white"/>
+                    <label class="form-label" for="webRtcUrlInput">WebRTC input URL</label>
+                </div>
+                <button id="streamingButton" class="btn btn-primary px-2 px-md-4" type="button">
+                    Start
+                </button>
+            </div>
+        </div>
+        <div class="col12 col-md-6">
+            <div class="playerWrapper rounded overflow-hidden">
                 <video controls id="previewPlayer" class="previewPlayer"></video>
             </div>
         </div>
-        <div class="col-12 mb-4">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Input Stream</h5>
-                    <div class="row mb-2">
-                        <div class="col-12">
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text">WebRTC Input URL</span>
+        <div class="col12 col-md-6">
+            <ul class="list-group">
+                <li class="list-group-item bg-light hstack">
+                    <h5 class="mb-0 fs-6">Stream information</h5>
+                    <small class="ms-auto">
+                        OvenLiveKit
+                        <span class="badge badge-info align-middle ms-1">1.0.2</span>
+                    </small>
+                </li>
+                <li class="list-group-item">
+                    <div class="row">
+                        <div class="col">
+                            <h6>Video</h6>
+                            <fieldset>
+                                <div class="mb-2">
+                                    <span>Resolution
+                                        <span class="badge badge-pill badge-info mr-1" data-mdb-toggle="tooltip" title="This may be different from the resolution you set. Because the browser will get the ideal resolution from the input device.">i</span>:
+                                    </span>
+                                    <span id="videoResolutionSpan" class="mr-2 align-middle">-</span>
                                 </div>
-                                <input id="webRtcUrlInput" type="text" class="form-control" placeholder="Please enter the OME WebRTC input URL.">
-                            </div>
-                            <small id="infoText" class="form-text text-left">
-                                <div class="row">
-                                    <div class="col-6">
-                                        <strong>Actual Resolution
-                                            <span class="badge badge-pill badge-info mr-1" data-toggle="tooltip" data-placement="top" title="This may be different from the resolution you set. Because the browser will get the ideal resolution from the input device.">i</span>
-                                            :
-                                        </strong>
-                                        <span id="videoResolutionSpan" class="mr-2">-</span>
-                                    </div>
-                                    <div class="col-6">
-                                        <strong>Actual Frame Rate: </strong>
-                                        <span id="videoFrameRateSpan" class="mr-2">-</span>
-                                    </div>
-                                    <div class="col-6">
-                                        <strong>Bitrate(video): </strong>
-                                        <span id="bitrateSpan" class="mr-2">-</span>
-                                    </div>
-                                    <div class="col-6">
-                                        <strong>ICE State: </strong>
-                                        <span id="iceStateSpan" class="mr-2">-</span>
-                                    </div>
+                                <div class="mb-2">
+                                    <span>Framerate: </span>
+                                    <span id="videoFrameRateSpan" class="mr-2">-</span>
                                 </div>
-                            </small>
-                            <small id="errorText" class="form-text text-danger text-center mt-2">
+                                <div class="mb-2">
+                                    <span>Bitrate: </span>
+                                    <span id="bitrateSpan" class="mr-2">-</span>
+                                </div>
 
-                            </small>
+                            </fieldset>
+
+                            <h6>Connection</h6>
+                            <fieldset>
+                                <div class="mb-2">
+                                    <span>ICE state: </span>
+                                    <span id="iceStateSpan" class="mr-2">-</span>
+                                </div>
+                            </fieldset>
+
+                            <div class="col-12">
+                                <small id="errorText" class="text-danger"></small>
+                            </div>
                         </div>
                     </div>
-                    <div class="mb-2 text-right">
-                        <button id="streamingButton" type="button" class="btn btn-primary" disabled="disabled">Start Streaming</button>
-                    </div>
-                    <h5 class="card-title">Input Sources</h5>
+                </li>
+            </ul>
+        </div>
 
-                    <div class="row mb-2">
-                        <div class="col-12">
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <label class="input-group-text" for="videoSourceSelect">Video Source</label>
-                                </div>
-                                <select class="custom-select constraintSelect" id="videoSourceSelect">
-                                    <option selected>Choose...</option>
+        <div class="col12">
+            <ul class="list-group">
+                <li class="list-group-item bg-light">
+                    <h5 class="mb-0 fs-6">Input stream settings</h5>
+                </li>
+                <li class="list-group-item">
+                    <div class="row">
+                        <div class="col-lg-6 border-start border-2 mb-3 mb-lg-0">
+                            <h6>Video settings</h6>
+                            <fieldset>
+                                <label for="videoSourceSelect">Source</label>
+                                <select name="" id="videoSourceSelect" class="form-control constraintSelect mb-2">
                                 </select>
-                            </div>
-                        </div>
-                    </div>
 
-                    <div class="row mb-2">
-                        <div class="col-12">
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <label class="input-group-text" for="videoResolutionSelect">Video Resolution</label>
-                                </div>
-                                <select class="custom-select constraintSelect" id="videoResolutionSelect">
+                                <label for="videoResolutionSelect">Resolution</label>
+                                <select id="videoResolutionSelect" class="form-control constraintSelect mb-2">
                                     <option selected value="">Not Set</option>
                                     <option value="fhd">Full HD (1920x1080)</option>
                                     <option value="hd">HD (1280x720)</option>
                                     <option value="vga">VGA (640x480)</option>
                                 </select>
-                            </div>
-                        </div>
-                    </div>
 
-                    <div class="row mb-2">
-                        <div class="col-12">
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <label class="input-group-text" for="videoBitrateInput">Video Bitrate</label>
-                                </div>
-                                <input id="videoBitrateInput" type="number" class="form-control constraintSelect" placeholder="Unlimited">
-                                <div class="input-group-append">
-                                    <span class="input-group-text">kbps</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                                <label for="videoBitrateInput">Bitrate limit (kbps)</label>
+                                <input id="videoBitrateInput" type="number" class="form-control constraintSelect mb-2" placeholder="Unlimited">
 
-                    <div class="row mb-2">
-                        <div class="col-12">
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <label class="input-group-text" for="videoFrameInput">Video Frame Rate</label>
-                                </div>
+                                <label for="videoFrameInput">Frame rate</label>
                                 <input id="videoFrameInput" type="number" class="form-control constraintSelect" placeholder="Not Set">
-                                <div class="input-group-append">
-                                    <span class="input-group-text">fps</span>
+                            </fieldset>
+                        </div>
+                        <div class="col-lg-6 border-start border-2 mb-3 mb-lg-0">
+                            <h6>Audio settings</h6>
+                            <fieldset>
+                                <div id="audioSourceSelectArea">
+                                    <label for="audioSourceSelect">Source</label>
+                                    <select class="form-control constraintSelect" id="audioSourceSelect">
+                                        <option selected>Choose...</option>
+                                    </select>
                                 </div>
-                            </div>
+                            </fieldset>
                         </div>
                     </div>
 
-                    <div id="audioSourceSelectArea" class="row mb-2">
-                        <div class="col-12">
-                            <div class="input-group mb-3">
-                                <div class="input-group-prepend">
-                                    <label class="input-group-text" for="audioSourceSelect">Audio Source</label>
-                                </div>
-                                <select class="custom-select constraintSelect" id="audioSourceSelect">
-                                    <option selected>Choose...</option>
-                                </select>
-                            </div>
-                        </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+</div>
+<div class="bg-light border-top mt-5">
+    <div class="container-lg mt-3">
+        <footer class="text-center text-lg-start">
+            <section class="">
+                <div class="row">
+                    <div class="col-md-5 col-lg-5 col-xl-5 mx-auto mt-3">
+                        <h6 class="text-uppercase mb-4 font-weight-bold">
+                            AirenSoft
+                        </h6>
+                        <p class="lead">
+                            Media Technology Expert Group
+                        </p>
+                        <p>
+                            Our mission is to build a powerful media world by making it easier for everyone to use all the complex and demanding media technologies of the world.
+                        </p>
                     </div>
 
+                    <hr class="w-100 clearfix d-lg-none"/>
+
+                    <div class="col-md-5 col-lg-2 col-xl-2 mx-auto mt-3">
+                        <h6 class="text-uppercase mb-4 font-weight-bold">OPEN SOURCE PROJECTS</h6>
+                        <p>
+                            <a class="" target="_blank" href="https://github.com/AirenSoft/OvenMediaEngine">OvenMediaEngine</a>
+                        </p>
+                        <p>
+                            <a class="" target="_blank" href="https://github.com/AirenSoft/OvenPlayer">OvenPlayer</a>
+                        </p>
+                        <p>
+                            <a class="" target="_blank" href="https://github.com/AirenSoft/OvenLiveKit-Web">OvenLiveKit-Web</a>
+                        </p>
+                        <p>
+                            <a class="" target="_blank" href="https://github.com/AirenSoft/OvenSpace">OvenSpace</a>
+                        </p>
+                    </div>
+
+                    <hr class="w-100 clearfix d-lg-none"/>
+
+                    <div class="col-md-5 col-lg-3 col-xl-3 mx-auto mt-3">
+                        <h6 class="text-uppercase mb-4 font-weight-bold">Contact</h6>
+                        <p><i class="fas fa-home mr-3"></i> #1203, Twenty First Valley, 157, Yangpyeong-ro, Yeongdeungpo-gu, Seoul, 07207 Republic of Korea</p>
+                        <p><i class="fas fa-envelope mr-3"></i> contact@airensoft.com</p>
+                        <p><i class="fas fa-phone mr-3"></i> +82-2-6378-5227</p>
+                    </div>
                 </div>
-            </div>
-        </div>
-        <div class="col-12 mb-2">
-            <div class="text-center mt-2">
-                <small>
-                    Powered by <a href="https://github.com/AirenSoft/OvenMediaEngine" class="text-primary" target="_blank">OvenMediaEngine</a> and <a href="https://github.com/AirenSoft/OvenPlayer" class="text-primary" target="_blank">OvenPlayer</a>.
-                </small>
-            </div>
-        </div>
+
+            </section>
+
+            <hr class="my-3">
+
+            <section class="p-3 pt-0">
+                <div class="row d-flex align-items-center">
+                    <div class="col-md-7 col-lg-8 text-center text-md-start">
+                        <div class="p-3">
+                            © 2022 Copyright:
+                            <a class="" href="https://www.airensoft.com">AirenSoft</a>
+                            Co., Ltd. All rights reserved.
+                        </div>
+                    </div>
+
+                    <div class="col-md-5 col-lg-4 ml-lg-0 text-center text-md-end">
+                        <!-- Facebook -->
+                        <a
+                                class="btn btn-floating m-1"
+                                class=""
+                                role="button"
+                                target="_blank"
+                                href="https://www.facebook.com/airensoft/"
+                        ><i class="fab fa-facebook-f"></i
+                        ></a>
+
+                        <!-- Twitter -->
+                        <a
+                                class="btn btn-floating m-1"
+                                class=""
+                                role="button"
+                                target="_blank"
+                                href="https://twitter.com/AirenSoft"
+                        ><i class="fab fa-twitter"></i
+                        ></a>
+
+                        <!-- Instagram -->
+                        <a
+                                class="btn btn-floating m-1"
+                                class=""
+                                role="button"
+                                target="_blank"
+                                href="https://www.instagram.com/airensoft"
+                        ><i class="fab fa-instagram"></i
+                        ></a>
+                    </div>
+                </div>
+            </section>
+        </footer>
     </div>
 </div>
 
-
-<script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.10.0/mdb.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/underscore@1.12.0/underscore-min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js" integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" integrity="sha384-+YQ4JLhjyBLPDQt//I+STsc9iw4uQqACwlvpslubQzn4u2UU2UFM80nGisd026JF" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/ovenlivekit@latest/dist/OvenLiveKit.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/ovenlivekit/dist/OvenLiveKit.min.js"></script>
 
 <script>
-
-    $('[data-toggle="tooltip"]').tooltip();
 
     let allDevices = null;
 
@@ -327,6 +414,14 @@
         } else {
             audioSourceSelectArea.show();
         }
+
+        if ($(this).val() === 'no') {
+
+            enableVideoContrll(false);
+        } else {
+
+            enableVideoContrll(true);
+        }
     });
 
     videoResolutionSelect.on('change', function () {
@@ -348,6 +443,12 @@
     $('.constraintSelect').on('change', function () {
         stopStreaming();
     });
+
+    function enableVideoContrll(enable) {
+        videoResolutionSelect.prop('disabled', !enable);
+        videoBitrateInput.prop('disabled', !enable);
+        videoFrameInput.prop('disabled', !enable);
+    }
 
 
     let frameCalculatorTimer = null;
@@ -393,32 +494,36 @@
 
         let newConstraint = {};
 
-        if (videoDeviceId) {
-            newConstraint.video = {
-                deviceId: {
-                    exact: videoDeviceId
-                }
-            };
+        if (videoDeviceId !== 'no') {
+            if (videoDeviceId) {
+                newConstraint.video = {
+                    deviceId: {
+                        exact: videoDeviceId
+                    }
+                };
+            }
+
+            if (videoResolution) {
+
+                const resolution = userResolutions[videoResolution];
+
+                newConstraint.video.width = resolution.width;
+                newConstraint.video.height = resolution.height;
+            }
+
+            if (videoFrame) {
+                newConstraint.video.frameRate = {exact: parseInt(videoFrame)};
+            }
         }
 
-        if (audioDeviceId) {
-            newConstraint.audio = {
-                deviceId: {
-                    exact: audioDeviceId
-                }
-            };
-        }
-
-        if (videoResolution) {
-
-            const resolution = userResolutions[videoResolution];
-
-            newConstraint.video.width = resolution.width;
-            newConstraint.video.height = resolution.height;
-        }
-
-        if (videoFrame) {
-            newConstraint.video.frameRate = {exact: parseInt(videoFrame)};
+        if (audioDeviceId !== 'no') {
+            if (audioDeviceId) {
+                newConstraint.audio = {
+                    deviceId: {
+                        exact: audioDeviceId
+                    }
+                };
+            }
         }
 
         return newConstraint;
@@ -467,6 +572,26 @@
 
             select.append('<option value="">No Source Available</option>')
         } else {
+
+            if (type === 'video') {
+
+                let option = $('<option></option>');
+
+                option.text('Without video');
+                option.val('no');
+
+                select.append(option);
+            }
+
+            if (type === 'audio') {
+
+                let option = $('<option></option>');
+
+                option.text('Without audio');
+                option.val('no');
+
+                select.append(option);
+            }
 
             _.each(devices, function (device) {
 
@@ -624,7 +749,9 @@
                 });
             } else {
 
-                input.getUserMedia(getUserConstraints()).then(function (stream) {
+                const userConstraints = getUserConstraints();
+
+                input.getUserMedia(userConstraints).then(function (stream) {
 
                     streamingButton.prop('disabled', false);
                     getResolutionAndCalculateFrame(videoElement);
@@ -637,7 +764,7 @@
 
         streamingStarted = true;
         streamingButton.removeClass('btn-primary').addClass('btn-danger');
-        streamingButton.text('Stop Streaming');
+        streamingButton.text('STOP');
 
         if (input) {
 
@@ -655,7 +782,7 @@
 
         streamingStarted = false;
         streamingButton.removeClass('btn-danger').addClass('btn-primary');
-        streamingButton.text('Start Streaming');
+        streamingButton.text('START');
 
         if (input) {
             createInput();
@@ -800,6 +927,10 @@
 
             if (savedVideoSource && checkDevice(allDevices.videoinput, savedVideoSource)) {
                 videoSourceSelect.val(savedVideoSource);
+            }
+
+            if (savedVideoSource === 'no') {
+                enableVideoContrll(false);
             }
 
             if (savedVideoSource === 'displayCapture') {
