@@ -11,8 +11,13 @@
 
     <title>OvenPlayer</title>
     <link rel="icon" href="./assets/images/00_OvenPlayer_Favicon.svg">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
-    <link href="https://fonts.googleapis.com/css?family=Noto+Sans" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet"/>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet"/>
+    <!-- MDB -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.10.0/mdb.min.css" rel="stylesheet"/>
 
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-40491361-8"></script>
@@ -28,6 +33,11 @@
         gtag('config', 'UA-40491361-8');
     </script>
 
+    <style>
+        .navbar-toggler-icon {
+            background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Cpath stroke='rgba(0, 0, 0, 0.55)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E") !important;
+        }
+    </style>
 
 
     <!-- VUE -->
@@ -61,44 +71,44 @@
     <script src="https://cdn.jsdelivr.net/npm/ovenplayer/dist/ovenplayer.js"></script>
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="/">OVENPLAYER</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-        <div class="navbar-nav mr-auto">
+<nav class="navbar navbar-expand-md navbar-light bg-light">
+    <div class="container-lg">
+        <a class="navbar-brand" href="/">OVENPLAYER</a>
+        <button class="navbar-toggler" type="button" data-mdb-toggle="collapse" data-mdb-target="#navbarNav" aria-controls="navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="./demo.html">Player Demo</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="./ome_demo.html">Sub-Second Latency Demo</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="https://github.com/AirenSoft/OvenPlayer" target="_blank">GitHub</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="https://airensoft.gitbook.io/ovenplayer/" target="_blank">Docs</a>
+                </li>
+            </ul>
         </div>
-        <ul class="navbar-nav my-2 my-lg-0">
-            <li class="nav-item">
-                <a class="nav-link" href="./demo.html">Player Demo</a>
-            </li>
-            <li class="nav-item active">
-                <a class="nav-link" href="./ome_demo.html">Sub-Second Latency Demo</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="https://github.com/AirenSoft/OvenPlayer" target="_blank">GitHub</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="https://airensoft.gitbook.io/ovenplayer/" target="_blank">Docs</a>
-            </li>
-        </ul>
     </div>
 </nav>
-<div class="container mt-4">
-    <div id="demo-navi" class="row">
+<div id="demo-navi" class="container-lg mt-4">
+
+    <div class="row">
         <div class="col-12 mb-4">
             <div id="player"></div>
         </div>
-
         <div class="col-12 mb-2">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title">
+                    <h4 class="card-title hstack">
                         WebRTC
-                        <small>{{titleStatus}}</small>
-
-                        <button class="btn btn-sm btn-outline-primary float-right btnReload" v-on:click="loadSources" v-if="titleStatus == 'OFFLINE'">Reload Player</button>
+                        <small class="ms-1">{{titleStatus}}</small>
+                        <button class="btn btn-sm btn-outline-primary ms-auto btnReload" v-on:click="loadSources" v-if="titleStatus == 'OFFLINE'">Reload Player</button>
                     </h4>
                     <p class="card-text">
                         On this page, you can experience Ultra-low latency with <a href="https://github.com/AirenSoft/OvenMediaEngine" class="text-primary" target="_blank">OvenMediaEngine</a>. Please follow our instructions to taste Ultra-low latency using broadcast tools like OBS.
@@ -156,18 +166,104 @@
                 </div>
             </div>
         </div>
-
-        <div class="col-12 mb-2">
-            <div class="text-center mt-2">
-                <small>
-                    Powered by <a href="https://github.com/AirenSoft/OvenMediaEngine" class="text-primary" target="_blank">OvenMediaEngine</a> and <a href="https://github.com/AirenSoft/OvenPlayer" class="text-primary" target="_blank">OvenPlayer</a>.
-                </small>
-            </div>
-        </div>
     </div>
 
 </div>
+<div class="bg-light border-top mt-5">
+    <div class="container-lg mt-3">
+        <footer class="text-center text-lg-start">
+            <section class="">
+                <div class="row">
+                    <div class="col-md-5 col-lg-5 col-xl-5 mx-auto mt-3">
+                        <h6 class="text-uppercase mb-4 font-weight-bold">
+                            AirenSoft
+                        </h6>
+                        <p class="lead">
+                            Media Technology Expert Group
+                        </p>
+                        <p>
+                            Our mission is to build a powerful media world by making it easier for everyone to use all the complex and demanding media technologies of the world.
+                        </p>
+                    </div>
 
+                    <hr class="w-100 clearfix d-lg-none"/>
+
+                    <div class="col-md-5 col-lg-2 col-xl-2 mx-auto mt-3">
+                        <h6 class="text-uppercase mb-4 font-weight-bold">OPEN SOURCE PROJECTS</h6>
+                        <p>
+                            <a class="" target="_blank" href="https://github.com/AirenSoft/OvenMediaEngine">OvenMediaEngine</a>
+                        </p>
+                        <p>
+                            <a class="" target="_blank" href="https://github.com/AirenSoft/OvenPlayer">OvenPlayer</a>
+                        </p>
+                        <p>
+                            <a class="" target="_blank" href="https://github.com/AirenSoft/OvenLiveKit-Web">OvenLiveKit-Web</a>
+                        </p>
+                        <p>
+                            <a class="" target="_blank" href="https://github.com/AirenSoft/OvenSpace">OvenSpace</a>
+                        </p>
+                    </div>
+
+                    <hr class="w-100 clearfix d-lg-none"/>
+
+                    <div class="col-md-5 col-lg-3 col-xl-3 mx-auto mt-3">
+                        <h6 class="text-uppercase mb-4 font-weight-bold">Contact</h6>
+                        <p><i class="fas fa-home mr-3"></i> #1203, Twenty First Valley, 157, Yangpyeong-ro, Yeongdeungpo-gu, Seoul, 07207 Republic of Korea</p>
+                        <p><i class="fas fa-envelope mr-3"></i> contact@airensoft.com</p>
+                        <p><i class="fas fa-phone mr-3"></i> +82-2-6378-5227</p>
+                    </div>
+                </div>
+
+            </section>
+
+            <hr class="my-3">
+
+            <section class="p-3 pt-0">
+                <div class="row d-flex align-items-center">
+                    <div class="col-md-7 col-lg-8 text-center text-md-start">
+                        <div class="p-3">
+                            © 2022 Copyright:
+                            <a class="" href="https://www.airensoft.com">AirenSoft</a>
+                            Co., Ltd. All rights reserved.
+                        </div>
+                    </div>
+
+                    <div class="col-md-5 col-lg-4 ml-lg-0 text-center text-md-end">
+                        <!-- Facebook -->
+                        <a
+                                class="btn btn-floating m-1"
+                                class=""
+                                role="button"
+                                target="_blank"
+                                href="https://www.facebook.com/airensoft/"
+                        ><i class="fab fa-facebook-f"></i
+                        ></a>
+
+                        <!-- Twitter -->
+                        <a
+                                class="btn btn-floating m-1"
+                                class=""
+                                role="button"
+                                target="_blank"
+                                href="https://twitter.com/AirenSoft"
+                        ><i class="fab fa-twitter"></i
+                        ></a>
+
+                        <!-- Instagram -->
+                        <a
+                                class="btn btn-floating m-1"
+                                class=""
+                                role="button"
+                                target="_blank"
+                                href="https://www.instagram.com/airensoft"
+                        ><i class="fab fa-instagram"></i
+                        ></a>
+                    </div>
+                </div>
+            </section>
+        </footer>
+    </div>
+</div>
 
 <script>
 
