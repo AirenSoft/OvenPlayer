@@ -134,11 +134,17 @@
             </div>
         </div>
 
+        <div class="col-12">
+            Don't have OvenMediaEngine installed? Try our OvenMediaEngine for demo.
+            <a id="useDemoOME" href="#">Try it out</a>
+        </div>
+
         <div class="col-lg-6">
             <div class="playerWrapper rounded overflow-hidden">
                 <video controls id="previewPlayer" class="previewPlayer"></video>
             </div>
         </div>
+
         <div class="col-lg-6">
             <ul class="list-group">
                 <li class="list-group-item bg-light hstack">
@@ -451,6 +457,13 @@
 
     $('.constraintSelect').on('change', function () {
         stopStreaming();
+    });
+
+    $('#useDemoOME').on('click', function (e) {
+        e.preventDefault();
+        webRtcUrlInput.val('wss://demo.ovenplayer.com:3333/app/test-input-stream?direction=send&transport=tcp');
+        webRtcUrlInput.focus();
+        webRtcUrlInput.change();
     });
 
     function enableVideoContrll(enable) {
