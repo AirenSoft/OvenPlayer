@@ -375,14 +375,18 @@
                                                 type="checkbox"
                                                 value=""
                                                 id="llDashCheck"
-                                                disabled
+                                                v-model="llDashCheck"
                                         />
                                         <label class="form-check-label" for="llDashCheck">
                                             Enable Low Latency MPEG DASH
                                         </label>
                                     </div>
                                     <div class="form-outline ms-4">
-                                        <input disabled type="number" id="llDashLiveDelayInput" class="form-control">
+                                        <input :disabled="!llDashCheck"
+                                               type="number"
+                                               id="llDashLiveDelayInput"
+                                               class="form-control" :class="playerOption.lowLatencyMpdLiveDelay ? 'active': ''"
+                                               v-model="llDashLiveDelay">
                                         <label class="form-label" for="llDashLiveDelayInput">Live Delay (Optional, second)</label>
                                     </div>
                                 </fieldset>
@@ -944,6 +948,80 @@
                     }
 
                     this.playerOption.webrtcConfig.connectionTimeout = value;
+                    this.unLoadPlayer(true);
+                    this.makePermanentLink();
+                }
+            },
+            llDashCheck: {
+                get: function () {
+
+                    let value = false;
+
+                    if (this.playerOption &&
+                        this.playerOption.sources) {
+
+                        _.each(this.playerOption.sources, function (source) {
+
+                            if (source.type === 'dash' && source.lowLatency === true) {
+
+                                value = true;
+                                return;
+                            }
+                        });
+                    }
+
+                    return value;
+                },
+                set: function (value) {
+
+                    if (this.playerOption &&
+                        this.playerOption.sources) {
+
+                        _.each(this.playerOption.sources, function (source) {
+
+                            if (source.type === 'dash') {
+
+                                if (value) {
+                                    source.lowLatency = true;
+                                } else {
+                                    delete source.lowLatency;
+                                }
+                            }
+                        });
+
+                        if (!value) {
+
+                            if (this.playerOption.lowLatencyMpdLiveDelay) {
+
+                                delete this.playerOption.lowLatencyMpdLiveDelay;
+                            }
+                        }
+
+                        this.unLoadPlayer(true);
+                        this.makePermanentLink();
+                    }
+                }
+            },
+            llDashLiveDelay: {
+                get: function () {
+
+                    if (this.playerOption.lowLatencyMpdLiveDelay &&
+                        _.isNumber(this.playerOption.lowLatencyMpdLiveDelay)) {
+
+                        return this.playerOption.lowLatencyMpdLiveDelay;
+                    }
+                },
+                set: function (value) {
+
+                    if (value) {
+
+                        this.playerOption.lowLatencyMpdLiveDelay = value;
+
+                    } else {
+
+                        delete this.playerOption.lowLatencyMpdLiveDelay;
+                    }
+
                     this.unLoadPlayer(true);
                     this.makePermanentLink();
                 }
