@@ -565,37 +565,17 @@ const WebRTCLoader = function (provider,
         let newDomain = generateDomainFromUrl(webSocketUrl);
         let ip = findIp(cloneCandidate.candidate);
 
-        if (ip === '' || ip === newDomain) {
-
-            return null;
-        }
-
         return new Promise(function (resolve, reject) {
+
+            if (ip === '' || ip === newDomain) {
+
+                resolve(null);
+            }
 
             // firefox browser throws a candidate parsing exception when a domain name is set at the address property. So we resolve the dns using google dns resolve api.
             if (currentBrowser.browser === 'Firefox' && !findIp(newDomain)) {
 
-                fetch('https://dns.google.com/resolve?name=' + newDomain)
-                    .then(resp => resp.json())
-                    .then(data => {
-
-                        if (data && data.Answer && data.Answer.length > 0) {
-
-                            if (data.Answer[0].data) {
-
-                                let relsolvedIp = data.Answer[0].data;
-
-                                cloneCandidate.candidate = cloneCandidate.candidate.replace(ip, relsolvedIp);
-                                resolve(cloneCandidate);
-                            } else {
-
-                                resolve(null);
-                            }
-                        } else {
-
-                            resolve(null);
-                        }
-                    });
+                resolve(null);
 
             } else {
 
