@@ -76,9 +76,22 @@ const Helpers = function($container, api){
             messageBox = MessageBox($current, api, message, description, withTimer, iconClass, clickCallback, dontClose);
         }
         function createThumbnail(){
+
+            const mediaElement = api.getMediaElement();
+
+            if (mediaElement) {
+                mediaElement.poster = ''
+            }
+
+            if (api.getConfig().image) {
+                mediaElement.poster = api.getConfig().image;
+            }
+
+
             if(thumbnail){
                 thumbnail.destroy();
             }
+
             thumbnail = Thumbnail($current, api, api.getConfig());
         }
         function createWaterMark() {
