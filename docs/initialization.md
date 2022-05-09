@@ -669,7 +669,7 @@ When playing HLS, you can set hls.js detailed tuning options ([https://github.co
 
 ### dashConfig
 
-When playing DASH, you can set configuration([http://cdn.dashjs.org/latest/jsdoc/module-Settings.html](http://cdn.dashjs.org/latest/jsdoc/module-Settings.html)) parameters of Dash.js MediaPlayer.
+When playing DASH, you can set configuration([https://cdn.dashjs.org/latest/jsdoc/module-Settings.html](https://cdn.dashjs.org/latest/jsdoc/module-Settings.html)) parameters of Dash.js MediaPlayer.
 
 | **Type** | Default | Required |
 | -------- | ------- | -------- |
