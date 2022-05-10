@@ -160,8 +160,8 @@ export const SYSTEM_TEXT = [
                 },
                 103: {
                     "code": 103,
-                    "message": "Can not load due to dashjs. Please check the lastest version.",
-                    "reason": "dash.js version is old. Please check the lastest."
+                    "message": "Can not load due to dash.js. Please use the latest dash.js.",
+                    "reason": "dash.js version is old."
                 },
                 104: {
                     "code": 104,
@@ -313,8 +313,8 @@ export const SYSTEM_TEXT = [
                 },
                 103: {
                     "code": 103,
-                    "message": "DashJS로 인해 로드 할 수 없습니다. dashjs 버전을 확인해주세요.",
-                    "reason": "dash.js version is old. Please check the lastest."
+                    "message": "DashJS로 인해 로드 할 수 없습니다. 최신 dash.js를 사용해 주세요..",
+                    "reason": "dash.js version is old."
                 },
                 104: {
                     "code": 104,
@@ -467,7 +467,7 @@ export const SYSTEM_TEXT = [
                 103: {
                     "code": 103,
                     "message": "Nie można załadować, ponieważ wersja dash.js jest za stara.",
-                    "reason": "dash.js version is old. Please check the lastest."
+                    "reason": "dash.js version is old."
                 },
                 104: {
                     "code": 104,
