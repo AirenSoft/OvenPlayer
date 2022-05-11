@@ -84,8 +84,8 @@ export const INIT_UNSUPPORT_ERROR = 101;
 export const INIT_RTMP_SETUP_ERROR = 102;
 export const INIT_DASH_UNSUPPORT = 103;
 export const INIT_ADS_ERROR = 104;
-export const INIT_DASH_NOTFOUND = 105;
-export const INIT_HLSJS_NOTFOUND = 106;
+export const INIT_DASH_FAIL = 105;
+export const INIT_HLSJS_FAIL = 106;
 export const PLAYER_UNKNWON_ERROR = 300;
 export const PLAYER_UNKNWON_OPERATION_ERROR = 301;
 export const PLAYER_UNKNWON_NETWORK_ERROR = 302;
@@ -170,13 +170,13 @@ export const SYSTEM_TEXT = [
                 },
                 105: {
                     "code": 105,
-                    "message": "Can not find the dashjs. Please check the dashjs.",
-                    "reason": "Not found dashjs."
+                    "message": "Error initializing DASH.",
+                    "reason": "Error initializing DASH."
                 },
                 106: {
                     "code": 106,
-                    "message": "Can not find the hlsjs. Please check the hlsjs.",
-                    "reason": "Not found hlsjs."
+                    "message": "Error initializing HLS.",
+                    "reason": "Error initializing HLS."
                 },
                 300: {
                     "code": 300,
@@ -313,7 +313,7 @@ export const SYSTEM_TEXT = [
                 },
                 103: {
                     "code": 103,
-                    "message": "DashJS로 인해 로드 할 수 없습니다. 최신 dash.js를 사용해 주세요..",
+                    "message": "DashJS로 인해 로드 할 수 없습니다. 최신 dash.js를 사용해 주세요.",
                     "reason": "dash.js version is old."
                 },
                 104: {
@@ -323,13 +323,13 @@ export const SYSTEM_TEXT = [
                 },
                 105: {
                     "code": 105,
-                    "message": "DashJS 라이브러리가 없어 로드 할 수 없습니다.",
-                    "reason": "Not found dashjs."
+                    "message": "DASH 초기화 중 오류가 발생했습니다.",
+                    "reason": "Error initializing DASH."
                 },
                 106: {
                     "code": 106,
-                    "message": "HLSJS 라이브러리가 없어 로드 할 수 없습니다.",
-                    "reason": "Not found hlsjs."
+                    "message": "HLS 초기화 중 오류가 발생했습니다.",
+                    "reason": "Error initializing HLS."
                 },
                 300: {
                     "code": 300,
@@ -476,13 +476,13 @@ export const SYSTEM_TEXT = [
                 },
                 105: {
                     "code": 105,
-                    "message": "Nie można załadować, nie znaleziono dash.js.",
-                    "reason": "Not found dashjs."
+                    "message": "Nie można załadować, nie znaleziono DASH.",
+                    "reason": "Error initializing DASH."
                 },
                 106: {
                     "code": 106,
                     "message": "Nie można załadować, nie znaleziono hlsjs.",
-                    "reason": "Not found hlsjs."
+                    "reason": "Error initializing HLS"
                 },
                 300: {
                     "code": 300,

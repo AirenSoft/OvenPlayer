@@ -10,7 +10,7 @@ import {
     STATE_AD_PLAYING,
     STATE_AD_PAUSED,
     INIT_DASH_UNSUPPORT,
-    INIT_DASH_NOTFOUND,
+    INIT_DASH_FAIL,
     ERRORS,
     PLAYER_UNKNWON_NETWORK_ERROR,
     CONTENT_LEVEL_CHANGED,
@@ -273,7 +273,7 @@ const Dash = function (element, playerConfig, adTagUrl) {
         if (error && error.code && error.code === INIT_DASH_UNSUPPORT) {
             throw error;
         } else {
-            let tempError = ERRORS.codes[INIT_DASH_NOTFOUND];
+            let tempError = ERRORS.codes[INIT_DASH_FAIL];
             tempError.error = error;
             throw tempError;
         }

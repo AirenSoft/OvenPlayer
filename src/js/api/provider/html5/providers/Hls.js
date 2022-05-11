@@ -6,19 +6,17 @@ import {errorTrigger} from "api/provider/utils";
 import {
     PROVIDER_HLS,
     PLAYER_STATE, STATE_IDLE, STATE_LOADING,
-    INIT_DASH_UNSUPPORT, ERRORS,
-    INIT_HLSJS_NOTFOUND,
+    ERRORS,
+    INIT_HLSJS_FAIL,
     HLS_PREPARED,
     HLS_DESTROYED
 } from "api/constants";
-import _ from "utils/underscore";
+
 import {
-    PLAYER_UNKNWON_ERROR,
     PLAYER_UNKNWON_NETWORK_ERROR,
-    PLAYER_UNKNWON_DECODE_ERROR,
     PLAYER_BAD_REQUEST_ERROR,
     PLAYER_AUTH_FAILED_ERROR,
-    PLAYER_NOT_ACCEPTABLE_ERROR, DASH_PREPARED, DASH_DESTROYED
+    PLAYER_NOT_ACCEPTABLE_ERROR
 } from "../../../constants";
 
 /**
@@ -214,7 +212,7 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
             superDestroy_func();
         };
     } catch (error) {
-        let tempError = ERRORS.codes[INIT_HLSJS_NOTFOUND];
+        let tempError = ERRORS.codes[INIT_HLSJS_FAIL];
         tempError.error = error;
         throw tempError;
     }
