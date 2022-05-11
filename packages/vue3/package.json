@@ -1,0 +1,22 @@
+{
+  "name": "ovenplayer-vue3",
+  "version": "1.0.0-alpha.0",
+  "main": "dist/ovenplayer-vue3.es.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview --port 5050"
+  },
+  "peerDependencies": {
+    "vue": "^3.2.33"
+  },
+  "dependencies": {
+    "ovenplayer": "^0.10.18"
+  },
+  "devDependencies": {
+    "@rollup/plugin-dynamic-import-vars": "^1.4.3",
+    "@types/ovenplayer": "^0.10.0",
+    "@vitejs/plugin-vue": "^2.3.1",
+    "vite": "^2.9.5"
+  }
+}
