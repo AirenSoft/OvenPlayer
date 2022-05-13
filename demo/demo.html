@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
@@ -125,8 +126,9 @@
     <script src="https://cdn.jsdelivr.net/npm/dashjs@3.2.2/dist/dash.all.min.js"></script>
 
     <!-- OvenPlayer -->
-    <script src="https://cdn.jsdelivr.net/npm/ovenplayer/dist/ovenplayer.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/ovenplayer@0.10.19/dist/ovenplayer.js"></script>
 </head>
+
 <body>
 <div id="app">
     <nav class="navbar navbar-expand-md navbar-light bg-light">
@@ -161,10 +163,11 @@
             </li>
             <li class="nav-item">
                 <a class="nav-link position-relative" href="demo_input.html" target="_blank">
-                <span>
-                    WebRTC Input
-                </span>
-                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-info">Beta</span>
+                        <span>
+                            WebRTC Input
+                        </span>
+                    <span
+                            class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-info">Beta</span>
                 </a>
             </li>
         </ul>
@@ -172,13 +175,11 @@
             <div class="col-12">
                 <div class="input-group">
                     <div class="form-outline flex-grow-1">
-                        <input type="text" id="playbackUrl" class="form-control bg-white"
-                               v-model="source"
+                        <input type="text" id="playbackUrl" class="form-control bg-white" v-model="source"
                                @keyup.enter="addSource"/>
                         <label class="form-label" for="playbackUrl">Playback URL</label>
                     </div>
-                    <button class="btn btn-primary px-2 px-md-4" type="button"
-                            @click="addSource">
+                    <button class="btn btn-primary px-2 px-md-4" type="button" @click="addSource">
                         ADD SOURCE
                     </button>
                 </div>
@@ -186,12 +187,11 @@
             <div class="col-12 col-md-6">
                 <div class="player-area rounded shadow overflow-hidden mb-2">
                     <div class="dummyPlayer d-flex justify-content-center text-center">
-                        <span v-if="playerMessage"
-                              class="text-white position-absolute"
-                              style="left: 1rem; right: 1rem; bottom: 28.125%">
-                            <i class="fas fa-info-circle me-1 text-info"></i>
-                            {{playerMessage}}
-                        </span>
+                            <span v-if="playerMessage" class="text-white position-absolute"
+                                  style="left: 1rem; right: 1rem; bottom: 28.125%">
+                                <i class="fas fa-info-circle me-1 text-info"></i>
+                                {{playerMessage}}
+                            </span>
                     </div>
                     <div class="player-wrapper">
                         <div id="player">
@@ -218,32 +218,34 @@
 
                         <ul>
                             <li>
-                                <strong>Sub-Second Latency</strong>: WebRTC (Signalling Protocol Conforms to the OME Specification)
+                                <strong>Sub-Second Latency</strong>: WebRTC (Signalling Protocol Conforms to the OME
+                                Specification)
                             </li>
                             <li>
                                 Legacy: MPEG-DASH, HLS
                             </li>
                         </ul>
-                        <p class="mt-4">To play the stream of OvenMediaEngine, please refer to the following documents.</p>
+                        <p class="mt-4">To play the stream of OvenMediaEngine, please refer to the following
+                            documents.</p>
                         <ul class="mb-2">
                             <li>
-                                WebRTC <a href="https://airensoft.gitbook.io/ovenmediaengine/streaming/webrtc-publishing#playback" class="ms-1" target="_blank">
+                                WebRTC <a
+                                    href="https://airensoft.gitbook.io/ovenmediaengine/streaming/webrtc-publishing#playback"
+                                    class="ms-1" target="_blank">
                                 <i class="fas fa-external-link-alt"></i>
                             </a>
                             </li>
                             <li>
-                                Dash& HLS <a href="https://airensoft.gitbook.io/ovenmediaengine/streaming/hls-mpeg-dash#streaming" class="ms-1" target="_blank">
+                                Dash& HLS <a
+                                    href="https://airensoft.gitbook.io/ovenmediaengine/streaming/hls-mpeg-dash#streaming"
+                                    class="ms-1" target="_blank">
                                 <i class="fas fa-external-link-alt"></i>
                             </a>
                             </li>
                         </ul>
                     </div>
-                    <source-item
-                            v-for="(source, index) in playerOption.sources"
-                            :source="source"
-                            :index="index"
-                            @remove-source="removeSource(index)"
-                    >
+                    <source-item v-for="(source, index) in playerOption.sources" :source="source" :index="index"
+                                 @remove-source="removeSource(index)">
                     </source-item>
                 </ul>
             </div>
@@ -263,50 +265,35 @@
                                 <h6>General Options</h6>
                                 <fieldset>
                                     <div class="form-check">
-                                        <input
-                                                class="form-check-input"
-                                                type="checkbox"
-                                                value=""
-                                                id="autoStart"
-                                                v-model="playerOption.autoStart"
-                                                @change="changeOptions"
-                                        />
+                                        <input class="form-check-input" type="checkbox" value="" id="autoStart"
+                                               v-model="playerOption.autoStart" @change="changeOptions"/>
                                         <label class="form-check-label" for="autoStart">
                                             autoStart
                                         </label>
-                                        <a href="https://airensoft.gitbook.io/ovenplayer/initialization#autostart" class="ms-1" target="_blank">
+                                        <a href="https://airensoft.gitbook.io/ovenplayer/initialization#autostart"
+                                           class="ms-1" target="_blank">
                                             <i class="fas fa-external-link-alt"></i>
                                         </a>
                                     </div>
                                     <div class="form-check">
-                                        <input
-                                                class="form-check-input"
-                                                type="checkbox"
-                                                value=""
-                                                id="autoFallback"
-                                                v-model="playerOption.autoFallback"
-                                                @change="changeOptions"
-                                        />
+                                        <input class="form-check-input" type="checkbox" value="" id="autoFallback"
+                                               v-model="playerOption.autoFallback" @change="changeOptions"/>
                                         <label class="form-check-label" for="autoFallback">
                                             autoFallback
                                         </label>
-                                        <a href="https://airensoft.gitbook.io/ovenplayer/initialization#autofallback" class="ms-1" target="_blank">
+                                        <a href="https://airensoft.gitbook.io/ovenplayer/initialization#autofallback"
+                                           class="ms-1" target="_blank">
                                             <i class="fas fa-external-link-alt"></i>
                                         </a>
                                     </div>
                                     <div class="form-check">
-                                        <input
-                                                class="form-check-input"
-                                                type="checkbox"
-                                                value=""
-                                                id="mute"
-                                                v-model="playerOption.mute"
-                                                @change="changeOptions"
-                                        />
+                                        <input class="form-check-input" type="checkbox" value="" id="mute"
+                                               v-model="playerOption.mute" @change="changeOptions"/>
                                         <label class="form-check-label" for="mute">
                                             mute
                                         </label>
-                                        <a href="https://airensoft.gitbook.io/ovenplayer/initialization#mute" class="ms-1" target="_blank">
+                                        <a href="https://airensoft.gitbook.io/ovenplayer/initialization#mute"
+                                           class="ms-1" target="_blank">
                                             <i class="fas fa-external-link-alt"></i>
                                         </a>
                                     </div>
@@ -317,49 +304,46 @@
                                 <h6>WebRTC Options</h6>
                                 <fieldset>
                                     <div class="form-check mb-2">
-                                        <input
-                                                class="form-check-input"
-                                                type="checkbox"
-                                                value=""
-                                                id="reloadOnConnectionTimeoutCheck"
-                                                v-model="reloadOnConnectionTimeoutCheck"
-                                        />
+                                        <input class="form-check-input" type="checkbox" value=""
+                                               id="reloadOnConnectionTimeoutCheck"
+                                               v-model="reloadOnConnectionTimeoutCheck"/>
                                         <label class="form-check-label" for="reloadOnConnectionTimeoutCheck">
                                             Reload On Connection Timeout
                                         </label>
-                                        <a href="https://airensoft.gitbook.io/ovenplayer/initialization#webrtcconfig.timeoutmaxretry-and-webrtcconfig.connectiontimeout" class="ms-1" target="_blank">
+                                        <a href="https://airensoft.gitbook.io/ovenplayer/initialization#webrtcconfig.timeoutmaxretry-and-webrtcconfig.connectiontimeout"
+                                           class="ms-1" target="_blank">
                                             <i class="fas fa-external-link-alt"></i>
                                         </a>
                                     </div>
                                     <div class="form-outline ms-4 mb-3">
-                                        <input :disabled="!reloadOnConnectionTimeoutCheck" type="number" id="webrtcLoadingTimeout" class="form-control active"
+                                        <input :disabled="!reloadOnConnectionTimeoutCheck" type="number"
+                                               id="webrtcLoadingTimeout" class="form-control active"
                                                v-model="webrtcLoadingTimeout">
-                                        <label class="form-label" for="webrtcLoadingTimeout">Timeout (Millisecond)</label>
+                                        <label class="form-label" for="webrtcLoadingTimeout">Timeout
+                                            (Millisecond)</label>
                                     </div>
                                     <div class="form-outline ms-4">
-                                        <input :disabled="!reloadOnConnectionTimeoutCheck" type="number" id="webrtcLoadingRetryCount" class="form-control active"
+                                        <input :disabled="!reloadOnConnectionTimeoutCheck" type="number"
+                                               id="webrtcLoadingRetryCount" class="form-control active"
                                                v-model="webrtcLoadingRetryCount">
                                         <label class="form-label" for="webrtcLoadingRetryCount">Retry count</label>
                                     </div>
                                 </fieldset>
                                 <fieldset>
                                     <div class="form-check mb-2">
-                                        <input
-                                                class="form-check-input"
-                                                type="checkbox"
-                                                value=""
-                                                id="playoutDelayHintCheck"
-                                                v-model="playoutDelayHintCheck"
-                                        />
+                                        <input class="form-check-input" type="checkbox" value=""
+                                               id="playoutDelayHintCheck" v-model="playoutDelayHintCheck"/>
                                         <label class="form-check-label" for="playoutDelayHintCheck">
                                             Enable Playout Delay Hint
                                         </label>
-                                        <a href="https://airensoft.gitbook.io/ovenplayer/initialization#webrtcconfig.playoutdelayhint" class="ms-1" target="_blank">
+                                        <a href="https://airensoft.gitbook.io/ovenplayer/initialization#webrtcconfig.playoutdelayhint"
+                                           class="ms-1" target="_blank">
                                             <i class="fas fa-external-link-alt"></i>
                                         </a>
                                     </div>
                                     <div class="form-outline ms-4">
-                                        <input :disabled="!playoutDelayHintCheck" type="number" id="playoutDelayHintInput" class="form-control active"
+                                        <input :disabled="!playoutDelayHintCheck" type="number"
+                                               id="playoutDelayHintInput" class="form-control active"
                                                v-model="playoutDelayHintInput">
                                         <label class="form-label" for="playoutDelayHintInput">Delay (Second)</label>
                                     </div>
@@ -370,48 +354,35 @@
                                 <h6>HLS Options</h6>
                                 <fieldset>
                                     <div class="form-check mb-2">
-                                        <input
-                                                class="form-check-input"
-                                                type="checkbox"
-                                                value=""
-                                                id="hlsLiveSyncDurationCheck"
-                                                v-model="hlsLiveSyncDurationCheck"
-                                        />
+                                        <input class="form-check-input" type="checkbox" value=""
+                                               id="hlsLiveSyncDurationCheck" v-model="hlsLiveSyncDurationCheck"/>
                                         <label class="form-check-label" for="hlsLiveSyncDurationCheck">
-                                            Set Live Sync Duration
+                                            Set Target Latency
                                         </label>
                                     </div>
                                     <div class="form-outline ms-4">
-                                        <input
-                                                :disabled="!hlsLiveSyncDurationCheck"
-                                                type="number"
-                                                id="hlsLiveSyncDuration"
-                                                class="form-control" :class="playerOption.hlsConfig && playerOption.hlsConfig.liveSyncDuration ? 'active': ''"
-                                                v-model="hlsLiveSyncDuration">
+                                        <input :disabled="!hlsLiveSyncDurationCheck" type="number"
+                                               id="hlsLiveSyncDuration" class="form-control"
+                                               :class="playerOption.hlsConfig && playerOption.hlsConfig.liveSyncDuration ? 'active': ''"
+                                               v-model="hlsLiveSyncDuration">
                                         <label class="form-label" for="hlsLiveSyncDuration">Second</label>
                                     </div>
                                 </fieldset>
 
                                 <fieldset>
                                     <div class="form-check mb-2">
-                                        <input
-                                                class="form-check-input"
-                                                type="checkbox"
-                                                value=""
-                                                id="hlsLiveSyncPlaybackRateCheck"
-                                                v-model="hlsLiveSyncPlaybackRateCheck"
-                                        />
+                                        <input class="form-check-input" type="checkbox" value=""
+                                               id="hlsLiveSyncPlaybackRateCheck"
+                                               v-model="hlsLiveSyncPlaybackRateCheck"/>
                                         <label class="form-check-label" for="hlsLiveSyncPlaybackRateCheck">
                                             Set Live Sync Playback Rate
                                         </label>
                                     </div>
                                     <div class="form-outline ms-4">
-                                        <input
-                                                :disabled="!hlsLiveSyncPlaybackRateCheck"
-                                                type="number"
-                                                id="hlsLiveSyncPlaybackRate"
-                                                class="form-control" :class="playerOption.hlsConfig && playerOption.hlsConfig.maxLiveSyncPlaybackRate ? 'active': ''"
-                                                v-model="hlsLiveSyncPlaybackRate">
+                                        <input :disabled="!hlsLiveSyncPlaybackRateCheck" type="number"
+                                               id="hlsLiveSyncPlaybackRate" class="form-control"
+                                               :class="playerOption.hlsConfig && playerOption.hlsConfig.maxLiveSyncPlaybackRate ? 'active': ''"
+                                               v-model="hlsLiveSyncPlaybackRate">
                                         <label class="form-label" for="hlsLiveSyncPlaybackRate">Min:1, Max2</label>
                                     </div>
                                 </fieldset>
@@ -421,24 +392,19 @@
                                 <h6>DASH Options</h6>
                                 <fieldset>
                                     <div class="form-check mb-2">
-                                        <input
-                                                class="form-check-input"
-                                                type="checkbox"
-                                                value=""
-                                                id="llDashCheck"
-                                                v-model="llDashCheck"
-                                        />
+                                        <input class="form-check-input" type="checkbox" value="" id="llDashCheck"
+                                               v-model="llDashCheck"/>
                                         <label class="form-check-label" for="llDashCheck">
                                             Enable Low Latency MPEG DASH
                                         </label>
                                     </div>
                                     <div class="form-outline ms-4">
-                                        <input :disabled="!llDashCheck"
-                                               type="number"
-                                               id="llDashLiveDelayInput"
-                                               class="form-control" :class="playerOption.lowLatencyMpdLiveDelay ? 'active': ''"
+                                        <input :disabled="!llDashCheck" type="number" id="llDashLiveDelayInput"
+                                               class="form-control"
+                                               :class="playerOption.lowLatencyMpdLiveDelay ? 'active': ''"
                                                v-model="llDashLiveDelay">
-                                        <label class="form-label" for="llDashLiveDelayInput">Live Delay (Optional, second)</label>
+                                        <label class="form-label" for="llDashLiveDelayInput">Live Delay (Optional,
+                                            second)</label>
                                     </div>
                                 </fieldset>
                             </div>
@@ -453,22 +419,16 @@
                                 <h6>Reload the player when error occurred</h6>
                                 <fieldset>
                                     <div class="form-check mb-2">
-                                        <input
-                                                class="form-check-input"
-                                                type="checkbox"
-                                                value=""
-                                                id="autoReload"
-                                                v-model="demoOption.autoReload"
-                                                @change="changeOptions"
-                                        />
+                                        <input class="form-check-input" type="checkbox" value="" id="autoReload"
+                                               v-model="demoOption.autoReload" @change="changeOptions"/>
                                         <label class="form-check-label" for="autoReload">
                                             Enable auto reload
                                         </label>
                                     </div>
                                     <div class="form-outline ms-4">
-                                        <input type="text" id="playerReloadInterval" class="form-control" :class="demoOption.autoReloadInterval ? 'active': ''"
-                                               v-model="demoOption.autoReloadInterval"
-                                               @change="changeOptions">
+                                        <input type="text" id="playerReloadInterval" class="form-control"
+                                               :class="demoOption.autoReloadInterval ? 'active': ''"
+                                               v-model="demoOption.autoReloadInterval" @change="changeOptions">
                                         <label class="form-label" for="playerReloadInterval">
                                             Reload interval (millisecond)
                                         </label>
@@ -485,15 +445,11 @@
                         <h5 class="mb-0 fs-6">Usage</h5>
                     </li>
                     <li class="list-group-item position-relative">
-                        <div v-html="createScriptHTML"
-                             class="my-2 small font-monospace w-100 overflow-auto"
+                        <div v-html="createScriptHTML" class="my-2 small font-monospace w-100 overflow-auto"
                              style="white-space: pre;">
                         </div>
-                        <button
-                                ref="copyCodeButton"
-                                class="btn btn-light text-dark position-absolute px-2 px-md-4"
-                                style="top: 0.5rem; right: 1rem"
-                                :data-clipboard-text="createScript">
+                        <button ref="copyCodeButton" class="btn btn-light text-dark position-absolute px-2 px-md-4"
+                                style="top: 0.5rem; right: 1rem" :data-clipboard-text="createScript">
                             <i class="far fa-copy me-1"></i>COPY
                         </button>
                     </li>
@@ -508,17 +464,11 @@
 
                         <div class="input-group">
                             <div class="form-outline flex-grow-1">
-                                <input type="text"
-                                       id="permanentLinkInput"
-                                       readonly
-                                       class="form-control bg-white"
+                                <input type="text" id="permanentLinkInput" readonly class="form-control bg-white"
                                        v-model="permanentLink"/>
                             </div>
-                            <button id="exportButton"
-                                    ref="exportButton"
-                                    data-clipboard-target="#permanentLinkInput"
-                                    class="btn btn-primary px-2 px-md-4"
-                                    type="button">
+                            <button id="exportButton" ref="exportButton" data-clipboard-target="#permanentLinkInput"
+                                    class="btn btn-primary px-2 px-md-4" type="button">
                                 <i class="far fa-copy me-1"></i>COPY
                             </button>
                         </div>
@@ -541,7 +491,8 @@
                                 Media Technology Expert Group
                             </p>
                             <p>
-                                Our mission is to build a powerful media world by making it easier for everyone to use all the complex and demanding media technologies of the world.
+                                Our mission is to build a powerful media world by making it easier for everyone to
+                                use all the complex and demanding media technologies of the world.
                             </p>
                         </div>
 
@@ -550,16 +501,20 @@
                         <div class="col-md-5 col-lg-2 col-xl-2 mx-auto mt-3">
                             <h6 class="text-uppercase mb-4 font-weight-bold">OPEN SOURCE PROJECTS</h6>
                             <p>
-                                <a class="" target="_blank" href="https://github.com/AirenSoft/OvenMediaEngine">OvenMediaEngine</a>
+                                <a class="" target="_blank"
+                                   href="https://github.com/AirenSoft/OvenMediaEngine">OvenMediaEngine</a>
                             </p>
                             <p>
-                                <a class="" target="_blank" href="https://github.com/AirenSoft/OvenPlayer">OvenPlayer</a>
+                                <a class="" target="_blank"
+                                   href="https://github.com/AirenSoft/OvenPlayer">OvenPlayer</a>
                             </p>
                             <p>
-                                <a class="" target="_blank" href="https://github.com/AirenSoft/OvenLiveKit-Web">OvenLiveKit-Web</a>
+                                <a class="" target="_blank"
+                                   href="https://github.com/AirenSoft/OvenLiveKit-Web">OvenLiveKit-Web</a>
                             </p>
                             <p>
-                                <a class="" target="_blank" href="https://github.com/AirenSoft/OvenSpace">OvenSpace</a>
+                                <a class="" target="_blank"
+                                   href="https://github.com/AirenSoft/OvenSpace">OvenSpace</a>
                             </p>
                         </div>
 
@@ -567,7 +522,8 @@
 
                         <div class="col-md-5 col-lg-3 col-xl-3 mx-auto mt-3">
                             <h6 class="text-uppercase mb-4 font-weight-bold">Contact</h6>
-                            <p><i class="fas fa-home mr-3"></i> #1203, Twenty First Valley, 157, Yangpyeong-ro, Yeongdeungpo-gu, Seoul, 07207 Republic of Korea</p>
+                            <p><i class="fas fa-home mr-3"></i> #1203, Twenty First Valley, 157, Yangpyeong-ro,
+                                Yeongdeungpo-gu, Seoul, 07207 Republic of Korea</p>
                             <p><i class="fas fa-envelope mr-3"></i> contact@airensoft.com</p>
                             <p><i class="fas fa-phone mr-3"></i> +82-2-6378-5227</p>
                         </div>
@@ -589,34 +545,16 @@
 
                         <div class="col-md-5 col-lg-4 ml-lg-0 text-center text-md-end">
                             <!-- Facebook -->
-                            <a
-                                    class="btn btn-floating m-1"
-                                    class=""
-                                    role="button"
-                                    target="_blank"
-                                    href="https://www.facebook.com/airensoft/"
-                            ><i class="fab fa-facebook-f"></i
-                            ></a>
+                            <a class="btn btn-floating m-1" class="" role="button" target="_blank"
+                               href="https://www.facebook.com/airensoft/"><i class="fab fa-facebook-f"></i></a>
 
                             <!-- Twitter -->
-                            <a
-                                    class="btn btn-floating m-1"
-                                    class=""
-                                    role="button"
-                                    target="_blank"
-                                    href="https://twitter.com/AirenSoft"
-                            ><i class="fab fa-twitter"></i
-                            ></a>
+                            <a class="btn btn-floating m-1" class="" role="button" target="_blank"
+                               href="https://twitter.com/AirenSoft"><i class="fab fa-twitter"></i></a>
 
                             <!-- Instagram -->
-                            <a
-                                    class="btn btn-floating m-1"
-                                    class=""
-                                    role="button"
-                                    target="_blank"
-                                    href="https://www.instagram.com/airensoft"
-                            ><i class="fab fa-instagram"></i
-                            ></a>
+                            <a class="btn btn-floating m-1" class="" role="button" target="_blank"
+                               href="https://www.instagram.com/airensoft"><i class="fab fa-instagram"></i></a>
                         </div>
                     </div>
                 </section>
@@ -1160,7 +1098,7 @@
                             this.playerOption.hlsConfig = {};
                         }
 
-                        this.playerOption.hlsConfig.maxLiveSyncPlaybackRate = 1;
+                        this.playerOption.hlsConfig.maxLiveSyncPlaybackRate = 1.2;
 
                     } else {
 
