@@ -370,10 +370,11 @@ const Api = function(container){
         let lastPlayPosition = currentProvider.getPosition();
         playerConfig.setSourceIndex(index);
 
-        initProvider(lastPlayPosition);
+        initProvider(lastPlayPosition).then(function () {
 
-        that.trigger(CONTENT_SOURCE_CHANGED, {
-            currentSource: index
+            that.trigger(CONTENT_SOURCE_CHANGED, {
+                currentSource: index
+            });
         });
 
         return index;
