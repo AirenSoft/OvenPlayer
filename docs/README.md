@@ -82,6 +82,12 @@ $ npm install ovenplayer
 $ npm install ovenplayer@0.10.0
 ```
 
+#### Vuejs component
+
+```
+$ npm install ovenplayer-vue3
+```
+
 ## Quick Start
 
 Below is a list of simple OvenPlayer initialization methods for each situation. For detailed options when initializing the OvenPlayer, please refer to the [Initialization](https://airensoft.gitbook.io/ovenplayer/initialization) chapter.
@@ -135,6 +141,50 @@ import OvenPlayer from 'ovenplayer';
 
 // Initialize OvenPlayer
 const player = OvenPlayer.create('player_id', options)
+```
+
+### OvenPlayer for Vue.js
+
+You can use OvenPlayer as a reusable [Vue.js](https://vuejs.org/) component.
+
+```javascript
+<script setup>
+import OvenPlayerVue3 from "ovenplayer-vue3";
+</script>
+
+<template>
+    <OvenPlayerVue3 
+    :config="playerConfig"
+    @ready="readyHandler"
+    @error="errorHandler"
+    >
+    </OvenPlayerVue3>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      playerConfig: {
+        sources: [
+          {
+            type: '...',
+            file: '...',
+          },
+        ],
+      },
+    };
+  },
+  methods: {
+    readyHandler(event) {
+      //
+    },
+    errorHandler(event) {
+      //
+    }
+  }
+};
+</script>
 ```
 
 ### Initialize for OME
