@@ -16,8 +16,9 @@ import {
     PLAYER_UNKNWON_NETWORK_ERROR,
     PLAYER_BAD_REQUEST_ERROR,
     PLAYER_AUTH_FAILED_ERROR,
-    PLAYER_NOT_ACCEPTABLE_ERROR
+    PLAYER_NOT_ACCEPTABLE_ERROR, STATE_PLAYING, CONTENT_LEVEL_CHANGED
 } from "../../../constants";
+import sizeHumanizer from "../../../../utils/sizeHumanizer";
 
 /**
  * @brief   hlsjs provider extended core.
@@ -89,6 +90,22 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
             hls.once(Hls.Events.MANIFEST_LOADED, function (event, data) {
 
                 isManifestLoaded = true;
+
+                for(let i = 0; i < hls.levels.length; i ++) {
+
+                    let qualityLevel = hls.levels[i];
+
+                    spec.qualityLevels.push({
+                        bitrate: qualityLevel.bitrate,
+                        height: qualityLevel.height,
+                        width: qualityLevel.width,
+                        index: i,
+                        label: qualityLevel.width + "x" + qualityLevel.height + ", " + sizeHumanizer(qualityLevel.bitrate, true, "bps")
+                    });
+                }
+
+                spec.currentQuality = hls.firstLevel;
+
             });
 
             hls.once(Hls.Events.LEVEL_LOADED, function (event, data) {
@@ -108,6 +125,17 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
                         that.seek(lastPlayPosition);
                     }
                 }
+            });
+
+            hls.on(Hls.Events.LEVEL_SWITCHED , function (event, data) {
+
+                spec.currentQuality = data.level;
+
+                that.trigger(CONTENT_LEVEL_CHANGED, {
+                    isAuto: hls.autoLevelEnabled,
+                    currentQuality: spec.currentQuality,
+                    type: "render"
+                });
             });
 
             hls.on(Hls.Events.ERROR, function (event, data) {
@@ -172,11 +200,23 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
             });
         });
 
-        superDestroy_func = that.super('destroy');
-        OvenPlayerConsole.log("HLS PROVIDER LOADED.");
+        that.setCurrentQuality = (qualityIndex) => {
+
+            hls.currentLevel = qualityIndex;
+            spec.currentQuality = qualityIndex;
+
+            return spec.currentQuality;
+        };
+
+        that.isAutoQuality = () => {
+            return hls.autoLevelEnabled;
+        };
+        
+        that.setAutoQuality = (isAuto) => {
+            hls.currentLevel = -1;
+        };
 
         superStop_func = that.super('stop');
-
         that.stop = () => {
 
             if (loadRetryer) {
@@ -192,6 +232,7 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
             superStop_func();
         };
 
+        superDestroy_func = that.super('destroy');
         that.destroy = () => {
 
             if (loadRetryer) {
@@ -203,7 +244,6 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
             if (hls) {
 
                 hls.destroy();
-
                 that.trigger(HLS_DESTROYED);
             }
 
@@ -211,6 +251,8 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
             OvenPlayerConsole.log("HLS : PROVIDER DESTROUYED.");
             superDestroy_func();
         };
+
+        OvenPlayerConsole.log("HLS PROVIDER LOADED.");
     } catch (error) {
         let tempError = ERRORS.codes[INIT_HLSJS_FAIL];
         tempError.error = error;
