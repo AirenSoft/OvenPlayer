@@ -126,7 +126,7 @@
     <script src="https://cdn.jsdelivr.net/npm/dashjs@3.2.2/dist/dash.all.min.js"></script>
 
     <!-- OvenPlayer -->
-    <script src="https://cdn.jsdelivr.net/npm/ovenplayer@0.10.19/dist/ovenplayer.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/ovenplayer@0.10.21/dist/ovenplayer.js"></script>
 </head>
 
 <body>
@@ -352,40 +352,33 @@
                             <div class="col-lg-3 border-start border-2 mb-3 mb-lg-0">
                                 <!--HLS Config -->
                                 <h6>HLS Options</h6>
-                                <fieldset>
-                                    <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" value=""
-                                               id="hlsLiveSyncDurationCheck" v-model="hlsLiveSyncDurationCheck"/>
-                                        <label class="form-check-label" for="hlsLiveSyncDurationCheck">
-                                            Set Target Latency
-                                        </label>
-                                    </div>
-                                    <div class="form-outline ms-4">
-                                        <input :disabled="!hlsLiveSyncDurationCheck" type="number"
-                                               id="hlsLiveSyncDuration" class="form-control"
-                                               :class="playerOption.hlsConfig && playerOption.hlsConfig.liveSyncDuration ? 'active': ''"
-                                               v-model="hlsLiveSyncDuration">
-                                        <label class="form-label" for="hlsLiveSyncDuration">Second</label>
-                                    </div>
-                                </fieldset>
-
-                                <fieldset>
-                                    <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" value=""
-                                               id="hlsLiveSyncPlaybackRateCheck"
-                                               v-model="hlsLiveSyncPlaybackRateCheck"/>
-                                        <label class="form-check-label" for="hlsLiveSyncPlaybackRateCheck">
-                                            Set Live Sync Playback Rate
-                                        </label>
-                                    </div>
-                                    <div class="form-outline ms-4">
-                                        <input :disabled="!hlsLiveSyncPlaybackRateCheck" type="number"
-                                               id="hlsLiveSyncPlaybackRate" class="form-control"
-                                               :class="playerOption.hlsConfig && playerOption.hlsConfig.maxLiveSyncPlaybackRate ? 'active': ''"
-                                               v-model="hlsLiveSyncPlaybackRate">
-                                        <label class="form-label" for="hlsLiveSyncPlaybackRate">Min:1, Max2</label>
-                                    </div>
-                                </fieldset>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" value=""
+                                           id="hlsManageLatencyCheck"
+                                           v-model="hlsManageLatencyCheck"/>
+                                    <label class="form-check-label" for="hlsManageLatencyCheck">
+                                        Manage Latency
+                                    </label>
+                                </div>
+                                <div class="form-outline ms-4 mb-3">
+                                    <input :disabled="!hlsManageLatencyCheck" type="number"
+                                           id="hlsTargetLatency" class="form-control active"
+                                           v-model="hlsTargetLatency">
+                                    <label class="form-label" for="hlsTargetLatency">Target latency
+                                        (Second)</label>
+                                </div>
+                                <div class="form-outline ms-4 mb-3">
+                                    <input :disabled="!hlsManageLatencyCheck" type="number"
+                                           id="hlsMaxLatency" class="form-control active"
+                                           v-model="hlsMaxLatency">
+                                    <label class="form-label" for="hlsMaxLatency">Max latency</label>
+                                </div>
+                                <div class="form-outline ms-4">
+                                    <input :disabled="!hlsManageLatencyCheck" type="number"
+                                           id="hlsLiveSyncCatchupRate" class="form-control active"
+                                           v-model="hlsLiveSyncCatchupRate">
+                                    <label class="form-label" for="hlsLiveSyncCatchupRate">Sync catch up rate</label>
+                                </div>
                             </div>
                             <div class="col-lg-3 border-start border-2 mb-3 mb-lg-0">
                                 <!--Dash Config -->
@@ -688,6 +681,10 @@
                     if (url.indexOf('.m3u8') > 0) {
 
                         protocol = "hls";
+
+                        if (url.endsWith('llhls.m3u8')) {
+                            protocol = 'll-hls'
+                        }
                     } else if (url.indexOf('.mpd') > 0) {
 
                         protocol = "dash";
@@ -1015,11 +1012,13 @@
                     this.makePermanentLink();
                 }
             },
-            hlsLiveSyncDurationCheck: {
+            hlsManageLatencyCheck: {
                 get: function () {
 
                     if (this.playerOption.hlsConfig &&
-                        _.isNumber(this.playerOption.hlsConfig.liveSyncDuration)) {
+                        (_.isNumber(this.playerOption.hlsConfig.liveSyncDuration)
+                            || _.isNumber(this.playerOption.hlsConfig.liveMaxLatencyDuration)
+                            || _.isNumber(this.playerOption.hlsConfig.maxLiveSyncPlaybackRate))) {
 
                         return true;
                     } else {
@@ -1029,29 +1028,29 @@
                 set: function (value) {
 
                     if (value) {
-
                         if (!this.playerOption.hlsConfig) {
                             this.playerOption.hlsConfig = {};
                         }
-
-                        this.playerOption.hlsConfig.liveSyncDuration = 3;
-
+                        this.playerOption.hlsConfig.liveSyncDuration = 1.5;
+                        this.playerOption.hlsConfig.liveMaxLatencyDuration = 3;
+                        this.playerOption.hlsConfig.maxLiveSyncPlaybackRate = 1.5;
                     } else {
 
                         delete this.playerOption.hlsConfig.liveSyncDuration;
+                        delete this.playerOption.hlsConfig.liveMaxLatencyDuration;
+                        delete this.playerOption.hlsConfig.maxLiveSyncPlaybackRate;
+
+                        if (_.isEmpty(this.playerOption.hlsConfig)) {
+
+                            delete this.playerOption.hlsConfig;
+                        }
                     }
-
-                    if (_.isEmpty(this.playerOption.hlsConfig)) {
-
-                        delete this.playerOption.hlsConfig;
-                    }
-
 
                     this.unLoadPlayer(true);
                     this.makePermanentLink();
                 }
             },
-            hlsLiveSyncDuration: {
+            hlsTargetLatency: {
                 get: function () {
 
                     if (this.playerOption.hlsConfig &&
@@ -1061,61 +1060,35 @@
                     }
                 },
                 set: function (value) {
-
-                    if (value) {
-
-                        if (!this.playerOption.hlsConfig) {
-                            this.playerOption.hlsConfig = {};
-                        }
-
-                        this.playerOption.hlsConfig.liveSyncDuration = value;
-
-                    } else {
-
-                        delete this.playerOption.hlsConfig.liveSyncDuration;
+                    if (!this.playerOption.hlsConfig) {
+                        this.playerOption.hlsConfig = {};
                     }
 
+                    this.playerOption.hlsConfig.liveSyncDuration = value;
                     this.unLoadPlayer(true);
                     this.makePermanentLink();
                 }
             },
-            hlsLiveSyncPlaybackRateCheck: {
+            hlsMaxLatency: {
                 get: function () {
 
                     if (this.playerOption.hlsConfig &&
-                        _.isNumber(this.playerOption.hlsConfig.maxLiveSyncPlaybackRate)) {
+                        _.isNumber(this.playerOption.hlsConfig.liveMaxLatencyDuration)) {
 
-                        return true;
-                    } else {
-                        return false;
+                        return this.playerOption.hlsConfig.liveMaxLatencyDuration;
                     }
                 },
                 set: function (value) {
-
-                    if (value) {
-
-                        if (!this.playerOption.hlsConfig) {
-                            this.playerOption.hlsConfig = {};
-                        }
-
-                        this.playerOption.hlsConfig.maxLiveSyncPlaybackRate = 1.2;
-
-                    } else {
-
-                        delete this.playerOption.hlsConfig.maxLiveSyncPlaybackRate;
+                    if (!this.playerOption.hlsConfig) {
+                        this.playerOption.hlsConfig = {};
                     }
 
-                    if (_.isEmpty(this.playerOption.hlsConfig)) {
-
-                        delete this.playerOption.hlsConfig;
-                    }
-
-
+                    this.playerOption.hlsConfig.liveMaxLatencyDuration = value;
                     this.unLoadPlayer(true);
                     this.makePermanentLink();
                 }
             },
-            hlsLiveSyncPlaybackRate: {
+            hlsLiveSyncCatchupRate: {
                 get: function () {
 
                     if (this.playerOption.hlsConfig &&
@@ -1125,24 +1098,16 @@
                     }
                 },
                 set: function (value) {
-
-                    if (value) {
-
-                        if (!this.playerOption.hlsConfig) {
-                            this.playerOption.hlsConfig = {};
-                        }
-
-                        this.playerOption.hlsConfig.maxLiveSyncPlaybackRate = value;
-
-                    } else {
-
-                        delete this.playerOption.hlsConfig.maxLiveSyncPlaybackRate;
+                    if (!this.playerOption.hlsConfig) {
+                        this.playerOption.hlsConfig = {};
                     }
 
+                    this.playerOption.hlsConfig.maxLiveSyncPlaybackRate = value;
                     this.unLoadPlayer(true);
                     this.makePermanentLink();
                 }
             }
+
         },
         mounted: function () {
 
