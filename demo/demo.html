@@ -371,13 +371,16 @@
                                     <input :disabled="!hlsManageLatencyCheck" type="number"
                                            id="hlsMaxLatency" class="form-control active"
                                            v-model="hlsMaxLatency">
-                                    <label class="form-label" for="hlsMaxLatency">Max latency</label>
+                                    <label class="form-label" for="hlsMaxLatency">Max latency (Second)</label>
                                 </div>
                                 <div class="form-outline ms-4">
                                     <input :disabled="!hlsManageLatencyCheck" type="number"
                                            id="hlsLiveSyncCatchupRate" class="form-control active"
+                                           min="1"
+                                           max="2"
+                                           step="0.1"
                                            v-model="hlsLiveSyncCatchupRate">
-                                    <label class="form-label" for="hlsLiveSyncCatchupRate">Sync catch up rate</label>
+                                    <label class="form-label" for="hlsLiveSyncCatchupRate">Sync catch up rate (min:1, max:2)</label>
                                 </div>
                             </div>
                             <div class="col-lg-3 border-start border-2 mb-3 mb-lg-0">
