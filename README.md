@@ -5,10 +5,10 @@
 
 In short, OvenPlayer is an <b>Open-Source</b> and <b>JavaScript-based WebRTC Player</b> for OvenMediaEngine (OME).
 
-OvenPlayer supports WebRTC Signaling from OvenMediaEngine for Sub-Second Latency Streaming. And, it automatically plays and fallbacks using <b>WebRTC</b>, <b>Low Latency MPEG-DASH</b> (LLDASH), <b>MPEG-DASH</b>, <b>HLS</b>, and <b>RTMP</b>.
+OvenPlayer supports WebRTC Signaling from OvenMediaEngine for Sub-Second Latency Streaming. And, it automatically plays and fallbacks using <b>LLHLS</b> (Low Latency HLS), <b>WebRTC</b>, <b>MPEG-DASH</b>, and <b>RTMP</b>.
 
 See the picture below:
-<img src="demo/assets/images/OvenPlayer_Overview_GitHub_220117.svg" style="max-width: 100%; height: auto;">
+<img src="demo/assets/images/OP_LLHLS_220610.svg" style="max-width: 100%; height: auto;">
 
 We also provide [OvenMediaEngine](https://github.com/AirenSoft/OvenMediaEngine), an Open-Source Streaming Server that enables Large-Scale and Sub-Second Latency Live Streaming.
 
@@ -29,8 +29,8 @@ Would you mind clicking on each link below for details:
 * <b>HTML5 Standard Video Player</b>
 * <b>Live Streaming with Various Protocols</b>
     * Sub-Second Latency: WebRTC (Signalling Protocol Conforms to the OME Specification)
-    * Low Latency: MPEG-DASH (Chunked CMAF)
-    * Legacy: MPEG-DASH, HLS
+    * Low Latency: LLHLS, LLDASH (Chunked CMAF)
+    * Legacy: HLS, MPEG-DASH
 * <b>Automatic Fallback Streaming</b>
 * <b>Fully Customizable UI and SDK</b>
 * <b>Insert ADs with Various Formats</b>
