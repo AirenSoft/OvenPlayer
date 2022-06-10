@@ -1,11 +1,11 @@
-# "JavaScript-based WebRTC Player for OvenMediaEngine" OvenPlayer
+# "JavaScript-based LLHLS and WebRTC Player for OvenMediaEngine" OvenPlayer
 
 
 ## What is OvenPlayer?
 
 In short, OvenPlayer is an <b>Open-Source</b> and <b>JavaScript-based WebRTC Player</b> for OvenMediaEngine (OME).
 
-OvenPlayer supports WebRTC Signaling from OvenMediaEngine for Sub-Second Latency Streaming. And, it automatically plays and fallbacks using <b>LLHLS</b> (Low Latency HLS), <b>WebRTC</b>, <b>MPEG-DASH</b>, and <b>RTMP</b>.
+OvenPlayer supports WebRTC Signaling from OvenMediaEngine for Sub-Second Latency Streaming. And, it automatically plays and fallbacks using <b>LLHLS</b> (Low Latency HLS), <b>WebRTC</b>.
 
 See the picture below:
 <img src="demo/assets/images/OP_LLHLS_220610.svg" style="max-width: 100%; height: auto;">
