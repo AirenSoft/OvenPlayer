@@ -64,11 +64,8 @@
     <!-- hls.js -->
     <script src="https://cdn.jsdelivr.net/npm/hls.js/dist/hls.min.js"></script>
 
-    <!-- dash.js -->
-    <script src="https://cdn.jsdelivr.net/npm/dashjs@3.2.2/dist/dash.all.min.js"></script>
-
     <!-- OvenPlayer -->
-    <script src="https://cdn.jsdelivr.net/npm/ovenplayer/dist/ovenplayer.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/ovenplayer@0.10.21/dist/ovenplayer.js"></script>
 </head>
 <body>
 <nav class="navbar navbar-expand-md navbar-light bg-light">
@@ -275,13 +272,13 @@
     var wsProtocol = 'ws:';
     var httpProtocol = 'http:';
     var signallingPort = ':3332';
-    var httpStreamingPort = ':8080';
+    var httpStreamingPort = ':3332';
 
     if (navProtocol === 'https:') {
         wsProtocol = 'wss:';
         httpProtocol = 'https:';
         signallingPort = ':3333';
-        httpStreamingPort = ':8443';
+        httpStreamingPort = ':3333';
     }
 
     var player = "", errorOccured = false;
@@ -303,20 +300,9 @@
             },
             {
                 type: 'hls',
-                file: httpProtocol + '//demo.ovenplayer.com' + httpStreamingPort + '/app/stream/playlist.m3u8',
-                label: 'HLS'
-            },
-            {
-                type: 'dash',
-                file: httpProtocol + '//demo.ovenplayer.com' + httpStreamingPort + '/app/stream/manifest.mpd',
-                label: 'MPEG-DASH'
-            },
-            {
-                type: 'dash',
-                file: httpProtocol + '//demo.ovenplayer.com' + httpStreamingPort + '/app/stream/manifest_ll.mpd',
-                label: 'LL MPEG-DASH',
-                lowLatency: true
-            },
+                file: httpProtocol + '//demo.ovenplayer.com' + httpStreamingPort + '/app/stream/llhls.m3u8',
+                label: 'Low-Latency HLS'
+            }
         ];
 
         player = OvenPlayer.create("player", {

@@ -122,9 +122,6 @@
     <!-- hls.js -->
     <script src="https://cdn.jsdelivr.net/npm/hls.js/dist/hls.min.js"></script>
 
-    <!-- dash.js -->
-    <script src="https://cdn.jsdelivr.net/npm/dashjs@3.2.2/dist/dash.all.min.js"></script>
-
     <!-- OvenPlayer -->
     <script src="https://cdn.jsdelivr.net/npm/ovenplayer@0.10.21/dist/ovenplayer.js"></script>
 </head>
@@ -214,7 +211,7 @@
                         </small>
                     </li>
                     <div class="list-group-item" v-if="playerOption.sources.length === 0">
-                        <p class="lead">Test various streams with OvenPlayer</p>
+                        <p class="lead">Test streams with OvenPlayer</p>
 
                         <ul>
                             <li>
@@ -222,7 +219,7 @@
                                 Specification)
                             </li>
                             <li>
-                                Legacy: MPEG-DASH, HLS
+                                Low-Latency HLS
                             </li>
                         </ul>
                         <p class="mt-4">To play the stream of OvenMediaEngine, please refer to the following
@@ -236,8 +233,8 @@
                             </a>
                             </li>
                             <li>
-                                Dash& HLS <a
-                                    href="https://airensoft.gitbook.io/ovenmediaengine/streaming/hls-mpeg-dash#streaming"
+                                Low-Latency HLS <a
+                                    href="https://airensoft.gitbook.io/ovenmediaengine/streaming/low-latency-hls"
                                     class="ms-1" target="_blank">
                                 <i class="fas fa-external-link-alt"></i>
                             </a>
@@ -260,7 +257,7 @@
                     <li class="list-group-item">
 
                         <div class="row">
-                            <div class="col-lg-3 border-start border-2 mb-3 mb-lg-0">
+                            <div class="col-lg-4 border-start border-2 mb-3 mb-lg-0">
                                 <!--General Config -->
                                 <h6>General Options</h6>
                                 <fieldset>
@@ -299,7 +296,7 @@
                                     </div>
                                 </fieldset>
                             </div>
-                            <div class="col-lg-3 border-start border-2 mb-3 mb-lg-0">
+                            <div class="col-lg-4 border-start border-2 mb-3 mb-lg-0">
                                 <!--WebRTC Config -->
                                 <h6>WebRTC Options</h6>
                                 <fieldset>
@@ -349,7 +346,7 @@
                                     </div>
                                 </fieldset>
                             </div>
-                            <div class="col-lg-3 border-start border-2 mb-3 mb-lg-0">
+                            <div class="col-lg-4 border-start border-2 mb-3 mb-lg-0">
                                 <!--HLS Config -->
                                 <h6>HLS Options</h6>
                                 <div class="form-check mb-2">
@@ -382,27 +379,6 @@
                                            v-model="hlsLiveSyncCatchupRate">
                                     <label class="form-label" for="hlsLiveSyncCatchupRate">Sync catch up rate (min:1, max:2)</label>
                                 </div>
-                            </div>
-                            <div class="col-lg-3 border-start border-2 mb-3 mb-lg-0">
-                                <!--Dash Config -->
-                                <h6>DASH Options</h6>
-                                <fieldset>
-                                    <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" value="" id="llDashCheck"
-                                               v-model="llDashCheck"/>
-                                        <label class="form-check-label" for="llDashCheck">
-                                            Enable Low Latency MPEG DASH
-                                        </label>
-                                    </div>
-                                    <div class="form-outline ms-4">
-                                        <input :disabled="!llDashCheck" type="number" id="llDashLiveDelayInput"
-                                               class="form-control"
-                                               :class="playerOption.lowLatencyMpdLiveDelay ? 'active': ''"
-                                               v-model="llDashLiveDelay">
-                                        <label class="form-label" for="llDashLiveDelayInput">Live Delay (Optional,
-                                            second)</label>
-                                    </div>
-                                </fieldset>
                             </div>
                         </div>
                     </li>
