@@ -248,7 +248,7 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
             }
 
             hls = null;
-            OvenPlayerConsole.log("HLS : PROVIDER DESTROUYED.");
+            OvenPlayerConsole.log("HLS : PROVIDER DESTROYED.");
             superDestroy_func();
         };
 
