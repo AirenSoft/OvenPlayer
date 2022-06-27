@@ -140,7 +140,8 @@ const WebRTC = function (element, playerConfig, adTagUrl) {
                 connectedCallback,
                 internalErrorCallback,
                 errorTrigger,
-                playerConfig
+                playerConfig,
+                spec
             );
 
             connectionStartTime = performance.now();

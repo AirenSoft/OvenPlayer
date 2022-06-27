@@ -10,8 +10,10 @@ import {
     PLAYER_WEBRTC_NETWORK_SLOW,
     PLAYER_WEBRTC_UNEXPECTED_DISCONNECT,
     PLAYER_WEBRTC_INTERNAL_ERROR,
-    OME_P2P_MODE
+    OME_P2P_MODE,
+    CONTENT_LEVEL_CHANGED
 } from "api/constants";
+import sizeHumanizer from "../../../../utils/sizeHumanizer";
 
 
 const WebRTCLoader = function (provider,
@@ -20,7 +22,8 @@ const WebRTCLoader = function (provider,
                                connectedCallback,
                                internalErrorCallback,
                                errorTrigger,
-                               playerConfig) {
+                               playerConfig,
+                               spec) {
 
     let defaultConnectionConfig = {};
 
@@ -41,6 +44,9 @@ const WebRTCLoader = function (provider,
     let wsClosedByPlayer = false;
 
     let recoverPacketLoss = false;
+
+    let playlistFromOme = null;
+    let autoQuality = false;
 
     if (playerConfig.getConfig().webrtcConfig &&
         playerConfig.getConfig().webrtcConfig.recoverPacketLoss === true) {
@@ -665,12 +671,6 @@ const WebRTCLoader = function (provider,
                     return;
                 }
 
-                if (!message.id) {
-
-                    OvenPlayerConsole.log('ID must be not null');
-                    return;
-                }
-
                 if (message.command === 'offer') {
 
                     let iceServers = message.iceServers || message.ice_servers;
@@ -717,6 +717,57 @@ const WebRTCLoader = function (provider,
                     let peerConnection3 = getPeerConnectionById(message.peer_id);
 
                     addIceCandidate(peerConnection3, message.candidates);
+                }
+
+                if (message.command === 'notification') {
+
+                    if (message.type === 'playlist') {
+
+                        const renditions = message.message.renditions;
+                        playlistFromOme = message.message;
+
+                        for (let i = 0; i < renditions.length; i++) {
+
+                            let rendition = renditions[i];
+
+                            spec.qualityLevels.push({
+                                bitrate: rendition.video_track.video.bitrate,
+                                height: rendition.video_track.video.height,
+                                width: rendition.video_track.video.width,
+                                index: i,
+                                label: rendition.name
+                            });
+                        }
+
+                        spec.currentQuality = 0;
+                        autoQuality = message.message.auto;
+                    }
+
+                    if (message.type === 'rendition_changed') {
+
+                        const rendition = message.message;
+
+                        if (message.auto) {
+                            autoQuality = message.auto;
+                        }
+
+                        let qualityIndex = 0;
+
+                        for (let i = 0; i < playlistFromOme.renditions.length; i ++) {
+
+                            if (rendition.rendition_name ===  playlistFromOme.renditions[i].name) {
+                                qualityIndex = i;
+                                spec.currentQuality = i;
+                                break;
+                            }
+                        }
+
+                        provider.trigger(CONTENT_LEVEL_CHANGED, {
+                            isAuto: autoQuality,
+                            currentQuality: qualityIndex,
+                            type: "render"
+                        });
+                    }
                 }
 
                 if (message.command === 'stop') {
@@ -884,6 +935,38 @@ const WebRTCLoader = function (provider,
         }
 
     }
+
+    provider.setCurrentQuality = (qualityIndex) => {
+
+        let rendition = playlistFromOme.renditions[qualityIndex];
+
+        sendMessage(ws, {
+            command: 'change_rendition',
+            id: mainPeerConnectionInfo.id,
+            rendition_name: rendition.name,
+            auto: false
+        });
+
+        autoQuality = false;
+
+        spec.currentQuality = qualityIndex;
+        return spec.currentQuality;
+    };
+
+    provider.isAutoQuality = () => {
+
+        return autoQuality;
+    };
+
+    provider.setAutoQuality = (auto) => {
+
+        sendMessage(ws, {
+            command: 'change_rendition',
+            id: mainPeerConnectionInfo.id,
+            auto: auto
+        });
+        autoQuality = auto;
+    };
 
     that.connect = () => {
 
