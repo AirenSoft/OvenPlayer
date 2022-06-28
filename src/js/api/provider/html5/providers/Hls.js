@@ -213,7 +213,11 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
         };
         
         that.setAutoQuality = (isAuto) => {
-            hls.currentLevel = -1;
+            if (isAuto) {
+                hls.currentLevel = -1;
+            } else {
+                hls.currentLevel = hls.currentLevel;
+            }
         };
 
         superStop_func = that.super('stop');

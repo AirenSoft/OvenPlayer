@@ -751,7 +751,7 @@ const WebRTCLoader = function (provider,
                             autoQuality = message.auto;
                         }
 
-                        let qualityIndex = 0;
+                        let qualityIndex = -1;
 
                         for (let i = 0; i < playlistFromOme.renditions.length; i ++) {
 

@@ -49,7 +49,7 @@ const QualityPanel = function($container, api, data){
             event.preventDefault();
             let value = LA$(event.currentTarget).attr("op-data-value");
             if(value === "AUTO"){
-                api.setAutoQuality(true);
+                api.setAutoQuality(!api.isAutoQuality());
             }else{
                 api.setCurrentQuality(parseInt(value));
             }
