@@ -283,7 +283,10 @@ const Api = function(container){
             playerConfig.setSourceIndex(0);
 
             if(currentProvider){
-                currentProvider.setCurrentQuality(0);
+
+                if (currentProvider.getQualityLevels().length > 0) {
+                    currentProvider.setCurrentQuality(0);
+                }
             }
 
             if ('sources' in playlist) {
