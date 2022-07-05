@@ -938,7 +938,15 @@ const WebRTCLoader = function (provider,
 
     provider.setCurrentQuality = (qualityIndex) => {
 
+        if (!playlistFromOme) {
+            return -1;
+        }
+
         let rendition = playlistFromOme.renditions[qualityIndex];
+
+        if (!rendition) {
+            return spec.currentQuality;
+        }
 
         sendMessage(ws, {
             command: 'change_rendition',
