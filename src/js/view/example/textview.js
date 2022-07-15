@@ -17,7 +17,7 @@ const TextView = function($container, api, text){
         }
     };
 
-    return OvenTemplate($container, "TextView", text, events, onRendered, onDestroyed );
+    return OvenTemplate($container, "TextView", text, null, events, onRendered, onDestroyed );
 
 };
 

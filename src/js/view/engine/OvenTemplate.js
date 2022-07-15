@@ -33,8 +33,8 @@ const OvenTemplate = function (container, templateName, playerConfig, data, even
 
         return newElement.firstChild;
     }
-    if(playerConfig && playerConfig.systemText){
-        uiText = playerConfig.systemText.ui;
+    if(playerConfig){
+        uiText = playerConfig;
     }
     if (isRoot) {
         $container.replace(createAndSelectElement(Templates[templateName + "Template"](uiText, data)));
