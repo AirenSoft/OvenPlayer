@@ -10,7 +10,7 @@ OvenPlayer supports VAST 4, VAST 3, VAST 2, VPAID 2 (HTML 5), and VMAP 1.0.1, so
 ```
 let player = OvenPlayer.create("player", {
     adTagUrl : "https://pubads.g.doubleclick.net/gampad/ads?...",
-    sources : {
+    sources : [
         type : "mp4", 
         file :  "https://path.to/your_video", 
         label : "360P"
