@@ -447,7 +447,7 @@ sources: [
         type: 'hls',
         file: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
         sectionStart: 300,
-        sectionStart: 600,
+        sectionEnd: 600,
     }
 ]
 ```
