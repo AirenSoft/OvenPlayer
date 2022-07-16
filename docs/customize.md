@@ -247,19 +247,19 @@ let $player = LA$("#player");
 #### Search element
 
 ```
-$player.find(".textView');
+$player.find(".textView");
 ```
 
 #### Access element
 
 ```
-$player.find(".textView').get();
+$player.find(".textView").get();
 ```
 
 #### Edit CSS
 
 ```
-$player.find(".textView').css("color", "#d9d9d9");
+$player.find(".textView").css("color", "#d9d9d9");
 ```
 
 Please check `/utils/likeA$.js` for more information. This is slightly more inconvenient than jquery but enough to control OvenPlayer.
