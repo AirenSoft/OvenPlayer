@@ -58,3 +58,54 @@ export const pickCurrentSource = (sources, playerConfig) => {
 
     return sourceIndex;
 }
+
+export const sortQualityLevels = (qualityLevels, playerConfig) => {
+
+    let orderConfig = playerConfig?.sourcesOrder;
+    let newOrder = [];
+
+    if (orderConfig) {
+        if (_.isArray(orderConfig)) {
+            let foundCount = 0;
+
+            for (var i = 0; i < orderConfig.length; i++) {
+                let value = _.find(qualityLevels, function(quality){
+                    return quality.label === orderConfig[i];
+                });
+
+                if (value) {
+                    newOrder.push({
+                        ...value,
+                        sortedIndex: foundCount
+                    });
+                    foundCount++;
+                }
+            }
+        } else if (_.isObject(orderConfig) || _.isString(orderConfig)) {
+            let permittedKeys = ['bitrate', 'width', 'height'];
+            let orderBy = orderConfig?.orderBy || (orderConfig == false ? orderConfig : 'bitrate');
+            let order = (orderConfig?.order || 'desc').toLowerCase();
+
+            if (permittedKeys.includes(orderBy)) {
+                newOrder = _.sortBy(qualityLevels, orderBy);
+
+                if (order === 'desc') {
+                    newOrder.reverse();
+                }
+
+                for (var i = 0; i < newOrder.length; i++) {
+                    newOrder[i] = {
+                        ...newOrder[i],
+                        sortedIndex: i,
+                    }
+                }
+            }
+        }
+    }
+
+    if (newOrder.length > 0) {
+        qualityLevels = newOrder;
+    }
+
+    return qualityLevels;
+}

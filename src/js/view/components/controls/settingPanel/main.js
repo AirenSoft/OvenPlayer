@@ -84,8 +84,8 @@ const Panels = function($container, api, data){
             for (let i = 0; i < qualityLevels.length; i ++) {
                 let body = {
                     title : qualityLevels[i].label,
-                    isCheck : api.getCurrentQuality() === i,
-                    value : i,
+                    isCheck : api.getCurrentQuality() === qualityLevels[i].index,
+                    value : qualityLevels[i].index,
                     panelType : panelType
                 };
                 panel.body.push(body);
@@ -151,7 +151,7 @@ const Panels = function($container, api, data){
 
                     if($panel.attr("op-panel-type") === "quality"){
                         let qualityList = api.getQualityLevels();
-                        let newQualityObject = qualityList[newQuality];
+                        let newQualityObject = _.find(qualityList, { index: newQuality });
                         $panel.find(".op-setting-item-value").text(newQualityObject.width+"x"+newQualityObject.height+", "+ sizeHumanizer(newQualityObject.bitrate, true, "bps"));
                     }
 
