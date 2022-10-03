@@ -401,7 +401,7 @@ By default, the sources shown will take the order provided by the encoder, but s
 
 Some examples are shown below:
 
-*** Order by Labels
+**Order by Labels**
 
 {% code title="example" %}
 ```
@@ -422,7 +422,7 @@ let player = OvenPlayer.create("player", {
 ```
 {% endcode %}
 
-*** Order by Bitrate, ascending
+**Order by Bitrate, ascending**
 
 {% code title="example" %}
 ```
@@ -439,7 +439,7 @@ let player = OvenPlayer.create("player", {
 ```
 {% endcode %}
 
-*** Order by Width, descending
+**Order by Width, descending**
 
 {% code title="example" %}
 ```
