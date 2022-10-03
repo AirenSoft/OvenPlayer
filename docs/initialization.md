@@ -351,8 +351,8 @@ You can register the URL of the content playback URL as shown below:
 {% code title="example" %}
 ```
 let player = OvenPlayer.create("player", {
-    type : "mp4", 
-    file :  "https://path.to/your_video", 
+    type : "mp4",
+    file :  "https://path.to/your_video",
     label : "360P"
 });
 ```
@@ -368,26 +368,94 @@ OvenPlayer will play a video in the order of the protocol or resolution you ente
 ```
 let player = OvenPlayer.create("player", {sources : [
     {
-        type : "mp4", 
-        file :  "https://path.to/your_video", 
+        type : "mp4",
+        file :  "https://path.to/your_video",
         label : "360P"
     },
     {
-        type : "mpd", 
-        file :  "https://path.to/your_video.mpd", 
+        type : "mpd",
+        file :  "https://path.to/your_video.mpd",
         label: "360P DASH"
     },
     {
-        type : "hls", 
-        file :  "https://path.to/your_video.m3u8", 
+        type : "hls",
+        file :  "https://path.to/your_video.m3u8",
         label: "360P HLS"
     },
     {
-        type : "rtmp", 
-        file :  "rtmp://path.to/your_video", 
+        type : "rtmp",
+        file :  "rtmp://path.to/your_video",
         label: "360P RTMP"
     }
 ] });
+```
+{% endcode %}
+
+### **sourcesOrder**
+
+By default, the sources shown will take the order provided by the encoder, but sometimes this can be incorrect. Using this parameter, you can change the order based on bitrate, video width, height, or with custom ordering based on the label set when encoding.
+
+* Passing a string will order by width, height, or bitrate - in ascending order.
+* Passing an object will order by an `orderBy` key like above, and `order` to sort in ascending (ASC) or descending (DESC) order.
+* Passing an array will order by Label - leaving certain levels out will exclude them from the list entirely.
+
+Some examples are shown below:
+
+*** Order by Labels
+
+{% code title="example" %}
+```
+let player = OvenPlayer.create("player", {
+    sources : [
+        {
+            type : "webrtc",
+            file :  "https://path.to/your_video",
+            label : "WebRTC"
+        },
+    ],
+    sourcesOrder : [
+        'High',
+        'Medium',
+        'Low'
+    ]
+});
+```
+{% endcode %}
+
+*** Order by Bitrate, ascending
+
+{% code title="example" %}
+```
+let player = OvenPlayer.create("player", {
+    sources : [
+        {
+            type : "webrtc",
+            file :  "https://path.to/your_video",
+            label : "WebRTC"
+        },
+    ],
+    sourcesOrder : 'bitrate'
+});
+```
+{% endcode %}
+
+*** Order by Width, descending
+
+{% code title="example" %}
+```
+let player = OvenPlayer.create("player", {
+    sources : [
+        {
+            type : "webrtc",
+            file :  "https://path.to/your_video",
+            label : "WebRTC"
+        },
+    ],
+    sourcesOrder : {
+        orderBy: 'width',
+        order: 'DESC'
+    }
+});
 ```
 {% endcode %}
 
@@ -396,8 +464,8 @@ let player = OvenPlayer.create("player", {sources : [
 {% code title="example" %}
 ```javascript
 let player = OvenPlayer.create("player", {sources : {
-    type : "mp4", 
-    file :  "https://path.to/your_video", 
+    type : "mp4",
+    file :  "https://path.to/your_video",
     label : "360P"
 }});
 ```
@@ -412,27 +480,27 @@ You can register the URL information of the subtitle file shown with a video. Ov
 {% code title="example" %}
 ```javascript
 let player = OvenPlayer.create("player", {sources : {
-        type : "mp4", 
-        file :  "https://path.to/your_video", 
+        type : "mp4",
+        file :  "https://path.to/your_video",
         label : "360P"
     ],
     tracks : [
         {
-            kind : "captions", 
-            file :  "https://path.to/your_caption.vtt", 
+            kind : "captions",
+            file :  "https://path.to/your_caption.vtt",
             label : "KO vtt"
         },
         {
-            kind : "captions", 
-            file :  "https://path.to/your_caption.srt", 
+            kind : "captions",
+            file :  "https://path.to/your_caption.srt",
             label : "KO srt"
         },
         {
-            kind : "captions", 
-            file :  "https://path.to/your_caption.smi", 
+            kind : "captions",
+            file :  "https://path.to/your_caption.smi",
             label : "KO smi"
         }
-    ] 
+    ]
 });
 ```
 {% endcode %}
@@ -475,8 +543,8 @@ For more information, see [Support and Compatibility](https://developers.google.
 let player = OvenPlayer.create("player", {
     adTagUrl : "https://pubads.g.doubleclick.net/gampad/ads?...",
     sources : {
-        type : "mp4", 
-        file :  "https://path.to/your_video", 
+        type : "mp4",
+        file :  "https://path.to/your_video",
         label : "360P"
     ]
 });
@@ -517,17 +585,17 @@ let player = OvenPlayer.create("player", {
             adTagUrl : "https://pubads.g.doubleclick.net/gampad/ads?...",
             image : "https://path.to/your_video_thumbnail.jpeg",
             duration : 7343,
-            sources: [    
+            sources: [
                 {
-                    type : "mp4", 
-                    file :  "https://path.to/your_video", 
+                    type : "mp4",
+                    file :  "https://path.to/your_video",
                     label : "360P"
                 }
             ],
             tracks: [
                 {
-                    kind : "captions", 
-                    file :  "https://path.to/your_caption.vtt", 
+                    kind : "captions",
+                    file :  "https://path.to/your_caption.vtt",
                     label : "KO vtt"
                 }
             ]
@@ -537,22 +605,22 @@ let player = OvenPlayer.create("player", {
             adTagUrl : "https://pubads.g.doubleclick.net/gampad/ads?...",
             image : "https://path.to/your_video_thumbnail2.jpeg",
             duration : 8333,
-            sources: [    
+            sources: [
                 {
-                    type : "mp4", 
-                    file :  "https://path.to/your_video2", 
+                    type : "mp4",
+                    file :  "https://path.to/your_video2",
                     label : "360P"
                 },
                 {
-                    type : "mpd", 
-                    file :  "https://path.to/your_video.mpd", 
+                    type : "mpd",
+                    file :  "https://path.to/your_video.mpd",
                     label: "360P DASH"
                 }
             ],
             tracks: [
                 {
-                    kind : "captions", 
-                    file :  "https://path.to/your_caption2.vtt", 
+                    kind : "captions",
+                    file :  "https://path.to/your_caption2.vtt",
                     label : "KO vtt"
                 }
             ]
@@ -604,7 +672,7 @@ You can set a list of STUN or TURN servers.
 let player = OvenPlayer.create("player", {
     sources : [
         {
-            type : "webrtc", 
+            type : "webrtc",
             file : "ws://source"
         }
     ],
@@ -649,7 +717,7 @@ You can ice transport policy, which can limit the transport policies of the ICE 
 let player = OvenPlayer.create("player", {
     sources : [
         {
-            type : "webrtc", 
+            type : "webrtc",
             file : "ws://source"
         }
     ],
