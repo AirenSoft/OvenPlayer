@@ -1,6 +1,7 @@
 /**
  * Created by hoho on 2019. 5. 17..
  */
+import _ from "utils/underscore";
 import OvenTemplate from "view/engine/OvenTemplate";
 import Panels from "view/components/controls/settingPanel/main";
 import PanelManager from "view/global/PanelManager";
@@ -40,7 +41,7 @@ const SettingButton = function ($container, api) {
         let currentSource = sources && sources.length > 0 ? sources[api.getCurrentSource()] : null;
 
         let qualityLevels = api.getQualityLevels();
-        let currentQuality = qualityLevels && qualityLevels.length > 0 ? qualityLevels[api.getCurrentQuality()] : null;
+        let currentQuality = qualityLevels && qualityLevels.length > 0 ? _.find(qualityLevels, { index: api.getCurrentQuality() }) : null;
 
         let captions = api.getCaptionList();
         let currentCaption = api.getCurrentCaption();
