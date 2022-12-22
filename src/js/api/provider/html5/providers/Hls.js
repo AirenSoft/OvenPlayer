@@ -40,9 +40,7 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
     try {
 
         let hlsConfig = {
-            debug: false,
-            maxBufferLength: 20,
-            maxMaxBufferLength: 30
+            debug: false
         };
 
         let hlsConfigFromPlayerConfig = playerConfig.getConfig().hlsConfig;

@@ -5,8 +5,28 @@ import EventEmitter from "api/EventEmitter";
 import MediaManager from "api/media/Manager";
 import PlaylistManager from "api/playlist/Manager";
 import ProviderController from "api/provider/Controller";
-import {READY, ERRORS, ERROR, CONTENT_COMPLETE, CONTENT_META, INIT_UNKNWON_ERROR, INIT_UNSUPPORT_ERROR, DESTROY, PLAYER_PLAY, NETWORK_UNSTABLED, PLAYER_WEBRTC_NETWORK_SLOW, PLAYER_WEBRTC_UNEXPECTED_DISCONNECT, PLAYER_WEBRTC_SET_LOCAL_DESC_ERROR,
-    PLAYER_FILE_ERROR, PROVIDER_DASH, PROVIDER_HLS, PROVIDER_WEBRTC, PROVIDER_HTML5, PROVIDER_RTMP, ALL_PLAYLIST_ENDED} from "api/constants";
+import {
+    READY,
+    ERRORS,
+    ERROR,
+    CONTENT_COMPLETE,
+    CONTENT_META,
+    INIT_UNKNWON_ERROR,
+    INIT_UNSUPPORT_ERROR,
+    DESTROY,
+    PLAYER_PLAY,
+    NETWORK_UNSTABLED,
+    PLAYER_WEBRTC_NETWORK_SLOW,
+    PLAYER_WEBRTC_UNEXPECTED_DISCONNECT,
+    PLAYER_WEBRTC_SET_LOCAL_DESC_ERROR,
+    PLAYER_FILE_ERROR,
+    PROVIDER_DASH,
+    PROVIDER_HLS,
+    PROVIDER_WEBRTC,
+    PROVIDER_HTML5,
+    PROVIDER_RTMP,
+    ALL_PLAYLIST_ENDED
+} from "api/constants";
 
 import {ApiRtmpExpansion} from 'api/ApiExpansions';
 import {analUserAgent} from "utils/browser";
@@ -20,7 +40,7 @@ import {CONTENT_SOURCE_CHANGED} from "./constants";
  *
  * */
 
-const Api = function(container){
+const Api = function (container) {
     const that = {};
     EventEmitter(that);
 
@@ -34,41 +54,41 @@ const Api = function(container){
     let playerConfig = "";
     let captionManager = "";
 
-    const runNextPlaylist = function(index){
+    const runNextPlaylist = function (index) {
         OvenPlayerConsole.log("runNextPlaylist");
         let nextPlaylistIndex = index; // || playlistManager.getCurrentPlaylistIndex() + 1;
         let playlist = playlistManager.getPlaylist();
-        let hasNextPlaylist = playlist[nextPlaylistIndex]? true : false;
+        let hasNextPlaylist = playlist[nextPlaylistIndex] ? true : false;
         //init source index
         playerConfig.setSourceIndex(0);
 
         //set Golbal Volume info
         playerConfig.setVolume(currentProvider.getVolume());
 
-        if(hasNextPlaylist){
+        if (hasNextPlaylist) {
 
             playlistManager.setCurrentPlaylist(nextPlaylistIndex);
             initProvider();
 
-        }else{
+        } else {
             //All Playlist Ended.
             that.trigger(ALL_PLAYLIST_ENDED, null);
         }
     };
-    const initProvider = function(lastPlayPosition){
+    const initProvider = function (lastPlayPosition) {
 
         return providerController.loadProviders(playlistManager.getCurrentPlayList()).then(Providers => {
 
-            if(Providers.length < 1){
+            if (Providers.length < 1) {
                 throw ERRORS.codes[INIT_UNSUPPORT_ERROR];
             }
 
-            if(currentProvider){
+            if (currentProvider) {
                 currentProvider.destroy();
                 currentProvider = null;
             }
 
-            if(captionManager){
+            if (captionManager) {
                 captionManager.destroy();
                 captionManager = null;
             }
@@ -81,21 +101,21 @@ const Api = function(container){
             let providerName = Providers[currentSourceIndex]["name"];
             OvenPlayerConsole.log("API : init() provider", providerName);
             //Init Provider.
-            currentProvider =  Providers[currentSourceIndex].provider(
+            currentProvider = Providers[currentSourceIndex].provider(
                 mediaManager.createMedia(providerName, playerConfig),
                 playerConfig,
                 playlistManager.getCurrentAdTag()
             );
 
-            if(providerName === PROVIDER_RTMP){
+            if (providerName === PROVIDER_RTMP) {
                 //If provider type is RTMP, we accepts RtmpExpansion.
                 Object.assign(that, ApiRtmpExpansion(currentProvider));
             }
 
             //This passes the event created by the Provider to API.
-            currentProvider.on("all", function(name, data){
+            currentProvider.on("all", function (name, data) {
 
-                if( name === ERROR) {
+                if (name === ERROR) {
 
                     // Chrome >=80 on Android misses h246 in SDP when first time after web page loaded.
                     // So wait until browser get h264 capabilities and create answer SDP.
@@ -121,7 +141,7 @@ const Api = function(container){
                     }
                 }
 
-                if(name === CONTENT_COMPLETE){
+                if (name === CONTENT_COMPLETE) {
                     runNextPlaylist(playlistManager.getCurrentPlaylistIndex() + 1);
                 }
 
@@ -129,22 +149,29 @@ const Api = function(container){
                     if (playerConfig.isAutoStart()) {
                         that.play();
                     }
+
+                    if (that.getProviderName() === PROVIDER_HLS && that.getDuration() === Infinity) {
+                        currentProvider.once(PLAYER_PLAY, function () {
+                            that.seek(Number.MAX_SAFE_INTEGER);
+                        });
+                    }
                 }
 
                 that.trigger(name, data);
             });
 
-        }).then(()=>{
+
+        }).then(() => {
 
             //provider's preload() have to made Promise. Cuz it overcomes 'flash loading timing problem'.
-            currentProvider.preload(playlistManager.getCurrentSources(), lastPlayPosition).then(function(){
+            currentProvider.preload(playlistManager.getCurrentSources(), lastPlayPosition).then(function () {
 
 
             }).catch((error) => {
 
-                if(error && error.code && ERRORS.codes[error.code]){
+                if (error && error.code && ERRORS.codes[error.code]) {
                     that.trigger(ERROR, ERRORS.codes[error.code]);
-                }else {
+                } else {
                     let tempError = ERRORS.codes[INIT_UNKNWON_ERROR];
                     tempError.error = error;
                     that.trigger(ERROR, tempError);
@@ -152,9 +179,9 @@ const Api = function(container){
             });
         }).catch((error) => {
             //INIT ERROR
-            if(error && error.code && ERRORS.codes[error.code]){
+            if (error && error.code && ERRORS.codes[error.code]) {
                 that.trigger(ERROR, ERRORS.codes[error.code]);
-            }else {
+            } else {
                 let tempError = ERRORS.codes[INIT_UNKNWON_ERROR];
                 tempError.error = error;
                 that.trigger(ERROR, tempError);
@@ -168,7 +195,7 @@ const Api = function(container){
      * @param      {object} options player initial option value.
      * @returns
      **/
-    that.init = (options) =>{
+    that.init = (options) => {
 
         if (!options) {
             options = {};
@@ -186,7 +213,7 @@ const Api = function(container){
         //ERRORS.codes.push(playerConfig.getSystemText());
 
         playlistManager.initPlaylist(playerConfig.getPlaylist(), playerConfig);
-        OvenPlayerConsole.log("API : init() sources : " , playlistManager.getCurrentSources());
+        OvenPlayerConsole.log("API : init() sources : ", playlistManager.getCurrentSources());
 
         initProvider();
 
@@ -195,17 +222,17 @@ const Api = function(container){
         });
     };
     that.getProviderName = () => {
-        if(currentProvider){
+        if (currentProvider) {
             return currentProvider.getName();
-        }else{
+        } else {
             return null;
         }
 
     };
     that.getMseInstance = () => {
-        if(currentProvider){
+        if (currentProvider) {
             return currentProvider.getMse();
-        }else{
+        } else {
             return null;
         }
 
@@ -218,7 +245,7 @@ const Api = function(container){
 
         return playerConfig.getBrowser();
     };
-    that.setTimecodeMode = (isShow) =>{
+    that.setTimecodeMode = (isShow) => {
         OvenPlayerConsole.log("API : setTimecodeMode()", isShow);
         playerConfig.setTimecodeMode(isShow);
     };
@@ -235,42 +262,56 @@ const Api = function(container){
 
     };
     that.seekFrame = (frameCount) => {
-        if(!currentProvider){return null;}
+        if (!currentProvider) {
+            return null;
+        }
         OvenPlayerConsole.log("API : seekFrame()", frameCount);
         return currentProvider.seekFrame(frameCount);
     };
 
     that.getDuration = () => {
-        if(!currentProvider){return null;}
+        if (!currentProvider) {
+            return null;
+        }
         OvenPlayerConsole.log("API : getDuration()", currentProvider.getDuration());
         return currentProvider.getDuration();
     };
     that.getPosition = () => {
-        if(!currentProvider){return null;}
+        if (!currentProvider) {
+            return null;
+        }
 
         OvenPlayerConsole.log("API : getPosition()", currentProvider.getPosition());
         return currentProvider.getPosition();
     };
     that.getVolume = () => {
-        if(!currentProvider){return null;}
+        if (!currentProvider) {
+            return null;
+        }
 
         OvenPlayerConsole.log("API : getVolume()", currentProvider.getVolume());
         return currentProvider.getVolume();
     };
     that.setVolume = (volume) => {
-        if(!currentProvider){return null;}
+        if (!currentProvider) {
+            return null;
+        }
 
         OvenPlayerConsole.log("API : setVolume() " + volume);
         currentProvider.setVolume(volume);
     };
     that.setMute = (state) => {
-        if(!currentProvider){return null;}
+        if (!currentProvider) {
+            return null;
+        }
 
         OvenPlayerConsole.log("API : setMute() " + state);
         return currentProvider.setMute(state);
     };
     that.getMute = () => {
-        if(!currentProvider){return null;}
+        if (!currentProvider) {
+            return null;
+        }
 
         OvenPlayerConsole.log("API : getMute() " + currentProvider.getMute());
         return currentProvider.getMute();
@@ -278,11 +319,11 @@ const Api = function(container){
     that.load = (playlist) => {
         OvenPlayerConsole.log("API : load() ", playlist);
 
-        if(playlist){
+        if (playlist) {
 
             playerConfig.setSourceIndex(0);
 
-            if(currentProvider){
+            if (currentProvider) {
 
                 if (currentProvider.getQualityLevels().length > 0) {
                     currentProvider.setCurrentQuality(0);
@@ -303,7 +344,9 @@ const Api = function(container){
 
     };
     that.play = () => {
-        if(!currentProvider){return null;}
+        if (!currentProvider) {
+            return null;
+        }
         OvenPlayerConsole.log("API : play() ");
 
         if (!currentProvider.metaLoaded() && !playerConfig.isAutoStart()) {
@@ -315,25 +358,33 @@ const Api = function(container){
         }
     };
     that.pause = () => {
-        if(!currentProvider){return null;}
+        if (!currentProvider) {
+            return null;
+        }
 
         OvenPlayerConsole.log("API : pause() ");
         currentProvider.pause();
     };
     that.seek = (position) => {
-        if(!currentProvider){return null;}
+        if (!currentProvider) {
+            return null;
+        }
 
-        OvenPlayerConsole.log("API : seek() "+ position);
+        OvenPlayerConsole.log("API : seek() " + position);
         currentProvider.seek(position);
     };
-    that.setPlaybackRate = (playbackRate) =>{
-        if(!currentProvider){return null;}
+    that.setPlaybackRate = (playbackRate) => {
+        if (!currentProvider) {
+            return null;
+        }
 
         OvenPlayerConsole.log("API : setPlaybackRate() ", playbackRate);
         return currentProvider.setPlaybackRate(playerConfig.setPlaybackRate(playbackRate));
     };
-    that.getPlaybackRate = () =>{
-        if(!currentProvider){return null;}
+    that.getPlaybackRate = () => {
+        if (!currentProvider) {
+            return null;
+        }
 
         OvenPlayerConsole.log("API : getPlaybackRate() ", currentProvider.getPlaybackRate());
         return currentProvider.getPlaybackRate();
@@ -353,20 +404,26 @@ const Api = function(container){
     };
 
     that.getSources = () => {
-        if(!currentProvider){return null;}
+        if (!currentProvider) {
+            return null;
+        }
 
         OvenPlayerConsole.log("API : getSources() ", currentProvider.getSources());
         return currentProvider.getSources();
     };
-    that.getCurrentSource = () =>{
-        if(!currentProvider){return null;}
+    that.getCurrentSource = () => {
+        if (!currentProvider) {
+            return null;
+        }
 
         OvenPlayerConsole.log("API : getCurrentSource() ", currentProvider.getCurrentSource());
         return currentProvider.getCurrentSource();
     };
-    that.setCurrentSource = (index) =>{
+    that.setCurrentSource = (index) => {
 
-        if(!currentProvider){return null;}
+        if (!currentProvider) {
+            return null;
+        }
 
         OvenPlayerConsole.log("API : setCurrentSource() ", index);
 
@@ -384,77 +441,102 @@ const Api = function(container){
     };
 
 
-
-    that.getQualityLevels = () =>{
-        if(!currentProvider){return null;}
+    that.getQualityLevels = () => {
+        if (!currentProvider) {
+            return null;
+        }
 
         OvenPlayerConsole.log("API : getQualityLevels() ", currentProvider.getQualityLevels());
         return currentProvider.getQualityLevels();
     };
-    that.getCurrentQuality = () =>{
-        if(!currentProvider){return null;}
+    that.getCurrentQuality = () => {
+        if (!currentProvider) {
+            return null;
+        }
 
         OvenPlayerConsole.log("API : getCurrentQuality() ", currentProvider.getCurrentQuality());
         return currentProvider.getCurrentQuality();
     };
-    that.setCurrentQuality = (qualityIndex) =>{
-        if(!currentProvider){return null;}
+    that.setCurrentQuality = (qualityIndex) => {
+        if (!currentProvider) {
+            return null;
+        }
 
         OvenPlayerConsole.log("API : setCurrentQuality() ", qualityIndex);
 
         return currentProvider.setCurrentQuality(qualityIndex);
     };
     that.isAutoQuality = () => {
-        if(!currentProvider){return null;}
+        if (!currentProvider) {
+            return null;
+        }
 
         OvenPlayerConsole.log("API : isAutoQuality()");
         return currentProvider.isAutoQuality();
     };
     that.setAutoQuality = (isAuto) => {
-        if(!currentProvider){return null;}
+        if (!currentProvider) {
+            return null;
+        }
 
         OvenPlayerConsole.log("API : setAutoQuality() ", isAuto);
         return currentProvider.setAutoQuality(isAuto);
     };
 
     that.getCaptionList = () => {
-        if(!captionManager){return null;}
+        if (!captionManager) {
+            return null;
+        }
         OvenPlayerConsole.log("API : getCaptionList() ", captionManager.getCaptionList());
         return captionManager.getCaptionList();
     };
     that.getCurrentCaption = () => {
-        if(!captionManager){return null;}
+        if (!captionManager) {
+            return null;
+        }
         OvenPlayerConsole.log("API : getCurrentCaption() ", captionManager.getCurrentCaption());
         return captionManager.getCurrentCaption();
     };
     that.setCurrentCaption = (index) => {
-        if(!captionManager){return null;}
+        if (!captionManager) {
+            return null;
+        }
         OvenPlayerConsole.log("API : setCurrentCaption() ", index);
         captionManager.setCurrentCaption(index);
     };
     that.addCaption = (track) => {
-        if(!captionManager){return null;}
+        if (!captionManager) {
+            return null;
+        }
         OvenPlayerConsole.log("API : addCaption() ")
         return captionManager.addCaption(track);
     };
     that.removeCaption = (index) => {
-        if(!captionManager){return null;}
+        if (!captionManager) {
+            return null;
+        }
         OvenPlayerConsole.log("API : removeCaption() ", index)
         return captionManager.removeCaption(index);
     };
 
     that.getBuffer = () => {
-        if(!currentProvider){return null;}
+        if (!currentProvider) {
+            return null;
+        }
         OvenPlayerConsole.log("API : getBuffer() ", currentProvider.getBuffer());
         currentProvider.getBuffer();
     };
     that.getState = () => {
-        if(!currentProvider){return null;}
+        if (!currentProvider) {
+            return null;
+        }
         OvenPlayerConsole.log("API : getState() ", currentProvider.getState());
         return currentProvider.getState();
     };
     that.stop = () => {
-        if(!currentProvider){return null;}
+        if (!currentProvider) {
+            return null;
+        }
 
         OvenPlayerConsole.log("API : stop() ");
         currentProvider.stop();
@@ -463,17 +545,17 @@ const Api = function(container){
 
         OvenPlayerConsole.log("API : remove() ");
 
-        if(captionManager){
+        if (captionManager) {
             captionManager.destroy();
             captionManager = null;
         }
 
-        if(currentProvider){
+        if (currentProvider) {
             currentProvider.destroy();
             currentProvider = null;
         }
 
-        if(mediaManager){
+        if (mediaManager) {
             mediaManager.destroy();
             mediaManager = null;
         }
@@ -501,7 +583,6 @@ const Api = function(container){
 
     return that;
 };
-
 
 
 export default Api;

@@ -10,7 +10,7 @@ export default (uiText, data) => {
                                     `<span class="op-live-badge-lowlatency">${uiText.controls.low_latency_p2p}</span>` : `<span class="op-live-badge-lowlatency">${uiText.controls.low_latency_live}</span>`
                             )
                         :
-                        `<span>${uiText.controls.live}</span>`) +
+                        `<span class="op-live-text" title="Skip ahead to live.">${uiText.controls.live}</span>`) +
                     `</span>`
                 )
                 :(`<span class="op-time-current">00:00</span><span class="op-time-separator"> / </span><span class="op-time-duration">00:00</span>`)

@@ -31,7 +31,8 @@ import {PLAYER_WEBRTC_WS_ERROR} from "../../../api/constants";
 
 const Controls = function ($container, api) {
 
-    let volumeButton = "", playButton = "", settingButton = "", progressBar = "", timeDisplay = "", fullScreenButton = "", frameButtons = "", hasPlaylist = false, initialDuration;
+    let volumeButton = "", playButton = "", settingButton = "", progressBar = "", timeDisplay = "",
+        fullScreenButton = "", frameButtons = "", hasPlaylist = false, initialDuration;
     let uiInited = false;
     let webrtc_is_p2p_mode = false;
     let isLiveMode = false;
@@ -111,7 +112,7 @@ const Controls = function ($container, api) {
             }
 
             if (sectionStart) {
-                 metadata.duration = metadata.duration - sectionStart;
+                metadata.duration = metadata.duration - sectionStart;
             }
 
             initTimeDisplay(metadata);
@@ -126,11 +127,18 @@ const Controls = function ($container, api) {
             }
 
             if (metadata.duration === Infinity) {
+
+                //live
                 OvenPlayerConsole.log("[[[[LIVE MODE]]]]");
                 isLiveMode = true;
-                //live
-                if (progressBar) {
-                    progressBar.destroy();
+
+                if (metadata.type === 'hls') {
+                    // hls dvr
+                    initProgressBar(false);
+                } else {
+                    if (progressBar) {
+                        progressBar.destroy();
+                    }
                 }
             } else {
                 //vod
