@@ -2,23 +2,21 @@
  * Created by hoho on 2018. 6. 7..
  */
 import Provider from "api/provider/html5/Provider";
-import {errorTrigger} from "api/provider/utils";
+import { errorTrigger } from "api/provider/utils";
 import {
     PROVIDER_HLS,
     PLAYER_STATE, STATE_IDLE, STATE_LOADING,
     ERRORS,
     INIT_HLSJS_FAIL,
     HLS_PREPARED,
-    HLS_DESTROYED
-} from "api/constants";
-
-import {
+    HLS_DESTROYED,
     PLAYER_UNKNWON_NETWORK_ERROR,
     PLAYER_BAD_REQUEST_ERROR,
     PLAYER_AUTH_FAILED_ERROR,
     PLAYER_NOT_ACCEPTABLE_ERROR, STATE_PLAYING, CONTENT_LEVEL_CHANGED
-} from "../../../constants";
-import sizeHumanizer from "../../../../utils/sizeHumanizer";
+} from "api/constants";
+
+import sizeHumanizer from "utils/sizeHumanizer";
 
 /**
  * @brief   hlsjs provider extended core.
@@ -35,7 +33,6 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
     let loadRetryer = null;
     let isManifestLoaded = false;
     let firstLoaded = false;
-
 
     try {
 
@@ -69,6 +66,7 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
             seeking: false,
             state: STATE_IDLE,
             buffer: 0,
+            dvrWindow: 0,
             framerate: 0,
             currentQuality: -1,
             currentSource: -1,
@@ -89,7 +87,7 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
 
                 isManifestLoaded = true;
 
-                for(let i = 0; i < hls.levels.length; i ++) {
+                for (let i = 0; i < hls.levels.length; i++) {
 
                     let qualityLevel = hls.levels[i];
 
@@ -125,7 +123,7 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
                 }
             });
 
-            hls.on(Hls.Events.LEVEL_SWITCHED , function (event, data) {
+            hls.on(Hls.Events.LEVEL_SWITCHED, function (event, data) {
 
                 spec.currentQuality = data.level;
 
@@ -134,6 +132,13 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
                     currentQuality: spec.currentQuality,
                     type: "render"
                 });
+            });
+
+            hls.on(Hls.Events.LEVEL_UPDATED, function (event, data) {
+                if (data && data.details) {
+                    spec.dvrWindow = data.details.totalduration;
+                }
+
             });
 
             hls.on(Hls.Events.ERROR, function (event, data) {
@@ -209,7 +214,7 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
         that.isAutoQuality = () => {
             return hls.autoLevelEnabled;
         };
-        
+
         that.setAutoQuality = (isAuto) => {
             if (isAuto) {
                 hls.currentLevel = -1;
@@ -217,6 +222,10 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
                 hls.currentLevel = hls.currentLevel;
             }
         };
+
+        that.getDuration = () => {
+            return element.duration;
+        }
 
         superStop_func = that.super('stop');
         that.stop = () => {

@@ -3,14 +3,14 @@
  */
 import OvenTemplate from "view/engine/OvenTemplate";
 import PanelManager from "view/global/PanelManager";
-import {naturalHms} from "utils/strings"
+import { naturalHms } from "utils/strings"
 import LA$ from "utils/likeA$";
 import {
     CONTENT_TIME,
     CONTENT_BUFFER,
-    AD_TIME
+    AD_TIME,
+    PROVIDER_HLS
 } from "api/constants";
-import {STATE_COMPLETE} from "../../../api/constants";
 
 const ProgressBar = function ($container, api, isAd) {
     const $root = LA$(api.getContainerElement());
@@ -40,6 +40,11 @@ const ProgressBar = function ($container, api, isAd) {
         $preview = "";
 
     let isMobile = api.getBrowser().mobile;
+    let hlsLive = false;
+
+    if (api.getProvider().getName() === PROVIDER_HLS && api.getProvider().isLive()) {
+        hlsLive = true;
+    }
 
     function positionElements(percentage) {
 
@@ -108,23 +113,24 @@ const ProgressBar = function ($container, api, isAd) {
             $preview.show();
         }
 
-        //const duration = isAd ? adDuration : api.getDuration();
-        let duration = api.getDuration();
+        if (!hlsLive) {
+            let duration = api.getDuration();
+            let second = duration * percentage;
 
-        if (duration === Infinity) {
-            $time.hide();
-            $preview.hide();
-            return;
-        }
-
-        let second = duration * percentage;
-
-        if (api.isTimecodeMode()) {
-            $time.text(naturalHms(second));
+            if (api.isTimecodeMode()) {
+                $time.text(naturalHms(second));
+            } else {
+                $time.text(Math.round(second * api.getFramerate()));
+            }
         } else {
-            $time.text(Math.round(second * api.getFramerate()));
+            let duration = api.getDvrWindow();
+            let second = duration * (1 - percentage);
+            if (api.isTimecodeMode()) {
+                $time.text('- ' + naturalHms(second));
+            } else {
+                $time.text('- ' + Math.round(second * api.getFramerate()));
+            }
         }
-
 
         let timeElemWidth = $time.width();
         let progressBarWidth = $progressBar.width();
@@ -149,7 +155,6 @@ const ProgressBar = function ($container, api, isAd) {
 
         let magneticPosition = calculateMagnetic(timeElemWidth);
         $time.css("left", magneticPosition + "px");
-
 
         if (api.getSources()[api.getCurrentSource()].gridThumbnail) {
 
@@ -199,6 +204,10 @@ const ProgressBar = function ($container, api, isAd) {
 
         let time = (durationForCalc || 0) * percentage;
 
+        if (hlsLive) {
+            time = (durationForCalc - api.getDvrWindow()) + api.getDvrWindow() * percentage;
+        }
+
         let sectionStart = api.getSources()[api.getCurrentSource()].sectionStart;
 
         if (sectionStart && sectionStart > 0) {
@@ -232,8 +241,15 @@ const ProgressBar = function ($container, api, isAd) {
 
             api.on(CONTENT_TIME, function (data) {
                 if (data && data.duration && data.position) {
+
                     durationForCalc = data.duration;
-                    positionElements(data.position / data.duration);
+                    let percentage = data.position / data.duration;
+
+                    if (hlsLive) {
+                        percentage = (api.getDvrWindow() - (data.duration - data.position)) / api.getDvrWindow();
+                    }
+
+                    positionElements(percentage);
                 }
             }, template);
 

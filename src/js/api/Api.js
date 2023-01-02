@@ -28,11 +28,11 @@ import {
     ALL_PLAYLIST_ENDED
 } from "api/constants";
 
-import {ApiRtmpExpansion} from 'api/ApiExpansions';
-import {analUserAgent} from "utils/browser";
-import {pickCurrentSource} from "api/provider/utils";
-import {version} from "../version";
-import {CONTENT_SOURCE_CHANGED} from "./constants";
+import { ApiRtmpExpansion } from 'api/ApiExpansions';
+import { analUserAgent } from "utils/browser";
+import { pickCurrentSource } from "api/provider/utils";
+import { version } from "../version";
+import { CONTENT_SOURCE_CHANGED } from "./constants";
 
 /**
  * @brief   This object connects UI to the provider.
@@ -150,7 +150,7 @@ const Api = function (container) {
                         that.play();
                     }
 
-                    if (that.getProviderName() === PROVIDER_HLS && that.getDuration() === Infinity) {
+                    if (currentProvider.getName() === PROVIDER_HLS && currentProvider.isLive()) {
                         currentProvider.once(PLAYER_PLAY, function () {
                             that.seek(Number.MAX_SAFE_INTEGER);
                         });
@@ -229,6 +229,9 @@ const Api = function (container) {
         }
 
     };
+    that.getProvider = () => {
+        return currentProvider;
+    };
     that.getMseInstance = () => {
         if (currentProvider) {
             return currentProvider.getMse();
@@ -268,13 +271,19 @@ const Api = function (container) {
         OvenPlayerConsole.log("API : seekFrame()", frameCount);
         return currentProvider.seekFrame(frameCount);
     };
-
     that.getDuration = () => {
         if (!currentProvider) {
             return null;
         }
         OvenPlayerConsole.log("API : getDuration()", currentProvider.getDuration());
         return currentProvider.getDuration();
+    };
+    that.getDvrWindow = () => {
+        if (!currentProvider) {
+            return null;
+        }
+        OvenPlayerConsole.log("API : getDvrWindow()", currentProvider.getDvrWindow());
+        return currentProvider.getDvrWindow();
     };
     that.getPosition = () => {
         if (!currentProvider) {

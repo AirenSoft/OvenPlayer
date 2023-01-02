@@ -5,17 +5,16 @@ import Ima from "api/ads/ima/Ad";
 import Vast from "api/ads/vast/Ad";
 import EventEmitter from "api/EventEmitter";
 import EventsListener from "api/provider/html5/Listener";
-import {extractVideoElement, pickCurrentSource} from "api/provider/utils";
+import { pickCurrentSource } from "api/provider/utils";
 import {
     WARN_MSG_MUTEDPLAY,
     UI_ICONS, PLAYER_WARNING,
     STATE_IDLE, STATE_PLAYING, STATE_PAUSED, STATE_COMPLETE, STATE_ERROR,
     PLAYER_STATE, PLAYER_COMPLETE, PLAYER_PAUSE, PLAYER_PLAY, STATE_AD_PLAYING, STATE_AD_PAUSED,
-    CONTENT_TIME, CONTENT_CAPTION_CUE_CHANGED, CONTENT_SOURCE_CHANGED,
+    CONTENT_META, CONTENT_TIME, CONTENT_CAPTION_CUE_CHANGED, CONTENT_SOURCE_CHANGED,
     AD_CLIENT_GOOGLEIMA, AD_CLIENT_VAST,
     PLAYBACK_RATE_CHANGED, CONTENT_MUTE, PROVIDER_HTML5, PROVIDER_WEBRTC, PROVIDER_DASH, PROVIDER_HLS
 } from "api/constants";
-import {CONTENT_META} from "../../constants";
 
 /**
  * @brief   Core For Html5 Video.
@@ -23,10 +22,10 @@ import {CONTENT_META} from "../../constants";
  * @param   playerConfig  player config
  * @param   onExtendedLoad on load handler
  * */
-const Provider = function (spec, playerConfig, onExtendedLoad){
+const Provider = function (spec, playerConfig, onExtendedLoad) {
     OvenPlayerConsole.log("[Provider] loaded. ");
 
-    let that ={};
+    let that = {};
     EventEmitter(that);
 
     let dashAttachedView = false;
@@ -36,15 +35,15 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
 
     let isPlayingProcessing = false;
 
-    if(spec.adTagUrl){
+    if (spec.adTagUrl) {
         OvenPlayerConsole.log("[Provider] Ad Client - ", playerConfig.getAdClient());
-        if(playerConfig.getAdClient() === AD_CLIENT_VAST){
+        if (playerConfig.getAdClient() === AD_CLIENT_VAST) {
             ads = Vast(elVideo, that, playerConfig, spec.adTagUrl);
-        }else{
+        } else {
             ads = Ima(elVideo, that, playerConfig, spec.adTagUrl);
         }
 
-        if(!ads){
+        if (!ads) {
             console.log("Can not load due to google ima for Ads.");
         }
     }
@@ -52,23 +51,23 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
     listener = EventsListener(elVideo, that, ads ? ads.videoEndedCallback : null, playerConfig);
     elVideo.playbackRate = elVideo.defaultPlaybackRate = playerConfig.getPlaybackRate();
 
-    const _load = (lastPlayPosition) =>{
+    const _load = (lastPlayPosition) => {
 
-        const source =  spec.sources[spec.currentSource];
+        const source = spec.sources[spec.currentSource];
         spec.framerate = source.framerate;
 
         that.setVolume(playerConfig.getVolume());
 
-        if(!spec.framerate){
+        if (!spec.framerate) {
             //init timecode mode
             playerConfig.setTimecodeMode(true);
         }
-        if(onExtendedLoad){
+        if (onExtendedLoad) {
             onExtendedLoad(source, lastPlayPosition);
 
-        }else{
+        } else {
 
-            OvenPlayerConsole.log("source loaded : ", source, "lastPlayPosition : "+ lastPlayPosition);
+            OvenPlayerConsole.log("source loaded : ", source, "lastPlayPosition : " + lastPlayPosition);
 
             let previousSource = elVideo.src;
 
@@ -116,10 +115,10 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
     that.setCanSeek = (canSeek) => {
         spec.canSeek = canSeek;
     };
-    that.isSeeking = ()=>{
+    that.isSeeking = () => {
         return spec.seeking;
     };
-    that.setSeeking = (seeking)=>{
+    that.setSeeking = (seeking) => {
         spec.seeking = seeking;
     };
     that.setMetaLoaded = () => {
@@ -130,13 +129,13 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
     };
 
     that.setState = (newState) => {
-        if(spec.state !== newState){
+        if (spec.state !== newState) {
             let prevState = spec.state;
 
             OvenPlayerConsole.log("Provider : setState()", newState);
 
             //ToDo : This is temporary code. If main video occur error, player avoid error message on ad playing.
-            if(prevState === STATE_AD_PLAYING && (newState === STATE_ERROR || newState === STATE_IDLE) ){
+            if (prevState === STATE_AD_PLAYING && (newState === STATE_ERROR || newState === STATE_IDLE)) {
                 return false;
             }
 
@@ -157,28 +156,28 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
 
             OvenPlayerConsole.log("Provider : triggerSatatus", newState);
             switch (newState) {
-                case STATE_COMPLETE :
+                case STATE_COMPLETE:
                     that.trigger(PLAYER_COMPLETE);
                     break;
-                case STATE_PAUSED :
+                case STATE_PAUSED:
                     that.trigger(PLAYER_PAUSE, {
                         prevState: spec.state,
                         newstate: STATE_PAUSED
                     });
                     break;
-                case STATE_AD_PAUSED :
+                case STATE_AD_PAUSED:
                     that.trigger(PLAYER_PAUSE, {
                         prevState: spec.state,
                         newstate: STATE_AD_PAUSED
                     });
                     break;
-                case STATE_PLAYING :
+                case STATE_PLAYING:
                     that.trigger(PLAYER_PLAY, {
                         prevState: spec.state,
                         newstate: STATE_PLAYING
                     });
                     break;
-                case STATE_AD_PLAYING :
+                case STATE_AD_PLAYING:
                     that.trigger(PLAYER_PLAY, {
                         prevState: spec.state,
                         newstate: STATE_AD_PLAYING
@@ -194,8 +193,7 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
 
         }
     };
-
-    that.getState = () =>{
+    that.getState = () => {
         return spec.state;
     };
     that.setBuffer = (newBuffer) => {
@@ -208,27 +206,30 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
         return spec.isLive ? true : (elVideo.duration === Infinity);
     };
     that.getDuration = () => {
-        return that.isLive() ?  Infinity : elVideo.duration;
+        return that.isLive() ? Infinity : elVideo.duration;
+    };
+    that.getDvrWindow = () => {
+        return spec.dvrWindow;
     };
     that.getPosition = () => {
-        if(!elVideo){
+        if (!elVideo) {
             return 0;
         }
         return elVideo.currentTime;
     };
-    that.setVolume = (volume) =>{
-        if(!elVideo){
+    that.setVolume = (volume) => {
+        if (!elVideo) {
             return false;
         }
-        elVideo.volume = volume/100;
+        elVideo.volume = volume / 100;
         playerConfig.setVolume(volume);
     };
-    that.getVolume = () =>{
+    that.getVolume = () => {
 
         return playerConfig.getVolume();
     };
-    that.setMute = (state) =>{
-        if(!elVideo){
+    that.setMute = (state) => {
+        if (!elVideo) {
             return false;
         }
         if (typeof state === 'undefined') {
@@ -253,12 +254,12 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
         }
         return elVideo.muted;
     };
-    that.getMute = () =>{
+    that.getMute = () => {
 
         return playerConfig.isMute();
     };
 
-    that.preload = (sources, lastPlayPosition) =>{
+    that.preload = (sources, lastPlayPosition) => {
 
         spec.sources = sources;
 
@@ -267,10 +268,10 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
 
         return new Promise(function (resolve, reject) {
 
-            if(playerConfig.isMute()){
+            if (playerConfig.isMute()) {
                 that.setMute(true);
             }
-            if(playerConfig.getVolume()){
+            if (playerConfig.getVolume()) {
                 that.setVolume(playerConfig.getVolume());
             }
 
@@ -278,17 +279,17 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
         });
 
     };
-    that.load = (sources) =>{
+    that.load = (sources) => {
 
         spec.sources = sources;
         spec.currentSource = pickCurrentSource(sources, playerConfig);
         _load(0);
     };
 
-    that.play = () =>{
+    that.play = () => {
 
         OvenPlayerConsole.log("Provider : play()");
-        if(!elVideo){
+        if (!elVideo) {
             return false;
         }
 
@@ -298,8 +299,8 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
         // }
 
         isPlayingProcessing = true;
-        if(that.getState() !== STATE_PLAYING){
-            if (  (ads && ads.isActive()) || (ads && !ads.started()) ) {
+        if (that.getState() !== STATE_PLAYING) {
+            if ((ads && ads.isActive()) || (ads && !ads.started())) {
                 ads.play().then(_ => {
                     //ads play success
                     isPlayingProcessing = false;
@@ -311,10 +312,10 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
                     OvenPlayerConsole.log("Provider : ads play fail", error);
                 });
 
-            }else{
+            } else {
                 let promise = elVideo.play();
                 if (promise !== undefined) {
-                    promise.then(function(){
+                    promise.then(function () {
                         isPlayingProcessing = false;
                         OvenPlayerConsole.log("Provider : video play success");
                         /*
@@ -339,7 +340,7 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
                         }
                         */
                     });
-                }else{
+                } else {
                     //IE promise is undefinded.
                     OvenPlayerConsole.log("Provider : video play success (ie)");
                     isPlayingProcessing = false;
@@ -348,51 +349,51 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
         }
 
     };
-    that.pause = () =>{
+    that.pause = () => {
 
         OvenPlayerConsole.log("Provider : pause()");
-        if(!elVideo){
+        if (!elVideo) {
             return false;
         }
 
         if (that.getState() === STATE_PLAYING) {
             elVideo.pause();
-        }else if(that.getState() === STATE_AD_PLAYING){
+        } else if (that.getState() === STATE_AD_PLAYING) {
             ads.pause();
         }
     };
-    that.seek = (position) =>{
-        if(!elVideo){
+    that.seek = (position) => {
+        if (!elVideo) {
             return false;
         }
         elVideo.currentTime = position;
     };
-    that.setPlaybackRate = (playbackRate) =>{
-        if(!elVideo){
+    that.setPlaybackRate = (playbackRate) => {
+        if (!elVideo) {
             return false;
         }
-        that.trigger(PLAYBACK_RATE_CHANGED, {playbackRate : playbackRate});
+        that.trigger(PLAYBACK_RATE_CHANGED, { playbackRate: playbackRate });
         return elVideo.playbackRate = elVideo.defaultPlaybackRate = playbackRate;
     };
-    that.getPlaybackRate = () =>{
-        if(!elVideo){
+    that.getPlaybackRate = () => {
+        if (!elVideo) {
             return 0;
         }
         return elVideo.playbackRate;
     };
 
     that.getSources = () => {
-        if(!elVideo){
+        if (!elVideo) {
             return [];
         }
 
-        return spec.sources.map(function(source, index) {
+        return spec.sources.map(function (source, index) {
 
             var obj = {
                 file: source.file,
                 type: source.type,
                 label: source.label,
-                index : index,
+                index: index,
                 sectionStart: source.sectionStart,
                 sectionEnd: source.sectionEnd,
                 gridThumbnail: source.gridThumbnail,
@@ -405,13 +406,13 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
             return obj;
         });
     };
-    that.getCurrentSource = () =>{
+    that.getCurrentSource = () => {
         return spec.currentSource;
     };
     that.setCurrentSource = (sourceIndex, needProviderChange) => {
 
-        if(sourceIndex > -1){
-            if(spec.sources && spec.sources.length > sourceIndex){
+        if (sourceIndex > -1) {
+            if (spec.sources && spec.sources.length > sourceIndex) {
                 //that.pause();
                 //that.setState(STATE_IDLE);
                 OvenPlayerConsole.log("source changed : " + sourceIndex);
@@ -425,7 +426,7 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
                 //spec.currentQuality = sourceIndex;
                 //that.pause();
                 that.setState(STATE_IDLE);
-                if(needProviderChange){
+                if (needProviderChange) {
                     _load(elVideo.currentTime || 0);
                 }
                 //
@@ -436,13 +437,13 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
 
 
     that.getQualityLevels = () => {
-        if(!elVideo){
+        if (!elVideo) {
             return [];
         }
         return spec.qualityLevels;
     };
     that.getCurrentQuality = () => {
-        if(!elVideo){
+        if (!elVideo) {
             return null;
         }
         return spec.currentQuality;
@@ -463,7 +464,7 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
     that.setFramerate = (framerate) => {
         return spec.framerate = framerate;
     };
-    that.seekFrame = (frameCount) =>{
+    that.seekFrame = (frameCount) => {
         let fps = spec.framerate;
         let currentFrames = elVideo.currentTime * fps;
         let newPosition = (currentFrames + frameCount) / fps;
@@ -473,8 +474,8 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
         that.seek(newPosition);
     };
 
-    that.stop = () =>{
-        if(!elVideo){
+    that.stop = () => {
+        if (!elVideo) {
             return false;
         }
         OvenPlayerConsole.log("CORE : stop() ");
@@ -490,15 +491,15 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
         isPlayingProcessing = false;
     };
 
-    that.destroy = () =>{
-        if(!elVideo){
+    that.destroy = () => {
+        if (!elVideo) {
             return false;
         }
         that.stop();
         listener.destroy();
         //elVideo.remove();
 
-        if(ads){
+        if (ads) {
             ads.destroy();
             ads = null;
         }
@@ -510,7 +511,7 @@ const Provider = function (spec, playerConfig, onExtendedLoad){
     // use : let super_destroy  = that.super('destroy'); ... super_destroy();
     that.super = (name) => {
         const method = that[name];
-        return function(){
+        return function () {
             return method.apply(that, arguments);
         };
     };

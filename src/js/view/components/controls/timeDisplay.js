@@ -2,12 +2,12 @@
  * Created by hoho on 2018. 7. 25..
  */
 import OvenTemplate from "view/engine/OvenTemplate";
-import {naturalHms} from "utils/strings";
+import { naturalHms } from "utils/strings";
 import {
     CONTENT_TIME,
-    CONTENT_TIME_MODE_CHANGED
+    CONTENT_TIME_MODE_CHANGED,
+    PROVIDER_HLS
 } from "api/constants";
-import {PLAYER_PLAY, PROVIDER_HLS} from "../../../api/constants";
 
 const TimeDisplay = function ($container, api, data) {
 
@@ -25,7 +25,7 @@ const TimeDisplay = function ($container, api, data) {
         $liveBadge = $current.find(".op-live-badge");
         $liveText = $current.find(".op-live-text");
 
-        if (api.getProviderName() === PROVIDER_HLS && api.getDuration() === Infinity) {
+        if (api.getProviderName() === PROVIDER_HLS && api.getProvider().isLive()) {
             hlsLive = true;
         }
 

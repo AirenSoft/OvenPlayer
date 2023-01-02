@@ -11,7 +11,6 @@ import PlaylistPanel from "view/components/controls/playlistPanel";
 import LA$ from 'utils/likeA$';
 import TimeDisplay from "view/components/controls/timeDisplay";
 import FullScreenButton from "view/components/controls/fullScreenButton";
-
 import {
     READY,
     CONTENT_META, CONTENT_LEVEL_CHANGED, CONTENT_TIME_MODE_CHANGED, CONTENT_TIME, PLAYER_PLAY,
@@ -24,10 +23,10 @@ import {
     STATE_AD_COMPLETE,
     CONTENT_SOURCE_CHANGED,
     OME_P2P_MODE,
-    PROVIDER_RTMP,
-    ERROR
+    ERROR,
+    PROVIDER_HLS,
+    PLAYER_WEBRTC_WS_ERROR
 } from "api/constants";
-import {PLAYER_WEBRTC_WS_ERROR} from "../../../api/constants";
 
 const Controls = function ($container, api) {
 
@@ -132,8 +131,8 @@ const Controls = function ($container, api) {
                 OvenPlayerConsole.log("[[[[LIVE MODE]]]]");
                 isLiveMode = true;
 
-                if (metadata.type === 'hls') {
-                    // hls dvr
+                if (metadata.type === PROVIDER_HLS) {
+                    // show progress bar when hls
                     initProgressBar(false);
                 } else {
                     if (progressBar) {
