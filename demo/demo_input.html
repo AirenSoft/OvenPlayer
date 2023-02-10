@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
@@ -19,7 +20,6 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.3.1/styles/github.css">
 
     <style>
-
         .navbar-toggler-icon {
             background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Cpath stroke='rgba(0, 0, 0, 0.55)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E") !important;
         }
@@ -55,7 +55,6 @@
         footer {
             font-size: 0.85rem;
         }
-
     </style>
 
     <script>
@@ -80,11 +79,13 @@
     </script>
 
 </head>
+
 <body>
 <nav class="navbar navbar-expand-md navbar-light bg-light">
     <div class="container-lg">
         <a class="navbar-brand" href="/">OVENPLAYER</a>
-        <button class="navbar-toggler" type="button" data-mdb-toggle="collapse" data-mdb-target="#navbarNav" aria-controls="navbarNav">
+        <button class="navbar-toggler" type="button" data-mdb-toggle="collapse" data-mdb-target="#navbarNav"
+                aria-controls="navbarNav">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
@@ -94,7 +95,7 @@
                     <a class="nav-link active" href="./demo.html">Test Player</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="https://space.ovenplayer.com">Demo</a>
+                    <a class="nav-link" href="https://space.ovenplayer.com" target="_blank">Demo</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="https://github.com/AirenSoft/OvenPlayer" target="_blank">GitHub</a>
@@ -113,10 +114,11 @@
         </li>
         <li class="nav-item">
             <a class="nav-link active position-relative" href="demo_input.html" target="_blank">
-                <span>
-                    WebRTC Input
-                </span>
-                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-info">Beta</span>
+                    <span>
+                        WebRTC Input
+                    </span>
+                <span
+                        class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-info">Beta</span>
             </a>
         </li>
     </ul>
@@ -151,7 +153,7 @@
                     <h5 class="mb-0 fs-6">Stream information</h5>
                     <small class="ms-auto">
                         OvenLiveKit
-                        <span class="badge badge-info align-middle ms-1">1.0.3</span>
+                        <span id="ovenLiveKitVersion" class="badge badge-info align-middle ms-1"></span>
                     </small>
                 </li>
                 <li class="list-group-item">
@@ -160,9 +162,10 @@
                             <h6>Video</h6>
                             <fieldset>
                                 <div class="mb-2">
-                                    <span>Resolution
-                                        <span class="badge badge-pill badge-info mr-1" data-mdb-toggle="tooltip" title="This may be different from the resolution you set. Because the browser will get the ideal resolution from the input device.">i</span>:
-                                    </span>
+                                        <span>Resolution
+                                            <span class="badge badge-pill badge-info mr-1" data-mdb-toggle="tooltip"
+                                                  title="This may be different from the resolution you set. Because the browser will get the ideal resolution from the input device.">i</span>:
+                                        </span>
                                     <span id="videoResolutionSpan" class="mr-2 align-middle">-</span>
                                 </div>
                                 <div class="mb-2">
@@ -220,10 +223,12 @@
                                 </select>
 
                                 <label for="videoBitrateInput">Bitrate limit (kbps)</label>
-                                <input id="videoBitrateInput" type="number" class="form-control constraintSelect mb-2" placeholder="Unlimited">
+                                <input id="videoBitrateInput" type="number"
+                                       class="form-control streamingCofingSelect mb-2" placeholder="Unlimited">
 
                                 <label for="videoFrameInput">Frame rate</label>
-                                <input id="videoFrameInput" type="number" class="form-control constraintSelect" placeholder="Not Set">
+                                <input id="videoFrameInput" type="number" class="form-control constraintSelect"
+                                       placeholder="Not Set">
                             </fieldset>
                         </div>
                         <div class="col-lg-6 border-start border-2 mb-3 mb-lg-0">
@@ -258,7 +263,8 @@
                             Media Technology Expert Group
                         </p>
                         <p>
-                            Our mission is to build a powerful media world by making it easier for everyone to use all the complex and demanding media technologies of the world.
+                            Our mission is to build a powerful media world by making it easier for everyone to use
+                            all the complex and demanding media technologies of the world.
                         </p>
                     </div>
 
@@ -267,13 +273,16 @@
                     <div class="col-md-5 col-lg-2 col-xl-2 mx-auto mt-3">
                         <h6 class="text-uppercase mb-4 font-weight-bold">OPEN SOURCE PROJECTS</h6>
                         <p>
-                            <a class="" target="_blank" href="https://github.com/AirenSoft/OvenMediaEngine">OvenMediaEngine</a>
+                            <a class="" target="_blank"
+                               href="https://github.com/AirenSoft/OvenMediaEngine">OvenMediaEngine</a>
                         </p>
                         <p>
-                            <a class="" target="_blank" href="https://github.com/AirenSoft/OvenPlayer">OvenPlayer</a>
+                            <a class="" target="_blank"
+                               href="https://github.com/AirenSoft/OvenPlayer">OvenPlayer</a>
                         </p>
                         <p>
-                            <a class="" target="_blank" href="https://github.com/AirenSoft/OvenLiveKit-Web">OvenLiveKit-Web</a>
+                            <a class="" target="_blank"
+                               href="https://github.com/AirenSoft/OvenLiveKit-Web">OvenLiveKit-Web</a>
                         </p>
                         <p>
                             <a class="" target="_blank" href="https://github.com/AirenSoft/OvenSpace">OvenSpace</a>
@@ -284,7 +293,8 @@
 
                     <div class="col-md-5 col-lg-3 col-xl-3 mx-auto mt-3">
                         <h6 class="text-uppercase mb-4 font-weight-bold">Contact</h6>
-                        <p><i class="fas fa-home mr-3"></i> #1203, Twenty First Valley, 157, Yangpyeong-ro, Yeongdeungpo-gu, Seoul, 07207 Republic of Korea</p>
+                        <p><i class="fas fa-home mr-3"></i> #1203, Twenty First Valley, 157, Yangpyeong-ro,
+                            Yeongdeungpo-gu, Seoul, 07207 Republic of Korea</p>
                         <p><i class="fas fa-envelope mr-3"></i> contact@airensoft.com</p>
                         <p><i class="fas fa-phone mr-3"></i> +82-2-6378-5227</p>
                     </div>
@@ -306,34 +316,16 @@
 
                     <div class="col-md-5 col-lg-4 ml-lg-0 text-center text-md-end">
                         <!-- Facebook -->
-                        <a
-                                class="btn btn-floating m-1"
-                                class=""
-                                role="button"
-                                target="_blank"
-                                href="https://www.facebook.com/airensoft/"
-                        ><i class="fab fa-facebook-f"></i
-                        ></a>
+                        <a class="btn btn-floating m-1" class="" role="button" target="_blank"
+                           href="https://www.facebook.com/airensoft/"><i class="fab fa-facebook-f"></i></a>
 
                         <!-- Twitter -->
-                        <a
-                                class="btn btn-floating m-1"
-                                class=""
-                                role="button"
-                                target="_blank"
-                                href="https://twitter.com/AirenSoft"
-                        ><i class="fab fa-twitter"></i
-                        ></a>
+                        <a class="btn btn-floating m-1" class="" role="button" target="_blank"
+                           href="https://twitter.com/AirenSoft"><i class="fab fa-twitter"></i></a>
 
                         <!-- Instagram -->
-                        <a
-                                class="btn btn-floating m-1"
-                                class=""
-                                role="button"
-                                target="_blank"
-                                href="https://www.instagram.com/airensoft"
-                        ><i class="fab fa-instagram"></i
-                        ></a>
+                        <a class="btn btn-floating m-1" class="" role="button" target="_blank"
+                           href="https://www.instagram.com/airensoft"><i class="fab fa-instagram"></i></a>
                     </div>
                 </div>
             </section>
@@ -343,8 +335,9 @@
 
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.10.0/mdb.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/underscore@1.12.0/underscore-min.js"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.slim.min.js" integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/ovenlivekit@1.0.3/dist/OvenLiveKit.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.slim.min.js"
+        integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/ovenlivekit@1.0.4/dist/OvenLiveKit.min.js"></script>
 
 <script>
 
@@ -413,6 +406,9 @@
     let savedVideoFrame = localStorage.getItem('savedVideoFrame');
     let savedAudioSource = localStorage.getItem('savedAudioSource');
 
+    let ovenLiveKitVersion = $('#ovenLiveKitVersion');
+    ovenLiveKitVersion.text(OvenLiveKit.getVersion());
+
     if (savedWebRtcUrl) {
         webRtcUrlInput.val(savedWebRtcUrl);
     }
@@ -456,6 +452,10 @@
     });
 
     $('.constraintSelect').on('change', function () {
+        resetOvenLiveKit();
+    });
+
+    $('.streamingCofingSelect').on('change', function () {
         stopStreaming();
     });
 
@@ -605,22 +605,22 @@
                 select.append(option);
             });
 
-            // if (type === 'video') {
-            //
-            //     let option = $('<option></option>');
-            //
-            //     option.text('Display capture');
-            //     option.val('displayCapture');
-            //
-            //     if (!navigator.mediaDevices.getDisplayMedia) {
-            //
-            //         option.text('Display capture (Not supported)');
-            //         option.attr('disabled', 'disabled');
-            //     }
-            //
-            //
-            //     select.append(option);
-            // }
+            if (type === 'video') {
+
+                let option = $('<option></option>');
+
+                option.text('Display capture');
+                option.val('displayCapture');
+
+                if (!navigator.mediaDevices.getDisplayMedia) {
+
+                    option.text('Display capture (Not supported)');
+                    option.attr('disabled', 'disabled');
+                }
+
+
+                select.append(option);
+            }
         }
 
         if (type === 'video') {
@@ -677,9 +677,6 @@
 
 
     function createInput() {
-
-        testPlaybackButtonArea.hide();
-        streamingButton.prop('disabled', true);
 
         if (input) {
             input.remove();
@@ -806,15 +803,30 @@
 
     function stopStreaming() {
 
+        if (input) {
+            input.stopStreaming();
+        }
+
         streamingStarted = false;
         streamingButton.removeClass('btn-danger').addClass('btn-primary');
         streamingButton.text('START');
+        testPlaybackButtonArea.hide();
+    }
+
+    function resetOvenLiveKit() {
+
+        streamingStarted = false;
+        streamingButton.removeClass('btn-danger').addClass('btn-primary');
+        streamingButton.text('START');
+        testPlaybackButtonArea.hide();
+        streamingButton.prop('disabled', true);
 
         if (input) {
             createInput();
         }
 
     }
+
 
     streamingButton.on('click', function () {
 
