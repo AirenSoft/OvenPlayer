@@ -8,11 +8,7 @@ OvenPlayer is a JavaScript-based Player that can play Low Latency HLS (LLHLS) an
 ## Demo
 <img src="demo/assets/images/05_OvenSpace_230214.png" style="max-width: 100%; height: auto;">
 
-OvenSpace, Sub-Second Latency Streaming Demo Service using [OvenMediaEngine](https://github.com/AirenSoft/OvenMediaEngine), [OvenPlayer](https://github.com/AirenSoft/OvenPlayer), and [OvenLiveKit](https://github.com/AirenSoft/OvenLiveKit-Web), allows you to stream your Webcam, Microphone, and Screen with Sub-Second Latency using WebRTC in your browser. You can also stream your video using an external live encoder that supports RTMP and SRT. 
-
-In the current demo service, 9 people can broadcast at the same time and many viewers can watch. And viewers can choose to watch the video over the WebRTC or LLHLS protocol.
-
-**Please visit the [OvenSpace Demo](https://space.ovenplayer.com/) and experience Sub-Second Latency Streaming.**
+OvenSpace is a sub-second latency streaming demo service using [OvenMediaEngine](https://github.com/AirenSoft/OvenMediaEngine), [OvenPlayer](https://github.com/AirenSoft/OvenPlayer) and [OvenLiveKit](https://github.com/AirenSoft/OvenLiveKit-Web). You can experience OvenPlayer in the **[OvenSpace Demo](https://space.ovenplayer.com/)** and and see examples of applying in [OvenSpace Repository](https://github.com/AirenSoft/OvenSpace).
 
 ## Features
 * HTML5 Standard Video Player
