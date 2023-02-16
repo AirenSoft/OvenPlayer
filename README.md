@@ -26,7 +26,7 @@ OvenSpace is a sub-second latency streaming demo service using [OvenMediaEngine]
 ## Quick Start
 Please read the [Quick Start](https://airensoft.gitbook.io/ovenplayer/#quick-start).
 
-### Test Player
+### OvenPlayer Demo
 * Without TLS: http://demo.ovenplayer.com
 * With TLS: https://demo.ovenplayer.com
 
