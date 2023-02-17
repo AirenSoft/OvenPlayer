@@ -8,7 +8,7 @@ OvenPlayer is a JavaScript-based Player that can play Low Latency HLS (LLHLS) an
 ## Demo
 <img src="demo/assets/images/05_OvenSpace_230214.png" style="max-width: 100%; height: auto;">
 
-OvenSpace is a sub-second latency streaming demo service using [OvenMediaEngine](https://github.com/AirenSoft/OvenMediaEngine), [OvenPlayer](https://github.com/AirenSoft/OvenPlayer) and [OvenLiveKit](https://github.com/AirenSoft/OvenLiveKit-Web). You can experience OvenPlayer in the **[OvenSpace Demo](https://space.ovenplayer.com/)** and and see examples of applying in [OvenSpace Repository](https://github.com/AirenSoft/OvenSpace).
+OvenSpace is a sub-second latency streaming demo service using [OvenMediaEngine](https://github.com/AirenSoft/OvenMediaEngine), [OvenPlayer](https://github.com/AirenSoft/OvenPlayer) and [OvenLiveKit](https://github.com/AirenSoft/OvenLiveKit-Web). You can experience OvenPlayer in the **[OvenSpace Demo](https://space.ovenplayer.com/)** and see examples of applying in [OvenSpace Repository](https://github.com/AirenSoft/OvenSpace).
 
 ## Features
 * HTML5 Standard Video Player
