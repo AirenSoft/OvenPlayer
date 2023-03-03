@@ -149,12 +149,6 @@ const Api = function (container) {
                     if (playerConfig.isAutoStart()) {
                         that.play();
                     }
-
-                    if (currentProvider.getName() === PROVIDER_HLS && currentProvider.isLive()) {
-                        currentProvider.once(PLAYER_PLAY, function () {
-                            that.seek(Number.MAX_SAFE_INTEGER);
-                        });
-                    }
                 }
 
                 that.trigger(name, data);
