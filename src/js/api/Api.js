@@ -469,6 +469,34 @@ const Api = function (container) {
 
         return currentProvider.setCurrentQuality(qualityIndex);
     };
+
+    that.getAudioTracks = () => {
+        if (!currentProvider) {
+            return null;
+        }
+
+        OvenPlayerConsole.log("API : getAudioTracks() ", currentProvider.getAudioTracks());
+        return currentProvider.getAudioTracks();
+    };
+
+    that.getCurrentAudioTrack = () => {
+        if (!currentProvider) {
+            return null;
+        }
+
+        OvenPlayerConsole.log("API : getCurrentAudioTrack() ", currentProvider.getCurrentAudioTrack());
+        return currentProvider.getCurrentAudioTrack();
+    };
+
+    that.setCurrentAudioTrack = (audioTrackIndex) => {
+        if (!currentProvider) {
+            return null;
+        }
+
+        OvenPlayerConsole.log("API : setCurrentAudioTrack() ", audioTrackIndex);
+        return currentProvider.setCurrentAudioTrack(audioTrackIndex);
+    };
+
     that.isAutoQuality = () => {
         if (!currentProvider) {
             return null;

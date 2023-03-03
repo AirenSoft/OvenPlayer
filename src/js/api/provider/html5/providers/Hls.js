@@ -13,7 +13,7 @@ import {
     PLAYER_UNKNWON_NETWORK_ERROR,
     PLAYER_BAD_REQUEST_ERROR,
     PLAYER_AUTH_FAILED_ERROR,
-    PLAYER_NOT_ACCEPTABLE_ERROR, STATE_PLAYING, CONTENT_LEVEL_CHANGED
+    PLAYER_NOT_ACCEPTABLE_ERROR, STATE_PLAYING, CONTENT_LEVEL_CHANGED, AUDIO_TRACK_CHANGED
 } from "api/constants";
 
 import sizeHumanizer from "utils/sizeHumanizer";
@@ -69,8 +69,10 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
             dvrWindow: 0,
             framerate: 0,
             currentQuality: -1,
-            currentSource: -1,
             qualityLevels: [],
+            currentAudioTrack: -1,
+            audioTracks: [],
+            currentSource: -1,
             sources: [],
             adTagUrl: adTagUrl
         };
@@ -102,6 +104,19 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
 
                 spec.currentQuality = hls.firstLevel;
 
+                for (let i = 0; i < hls.audioTracks.length; i++) {
+
+                    let audioTrack = hls.audioTracks[i];
+
+                    spec.audioTracks.push({
+                        index: audioTrack.id,
+                        label: audioTrack.name
+                    });
+
+                    if (audioTrack.default === true) {
+                        spec.currentAudioTrack = audioTrack.id;
+                    }
+                }
             });
 
             hls.once(Hls.Events.LEVEL_LOADED, function (event, data) {
@@ -131,6 +146,14 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
                     isAuto: hls.autoLevelEnabled,
                     currentQuality: spec.currentQuality,
                     type: "render"
+                });
+            });
+
+            hls.on(Hls.Events.AUDIO_TRACK_SWITCHED , function (event, data) {
+
+                spec.currentAudioTrack = data.id;
+                that.trigger(AUDIO_TRACK_CHANGED, {
+                    currentAudioTrack: spec.currentAudioTrack
                 });
             });
 
@@ -221,6 +244,13 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
             } else {
                 hls.currentLevel = hls.currentLevel;
             }
+        };
+
+        that.setCurrentAudioTrack = (audioTrackIndex) => {
+            hls.audioTrack = audioTrackIndex;
+            spec.currentAudioTrack = audioTrackIndex;
+
+            return spec.currentAudioTrack;
         };
 
         that.getDuration = () => {

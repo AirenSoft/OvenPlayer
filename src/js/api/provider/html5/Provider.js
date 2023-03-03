@@ -451,6 +451,25 @@ const Provider = function (spec, playerConfig, onExtendedLoad) {
     that.setCurrentQuality = (qualityIndex) => {
         //Do nothing
     };
+
+    that.getAudioTracks = () => {
+        if (!elVideo) {
+            return [];
+        }
+        return spec.audioTracks;
+    };
+
+    that.getCurrentAudioTrack = () => {
+        if (!elVideo) {
+            return [];
+        }
+        return spec.currentAudioTrack;
+    };
+
+    that.setCurrentAudioTrack = (audioTrackIndex) => {
+        //Do nothing
+    };
+
     that.isAutoQuality = () => {
         //Do nothing
     };
