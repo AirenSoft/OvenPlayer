@@ -11,9 +11,11 @@ import {
     PLAYER_WEBRTC_UNEXPECTED_DISCONNECT,
     PLAYER_WEBRTC_INTERNAL_ERROR,
     OME_P2P_MODE,
-    CONTENT_LEVEL_CHANGED
+    CONTENT_LEVEL_CHANGED,
+    PEER_CONNECTION_PREPARED
 } from "api/constants";
 import sizeHumanizer from "../../../../utils/sizeHumanizer";
+import {PEER_CONNECTION_DESTROYED} from "../../../constants";
 
 
 const WebRTCLoader = function (provider,
@@ -309,6 +311,7 @@ const WebRTCLoader = function (provider,
         try {
 
             peerConnection = new RTCPeerConnection(peerConnectionConfig);
+            provider.trigger(PEER_CONNECTION_PREPARED, peerConnection);
 
         } catch (error) {
             let tempError = ERRORS.codes[PLAYER_WEBRTC_INTERNAL_ERROR];
@@ -870,6 +873,7 @@ const WebRTCLoader = function (provider,
             }
 
             mainPeerConnectionInfo.peerConnection = null;
+            provider.trigger(PEER_CONNECTION_DESTROYED);
             mainPeerConnectionInfo = null;
         }
 

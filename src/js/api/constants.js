@@ -39,6 +39,8 @@ export const HLS_PREPARED = "hlsPrepared";
 export const HLS_DESTROYED = "hlsDestroyed";
 export const DASH_PREPARED = "dashPrepared";
 export const DASH_DESTROYED = "dashDestroyed";
+export const PEER_CONNECTION_PREPARED = "peerConnectionPrepared";
+export const PEER_CONNECTION_DESTROYED = "peerConnectionDestroyed";
 
 
 
