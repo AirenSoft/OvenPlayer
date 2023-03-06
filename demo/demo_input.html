@@ -844,7 +844,7 @@
 
         const url = new URL(inputUrl);
 
-        let playbackUrl = url.protocol + url.host + url.pathname;
+        let playbackUrl = url.protocol + '//' + url.host + url.pathname;
 
         if (url.searchParams.get('transport')) {
 
