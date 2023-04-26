@@ -6,17 +6,27 @@ import { naturalHms } from "utils/strings";
 import {
     CONTENT_TIME,
     CONTENT_TIME_MODE_CHANGED,
-    PROVIDER_HLS
+    PROVIDER_HLS,
+    PROVIDER_HTML5
 } from "api/constants";
 
 const TimeDisplay = function ($container, api, data) {
 
     let $position = "", $duration = "", $liveBadge = "", $liveText = "";
+
+    const mediaElement = api.getMediaElement();
+
     let hlsLive = false;
+    let nativeHlsLive = false;
 
     function convertHumanizeTime(time) {
         return naturalHms(time);
-    };
+    }
+
+
+    function getNativeHlsDvrWindow() {
+        return mediaElement.seekable.end(mediaElement.seekable.length - 1) - mediaElement.seekable.start(0);
+    }
 
     const onRendered = function ($current, template) {
         let isTimecode = api.isTimecodeMode();
@@ -25,8 +35,12 @@ const TimeDisplay = function ($container, api, data) {
         $liveBadge = $current.find(".op-live-badge");
         $liveText = $current.find(".op-live-text");
 
-        if (api.getProviderName() === PROVIDER_HLS && api.getProvider().isLive()) {
+        if (data && data.type === PROVIDER_HLS && data.duration === Infinity) {
             hlsLive = true;
+
+            if (api.getProviderName() === PROVIDER_HTML5) {
+                nativeHlsLive = true;
+            }
         }
 
         if (data.duration !== Infinity) {
@@ -54,9 +68,21 @@ const TimeDisplay = function ($container, api, data) {
                 }
             }, template);
         } else {
-            if (hlsLive) {
+            if (hlsLive && !nativeHlsLive) {
                 api.on(CONTENT_TIME, function (data) {
+
                     if (data.duration - data.position > 3) {
+                        $liveBadge.addClass('op-live-badge-delayed');
+                    } else {
+                        $liveBadge.removeClass('op-live-badge-delayed');
+                    }
+
+                }, template);
+            } else if (hlsLive && nativeHlsLive) {
+
+                api.on(CONTENT_TIME, function (data) {
+                    const dvrWindow = getNativeHlsDvrWindow();
+                    if (dvrWindow - data.position > 3) {
                         $liveBadge.addClass('op-live-badge-delayed');
                     } else {
                         $liveBadge.removeClass('op-live-badge-delayed');
@@ -67,6 +93,7 @@ const TimeDisplay = function ($container, api, data) {
         }
 
     };
+
     const onDestroyed = function (template) {
         api.off(CONTENT_TIME_MODE_CHANGED, null, template);
         api.off(CONTENT_TIME, null, template);

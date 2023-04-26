@@ -66,11 +66,11 @@ const Controls = function ($container, api) {
             timeDisplay = TimeDisplay($current.find(".op-left-controls"), api, data);
         }
 
-        function initProgressBar(isAd) {
+        function initProgressBar(isAd, meta) {
             if (progressBar) {
                 progressBar.destroy();
             }
-            progressBar = ProgressBar($current.find(".op-progressbar-container"), api, isAd);
+            progressBar = ProgressBar($current.find(".op-progressbar-container"), api, isAd, meta);
         }
 
         function initFrameJumpButtons() {
@@ -133,7 +133,7 @@ const Controls = function ($container, api) {
 
                 if (metadata.type === PROVIDER_HLS) {
                     // show progress bar when hls
-                    initProgressBar(false);
+                    initProgressBar(false, metadata);
                 } else {
                     if (progressBar) {
                         progressBar.destroy();
