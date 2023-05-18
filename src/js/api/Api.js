@@ -132,6 +132,10 @@ const Api = function (container) {
                     //     }
                     // }
 
+                    if (providerName === PROVIDER_WEBRTC) {
+                        currentProvider.removeStream();
+                    }
+
                     if (playerConfig.getConfig().autoFallback && that.getCurrentSource() + 1 < that.getSources().length) {
 
                         that.pause();

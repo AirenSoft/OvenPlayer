@@ -224,6 +224,10 @@ const WebRTC = function (element, playerConfig, adTagUrl) {
 
     OvenPlayerConsole.log("WEBRTC PROVIDER LOADED.");
 
+    that.removeStream = () => {
+        element.srcObject = null;
+    };
+
 
     that.destroy = () => {
 
