@@ -158,6 +158,10 @@ const Api = function (container) {
                 that.trigger(name, data);
             });
 
+            that.trigger(CONTENT_SOURCE_CHANGED, {
+                currentSource: currentSourceIndex
+            });
+
 
         }).then(() => {
 
