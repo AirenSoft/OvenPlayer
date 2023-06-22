@@ -102,7 +102,29 @@ const TimeDisplay = function ($container, api, data) {
         "click .op-live-text": function (event, $current, template) {
 
             event.preventDefault();
+
             api.seek(Number.MAX_SAFE_INTEGER);
+
+            //When playback get back to the latest, turn the latency control back on.
+            const config = api.getConfig();
+            if (config.hlsConfig) {
+
+                const hlsConfig = config.hlsConfig;
+                if (typeof hlsConfig.liveSyncDuration === 'number') {
+                    api.getMseInstance().config.liveSyncDuration
+                        = hlsConfig.liveSyncDuration;
+                }
+
+                if (typeof hlsConfig.liveMaxLatencyDuration === 'number') {
+                    api.getMseInstance().config.liveMaxLatencyDuration
+                        = hlsConfig.liveMaxLatencyDuration;
+                }
+
+                if (typeof hlsConfig.maxLiveSyncPlaybackRate === 'number') {
+                    api.getMseInstance().config.maxLiveSyncPlaybackRate =
+                        hlsConfig.maxLiveSyncPlaybackRate;
+                }
+            }
         },
     };
 
