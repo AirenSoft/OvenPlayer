@@ -51,7 +51,7 @@ const SettingButton = function ($container, api) {
 
         let framerate = api.getFramerate();
 
-        if (api.getDuration() !== Infinity && currentSource && currentSource.type !== PROVIDER_RTMP) {
+        if (currentSource) {
             let body = {
                 title: PANEL_TITLE.speed,
                 value: api.getPlaybackRate() + PANEL_TITLE.speedUnit,
