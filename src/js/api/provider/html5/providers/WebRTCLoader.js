@@ -68,8 +68,10 @@ const WebRTCLoader = function (provider,
 
     let currentBrowser = analUserAgent();
 
+    let existingHandler = null;
+
     (function () {
-        let existingHandler = window.onbeforeunload;
+        existingHandler = window.onbeforeunload;
         window.onbeforeunload = function (event) {
             if (existingHandler) {
                 existingHandler(event);
@@ -78,6 +80,7 @@ const WebRTCLoader = function (provider,
             closePeer();
         }
     })();
+
 
     function getPeerConnectionById(id) {
 
@@ -989,6 +992,9 @@ const WebRTCLoader = function (provider,
 
         wsClosedByPlayer = true;
         closePeer();
+
+        window.onbeforeunload = existingHandler;
+        existingHandler = null;
     };
 
     return that;
