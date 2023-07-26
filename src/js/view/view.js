@@ -35,6 +35,7 @@ const View = function($container){
     let panelManager = PanelManager();
     let screenSize = "";
     let currentPlayerSize = "";
+    let resizeSensor = null;
 
     let that = {};
 
@@ -136,7 +137,7 @@ const View = function($container){
         viewTemplate = template;
         calcPlayerWidth();
         currentPlayerSize = screenSize;
-        new ResizeSensor($playerRoot.get(), function() {
+        resizeSensor = new ResizeSensor($playerRoot.get(), function() {
 
             $playerRoot.removeClass("large");
             $playerRoot.removeClass("medium");
@@ -154,6 +155,11 @@ const View = function($container){
 
     };
     const onDestroyed = function(){
+        if(resizeSensor) {
+            resizeSensor.detach();
+            resizeSensor = null;
+        }
+
         if(helper){
             helper.destroy();
             helper = null;

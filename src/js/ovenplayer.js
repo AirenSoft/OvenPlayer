@@ -11,8 +11,6 @@ function ovenPlayerFactory() {
 
     OvenPlayer.create = function (container, options) {
 
-        console.log("[OvenPlayer] v."+ version);
-
         let containerElement = checkAndGetContainerElement(container);
 
         let player = View(containerElement);
@@ -20,6 +18,8 @@ function ovenPlayerFactory() {
         const playerInstance = OvenPlayerSDK.create(player.getMediaElementContainer(), options);
 
         player.setApi(playerInstance);
+
+        OvenPlayerConsole.log("[OvenPlayer] v."+ version);
 
         return playerInstance;
     };
