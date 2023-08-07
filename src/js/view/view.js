@@ -298,8 +298,11 @@ const View = function($container){
             }
 
         },
+
+        // STREAMWELL CUSTOM
         "contextmenu .ovenplayer" : function(event, $current, template){
             event.stopPropagation();
+            return;
             if(!LA$(event.currentTarget).find("object")){
                 event.preventDefault();
                 createContextPanel(event.pageX, event.pageY);
