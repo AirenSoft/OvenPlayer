@@ -19,7 +19,9 @@ export default (uiText, data) => {
 
 
 export const settingItemTemplate = (data, useCheck) => {
-    return (
+    if (data.panelType == "speed") {
+        return "";
+    } else return (
         '<div class="op-setting-item" op-panel-type="'+data.panelType+'" op-data-value="'+data.value+'">' +
         (useCheck?'<span class="op-setting-item-checked '+(data.isCheck?'op-show':'')+'">&#x2713;</span>':'' )+
         '<span class="op-setting-item-title">'+data.title+'</span>' +
