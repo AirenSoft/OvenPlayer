@@ -41,4 +41,4 @@ git clone https://github.com/AirenSoft/OvenPlayer.git
 http://YOUR_IP/OvenPlayer/docs/demo.html
 ```
 
-![](<../.gitbook/assets/스크린샷 2019-05-02 오후 4.06.35.png>)
+![](<../.gitbook/assets/demo_player.png>)
