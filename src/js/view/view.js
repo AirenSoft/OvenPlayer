@@ -200,13 +200,32 @@ const View = function($container){
         "dblclick .ovenplayer" : function(event, $current, template){
 
             if (api) {
+                    const touchPosition = getTouchSection(event);
+                    const currentPosition = api.getPosition();
 
+                    // seek back 10s
+                    if (touchPosition == 'left') {
+                        const newPosition = Math.max(currentPosition - 10, 0);
+                        OvenPlayerConsole.log(`Seeking to ${newPosition}`);
+                        api.seek(newPosition);
+                    }
+
+                    // seek forward 10s
+                    if (touchPosition === 'right') {
+                        const newPosition = Math.min(currentPosition + 10, api.getDuration());
+                        OvenPlayerConsole.log(`Seeking to ${newPosition}`);
+                        api.seek(newPosition);
+                    }
+
+                    if (touchPosition === 'middle') {
+                        OvenPlayerConsole.log(`Toggling fullscreen`);
                 if (api.getConfig().expandFullScreenUI && api.toggleFullScreen) {
 
                     if(!(LA$(event.target).closest(".op-controls-container") || LA$(event.target).closest(".op-setting-panel") )){
                         api.toggleFullScreen();
                     }
                 }
+            }
             }
         },
         //For iOS safari
