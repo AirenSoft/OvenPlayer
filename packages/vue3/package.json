@@ -17,6 +17,6 @@
     "@rollup/plugin-dynamic-import-vars": "^1.4.3",
     "@types/ovenplayer": "^0.10.0",
     "@vitejs/plugin-vue": "^2.3.1",
-    "vite": "^2.9.13"
+    "vite": "^2.9.16"
   }
 }
