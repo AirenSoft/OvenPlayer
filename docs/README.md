@@ -147,7 +147,7 @@ const player = OvenPlayer.create('player_id', options)
 
 You can use OvenPlayer as a reusable [Vue.js](https://vuejs.org/) component.
 
-```javascript
+```vue
 <script setup>
 import OvenPlayerVue3 from "ovenplayer-vue3";
 </script>
@@ -319,9 +319,7 @@ You need to place the `dash.js` first, and then `ovenplayer.js` as shown below:
 
 ### Initialize for HLS
 
-If you want to play HLS, you need the [hls.js](https://github.com/video-dev/hls.js).
-
-You need to place the `hls.js` first, and then `ovenplayer.js` as shown below:
+OvenPlayer will use third party to initialize HLS [hls.js](https://github.com/video-dev/hls.js).
 
 ```markup
 <!DOCTYPE html>
@@ -337,9 +335,6 @@ You need to place the `hls.js` first, and then `ovenplayer.js` as shown below:
 <body>
     <!-- OvenPlayer will be initialized inside this element -->
     <div id="player_id"></div>
-
-    <!-- You need hls.js to play HLS. -->
-    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest/dist/hls.min.js"></script>
 
     <!-- Load OvenPlayer via CDN -->
     <script src="https://cdn.jsdelivr.net/npm/ovenplayer/dist/ovenplayer.js"></script>
