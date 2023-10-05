@@ -26,7 +26,7 @@ const FullScreenButton = function($container, api){
     let browserInfo = api.getBrowser();
     let isIos = browserInfo.os === "iOS"; // && browserInfo.browser === "Safari";
     let isAndroid = browserInfo.os === "Android";
-    let fullscreenChagedEventName = ""; //For IE11
+    let fullscreenChangedEventName = ""; //For IE11
     let isForceMode = false;    //This means to look like for fullscreen.
 
     let fullScreenEventTypes = {
@@ -96,7 +96,7 @@ const FullScreenButton = function($container, api){
     function findFullScreenChangedEventName(){
         let rootElement =  $root.get();
         let eventName = "";
-        //ios don;t have a fullscreenchage event. go to hell.
+        //ios don;t have a fullscreenchange event. go to hell.
         //ios will checkFullScreen();
 
         if (rootElement.requestFullscreen) {
@@ -257,9 +257,9 @@ const FullScreenButton = function($container, api){
 
         resetFullscreenButtonState();
 
-        fullscreenChagedEventName = findFullScreenChangedEventName();
-        if(fullscreenChagedEventName){
-            document.addEventListener(fullscreenChagedEventName, afterFullScreenChangedCallback, false);
+        fullscreenChangedEventName = findFullScreenChangedEventName();
+        if(fullscreenChangedEventName){
+            document.addEventListener(fullscreenChangedEventName, afterFullScreenChangedCallback, false);
         }
 
         api.on(AD_CHANGED, function(ad){
@@ -290,12 +290,8 @@ const FullScreenButton = function($container, api){
 
 
     const onDestroyed = function(template){
-
-        if (api.getConfig() && !api.getConfig().expandFullScreenUI) {
-
-            if(fullscreenChagedEventName){
-                document.removeEventListener(fullscreenChagedEventName, afterFullScreenChangedCallback);
-            }
+        if (fullscreenChangedEventName){
+            document.removeEventListener(fullscreenChangedEventName, afterFullScreenChangedCallback);
         }
 
         api.off(AD_CHANGED, null, template);

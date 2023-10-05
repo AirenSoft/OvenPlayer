@@ -224,11 +224,18 @@
 
                                 <label for="videoBitrateInput">Bitrate limit (kbps)</label>
                                 <input id="videoBitrateInput" type="number"
-                                       class="form-control streamingCofingSelect mb-2" placeholder="Unlimited">
+                                       class="form-control streamingConfigSelect mb-2" placeholder="Unlimited">
 
                                 <label for="videoFrameInput">Frame rate</label>
-                                <input id="videoFrameInput" type="number" class="form-control constraintSelect"
+                                <input id="videoFrameInput" type="number" class="form-control constraintSelect mb-2"
                                        placeholder="Not Set">
+
+                                <label for="videoPreferredCodecSelect">Preferred video codec</label>
+                                <select id="videoPreferredCodecSelect" class="form-control streamingConfigSelect mb-2">
+                                    <option selected value="">Not Set</option>
+                                    <option value="H264">H264</option>
+                                    <option value="VP8">VP8</option>
+                                </select>
                             </fieldset>
                         </div>
                         <div class="col-lg-6 border-start border-2 mb-3 mb-lg-0">
@@ -337,7 +344,7 @@
 <script src="https://cdn.jsdelivr.net/npm/underscore@1.12.0/underscore-min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js"
         integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/ovenlivekit@1.0.4/dist/OvenLiveKit.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/ovenlivekit@1.1.0/dist/OvenLiveKit.min.js"></script>
 
 <script>
 
@@ -388,6 +395,7 @@
     let videoResolutionSelect = $('#videoResolutionSelect');
     let videoBitrateInput = $('#videoBitrateInput');
     let videoFrameInput = $('#videoFrameInput');
+    let videoPreferredCodecSelect = $('#videoPreferredCodecSelect');
     let audioSourceSelect = $('#audioSourceSelect');
     let audioSourceSelectArea = $('#audioSourceSelectArea');
 
@@ -428,10 +436,10 @@
 
         if ($(this).val() === 'no') {
 
-            enableVideoContrll(false);
+            enableVideoControl(false);
         } else {
 
-            enableVideoContrll(true);
+            enableVideoControl(true);
         }
     });
 
@@ -455,7 +463,7 @@
         resetOvenLiveKit();
     });
 
-    $('.streamingCofingSelect').on('change', function () {
+    $('.streamingConfigSelect').on('change', function () {
         stopStreaming();
     });
 
@@ -466,7 +474,7 @@
         webRtcUrlInput.change();
     });
 
-    function enableVideoContrll(enable) {
+    function enableVideoControl(enable) {
         videoResolutionSelect.prop('disabled', !enable);
         videoBitrateInput.prop('disabled', !enable);
         videoFrameInput.prop('disabled', !enable);
@@ -797,6 +805,10 @@
                 connectionConfig.maxVideoBitrate = parseInt(videoBitrateInput.val());
             }
 
+            if (videoPreferredCodecSelect.val() !== '') {
+                connectionConfig.preferredVideoFormat = videoPreferredCodecSelect.val();
+            }
+
             input.startStreaming(webRtcUrlInput.val(), connectionConfig);
         }
     }
@@ -844,7 +856,7 @@
 
         const url = new URL(inputUrl);
 
-        let playbackUrl = url.protocol + url.host + url.pathname;
+        let playbackUrl = url.protocol + '//' + url.host + url.pathname;
 
         if (url.searchParams.get('transport')) {
 
@@ -996,7 +1008,7 @@
             }
 
             if (savedVideoSource === 'no') {
-                enableVideoContrll(false);
+                enableVideoControl(false);
             }
 
             if (savedVideoSource === 'displayCapture') {

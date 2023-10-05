@@ -418,9 +418,6 @@ const Provider = function (spec, playerConfig, onExtendedLoad) {
                 OvenPlayerConsole.log("source changed : " + sourceIndex);
                 spec.currentSource = sourceIndex;
 
-                that.trigger(CONTENT_SOURCE_CHANGED, {
-                    currentSource: sourceIndex
-                });
                 playerConfig.setSourceIndex(sourceIndex);
                 //playerConfig.setSourceLabel(spec.sources[sourceIndex].label);
                 //spec.currentQuality = sourceIndex;

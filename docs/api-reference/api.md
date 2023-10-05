@@ -838,7 +838,7 @@ This command checks whether the video quality has been set to change automatical
 ### **setAutoQuality**()
 
 ```
-playerInstance.setAutoQulaity(isAuto)
+playerInstance.setAutoQuality(isAuto)
 ```
 
 You can use this command to set whether to change the video quality automatically.

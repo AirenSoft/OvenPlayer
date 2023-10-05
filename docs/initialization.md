@@ -89,7 +89,7 @@ You set up to show all logs that occur in the OvenPlayer that is on the web page
 OvenPlayer.debug(true);
 ```
 
-![](<.gitbook/assets/스크린샷 2019-04-25 오후 8.05.29.png>)
+![](<.gitbook/assets/web_inspector.png>)
 
 ## Options
 
@@ -447,7 +447,7 @@ sources: [
         type: 'hls',
         file: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
         sectionStart: 300,
-        sectionStart: 600,
+        sectionEnd: 600,
     }
 ]
 ```

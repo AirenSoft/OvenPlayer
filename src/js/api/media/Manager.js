@@ -18,6 +18,7 @@ const Manager = function(container, browserInfo){
     const createHtmlVideo = function(isLoop, isAutoStart){
 
         videoElement = document.createElement('video');
+        videoElement.setAttribute('preload', 'auto');
         videoElement.setAttribute('disableremoteplayback', '');
         videoElement.setAttribute('webkit-playsinline', 'true');
         videoElement.setAttribute('playsinline', 'true');
@@ -64,6 +65,8 @@ const Manager = function(container, browserInfo){
     that.destroy = () =>{
         $container.removeChild();
         $container = null;
+        videoElement.src = null;
+        videoElement.srcObject = null;
         videoElement = null;
     };
 
