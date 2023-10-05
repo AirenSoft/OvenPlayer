@@ -2,6 +2,7 @@
  * Created by hoho on 2018. 6. 7..
  */
 import Hls from "hls.js";
+
 import Provider from "api/provider/html5/Provider";
 import { errorTrigger } from "api/provider/utils";
 import {
@@ -16,12 +17,14 @@ import {
     PLAYER_AUTH_FAILED_ERROR,
     PLAYER_NOT_ACCEPTABLE_ERROR, STATE_PLAYING, CONTENT_LEVEL_CHANGED, AUDIO_TRACK_CHANGED
 } from "api/constants";
+
 import sizeHumanizer from "utils/sizeHumanizer";
 
 /**
  * @brief   hlsjs provider extended core.
- * @param   container player element.
+ * @param   element player element.
  * @param   playerConfig    config.
+ * @param   adTagUrl url for ad
  * */
 
 
@@ -241,8 +244,6 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
         that.setAutoQuality = (isAuto) => {
             if (isAuto) {
                 hls.currentLevel = -1;
-            } else {
-                hls.currentLevel = hls.currentLevel;
             }
         };
 
