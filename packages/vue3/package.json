@@ -1,6 +1,6 @@
 {
   "name": "ovenplayer-vue3",
-  "version": "1.0.0-alpha.0",
+  "version": "1.0.0-beta.0",
   "type": "module",
   "main": "dist/ovenplayer-vue3.umd.js",
   "module": "dist/ovenplayer-vue3.es.js",
