@@ -8,6 +8,7 @@ import PanelManager from "view/global/PanelManager";
 import ContextPanel from 'view/components/helpers/contextPanel';
 import LA$ from 'utils/likeA$';
 import ResizeSensor from "utils/resize-sensor";
+import getTouchSection from "utils/getTouchSection";
 import {
     READY,
     DESTROY,
@@ -198,26 +199,26 @@ const View = function($container){
             }
         },
         "dblclick .ovenplayer" : function(event, $current, template){
-
             if (api) {
                     const touchPosition = getTouchSection(event);
                     const currentPosition = api.getPosition();
+                    const tapToSeekEnabled = api.getConfig().doubleTapToSeek;
 
                     // seek back 10s
-                    if (touchPosition == 'left') {
+                    if (tapToSeekEnabled && touchPosition == 'left') {
                         const newPosition = Math.max(currentPosition - 10, 0);
                         OvenPlayerConsole.log(`Seeking to ${newPosition}`);
                         api.seek(newPosition);
                     }
 
                     // seek forward 10s
-                    if (touchPosition === 'right') {
+                    if (tapToSeekEnabled && touchPosition === 'right') {
                         const newPosition = Math.min(currentPosition + 10, api.getDuration());
                         OvenPlayerConsole.log(`Seeking to ${newPosition}`);
                         api.seek(newPosition);
                     }
 
-                    if (touchPosition === 'middle') {
+                    if (touchPosition === 'middle' || !tapToSeekEnabled) {
                         OvenPlayerConsole.log(`Toggling fullscreen`);
                 if (api.getConfig().expandFullScreenUI && api.toggleFullScreen) {
 

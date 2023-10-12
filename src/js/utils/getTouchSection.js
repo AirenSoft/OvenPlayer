@@ -4,9 +4,6 @@
  * @returns {'left'|'middle'|'right'}
  */
 export default function getTouchSection(event) {
-    // get the elements width
-    console.log(event.target);
-
     /**
      * @type {DOMRect}
      */
