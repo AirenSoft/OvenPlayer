@@ -35,7 +35,8 @@ const Configurator = function(options, provider){
             loadingRetryCount: 0,
             expandFullScreenUI: true,
             fullscreenOption: null,
-            showBigPlayButton: true
+            showBigPlayButton: true,
+            doubleTapToSeek: false,
         };
         const serialize = function (val) {
             if (val === undefined) {
