@@ -1,19 +1,18 @@
+import { resolve } from 'path'
+import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 
-const path = require('path')
-const { defineConfig } = require('vite')
-
-
-module.exports = defineConfig({
+// https://vitejs.dev/config/
+export default defineConfig({
   plugins: [vue()],
   build: {
     lib: {
-      entry: path.resolve(__dirname, 'src/index.js'),
+      entry: resolve(__dirname, 'src/index.ts'),
       name: 'ovenplayer-vue3',
       fileName: (format) => `ovenplayer-vue3.${format}.js`
     },
     rollupOptions: {
-      external: ['vue', 'ovenplayer'],
+      external: ['ovenplayer', 'vue'],
       output: {
         globals: {
           ovenplayer: 'OvenPlayer',

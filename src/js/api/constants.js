@@ -39,6 +39,8 @@ export const HLS_PREPARED = "hlsPrepared";
 export const HLS_DESTROYED = "hlsDestroyed";
 export const DASH_PREPARED = "dashPrepared";
 export const DASH_DESTROYED = "dashDestroyed";
+export const PEER_CONNECTION_PREPARED = "peerConnectionPrepared";
+export const PEER_CONNECTION_DESTROYED = "peerConnectionDestroyed";
 
 
 
@@ -73,6 +75,7 @@ export const CONTENT_CAPTION_CUE_CHANGED = "cueChanged";
 export const CONTENT_CAPTION_CHANGED = "captionChanged";
 export const CONTENT_TIME_MODE_CHANGED = "timeDisplayModeChanged";
 export const OME_P2P_MODE = "p2pMode";
+export const AUDIO_TRACK_CHANGED = "audioTrackChanged";
 
 
 export const AD_CLIENT_GOOGLEIMA = "googleima";
@@ -134,6 +137,7 @@ export const SYSTEM_TEXT = [
                 "speedUnit" : "x",
                 "source" : "Source",
                 "quality" : "Quality",
+                "audioTrack" : "Audio",
                 "caption" : "Caption",
                 "display" : "Display"
             }
@@ -287,6 +291,7 @@ export const SYSTEM_TEXT = [
                 "speedUnit" : "x",
                 "source" : "소스",
                 "quality" : "품질",
+                "audioTrack" : "오디오",
                 "caption" : "자막",
                 "display" : "표시"
             }
@@ -440,6 +445,7 @@ export const SYSTEM_TEXT = [
                 "speedUnit" : "x",
                 "source" : "Źrodło",
                 "quality" : "Jakość",
+                "audioTrack" : "Audio",
                 "caption" : "Podtytuł",
                 "display" : "Wyświetlacz"
             }

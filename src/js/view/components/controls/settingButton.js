@@ -9,28 +9,29 @@ import {
 } from "api/constants";
 
 let PANEL_TITLE = {
-    "speed" : "Speed",
-    "speedUnit" : "x",
-    "source" : "Source",
-    "quality" : "Quality",
-    "caption" : "Caption",
-    "display" : "Display"
+    "speed": "Speed",
+    "speedUnit": "x",
+    "source": "Source",
+    "quality": "Quality",
+    "audioTrack": "Audio",
+    "caption": "Caption",
+    "display": "Display"
 };
 const SettingButton = function ($container, api) {
     let panelManager = PanelManager();
 
-     function generateMainData(api){
+    function generateMainData(api) {
         let panel = {
-            id : "panel-"+new Date().getTime(),
-            title : "Settings",
-            body : [],
-            isRoot : true,
-            panelType : ""
+            id: "panel-" + new Date().getTime(),
+            title: "Settings",
+            body: [],
+            isRoot: true,
+            panelType: ""
         };
 
         let playerConfig = api.getConfig();
 
-        if(playerConfig && playerConfig.systemText){
+        if (playerConfig && playerConfig.systemText) {
             Object.keys(PANEL_TITLE).forEach(title => {
                 PANEL_TITLE[title] = playerConfig.systemText.ui.setting[title];
             });
@@ -42,29 +43,32 @@ const SettingButton = function ($container, api) {
         let qualityLevels = api.getQualityLevels();
         let currentQuality = qualityLevels && qualityLevels.length > 0 ? qualityLevels[api.getCurrentQuality()] : null;
 
+        let audioTracks = api.getAudioTracks();
+        let currentAudioTrack = audioTracks && audioTracks.length > 0 ? audioTracks[api.getCurrentAudioTrack()] : null;
+
         let captions = api.getCaptionList();
         let currentCaption = api.getCurrentCaption();
 
         let framerate = api.getFramerate();
 
-        if(api.getDuration() !== Infinity && currentSource && currentSource.type !== PROVIDER_RTMP){
+        if (currentSource) {
             let body = {
-                title : PANEL_TITLE.speed,
-                value :  api.getPlaybackRate() + PANEL_TITLE.speedUnit,
-                description :  api.getPlaybackRate() + PANEL_TITLE.speedUnit,
-                panelType : "speed",
-                hasNext : true
+                title: PANEL_TITLE.speed,
+                value: api.getPlaybackRate() + PANEL_TITLE.speedUnit,
+                description: api.getPlaybackRate() + PANEL_TITLE.speedUnit,
+                panelType: "speed",
+                hasNext: true
             };
             panel.body.push(body);
         }
-        if (sources && sources.length > 0) {
+        if (sources && sources.length > 1) {
 
             let body = {
-                title : PANEL_TITLE.source,
-                value : currentSource ? currentSource.label : "Default",
-                description : currentSource ? currentSource.label : "Default",
-                panelType : "source",
-                hasNext : true
+                title: PANEL_TITLE.source,
+                value: currentSource ? currentSource.label : "Default",
+                description: currentSource ? currentSource.label : "Default",
+                panelType: "source",
+                hasNext: true
             };
 
             panel.body.push(body);
@@ -72,34 +76,48 @@ const SettingButton = function ($container, api) {
         if (qualityLevels && qualityLevels.length > 0) {
 
             let body = {
-                title : PANEL_TITLE.quality,
-                value : currentQuality ? currentQuality.label : "Default",
-                description : currentQuality ? currentQuality.label : "Default",
-                panelType : "quality",
-                hasNext : true
+                title: PANEL_TITLE.quality,
+                value: currentQuality ? currentQuality.label : "Default",
+                description: currentQuality ? currentQuality.label : "Default",
+                panelType: "quality",
+                hasNext: true
             };
 
             panel.body.push(body);
         }
+
+        if (audioTracks && audioTracks.length > 0) {
+
+            let body = {
+                title: PANEL_TITLE.audioTrack,
+                value: currentAudioTrack ? currentAudioTrack.label : "Default",
+                description: currentAudioTrack ? currentAudioTrack.label : "Default",
+                panelType: "audioTrack",
+                hasNext: true
+            };
+
+            panel.body.push(body);
+        }
+
         if (captions && captions.length > 0) {
 
             let body = {
-                title : PANEL_TITLE.caption,
-                value : captions[currentCaption] ? captions[currentCaption].label : "OFF",
-                description : captions[currentCaption] ? captions[currentCaption].label : "OFF",
-                panelType : "caption",
-                hasNext : true
+                title: PANEL_TITLE.caption,
+                value: captions[currentCaption] ? captions[currentCaption].label : "OFF",
+                description: captions[currentCaption] ? captions[currentCaption].label : "OFF",
+                panelType: "caption",
+                hasNext: true
             };
 
             panel.body.push(body);
         }
-        if(framerate > 0){
+        if (framerate > 0) {
             let body = {
-                title : PANEL_TITLE.display,
-                value : api.isTimecodeMode() ? "Play time" : "Framecode",
-                description : api.isTimecodeMode() ? "Play time" : "Framecode",
-                panelType : "display",
-                hasNext : true
+                title: PANEL_TITLE.display,
+                value: api.isTimecodeMode() ? "Play time" : "Framecode",
+                description: api.isTimecodeMode() ? "Play time" : "Framecode",
+                panelType: "display",
+                hasNext: true
             };
 
             panel.body.push(body);
@@ -108,26 +126,25 @@ const SettingButton = function ($container, api) {
         return panel;
     };
 
-    const onRendered = function($current, template){
+    const onRendered = function ($current, template) {
     };
-    const onDestroyed = function(template){
+    const onDestroyed = function (template) {
     };
     const events = {
-        "click .op-setting-button" : function(event, $current, template){
+        "click .op-setting-button": function (event, $current, template) {
             event.preventDefault();
             let $parent = $current.closest(".op-controls-container");
-            if(panelManager.size() > 0){
+            if (panelManager.size() > 0) {
                 panelManager.clear();
-            }else{
+            } else {
                 let panelData = generateMainData(api);
                 panelManager.add(Panels($parent, api, panelData));
             }
         },
     };
 
-    return OvenTemplate($container, "SettingButton", api.getConfig(), null, events, onRendered, onDestroyed );
+    return OvenTemplate($container, "SettingButton", api.getConfig(), null, events, onRendered, onDestroyed);
 };
-
 
 
 export default SettingButton;

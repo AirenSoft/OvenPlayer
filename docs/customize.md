@@ -89,7 +89,7 @@ The view of OvenPlayer has consisted of a template that extended OvenTemplate.
 
 The template has a minimal life cycle starting with `onRendered()` and ending with `onDestroyed()`, and you can set an event callback with a valid scope in the template.
 
-![](<.gitbook/assets/다운로드 (2).png>)
+![](<.gitbook/assets/player_template.png>)
 
 The top-level parent template is `view/view.js`. View creates child `Controls` and `Helpers` templates. Also, Controls and Helpers create and control child templates, respectively.
 
@@ -247,19 +247,19 @@ let $player = LA$("#player");
 #### Search element
 
 ```
-$player.find(".textView');
+$player.find(".textView");
 ```
 
 #### Access element
 
 ```
-$player.find(".textView').get();
+$player.find(".textView").get();
 ```
 
 #### Edit CSS
 
 ```
-$player.find(".textView').css("color", "#d9d9d9");
+$player.find(".textView").css("color", "#d9d9d9");
 ```
 
 Please check `/utils/likeA$.js` for more information. This is slightly more inconvenient than jquery but enough to control OvenPlayer.
@@ -274,6 +274,6 @@ npm run watch
 
 You can see the added TextView by building OvenPlayer and running `dist/development/ index.html`.
 
-![Test run screen](<.gitbook/assets/스크린샷 2019-04-30 오전 11.48.15.png>)
+![Test run screen](<.gitbook/assets/custom_ui.png>)
 
 In this way, you can add a new UI or customize the template.

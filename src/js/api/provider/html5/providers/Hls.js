@@ -2,23 +2,21 @@
  * Created by hoho on 2018. 6. 7..
  */
 import Provider from "api/provider/html5/Provider";
-import {errorTrigger} from "api/provider/utils";
+import { errorTrigger } from "api/provider/utils";
 import {
     PROVIDER_HLS,
     PLAYER_STATE, STATE_IDLE, STATE_LOADING,
     ERRORS,
     INIT_HLSJS_FAIL,
     HLS_PREPARED,
-    HLS_DESTROYED
-} from "api/constants";
-
-import {
+    HLS_DESTROYED,
     PLAYER_UNKNWON_NETWORK_ERROR,
     PLAYER_BAD_REQUEST_ERROR,
     PLAYER_AUTH_FAILED_ERROR,
-    PLAYER_NOT_ACCEPTABLE_ERROR, STATE_PLAYING, CONTENT_LEVEL_CHANGED
-} from "../../../constants";
-import sizeHumanizer from "../../../../utils/sizeHumanizer";
+    PLAYER_NOT_ACCEPTABLE_ERROR, STATE_PLAYING, CONTENT_LEVEL_CHANGED, AUDIO_TRACK_CHANGED
+} from "api/constants";
+
+import sizeHumanizer from "utils/sizeHumanizer";
 
 /**
  * @brief   hlsjs provider extended core.
@@ -36,13 +34,10 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
     let isManifestLoaded = false;
     let firstLoaded = false;
 
-
     try {
 
         let hlsConfig = {
-            debug: false,
-            maxBufferLength: 20,
-            maxMaxBufferLength: 30
+            debug: false
         };
 
         let hlsConfigFromPlayerConfig = playerConfig.getConfig().hlsConfig;
@@ -71,10 +66,13 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
             seeking: false,
             state: STATE_IDLE,
             buffer: 0,
+            dvrWindow: 0,
             framerate: 0,
             currentQuality: -1,
-            currentSource: -1,
             qualityLevels: [],
+            currentAudioTrack: -1,
+            audioTracks: [],
+            currentSource: -1,
             sources: [],
             adTagUrl: adTagUrl
         };
@@ -91,7 +89,7 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
 
                 isManifestLoaded = true;
 
-                for(let i = 0; i < hls.levels.length; i ++) {
+                for (let i = 0; i < hls.levels.length; i++) {
 
                     let qualityLevel = hls.levels[i];
 
@@ -106,6 +104,19 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
 
                 spec.currentQuality = hls.firstLevel;
 
+                for (let i = 0; i < hls.audioTracks.length; i++) {
+
+                    let audioTrack = hls.audioTracks[i];
+
+                    spec.audioTracks.push({
+                        index: audioTrack.id,
+                        label: audioTrack.name
+                    });
+
+                    if (audioTrack.default === true) {
+                        spec.currentAudioTrack = audioTrack.id;
+                    }
+                }
             });
 
             hls.once(Hls.Events.LEVEL_LOADED, function (event, data) {
@@ -127,7 +138,7 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
                 }
             });
 
-            hls.on(Hls.Events.LEVEL_SWITCHED , function (event, data) {
+            hls.on(Hls.Events.LEVEL_SWITCHED, function (event, data) {
 
                 spec.currentQuality = data.level;
 
@@ -136,6 +147,21 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
                     currentQuality: spec.currentQuality,
                     type: "render"
                 });
+            });
+
+            hls.on(Hls.Events.AUDIO_TRACK_SWITCHED , function (event, data) {
+
+                spec.currentAudioTrack = data.id;
+                that.trigger(AUDIO_TRACK_CHANGED, {
+                    currentAudioTrack: spec.currentAudioTrack
+                });
+            });
+
+            hls.on(Hls.Events.LEVEL_UPDATED, function (event, data) {
+                if (data && data.details) {
+                    spec.dvrWindow = data.details.totalduration;
+                }
+
             });
 
             hls.on(Hls.Events.ERROR, function (event, data) {
@@ -211,7 +237,7 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
         that.isAutoQuality = () => {
             return hls.autoLevelEnabled;
         };
-        
+
         that.setAutoQuality = (isAuto) => {
             if (isAuto) {
                 hls.currentLevel = -1;
@@ -219,6 +245,17 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
                 hls.currentLevel = hls.currentLevel;
             }
         };
+
+        that.setCurrentAudioTrack = (audioTrackIndex) => {
+            hls.audioTrack = audioTrackIndex;
+            spec.currentAudioTrack = audioTrackIndex;
+
+            return spec.currentAudioTrack;
+        };
+
+        that.getDuration = () => {
+            return element.duration;
+        }
 
         superStop_func = that.super('stop');
         that.stop = () => {

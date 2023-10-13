@@ -26,8 +26,10 @@ const Html5 = function(element, playerConfig, adTagUrl){
         buffer : 0,
         framerate : 0,
         currentQuality : -1,
-        currentSource : -1,
         qualityLevels : [],
+        currentAudioTrack: -1,
+        audioTracks: [],
+        currentSource : -1,
         sources : [],
         adTagUrl : adTagUrl
     };

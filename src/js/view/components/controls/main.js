@@ -11,7 +11,6 @@ import PlaylistPanel from "view/components/controls/playlistPanel";
 import LA$ from 'utils/likeA$';
 import TimeDisplay from "view/components/controls/timeDisplay";
 import FullScreenButton from "view/components/controls/fullScreenButton";
-
 import {
     READY,
     CONTENT_META, CONTENT_LEVEL_CHANGED, CONTENT_TIME_MODE_CHANGED, CONTENT_TIME, PLAYER_PLAY,
@@ -24,14 +23,15 @@ import {
     STATE_AD_COMPLETE,
     CONTENT_SOURCE_CHANGED,
     OME_P2P_MODE,
-    PROVIDER_RTMP,
-    ERROR
+    ERROR,
+    PROVIDER_HLS,
+    PLAYER_WEBRTC_WS_ERROR
 } from "api/constants";
-import {PLAYER_WEBRTC_WS_ERROR} from "../../../api/constants";
 
 const Controls = function ($container, api) {
 
-    let volumeButton = "", playButton = "", settingButton = "", progressBar = "", timeDisplay = "", fullScreenButton = "", frameButtons = "", hasPlaylist = false, initialDuration;
+    let volumeButton = "", playButton = "", settingButton = "", progressBar = "", timeDisplay = "",
+        fullScreenButton = "", frameButtons = "", hasPlaylist = false, initialDuration;
     let uiInited = false;
     let webrtc_is_p2p_mode = false;
     let isLiveMode = false;
@@ -66,11 +66,11 @@ const Controls = function ($container, api) {
             timeDisplay = TimeDisplay($current.find(".op-left-controls"), api, data);
         }
 
-        function initProgressBar(isAd) {
+        function initProgressBar(isAd, meta) {
             if (progressBar) {
                 progressBar.destroy();
             }
-            progressBar = ProgressBar($current.find(".op-progressbar-container"), api, isAd);
+            progressBar = ProgressBar($current.find(".op-progressbar-container"), api, isAd, meta);
         }
 
         function initFrameJumpButtons() {
@@ -111,7 +111,7 @@ const Controls = function ($container, api) {
             }
 
             if (sectionStart) {
-                 metadata.duration = metadata.duration - sectionStart;
+                metadata.duration = metadata.duration - sectionStart;
             }
 
             initTimeDisplay(metadata);
@@ -126,11 +126,18 @@ const Controls = function ($container, api) {
             }
 
             if (metadata.duration === Infinity) {
+
+                //live
                 OvenPlayerConsole.log("[[[[LIVE MODE]]]]");
                 isLiveMode = true;
-                //live
-                if (progressBar) {
-                    progressBar.destroy();
+
+                if (metadata.type === PROVIDER_HLS) {
+                    // show progress bar when hls
+                    initProgressBar(false, metadata);
+                } else {
+                    if (progressBar) {
+                        progressBar.destroy();
+                    }
                 }
             } else {
                 //vod

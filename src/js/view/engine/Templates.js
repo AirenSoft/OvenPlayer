@@ -25,6 +25,7 @@ import PanelsTemplate from 'view/components/controls/settingPanel/mainTemplate';
 import SpeedPanelTemplate from 'view/components/controls/settingPanel/mainTemplate';
 import SourcePanelTemplate from 'view/components/controls/settingPanel/mainTemplate';
 import QualityPanelTemplate from 'view/components/controls/settingPanel/mainTemplate';
+import AudioTrackPanelTemplate from 'view/components/controls/settingPanel/mainTemplate';
 import CaptionPanelTemplate from 'view/components/controls/settingPanel/mainTemplate';
 import TimeDisplayPanelTemplate from 'view/components/controls/settingPanel/mainTemplate';
 import PlaylistPanelTemplate from 'view/components/controls/playlistPanelTemplate';
@@ -53,6 +54,7 @@ const Templates = {
     SpeedPanelTemplate,
     SourcePanelTemplate,
     QualityPanelTemplate,
+    AudioTrackPanelTemplate,
     CaptionPanelTemplate,
     TimeDisplayPanelTemplate,
     PlaylistPanelTemplate
