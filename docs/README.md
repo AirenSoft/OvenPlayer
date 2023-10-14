@@ -147,13 +147,14 @@ const player = OvenPlayer.create('player_id', options)
 
 You can use OvenPlayer as a reusable [Vue.js](https://vuejs.org/) component.
 
-```javascript
+```vue
 <script setup>
 import OvenPlayerVue3 from "ovenplayer-vue3";
 </script>
 
 <template>
-    <OvenPlayerVue3 
+    <OvenPlayerVue3
+    ref="ovenplayer"
     :config="playerConfig"
     @ready="readyHandler"
     @error="errorHandler"
@@ -181,15 +182,25 @@ export default {
     },
     errorHandler(event) {
       //
+    },
+    getQualityLevels() {
+      return this.$refs.ovenplayer.playerInstance.getQualityLevels()
     }
   }
 };
 </script>
 ```
 
+this component provides three exposed member:
+
+- playerInstance: `ovenplayer.js` instance.
+- createPlayer(): create player.
+  - Note: please call `removePlayer` first, ensure there's no active instance.
+- removePlayer(): remove player.
+
 ### Initialize for OME
 
-To play Sub-Second Latency Stream of OvenMediaEngine, set the source `type` to `webrtc`and set the `file` to the WebRTC Signaling URL with OvenMediaEngine. An explanation of the WebRTC Signaling URL can be found [here](https://airensoft.gitbook.io/ovenmediaengine/getting-started#playback).
+To play Sub-Second Latency Stream of OvenMediaEngine, set the source `type` to `webrtc` and set the `file` to the WebRTC Signaling URL with OvenMediaEngine. An explanation of the WebRTC Signaling URL can be found [here](https://airensoft.gitbook.io/ovenmediaengine/getting-started#playback).
 
 ```markup
 <!DOCTYPE html>
