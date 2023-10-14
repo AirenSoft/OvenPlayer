@@ -10,10 +10,9 @@ import {
 
 /**
  * @brief   This manages provider.
- * @param
  * */
 const Controller = function () {
-    let supportChacker = SupportChecker();
+    let supportChecker = SupportChecker();
     const Providers = {};
 
     const that = {};
@@ -56,7 +55,7 @@ const Controller = function () {
 
 
     that.loadProviders = (playlistItem) => {
-        const supportedProviderNames = supportChacker.findProviderNamesByPlaylist(playlistItem);
+        const supportedProviderNames = supportChecker.findProviderNamesByPlaylist(playlistItem);
         OvenPlayerConsole.log("ProviderController loadProviders() ", supportedProviderNames);
         if (!supportedProviderNames) {
             return Promise.reject(ERRORS.codes[INIT_UNSUPPORT_ERROR]);
@@ -78,14 +77,14 @@ const Controller = function () {
     };
 
     that.getProviderBySource = (source) => {
-        const supportedProviderName = supportChacker.findProviderNameBySource(source);
+        const supportedProviderName = supportChecker.findProviderNameBySource(source);
         OvenPlayerConsole.log("ProviderController getProviderBySource() ", supportedProviderName);
         return that.findByName(supportedProviderName);
     };
 
     that.isSameProvider = (currentSource, newSource) => {
-        OvenPlayerConsole.log("ProviderController isSameProvider() ", supportChacker.findProviderNameBySource(currentSource), supportChacker.findProviderNameBySource(newSource));
-        return supportChacker.findProviderNameBySource(currentSource) === supportChacker.findProviderNameBySource(newSource);
+        OvenPlayerConsole.log("ProviderController isSameProvider() ", supportChecker.findProviderNameBySource(currentSource), supportChecker.findProviderNameBySource(newSource));
+        return supportChecker.findProviderNameBySource(currentSource) === supportChecker.findProviderNameBySource(newSource);
     };
 
     return that;
