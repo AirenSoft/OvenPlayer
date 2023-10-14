@@ -452,6 +452,22 @@ sources: [
 ]
 ```
 
+### **overrideNative**
+
+You can prevent the use of some browser's native HLS capabilities by setting the flag
+`overrideNative` to the video source. This forces the use of Media Source Extensions
+to provide a more consistent experience between browsers.
+
+```
+sources: [
+    {
+        type: 'hls',
+        file: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
+        overrideNative: true,
+    }
+]
+```
+
 ### **volume**
 
 | **Type** | Default | Required |
