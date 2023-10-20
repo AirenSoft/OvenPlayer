@@ -1,6 +1,7 @@
 /**
- * Created by hoho on 2018. 6. 7..
+ * Created by hoho on 2018. 6. 7.
  */
+import Hls from "hls.js";
 import Provider from "api/provider/html5/Provider";
 import { errorTrigger } from "api/provider/utils";
 import {
@@ -19,9 +20,10 @@ import {
 import sizeHumanizer from "utils/sizeHumanizer";
 
 /**
- * @brief   hlsjs provider extended core.
- * @param   container player element.
+ * @brief   hls.js provider extended core.
+ * @param   element player element.
  * @param   playerConfig    config.
+ * @param   adTagUrl url for ad
  * */
 
 
