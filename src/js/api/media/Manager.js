@@ -65,7 +65,9 @@ const Manager = function(container, browserInfo){
     that.destroy = () =>{
         $container.removeChild();
         $container = null;
-        videoElement.srcObject = null;
+        if(videoElement!=null && videoElement!=='') {
+            videoElement.srcObject = null;
+        }
         videoElement = null;
     };
 
