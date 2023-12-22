@@ -507,6 +507,14 @@ let player = OvenPlayer.create("player", {
 
 Sets whether to Google IMA or Simple VAST the Ads client when player initialize. "googleima" or "vast".
 
+### ***image***
+
+| **Type** | Default | Required |
+| -------- | ------- | -------- |
+| String   | -       | false    |
+
+You can set the URL of a poster image / thumbnail. The image file is displayed prior to the player showing the first frames of the video.
+
 ### **playlist**
 
 | **Type**        | Default | Required |
