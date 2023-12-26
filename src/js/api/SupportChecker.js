@@ -46,7 +46,13 @@ const SupportChecker = function(){
                 const overrideNative = source.overrideNative;
 
                 if(!type){return false;}
+
                 const mimeType = source.mimeType || MimeTypes[type];
+
+                // Use HLS native player on iOS only
+                if (isHls(file, type) && userAgentObject.os !== "iOS") {
+                    return false;
+                }
 
                 // Latest Edge browser returns "Chrome" from userAgentObject.browser
                 // Make sure to use hls.js Android devices
