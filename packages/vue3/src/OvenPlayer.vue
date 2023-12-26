@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, onUpdated } from 'vue';
+import { ref, watch, onMounted, onUnmounted } from 'vue';
 import OvenPlayer from 'ovenplayer';
 
 import type { OvenPlayerConfig, OvenPlayerInstance, OvenPlayerEvents } from 'ovenplayer';
@@ -179,10 +179,14 @@ onMounted(createPlayer);
 
 onUnmounted(removePlayer);
 
-onUpdated(() => {
-  removePlayer();
-  createPlayer();
-});
+watch(
+  () => props.config,
+  () => {
+    removePlayer();
+    createPlayer();
+  },
+  { deep: true }
+);
 </script>
 
 <template>
