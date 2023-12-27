@@ -126,10 +126,13 @@ const ProgressBar = function ($container, api, isAd, metadata) {
             $preview.show();
         }
 
+        let duration = 0;
+        let second = 0;
+
         if (hlsLive && !nativeHlsLive) {
 
-            let duration = api.getDvrWindow();
-            let second = duration * (1 - percentage);
+            duration = api.getDvrWindow();
+            second = duration * (1 - percentage);
             if (api.isTimecodeMode()) {
                 $time.text('- ' + naturalHms(second));
             } else {
@@ -137,8 +140,8 @@ const ProgressBar = function ($container, api, isAd, metadata) {
             }
         } else if (hlsLive && nativeHlsLive) {
 
-            let duration = getNativeHlsDvrWindow();
-            let second = duration * (1 - percentage);
+            duration = getNativeHlsDvrWindow();
+            second = duration * (1 - percentage);
             if (api.isTimecodeMode()) {
                 $time.text('- ' + naturalHms(second));
             } else {
@@ -146,8 +149,8 @@ const ProgressBar = function ($container, api, isAd, metadata) {
             }
         } else {
 
-            let duration = api.getDuration();
-            let second = duration * percentage;
+            duration = api.getDuration();
+            second = duration * percentage;
 
             if (api.isTimecodeMode()) {
                 $time.text(naturalHms(second));
