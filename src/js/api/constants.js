@@ -89,6 +89,7 @@ export const INIT_DASH_UNSUPPORT = 103;
 export const INIT_ADS_ERROR = 104;
 export const INIT_DASH_FAIL = 105;
 export const INIT_HLSJS_FAIL = 106;
+export const INIT_DRM_FAIL = 107;
 export const PLAYER_UNKNWON_ERROR = 300;
 export const PLAYER_UNKNWON_OPERATION_ERROR = 301;
 export const PLAYER_UNKNWON_NETWORK_ERROR = 302;
@@ -112,478 +113,493 @@ export const WARN_MSG_MUTEDPLAY = "Please touch here to turn on the sound.";
 
 
 export const UI_ICONS = {
-    volume_mute : "volume-mute",
-    op_warning : "op-warning"
+  volume_mute: "volume-mute",
+  op_warning: "op-warning"
 };
 
 
-export const ERRORS = {codes : ""};
+export const ERRORS = { codes: "" };
 
 
 export const SYSTEM_TEXT = [
-    {
-        "lang" : "en",
-        "ui" : {
-            "context" : "About OvenPlayer",
-            "controls" : {
-                "live" : "Live Streaming",
-                "low_latency_live" : "Sub-Second Latency Streaming",
-                "low_latency_p2p" : "Sub-Second Latency P2P",
-            },
-            "playlist" : "Playlist",
-            "setting" : {
-                "title" : "Settings",
-                "speed" : "Speed",
-                "speedUnit" : "x",
-                "source" : "Source",
-                "quality" : "Quality",
-                "audioTrack" : "Audio",
-                "caption" : "Caption",
-                "display" : "Display",
-                "zoom" : "Zoom"
-            }
-        },
-        "api" : {
-            "message" : {
-                "muted_play" : "Please touch here to turn on the sound."
-            },
-            "error": {
-                100: {
-                    "code": 100,
-                    "message": "Can not load due to unknown reasons.",
-                    "reason": "Can not load due to unknown reasons."
-                },
-                101: {
-                    "code": 101,
-                    "message": "Can not load due to playable media not found.",
-                    "reason": "Can not load due to playable media not found."
-                },
-                102: {
-                    "code": 102,
-                    "message": "Flash fetching process aborted. </br><a href='http://www.adobe.com/go/getflashplayer' target='_self'><img src='http://www.adobe.com/images/shared/download_buttons/get_flash_player.gif' alt='Get Adobe Flash player'></a>",
-                    "reason": "It looks like not found swf or your environment is localhost."
-                },
-                103: {
-                    "code": 103,
-                    "message": "Can not load due to dash.js. Please use the latest dash.js.",
-                    "reason": "dash.js version is old."
-                },
-                104: {
-                    "code": 104,
-                    "message": "Can not load due to google ima for Ads. ",
-                    "reason": "Please check the google ima library."
-                },
-                105: {
-                    "code": 105,
-                    "message": "Error initializing DASH.",
-                    "reason": "Error initializing DASH."
-                },
-                106: {
-                    "code": 106,
-                    "message": "Error initializing HLS.",
-                    "reason": "Error initializing HLS."
-                },
-                300: {
-                    "code": 300,
-                    "message": "Can not play due to unknown reasons.",
-                    "reason": "Can not play due to unknown reasons."
-                },
-                301: {
-                    "code": 301,
-                    "message": "Fetching process aborted by user.",
-                    "reason": "Fetching process aborted by user."
-                },
-                302: {
-                    "code": 302,
-                    "message": "Some of the media could not be downloaded due to a network error.",
-                    "reason": "Error occurred when downloading."
-                },
-                303: {
-                    "code": 303,
-                    "message": "Unable to load media. This may be due to a server or network error, or due to an unsupported format.",
-                    "reason": "Error occurred when decoding."
-                },
-                304: {
-                    "code": 304,
-                    "message": "Media playback has been canceled. It looks like your media is corrupted or your browser does not support the features your media uses.",
-                    "reason": "Media playback not supported."
-                },
-                305: {
-                    "code": 305,
-                    "message": "Can not load captions due to unknown reasons.",
-                    "reason": "Can not load captions due to unknown reasons."
-                },
-                306: {
-                    "code": 306,
-                    "message": "Unable to load media. This may be due to a server or network error, or due to an unsupported format.",
-                    "reason": "The server cannot or will not process the request."
-                },
-                307: {
-                    "code": 307,
-                    "message": "Unable to load media. This may be due to a server or network error, or due to an unsupported format.",
-                    "reason": "The server refused the request."
-                },
-                308: {
-                    "code": 308,
-                    "message": "Unable to load media. This may be due to a server or network error, or due to an unsupported format.",
-                    "reason": "The server do not accept the request."
-                },
-                501: {
-                    "code": 501,
-                    "message": "Connection with low-latency(OME) server failed.",
-                    "reason": "WebSocket connection failed."
-                },
-                502: {
-                    "code": 502,
-                    "message": "Connection with low-latency(OME) server failed.",
-                    "reason": "WebRTC addIceCandidate failed."
-                },
-                503: {
-                    "code": 503,
-                    "message": "Connection with low-latency(OME) server failed.",
-                    "reason": "WebRTC setRemoteDescription failed."
-                },
-                504: {
-                    "code": 504,
-                    "message": "Connection with low-latency(OME) server failed.",
-                    "reason": "WebRTC peer createOffer failed."
-                },
-                505: {
-                    "code": 505,
-                    "message": "Connection with low-latency(OME) server failed.",
-                    "reason": "WebRTC setLocalDescription failed."
-                },
-                506: {
-                    "code": 506,
-                    "message": "Connection with low-latency(OME) server failed.",
-                    "reason": "WebRTC internal error."
-                },
-                510: {
-                    "code": 510,
-                    "message": "Network connection is unstable. Check the network connection.",
-                    "reason": "Network is slow."
-                },
-                511: {
-                    "code": 511,
-                    "message": "Connection with low-latency(OME) terminated unexpectedly.",
-                    "reason": "Unexpected end of connection."
-                },
-                512: {
-                    "code": 512,
-                    "message": "Connection with low-latency(OME) server failed.",
-                    "reason": "Connection timeout."
-                }
-            }
-        }
+  {
+    "lang": "en",
+    "ui": {
+      "context": "About OvenPlayer",
+      "controls": {
+        "live": "Live Streaming",
+        "low_latency_live": "Sub-Second Latency Streaming",
+        "low_latency_p2p": "Sub-Second Latency P2P",
+      },
+      "playlist": "Playlist",
+      "setting": {
+        "title": "Settings",
+        "speed": "Speed",
+        "speedUnit": "x",
+        "source": "Source",
+        "quality": "Quality",
+        "audioTrack": "Audio",
+        "caption": "Caption",
+        "display": "Display",
+        "zoom" : "Zoom"
+      }
     },
-    {
-        "lang" : "ko",
-        "ui" : {
-            "context" : "오븐플레이어에 관하여",
-            "controls" : {
-                "live" : "라이브",
-                "low_latency_live" : "초저지연 라이브",
-                "low_latency_p2p" : "초저지연 P2P",
-            },
-            "playlist" : "플레이리스트",
-            "setting" : {
-                "title" : "설정",
-                "speed" : "재생 속도",
-                "speedUnit" : "x",
-                "source" : "소스",
-                "quality" : "품질",
-                "audioTrack" : "오디오",
-                "caption" : "자막",
-                "display" : "표시",
-                "zoom" : "Zoom"
-            }
+    "api": {
+      "message": {
+        "muted_play": "Please touch here to turn on the sound."
+      },
+      "error": {
+        100: {
+          "code": 100,
+          "message": "Can not load due to unknown reasons.",
+          "reason": "Can not load due to unknown reasons."
         },
-        "api" : {
-            "message" : {
-                "muted_play" : "눌러서 소리 켜기"
-            },
-            "error": {
-                100: {
-                    "code": 100,
-                    "message": "알 수 없는 이유로 로드 할 수 없습니다.",
-                    "reason": "알 수 없는 이유로 로드 할 수 없습니다."
-                },
-                101: {
-                    "code": 101,
-                    "message": "지원되는 미디어를 찾지 못해 로드 할 수 없습니다.",
-                    "reason": "Can not load due to playable media not found."
-                },
-                102: {
-                    "code": 102,
-                    "message": "플레시 로드가 중단 되었습니다. </br><a href='http://www.adobe.com/go/getflashplayer' target='_self'><img src='http://www.adobe.com/images/shared/download_buttons/get_flash_player.gif' alt='Get Adobe Flash player'></a>",
-                    "reason": "It looks like not found swf or your environment is localhost."
-                },
-                103: {
-                    "code": 103,
-                    "message": "DashJS로 인해 로드 할 수 없습니다. 최신 dash.js를 사용해 주세요.",
-                    "reason": "dash.js version is old."
-                },
-                104: {
-                    "code": 104,
-                    "message": "Google IMA 라이브러리가 없어 로드 할 수 없습니다.",
-                    "reason": "Please check the google ima library."
-                },
-                105: {
-                    "code": 105,
-                    "message": "DASH 초기화 중 오류가 발생했습니다.",
-                    "reason": "Error initializing DASH."
-                },
-                106: {
-                    "code": 106,
-                    "message": "HLS 초기화 중 오류가 발생했습니다.",
-                    "reason": "Error initializing HLS."
-                },
-                300: {
-                    "code": 300,
-                    "message": "알 수 없는 이유로 재생할 수 없습니다.",
-                    "reason": "Can not play due to unknown reasons."
-                },
-                301: {
-                    "code": 301,
-                    "message": "사용자에 의한 프로세스 중단.",
-                    "reason": "Fetching process aborted by user."
-                },
-                302: {
-                    "code": 302,
-                    "message": "네트워크 오류로 인해 일부 미디어를 다운로드 할 수 없습니다.",
-                    "reason": "Error occurred when downloading."
-                },
-                303: {
-                    "code": 303,
-                    "message": "미디어를 로드 할 수 없습니다. 서버 또는 네트워크 오류 또는 지원되지 않는 형식으로 인해 발생할 수 있습니다.",
-                    "reason": "Error occurred when decoding."
-                },
-                304: {
-                    "code": 304,
-                    "message": "미디어 재생이 취소되었습니다. 미디어가 손상되었거나 브라우저가 미디어에서 사용하는 기능을 지원하지 않는 것 같습니다.",
-                    "reason": "Media playback not supported."
-                },
-                305: {
-                    "code": 305,
-                    "message": "알 수 없는 이유로 자막을 로드 할 수 없습니다.",
-                    "reason": "Can not load captions due to unknown reasons."
-                },
-                306: {
-                    "code": 306,
-                    "message": "미디어를 로드 할 수 없습니다. 서버 또는 네트워크 오류 또는 지원되지 않는 형식으로 인해 발생할 수 있습니다.",
-                    "reason": "The server cannot or will not process the request."
-                },
-                307: {
-                    "code": 307,
-                    "message": "미디어를 로드 할 수 없습니다. 서버 또는 네트워크 오류 또는 지원되지 않는 형식으로 인해 발생할 수 있습니다.",
-                    "reason": "The server refused the request."
-                },
-                308: {
-                    "code": 308,
-                    "message": "미디어를 로드 할 수 없습니다. 서버 또는 네트워크 오류 또는 지원되지 않는 형식으로 인해 발생할 수 있습니다.",
-                    "reason": "The server do not accept the request."
-                },
-                501: {
-                    "code": 501,
-                    "message": "웹소켓 연결 실패",
-                    "reason": "WebSocket connection failed."
-                },
-                502: {
-                    "code": 502,
-                    "message": "저지연(OME) 서버와 연결에 실패했습니다.",
-                    "reason": "WebRTC addIceCandidate failed."
-                },
-                503: {
-                    "code": 503,
-                    "message": "저지연(OME) 서버와 연결에 실패했습니다.",
-                    "reason": "WebRTC setRemoteDescription failed."
-                },
-                504: {
-                    "code": 504,
-                    "message": "저지연(OME) 서버와 연결에 실패했습니다.",
-                    "reason": "WebRTC peer createOffer failed."
-                },
-                505: {
-                    "code": 505,
-                    "message": "저지연(OME) 서버와 연결에 실패했습니다.",
-                    "reason": "WebRTC setLocalDescription failed."
-                },
-                506: {
-                    "code": 506,
-                    "message": "저지연(OME) 서버와 연결에 실패했습니다.",
-                    "reason": "WebRTC internal error."
-                },
-                510: {
-                    "code": 510,
-                    "message": "네트워크 연결이 불안정합니다. 네트워크 연결을 확인하십시오.",
-                    "reason": "Network is slow."
-                },
-                511: {
-                    "code": 511,
-                    "message": "저지연(OME) 서버와 연결에 실패했습니다.",
-                    "reason": "Unexpected end of connection."
-                },
-                512: {
-                    "code": 512,
-                    "message": "저지연(OME) 서버와 연결에 실패했습니다.",
-                    "reason": "Connection timeout."
-                }
-            }
-        }
-    },
-    {
-        "lang" : "pl",
-        "ui" : {
-            "context" : "O OvenPlayer",
-            "controls" : {
-                "live" : "Transmisja na żywo",
-                "low_latency_live" : "Transmisja z niskim opóźnieniem",
-                "low_latency_p2p" : "Transmisja z niskim opóźnieniem P2P",
-            },
-            "playlist" : "Playlista",
-            "setting" : {
-                "title" : "Ustawienia",
-                "speed" : "Prędkość",
-                "speedUnit" : "x",
-                "source" : "Źrodło",
-                "quality" : "Jakość",
-                "audioTrack" : "Audio",
-                "caption" : "Podtytuł",
-                "display" : "Wyświetlacz",
-                "zoom" : "Zoom"
-            }
+        101: {
+          "code": 101,
+          "message": "Can not load due to playable media not found.",
+          "reason": "Can not load due to playable media not found."
         },
-        "api" : {
-            "message" : {
-                "muted_play" : "Naciśnij tutaj, aby aktywować dźwięk"
-            },
-            "error": {
-                100: {
-                    "code": 100,
-                    "message": "Nie można załadować z nieznanego powodu.",
-                    "reason": "Can not load due to unknown reasons."
-                },
-                101: {
-                    "code": 101,
-                    "message": "Nie można załadować, ponieważ nie znaleziono multimediów, który można odtworzyć.",
-                    "reason": "Can not load due to playable media not found."
-                },
-                102: {
-                    "code": 102,
-                    "message": "Flash fetching process aborted. </br><a href='http://www.adobe.com/go/getflashplayer' target='_self'><img src='http://www.adobe.com/images/shared/download_buttons/get_flash_player.gif' alt='Get Adobe Flash player'></a>",
-                    "reason": "It looks like not found swf or your environment is localhost."
-                },
-                103: {
-                    "code": 103,
-                    "message": "Nie można załadować, ponieważ wersja dash.js jest za stara.",
-                    "reason": "dash.js version is old."
-                },
-                104: {
-                    "code": 104,
-                    "message": "Can not load due to google ima for Ads. ",
-                    "reason": "Please check the google ima library."
-                },
-                105: {
-                    "code": 105,
-                    "message": "Nie można załadować, nie znaleziono DASH.",
-                    "reason": "Error initializing DASH."
-                },
-                106: {
-                    "code": 106,
-                    "message": "Nie można załadować, nie znaleziono hlsjs.",
-                    "reason": "Error initializing HLS"
-                },
-                300: {
-                    "code": 300,
-                    "message": "Nie można odtworzyć z nieznanego powodu.",
-                    "reason": "Can not play due to unknown reasons."
-                },
-                301: {
-                    "code": 301,
-                    "message": "Proces pobierania przerwany przez użytkownika.",
-                    "reason": "Fetching process aborted by user."
-                },
-                302: {
-                    "code": 302,
-                    "message": "Nie udało się pobrać niektórych multimediów z powodu błędu sieci.",
-                    "reason": "Error occurred when downloading."
-                },
-                303: {
-                    "code": 303,
-                    "message": "Nie udało się załadować niektórych multimediów. Może być to spowodowane problemem z serwerem, siecią lub niewspieranym formatem.",
-                    "reason": "Error occurred when decoding."
-                },
-                304: {
-                    "code": 304,
-                    "message": "Odtwarzanie zostało anulowane. Wygląda na to, że plik jest uszkodzony lub Twoja przeglądarka nie obsługuje tego pliku.",
-                    "reason": "Media playback not supported."
-                },
-                305: {
-                    "code": 305,
-                    "message": "Nie można wczytać napisów z nieznanego powodu.",
-                    "reason": "Can not load captions due to unknown reasons."
-                },
-                306: {
-                    "code": 306,
-                    "message": "Nie udało się załadować niektórych multimediów. Może być to spowodowane problemem z serwerem, siecią lub niewspieranym formatem.",
-                    "reason": "The server cannot or will not process the request."
-                },
-                307: {
-                    "code": 307,
-                    "message": "Nie udało się załadować niektórych multimediów. Może być to spowodowane problemem z serwerem, siecią lub niewspieranym formatem.",
-                    "reason": "The server refused the request."
-                },
-                308: {
-                    "code": 308,
-                    "message": "Nie udało się załadować niektórych multimediów. Może być to spowodowane problemem z serwerem, siecią lub niewspieranym formatem.",
-                    "reason": "The server do not accept the request."
-                },
-                501: {
-                    "code": 501,
-                    "message": "Połączenie z serwerem niskiego opóźnienia (OME) nie powiodło się.",
-                    "reason": "WebSocket connection failed."
-                },
-                502: {
-                    "code": 502,
-                    "message": "Połączenie z serwerem niskiego opóźnienia (OME) nie powiodło się.",
-                    "reason": "WebRTC addIceCandidate failed."
-                },
-                503: {
-                    "code": 503,
-                    "message": "Połączenie z serwerem niskiego opóźnienia (OME) nie powiodło się.",
-                    "reason": "WebRTC setRemoteDescription failed."
-                },
-                504: {
-                    "code": 504,
-                    "message": "Połączenie z serwerem niskiego opóźnienia (OME) nie powiodło się.",
-                    "reason": "WebRTC peer createOffer failed."
-                },
-                505: {
-                    "code": 505,
-                    "message": "Połączenie z serwerem niskiego opóźnienia (OME) nie powiodło się.",
-                    "reason": "WebRTC setLocalDescription failed."
-                },
-                506: {
-                    "code": 506,
-                    "message": "Połączenie z serwerem niskiego opóźnienia (OME) nie powiodło się.",
-                    "reason": "WebRTC internal error."
-                },
-                510: {
-                    "code": 510,
-                    "message": "Połączenie sieciowe jest niestabilne. Sprawdź swoją sieć.",
-                    "reason": "Network is slow."
-                },
-                511: {
-                    "code": 511,
-                    "message": "Połączenie z serwerem niskiego opóźnienia (OME) nieoczekiwanie zakończone.",
-                    "reason": "Unexpected end of connection."
-                },
-                512: {
-                    "code": 512,
-                    "message": "Połączenie z serwerem niskiego opóźnienia (OME) nie powiodło się.",
-                    "reason": "Connection timeout."
-                }
-            }
+        102: {
+          "code": 102,
+          "message": "Flash fetching process aborted. </br><a href='http://www.adobe.com/go/getflashplayer' target='_self'><img src='http://www.adobe.com/images/shared/download_buttons/get_flash_player.gif' alt='Get Adobe Flash player'></a>",
+          "reason": "It looks like not found swf or your environment is localhost."
+        },
+        103: {
+          "code": 103,
+          "message": "Can not load due to dash.js. Please use the latest dash.js.",
+          "reason": "dash.js version is old."
+        },
+        104: {
+          "code": 104,
+          "message": "Can not load due to google ima for Ads. ",
+          "reason": "Please check the google ima library."
+        },
+        105: {
+          "code": 105,
+          "message": "Error initializing DASH.",
+          "reason": "Error initializing DASH."
+        },
+        106: {
+          "code": 106,
+          "message": "Error initializing HLS.",
+          "reason": "Error initializing HLS."
+        },
+        107: {
+          "code": 107,
+          "message": "Error initializing DRM.",
+          "reason": "Error initializing DRM."
+        },
+        300: {
+          "code": 300,
+          "message": "Can not play due to unknown reasons.",
+          "reason": "Can not play due to unknown reasons."
+        },
+        301: {
+          "code": 301,
+          "message": "Fetching process aborted by user.",
+          "reason": "Fetching process aborted by user."
+        },
+        302: {
+          "code": 302,
+          "message": "Some of the media could not be downloaded due to a network error.",
+          "reason": "Error occurred when downloading."
+        },
+        303: {
+          "code": 303,
+          "message": "Unable to load media. This may be due to a server or network error, or due to an unsupported format.",
+          "reason": "Error occurred when decoding."
+        },
+        304: {
+          "code": 304,
+          "message": "Media playback has been canceled. It looks like your media is corrupted or your browser does not support the features your media uses.",
+          "reason": "Media playback not supported."
+        },
+        305: {
+          "code": 305,
+          "message": "Can not load captions due to unknown reasons.",
+          "reason": "Can not load captions due to unknown reasons."
+        },
+        306: {
+          "code": 306,
+          "message": "Unable to load media. This may be due to a server or network error, or due to an unsupported format.",
+          "reason": "The server cannot or will not process the request."
+        },
+        307: {
+          "code": 307,
+          "message": "Unable to load media. This may be due to a server or network error, or due to an unsupported format.",
+          "reason": "The server refused the request."
+        },
+        308: {
+          "code": 308,
+          "message": "Unable to load media. This may be due to a server or network error, or due to an unsupported format.",
+          "reason": "The server do not accept the request."
+        },
+        501: {
+          "code": 501,
+          "message": "Connection with low-latency(OME) server failed.",
+          "reason": "WebSocket connection failed."
+        },
+        502: {
+          "code": 502,
+          "message": "Connection with low-latency(OME) server failed.",
+          "reason": "WebRTC addIceCandidate failed."
+        },
+        503: {
+          "code": 503,
+          "message": "Connection with low-latency(OME) server failed.",
+          "reason": "WebRTC setRemoteDescription failed."
+        },
+        504: {
+          "code": 504,
+          "message": "Connection with low-latency(OME) server failed.",
+          "reason": "WebRTC peer createOffer failed."
+        },
+        505: {
+          "code": 505,
+          "message": "Connection with low-latency(OME) server failed.",
+          "reason": "WebRTC setLocalDescription failed."
+        },
+        506: {
+          "code": 506,
+          "message": "Connection with low-latency(OME) server failed.",
+          "reason": "WebRTC internal error."
+        },
+        510: {
+          "code": 510,
+          "message": "Network connection is unstable. Check the network connection.",
+          "reason": "Network is slow."
+        },
+        511: {
+          "code": 511,
+          "message": "Connection with low-latency(OME) terminated unexpectedly.",
+          "reason": "Unexpected end of connection."
+        },
+        512: {
+          "code": 512,
+          "message": "Connection with low-latency(OME) server failed.",
+          "reason": "Connection timeout."
         }
+      }
     }
+  },
+  {
+    "lang": "ko",
+    "ui": {
+      "context": "오븐플레이어에 관하여",
+      "controls": {
+        "live": "라이브",
+        "low_latency_live": "초저지연 라이브",
+        "low_latency_p2p": "초저지연 P2P",
+      },
+      "playlist": "플레이리스트",
+      "setting": {
+        "title": "설정",
+        "speed": "재생 속도",
+        "speedUnit": "x",
+        "source": "소스",
+        "quality": "품질",
+        "audioTrack": "오디오",
+        "caption": "자막",
+        "display": "표시",
+        "zoom" : "Zoom"
+      }
+    },
+    "api": {
+      "message": {
+        "muted_play": "눌러서 소리 켜기"
+      },
+      "error": {
+        100: {
+          "code": 100,
+          "message": "알 수 없는 이유로 로드 할 수 없습니다.",
+          "reason": "알 수 없는 이유로 로드 할 수 없습니다."
+        },
+        101: {
+          "code": 101,
+          "message": "지원되는 미디어를 찾지 못해 로드 할 수 없습니다.",
+          "reason": "Can not load due to playable media not found."
+        },
+        102: {
+          "code": 102,
+          "message": "플레시 로드가 중단 되었습니다. </br><a href='http://www.adobe.com/go/getflashplayer' target='_self'><img src='http://www.adobe.com/images/shared/download_buttons/get_flash_player.gif' alt='Get Adobe Flash player'></a>",
+          "reason": "It looks like not found swf or your environment is localhost."
+        },
+        103: {
+          "code": 103,
+          "message": "DashJS로 인해 로드 할 수 없습니다. 최신 dash.js를 사용해 주세요.",
+          "reason": "dash.js version is old."
+        },
+        104: {
+          "code": 104,
+          "message": "Google IMA 라이브러리가 없어 로드 할 수 없습니다.",
+          "reason": "Please check the google ima library."
+        },
+        105: {
+          "code": 105,
+          "message": "DASH 초기화 중 오류가 발생했습니다.",
+          "reason": "Error initializing DASH."
+        },
+        106: {
+          "code": 106,
+          "message": "HLS 초기화 중 오류가 발생했습니다.",
+          "reason": "Error initializing HLS."
+        },
+        107: {
+          "code": 107,
+          "message": "DRM 초기화 중 오류가 발생했습니다.",
+          "reason": "Error initializing DRM."
+        },
+        300: {
+          "code": 300,
+          "message": "알 수 없는 이유로 재생할 수 없습니다.",
+          "reason": "Can not play due to unknown reasons."
+        },
+        301: {
+          "code": 301,
+          "message": "사용자에 의한 프로세스 중단.",
+          "reason": "Fetching process aborted by user."
+        },
+        302: {
+          "code": 302,
+          "message": "네트워크 오류로 인해 일부 미디어를 다운로드 할 수 없습니다.",
+          "reason": "Error occurred when downloading."
+        },
+        303: {
+          "code": 303,
+          "message": "미디어를 로드 할 수 없습니다. 서버 또는 네트워크 오류 또는 지원되지 않는 형식으로 인해 발생할 수 있습니다.",
+          "reason": "Error occurred when decoding."
+        },
+        304: {
+          "code": 304,
+          "message": "미디어 재생이 취소되었습니다. 미디어가 손상되었거나 브라우저가 미디어에서 사용하는 기능을 지원하지 않는 것 같습니다.",
+          "reason": "Media playback not supported."
+        },
+        305: {
+          "code": 305,
+          "message": "알 수 없는 이유로 자막을 로드 할 수 없습니다.",
+          "reason": "Can not load captions due to unknown reasons."
+        },
+        306: {
+          "code": 306,
+          "message": "미디어를 로드 할 수 없습니다. 서버 또는 네트워크 오류 또는 지원되지 않는 형식으로 인해 발생할 수 있습니다.",
+          "reason": "The server cannot or will not process the request."
+        },
+        307: {
+          "code": 307,
+          "message": "미디어를 로드 할 수 없습니다. 서버 또는 네트워크 오류 또는 지원되지 않는 형식으로 인해 발생할 수 있습니다.",
+          "reason": "The server refused the request."
+        },
+        308: {
+          "code": 308,
+          "message": "미디어를 로드 할 수 없습니다. 서버 또는 네트워크 오류 또는 지원되지 않는 형식으로 인해 발생할 수 있습니다.",
+          "reason": "The server do not accept the request."
+        },
+        501: {
+          "code": 501,
+          "message": "웹소켓 연결 실패",
+          "reason": "WebSocket connection failed."
+        },
+        502: {
+          "code": 502,
+          "message": "저지연(OME) 서버와 연결에 실패했습니다.",
+          "reason": "WebRTC addIceCandidate failed."
+        },
+        503: {
+          "code": 503,
+          "message": "저지연(OME) 서버와 연결에 실패했습니다.",
+          "reason": "WebRTC setRemoteDescription failed."
+        },
+        504: {
+          "code": 504,
+          "message": "저지연(OME) 서버와 연결에 실패했습니다.",
+          "reason": "WebRTC peer createOffer failed."
+        },
+        505: {
+          "code": 505,
+          "message": "저지연(OME) 서버와 연결에 실패했습니다.",
+          "reason": "WebRTC setLocalDescription failed."
+        },
+        506: {
+          "code": 506,
+          "message": "저지연(OME) 서버와 연결에 실패했습니다.",
+          "reason": "WebRTC internal error."
+        },
+        510: {
+          "code": 510,
+          "message": "네트워크 연결이 불안정합니다. 네트워크 연결을 확인하십시오.",
+          "reason": "Network is slow."
+        },
+        511: {
+          "code": 511,
+          "message": "저지연(OME) 서버와 연결에 실패했습니다.",
+          "reason": "Unexpected end of connection."
+        },
+        512: {
+          "code": 512,
+          "message": "저지연(OME) 서버와 연결에 실패했습니다.",
+          "reason": "Connection timeout."
+        }
+      }
+    }
+  },
+  {
+    "lang": "pl",
+    "ui": {
+      "context": "O OvenPlayer",
+      "controls": {
+        "live": "Transmisja na żywo",
+        "low_latency_live": "Transmisja z niskim opóźnieniem",
+        "low_latency_p2p": "Transmisja z niskim opóźnieniem P2P",
+      },
+      "playlist": "Playlista",
+      "setting": {
+        "title": "Ustawienia",
+        "speed": "Prędkość",
+        "speedUnit": "x",
+        "source": "Źrodło",
+        "quality": "Jakość",
+        "audioTrack": "Audio",
+        "caption": "Podtytuł",
+        "display": "Wyświetlacz",
+        "zoom" : "Zoom"
+      }
+    },
+    "api": {
+      "message": {
+        "muted_play": "Naciśnij tutaj, aby aktywować dźwięk"
+      },
+      "error": {
+        100: {
+          "code": 100,
+          "message": "Nie można załadować z nieznanego powodu.",
+          "reason": "Can not load due to unknown reasons."
+        },
+        101: {
+          "code": 101,
+          "message": "Nie można załadować, ponieważ nie znaleziono multimediów, który można odtworzyć.",
+          "reason": "Can not load due to playable media not found."
+        },
+        102: {
+          "code": 102,
+          "message": "Flash fetching process aborted. </br><a href='http://www.adobe.com/go/getflashplayer' target='_self'><img src='http://www.adobe.com/images/shared/download_buttons/get_flash_player.gif' alt='Get Adobe Flash player'></a>",
+          "reason": "It looks like not found swf or your environment is localhost."
+        },
+        103: {
+          "code": 103,
+          "message": "Nie można załadować, ponieważ wersja dash.js jest za stara.",
+          "reason": "dash.js version is old."
+        },
+        104: {
+          "code": 104,
+          "message": "Can not load due to google ima for Ads. ",
+          "reason": "Please check the google ima library."
+        },
+        105: {
+          "code": 105,
+          "message": "Nie można załadować, nie znaleziono DASH.",
+          "reason": "Error initializing DASH."
+        },
+        106: {
+          "code": 106,
+          "message": "Nie można załadować, nie znaleziono hlsjs.",
+          "reason": "Error initializing HLS"
+        },
+        107: {
+          "code": 107,
+          "message": "Nie można załadować, nie znaleziono DRM.",
+          "reason": "Error initializing DRM"
+        },
+        300: {
+          "code": 300,
+          "message": "Nie można odtworzyć z nieznanego powodu.",
+          "reason": "Can not play due to unknown reasons."
+        },
+        301: {
+          "code": 301,
+          "message": "Proces pobierania przerwany przez użytkownika.",
+          "reason": "Fetching process aborted by user."
+        },
+        302: {
+          "code": 302,
+          "message": "Nie udało się pobrać niektórych multimediów z powodu błędu sieci.",
+          "reason": "Error occurred when downloading."
+        },
+        303: {
+          "code": 303,
+          "message": "Nie udało się załadować niektórych multimediów. Może być to spowodowane problemem z serwerem, siecią lub niewspieranym formatem.",
+          "reason": "Error occurred when decoding."
+        },
+        304: {
+          "code": 304,
+          "message": "Odtwarzanie zostało anulowane. Wygląda na to, że plik jest uszkodzony lub Twoja przeglądarka nie obsługuje tego pliku.",
+          "reason": "Media playback not supported."
+        },
+        305: {
+          "code": 305,
+          "message": "Nie można wczytać napisów z nieznanego powodu.",
+          "reason": "Can not load captions due to unknown reasons."
+        },
+        306: {
+          "code": 306,
+          "message": "Nie udało się załadować niektórych multimediów. Może być to spowodowane problemem z serwerem, siecią lub niewspieranym formatem.",
+          "reason": "The server cannot or will not process the request."
+        },
+        307: {
+          "code": 307,
+          "message": "Nie udało się załadować niektórych multimediów. Może być to spowodowane problemem z serwerem, siecią lub niewspieranym formatem.",
+          "reason": "The server refused the request."
+        },
+        308: {
+          "code": 308,
+          "message": "Nie udało się załadować niektórych multimediów. Może być to spowodowane problemem z serwerem, siecią lub niewspieranym formatem.",
+          "reason": "The server do not accept the request."
+        },
+        501: {
+          "code": 501,
+          "message": "Połączenie z serwerem niskiego opóźnienia (OME) nie powiodło się.",
+          "reason": "WebSocket connection failed."
+        },
+        502: {
+          "code": 502,
+          "message": "Połączenie z serwerem niskiego opóźnienia (OME) nie powiodło się.",
+          "reason": "WebRTC addIceCandidate failed."
+        },
+        503: {
+          "code": 503,
+          "message": "Połączenie z serwerem niskiego opóźnienia (OME) nie powiodło się.",
+          "reason": "WebRTC setRemoteDescription failed."
+        },
+        504: {
+          "code": 504,
+          "message": "Połączenie z serwerem niskiego opóźnienia (OME) nie powiodło się.",
+          "reason": "WebRTC peer createOffer failed."
+        },
+        505: {
+          "code": 505,
+          "message": "Połączenie z serwerem niskiego opóźnienia (OME) nie powiodło się.",
+          "reason": "WebRTC setLocalDescription failed."
+        },
+        506: {
+          "code": 506,
+          "message": "Połączenie z serwerem niskiego opóźnienia (OME) nie powiodło się.",
+          "reason": "WebRTC internal error."
+        },
+        510: {
+          "code": 510,
+          "message": "Połączenie sieciowe jest niestabilne. Sprawdź swoją sieć.",
+          "reason": "Network is slow."
+        },
+        511: {
+          "code": 511,
+          "message": "Połączenie z serwerem niskiego opóźnienia (OME) nieoczekiwanie zakończone.",
+          "reason": "Unexpected end of connection."
+        },
+        512: {
+          "code": 512,
+          "message": "Połączenie z serwerem niskiego opóźnienia (OME) nie powiodło się.",
+          "reason": "Connection timeout."
+        }
+      }
+    }
+  }
 ];
