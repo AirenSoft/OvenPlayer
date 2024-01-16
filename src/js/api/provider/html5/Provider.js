@@ -50,6 +50,7 @@ const Provider = function (spec, playerConfig, onExtendedLoad) {
 
     listener = EventsListener(elVideo, that, ads ? ads.videoEndedCallback : null, playerConfig);
     elVideo.playbackRate = elVideo.defaultPlaybackRate = playerConfig.getPlaybackRate();
+    spec.zoomFactor = 1.0;
 
     const _load = (lastPlayPosition) => {
 
@@ -381,7 +382,12 @@ const Provider = function (spec, playerConfig, onExtendedLoad) {
         }
         return elVideo.playbackRate;
     };
-
+    that.getZoomFactor = () => {
+        return spec.zoomFactor;
+    };
+    that.setZoomFactor = (zoomFactor) => {
+        return spec.zoomFactor = zoomFactor;
+    };
     that.getSources = () => {
         if (!elVideo) {
             return [];

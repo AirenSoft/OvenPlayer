@@ -15,7 +15,8 @@ let PANEL_TITLE = {
     "quality": "Quality",
     "audioTrack": "Audio",
     "caption": "Caption",
-    "display": "Display"
+    "display": "Display",
+    "zoom" : "Zoom"
 };
 const SettingButton = function ($container, api) {
     let panelManager = PanelManager();
@@ -51,6 +52,8 @@ const SettingButton = function ($container, api) {
 
         let framerate = api.getFramerate();
 
+        let allowZoom = playerConfig.showZoomSettings;
+
         if (currentSource) {
             let body = {
                 title: PANEL_TITLE.speed,
@@ -58,6 +61,16 @@ const SettingButton = function ($container, api) {
                 description: api.getPlaybackRate() + PANEL_TITLE.speedUnit,
                 panelType: "speed",
                 hasNext: true
+            };
+            panel.body.push(body);
+        }
+        if (allowZoom) {
+            let body = {
+                title : PANEL_TITLE.zoom,
+                value :  Math.round(api.getZoomFactor() * 100) + "%",
+                description :  Math.round(api.getZoomFactor() * 100) + "%",
+                panelType : "zoom",
+                hasNext : true
             };
             panel.body.push(body);
         }

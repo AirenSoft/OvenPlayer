@@ -7,6 +7,7 @@ import LA$ from 'utils/likeA$';
 import _ from "utils/underscore";
 import sizeHumanizer from "utils/sizeHumanizer";
 import SpeedPanel from "view/components/controls/settingPanel/speedPanel";
+import ZoomPanel from "view/components/controls/settingPanel/zoomPanel";
 import SourcePanel from "view/components/controls/settingPanel/sourcePanel";
 import QualityPanel from "view/components/controls/settingPanel/qualityPanel";
 import AudioTrackPanel from "view/components/controls/settingPanel/audioTrackPanel";
@@ -19,6 +20,7 @@ import {AUDIO_TRACK_CHANGED} from "../../../../api/constants";
 
 let PANEL_TITLE = {
     "speed": "Speed",
+    "zoom": "Zoom",
     "speedUnit": "x",
     "source": "Source",
     "quality": "Quality",
@@ -63,6 +65,32 @@ const Panels = function ($container, api, data) {
                 };
                 panel.body.push(body);
             }
+
+        } else if (panelType === "zoom") {
+            let bodyIn = {
+                title : "+5%",
+                isCheck : false,
+                value : 0.05,
+                description : 0.05,
+                panelType : panelType
+            };
+            let body = {
+                title : "100%",
+                isCheck : false,
+                value : 0,
+                description : 1.0,
+                panelType : panelType
+            };
+            let bodyOut = {
+                title : "-5%",
+                isCheck : false,
+                value : -0.05,
+                description : -0.05,
+                panelType : panelType
+            };
+            panel.body.push(bodyIn);
+            panel.body.push(body);
+            panel.body.push(bodyOut);
 
         } else if (panelType === "source") {
             let sources = api.getSources();
@@ -203,6 +231,8 @@ const Panels = function ($container, api, data) {
             let panel = null;
             if (panelType === "speed") {
                 panel = SpeedPanel($container, api, extractSubPanelData(api, panelType));
+            } else if (panelType === "zoom") {
+                panel = ZoomPanel($container, api, extractSubPanelData(api, panelType));
             } else if (panelType === "source") {
                 panel = SourcePanel($container, api, extractSubPanelData(api, panelType));
             } else if (panelType === "quality") {
