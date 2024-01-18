@@ -2,384 +2,380 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 
-    <title>OvenPlayer</title>
-    <link rel="icon" href="./assets/images/00_OvenPlayer_Favicon.svg">
+  <title>OvenPlayer</title>
+  <link rel="icon" href="./assets/images/00_OvenPlayer_Favicon.svg">
 
-    <!-- Font Awesome -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet"/>
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet"/>
-    <!-- MDB -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.10.0/mdb.min.css" rel="stylesheet"/>
-    <!-- highlightjs -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.3.1/styles/github.css">
+  <!-- Font Awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet" />
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
+  <!-- MDB -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.10.0/mdb.min.css" rel="stylesheet" />
+  <!-- highlightjs -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.3.1/styles/github.css">
 
-    <style>
-        .navbar-toggler-icon {
-            background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Cpath stroke='rgba(0, 0, 0, 0.55)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E") !important;
-        }
+  <style>
+    .navbar-toggler-icon {
+      background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Cpath stroke='rgba(0, 0, 0, 0.55)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E") !important;
+    }
 
-        .playerWrapper {
-            position: relative;
-            width: 100%;
-            height: 0;
-            padding-bottom: 56.25%;
-            background-color: #000;
-        }
+    .playerWrapper {
+      position: relative;
+      width: 100%;
+      height: 0;
+      padding-bottom: 56.25%;
+      background-color: #000;
+    }
 
-        .previewPlayer {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-        }
+    .previewPlayer {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+    }
 
-        fieldset {
-            padding-left: 0.5rem;
-            padding-bottom: 0.5rem;
-            font-size: 0.85rem;
-        }
+    fieldset {
+      padding-left: 0.5rem;
+      padding-bottom: 0.5rem;
+      font-size: 0.85rem;
+    }
 
-        .list-group-item {
-            padding: 0.5rem 1rem;
-        }
+    .list-group-item {
+      padding: 0.5rem 1rem;
+    }
 
-        .list-group-item h6 {
-            margin-top: 0.5rem;
-        }
+    .list-group-item h6 {
+      margin-top: 0.5rem;
+    }
 
-        footer {
-            font-size: 0.85rem;
-        }
-    </style>
+    footer {
+      font-size: 0.85rem;
+    }
+  </style>
 
-    <script>
-        if (window.location.href.indexOf('localhost') < 0 && window.location.protocol !== 'https:') {
-            location.href = location.href.replace('http://', 'https://');
-        }
-    </script>
+  <script>
+    if (window.location.href.indexOf('localhost') < 0 && window.location.protocol !== 'https:') {
+      location.href = location.href.replace('http://', 'https://');
+    }
+  </script>
 
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-40491361-8"></script>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-40491361-8"></script>
 
-    <script>
-        window.dataLayer = window.dataLayer || [];
+  <script>
+    window.dataLayer = window.dataLayer || [];
 
-        function gtag() {
-            dataLayer.push(arguments);
-        }
+    function gtag() {
+      dataLayer.push(arguments);
+    }
 
-        gtag('js', new Date());
+    gtag('js', new Date());
 
-        gtag('config', 'UA-40491361-8');
-    </script>
+    gtag('config', 'UA-40491361-8');
+  </script>
 
 </head>
 
 <body>
-<nav class="navbar navbar-expand-md navbar-light bg-light">
+  <nav class="navbar navbar-expand-md navbar-light bg-light">
     <div class="container-lg">
-        <a class="navbar-brand" href="/">OVENPLAYER</a>
-        <button class="navbar-toggler" type="button" data-mdb-toggle="collapse" data-mdb-target="#navbarNav"
-                aria-controls="navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
+      <a class="navbar-brand" href="/">OVENPLAYER</a>
+      <button class="navbar-toggler" type="button" data-mdb-toggle="collapse" data-mdb-target="#navbarNav"
+        aria-controls="navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
 
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item">
-                    <a class="nav-link active" href="./demo.html">Test Player</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="https://space.ovenplayer.com" target="_blank">Demo</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="https://github.com/AirenSoft/OvenPlayer" target="_blank">GitHub</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="https://airensoft.gitbook.io/ovenplayer/" target="_blank">Docs</a>
-                </li>
-            </ul>
-        </div>
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link active" href="./demo.html">Test Player</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="https://space.ovenplayer.com" target="_blank">Demo</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="https://github.com/AirenSoft/OvenPlayer" target="_blank">GitHub</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="https://airensoft.gitbook.io/ovenplayer/" target="_blank">Docs</a>
+          </li>
+        </ul>
+      </div>
     </div>
-</nav>
-<div class="container-lg mt-4">
+  </nav>
+  <div class="container-lg mt-4">
     <ul class="nav nav-pills mb-3">
-        <li class="nav-item">
-            <a class="nav-link" href="demo.html" target="_blank">Player</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link active position-relative" href="demo_input.html" target="_blank">
-                    <span>
-                        WebRTC Input
-                    </span>
-                <span
-                        class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-info">Beta</span>
-            </a>
-        </li>
+      <li class="nav-item">
+        <a class="nav-link" href="demo.html" target="_blank">Player</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link active position-relative" href="demo_input.html" target="_blank">
+          <span>
+            WebRTC Input
+          </span>
+          <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-info">Beta</span>
+        </a>
+      </li>
     </ul>
 
     <div class="row g-3 mb-3">
-        <div class="col-12">
-            <div class="input-group">
-                <div class="form-outline flex-grow-1">
-                    <input type="text" id="webRtcUrlInput" class="form-control bg-white"/>
-                    <label class="form-label" for="webRtcUrlInput">WebRTC input URL</label>
+      <div class="col-12">
+        <div class="input-group">
+          <div class="form-outline flex-grow-1">
+            <input type="text" id="webRtcUrlInput" class="form-control bg-white" />
+            <label class="form-label" for="webRtcUrlInput">WebRTC input URL</label>
+          </div>
+          <button id="streamingButton" class="btn btn-primary px-2 px-md-4" type="button">
+            Start
+          </button>
+        </div>
+      </div>
+
+      <div class="col-12">
+        Don't have OvenMediaEngine installed? Try our OvenMediaEngine for demo.
+        <a id="useDemoOME" href="#">Try it out</a>
+      </div>
+
+      <div class="col-lg-6">
+        <div class="playerWrapper rounded overflow-hidden">
+          <video controls id="previewPlayer" class="previewPlayer"></video>
+        </div>
+      </div>
+
+      <div class="col-lg-6">
+        <ul class="list-group">
+          <li class="list-group-item bg-light hstack">
+            <h5 class="mb-0 fs-6">Stream information</h5>
+            <small class="ms-auto">
+              OvenLiveKit
+              <span id="ovenLiveKitVersion" class="badge badge-info align-middle ms-1"></span>
+            </small>
+          </li>
+          <li class="list-group-item">
+            <div class="row">
+              <div class="col">
+                <h6>Video</h6>
+                <fieldset>
+                  <div class="mb-2">
+                    <span>Resolution
+                      <span class="badge badge-pill badge-info mr-1" data-mdb-toggle="tooltip"
+                        title="This may be different from the resolution you set. Because the browser will get the ideal resolution from the input device.">i</span>:
+                    </span>
+                    <span id="videoResolutionSpan" class="mr-2 align-middle">-</span>
+                  </div>
+                  <div class="mb-2">
+                    <span>Framerate: </span>
+                    <span id="videoFrameRateSpan" class="mr-2">-</span>
+                  </div>
+                  <div class="mb-2">
+                    <span>Bitrate: </span>
+                    <span id="bitrateSpan" class="mr-2">-</span>
+                  </div>
+
+                </fieldset>
+
+                <h6>Connection</h6>
+                <fieldset>
+                  <div class="mb-2">
+                    <span>ICE state: </span>
+                    <span id="iceStateSpan" class="mr-2">-</span>
+                  </div>
+                </fieldset>
+
+                <div class="col-12">
+                  <small id="errorText" class="text-danger"></small>
                 </div>
-                <button id="streamingButton" class="btn btn-primary px-2 px-md-4" type="button">
-                    Start
-                </button>
+              </div>
             </div>
-        </div>
+          </li>
+        </ul>
 
-        <div class="col-12">
-            Don't have OvenMediaEngine installed? Try our OvenMediaEngine for demo.
-            <a id="useDemoOME" href="#">Try it out</a>
+        <div id="testPlaybackButtonArea" class="mt-2" style="display: none;">
+          <button id="playStreamButton" class="btn btn-info w-100">Play stream with test player</button>
         </div>
+      </div>
 
-        <div class="col-lg-6">
-            <div class="playerWrapper rounded overflow-hidden">
-                <video controls id="previewPlayer" class="previewPlayer"></video>
+      <div class="col-12">
+        <ul class="list-group">
+          <li class="list-group-item bg-light">
+            <h5 class="mb-0 fs-6">Input stream settings</h5>
+          </li>
+          <li class="list-group-item">
+            <div class="row">
+              <div class="col-lg-6 border-start border-2 mb-3 mb-lg-0">
+                <h6>Video settings</h6>
+                <fieldset>
+                  <label for="videoSourceSelect">Device</label>
+                  <select name="" id="videoSourceSelect" class="form-control constraintSelect mb-2">
+                  </select>
+
+                  <label for="videoResolutionSelect">Resolution</label>
+                  <select id="videoResolutionSelect" class="form-control constraintSelect mb-2">
+                    <option selected value="">Not Set</option>
+                    <option value="fhd">Full HD (1920x1080)</option>
+                    <option value="hd">HD (1280x720)</option>
+                    <option value="vga">VGA (640x480)</option>
+                  </select>
+
+                  <label for="videoBitrateInput">Bitrate limit (kbps)</label>
+                  <input id="videoBitrateInput" type="number" class="form-control streamingConfigSelect mb-2"
+                    placeholder="Unlimited">
+
+                  <label for="videoFrameInput">Frame rate</label>
+                  <input id="videoFrameInput" type="number" class="form-control constraintSelect mb-2"
+                    placeholder="Not Set">
+
+                  <label for="videoPreferredCodecSelect">Preferred video codec</label>
+                  <select id="videoPreferredCodecSelect" class="form-control streamingConfigSelect mb-2">
+                    <option selected value="">Not Set</option>
+                    <option value="H264">H264</option>
+                    <option value="VP8">VP8</option>
+                  </select>
+                </fieldset>
+              </div>
+              <div class="col-lg-6 border-start border-2 mb-3 mb-lg-0">
+                <h6>Audio settings</h6>
+                <fieldset>
+                  <div id="audioSourceSelectArea">
+                    <label for="audioSourceSelect">Device</label>
+                    <select class="form-control constraintSelect" id="audioSourceSelect">
+                      <option selected>Choose...</option>
+                    </select>
+                  </div>
+                </fieldset>
+              </div>
             </div>
-        </div>
 
-        <div class="col-lg-6">
-            <ul class="list-group">
-                <li class="list-group-item bg-light hstack">
-                    <h5 class="mb-0 fs-6">Stream information</h5>
-                    <small class="ms-auto">
-                        OvenLiveKit
-                        <span id="ovenLiveKitVersion" class="badge badge-info align-middle ms-1"></span>
-                    </small>
-                </li>
-                <li class="list-group-item">
-                    <div class="row">
-                        <div class="col">
-                            <h6>Video</h6>
-                            <fieldset>
-                                <div class="mb-2">
-                                        <span>Resolution
-                                            <span class="badge badge-pill badge-info mr-1" data-mdb-toggle="tooltip"
-                                                  title="This may be different from the resolution you set. Because the browser will get the ideal resolution from the input device.">i</span>:
-                                        </span>
-                                    <span id="videoResolutionSpan" class="mr-2 align-middle">-</span>
-                                </div>
-                                <div class="mb-2">
-                                    <span>Framerate: </span>
-                                    <span id="videoFrameRateSpan" class="mr-2">-</span>
-                                </div>
-                                <div class="mb-2">
-                                    <span>Bitrate: </span>
-                                    <span id="bitrateSpan" class="mr-2">-</span>
-                                </div>
-
-                            </fieldset>
-
-                            <h6>Connection</h6>
-                            <fieldset>
-                                <div class="mb-2">
-                                    <span>ICE state: </span>
-                                    <span id="iceStateSpan" class="mr-2">-</span>
-                                </div>
-                            </fieldset>
-
-                            <div class="col-12">
-                                <small id="errorText" class="text-danger"></small>
-                            </div>
-                        </div>
-                    </div>
-                </li>
-            </ul>
-
-            <div id="testPlaybackButtonArea" class="mt-2" style="display: none;">
-                <button id="playStreamButton" class="btn btn-info w-100">Play stream with test player</button>
-            </div>
-        </div>
-
-        <div class="col-12">
-            <ul class="list-group">
-                <li class="list-group-item bg-light">
-                    <h5 class="mb-0 fs-6">Input stream settings</h5>
-                </li>
-                <li class="list-group-item">
-                    <div class="row">
-                        <div class="col-lg-6 border-start border-2 mb-3 mb-lg-0">
-                            <h6>Video settings</h6>
-                            <fieldset>
-                                <label for="videoSourceSelect">Device</label>
-                                <select name="" id="videoSourceSelect" class="form-control constraintSelect mb-2">
-                                </select>
-
-                                <label for="videoResolutionSelect">Resolution</label>
-                                <select id="videoResolutionSelect" class="form-control constraintSelect mb-2">
-                                    <option selected value="">Not Set</option>
-                                    <option value="fhd">Full HD (1920x1080)</option>
-                                    <option value="hd">HD (1280x720)</option>
-                                    <option value="vga">VGA (640x480)</option>
-                                </select>
-
-                                <label for="videoBitrateInput">Bitrate limit (kbps)</label>
-                                <input id="videoBitrateInput" type="number"
-                                       class="form-control streamingConfigSelect mb-2" placeholder="Unlimited">
-
-                                <label for="videoFrameInput">Frame rate</label>
-                                <input id="videoFrameInput" type="number" class="form-control constraintSelect mb-2"
-                                       placeholder="Not Set">
-
-                                <label for="videoPreferredCodecSelect">Preferred video codec</label>
-                                <select id="videoPreferredCodecSelect" class="form-control streamingConfigSelect mb-2">
-                                    <option selected value="">Not Set</option>
-                                    <option value="H264">H264</option>
-                                    <option value="VP8">VP8</option>
-                                </select>
-                            </fieldset>
-                        </div>
-                        <div class="col-lg-6 border-start border-2 mb-3 mb-lg-0">
-                            <h6>Audio settings</h6>
-                            <fieldset>
-                                <div id="audioSourceSelectArea">
-                                    <label for="audioSourceSelect">Device</label>
-                                    <select class="form-control constraintSelect" id="audioSourceSelect">
-                                        <option selected>Choose...</option>
-                                    </select>
-                                </div>
-                            </fieldset>
-                        </div>
-                    </div>
-
-                </li>
-            </ul>
-        </div>
+          </li>
+        </ul>
+      </div>
     </div>
 
-</div>
-<div class="bg-light border-top mt-5">
+  </div>
+  <div class="bg-light border-top mt-5">
     <div class="container-lg mt-3">
-        <footer class="text-center text-lg-start">
-            <section class="">
-                <div class="row">
-                    <div class="col-md-5 col-lg-5 col-xl-5 mx-auto mt-3">
-                        <h6 class="text-uppercase mb-4 font-weight-bold">
-                            AirenSoft
-                        </h6>
-                        <p class="lead">
-                            Media Technology Expert Group
-                        </p>
-                        <p>
-                            Our mission is to build a powerful media world by making it easier for everyone to use
-                            all the complex and demanding media technologies of the world.
-                        </p>
-                    </div>
+      <footer class="text-center text-lg-start">
+        <section class="">
+          <div class="row">
+            <div class="col-md-5 col-lg-5 col-xl-5 mx-auto mt-3">
+              <h6 class="text-uppercase mb-4 font-weight-bold">
+                AirenSoft
+              </h6>
+              <p class="lead">
+                Media Technology Expert Group
+              </p>
+              <p>
+                Our mission is to build a powerful media world by making it easier for everyone to use
+                all the complex and demanding media technologies of the world.
+              </p>
+            </div>
 
-                    <hr class="w-100 clearfix d-lg-none"/>
+            <hr class="w-100 clearfix d-lg-none" />
 
-                    <div class="col-md-5 col-lg-2 col-xl-2 mx-auto mt-3">
-                        <h6 class="text-uppercase mb-4 font-weight-bold">OPEN SOURCE PROJECTS</h6>
-                        <p>
-                            <a class="" target="_blank"
-                               href="https://github.com/AirenSoft/OvenMediaEngine">OvenMediaEngine</a>
-                        </p>
-                        <p>
-                            <a class="" target="_blank"
-                               href="https://github.com/AirenSoft/OvenPlayer">OvenPlayer</a>
-                        </p>
-                        <p>
-                            <a class="" target="_blank"
-                               href="https://github.com/AirenSoft/OvenLiveKit-Web">OvenLiveKit-Web</a>
-                        </p>
-                        <p>
-                            <a class="" target="_blank" href="https://github.com/AirenSoft/OvenSpace">OvenSpace</a>
-                        </p>
-                    </div>
+            <div class="col-md-5 col-lg-2 col-xl-2 mx-auto mt-3">
+              <h6 class="text-uppercase mb-4 font-weight-bold">OPEN SOURCE PROJECTS</h6>
+              <p>
+                <a class="" target="_blank" href="https://github.com/AirenSoft/OvenMediaEngine">OvenMediaEngine</a>
+              </p>
+              <p>
+                <a class="" target="_blank" href="https://github.com/AirenSoft/OvenPlayer">OvenPlayer</a>
+              </p>
+              <p>
+                <a class="" target="_blank" href="https://github.com/AirenSoft/OvenLiveKit-Web">OvenLiveKit-Web</a>
+              </p>
+              <p>
+                <a class="" target="_blank" href="https://github.com/AirenSoft/OvenSpace">OvenSpace</a>
+              </p>
+            </div>
 
-                    <hr class="w-100 clearfix d-lg-none"/>
+            <hr class="w-100 clearfix d-lg-none" />
 
-                    <div class="col-md-5 col-lg-3 col-xl-3 mx-auto mt-3">
-                        <h6 class="text-uppercase mb-4 font-weight-bold">Contact</h6>
-                        <p><i class="fas fa-home mr-3"></i> #1203, Twenty First Valley, 157, Yangpyeong-ro,
-                            Yeongdeungpo-gu, Seoul, 07207 Republic of Korea</p>
-                        <p><i class="fas fa-envelope mr-3"></i> contact@airensoft.com</p>
-                        <p><i class="fas fa-phone mr-3"></i> +82-2-6378-5227</p>
-                    </div>
-                </div>
+            <div class="col-md-5 col-lg-3 col-xl-3 mx-auto mt-3">
+              <h6 class="text-uppercase mb-4 font-weight-bold">Contact</h6>
+              <p><i class="fas fa-home mr-3"></i> #1203, Twenty First Valley, 157, Yangpyeong-ro,
+                Yeongdeungpo-gu, Seoul, 07207 Republic of Korea</p>
+              <p><i class="fas fa-envelope mr-3"></i> contact@airensoft.com</p>
+              <p><i class="fas fa-phone mr-3"></i> +82-2-6378-5227</p>
+            </div>
+          </div>
 
-            </section>
+        </section>
 
-            <hr class="my-3">
+        <hr class="my-3">
 
-            <section class="p-3 pt-0">
-                <div class="row d-flex align-items-center">
-                    <div class="col-md-7 col-lg-8 text-center text-md-start">
-                        <div class="p-3">
-                            © 2022 Copyright:
-                            <a class="" href="https://www.airensoft.com">AirenSoft</a>
-                            Co., Ltd. All rights reserved.
-                        </div>
-                    </div>
+        <section class="p-3 pt-0">
+          <div class="row d-flex align-items-center">
+            <div class="col-md-7 col-lg-8 text-center text-md-start">
+              <div class="p-3">
+                © Copyright:
+                <a class="" href="https://www.airensoft.com">AirenSoft</a>
+                Co., Ltd. All rights reserved.
+              </div>
+            </div>
 
-                    <div class="col-md-5 col-lg-4 ml-lg-0 text-center text-md-end">
-                        <!-- Facebook -->
-                        <a class="btn btn-floating m-1" class="" role="button" target="_blank"
-                           href="https://www.facebook.com/airensoft/"><i class="fab fa-facebook-f"></i></a>
+            <div class="col-md-5 col-lg-4 ml-lg-0 text-center text-md-end">
+              <!-- Facebook -->
+              <a class="btn btn-floating m-1" class="" role="button" target="_blank"
+                href="https://www.facebook.com/airensoft/"><i class="fab fa-facebook-f"></i></a>
 
-                        <!-- Twitter -->
-                        <a class="btn btn-floating m-1" class="" role="button" target="_blank"
-                           href="https://twitter.com/AirenSoft"><i class="fab fa-twitter"></i></a>
+              <!-- Twitter -->
+              <a class="btn btn-floating m-1" class="" role="button" target="_blank"
+                href="https://twitter.com/AirenSoft"><i class="fab fa-twitter"></i></a>
 
-                        <!-- Instagram -->
-                        <a class="btn btn-floating m-1" class="" role="button" target="_blank"
-                           href="https://www.instagram.com/airensoft"><i class="fab fa-instagram"></i></a>
-                    </div>
-                </div>
-            </section>
-        </footer>
+              <!-- Instagram -->
+              <a class="btn btn-floating m-1" class="" role="button" target="_blank"
+                href="https://www.instagram.com/airensoft"><i class="fab fa-instagram"></i></a>
+            </div>
+          </div>
+        </section>
+      </footer>
     </div>
-</div>
+  </div>
 
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.10.0/mdb.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/underscore@1.12.0/underscore-min.js"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.slim.min.js"
-        integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/ovenlivekit@1.1.0/dist/OvenLiveKit.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.10.0/mdb.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/underscore@1.12.0/underscore-min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js"
+    integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/ovenlivekit@1.1.0/dist/OvenLiveKit.min.js"></script>
 
-<script>
+  <script>
 
     let allDevices = null;
 
     let input = null;
 
     const userResolutions = {
-        vga: {
-            // width: {exact: 640}, height: {exact: 480}
-            // width: { min: 0, ideal: 640}, height: { min: 0, ideal: 480 }
-            width: {ideal: 640}, height: {ideal: 480}
-        },
-        hd: {
-            // width: {exact: 1280}, height: {exact: 720}
-            // width: { min: 640, ideal: 1280}, height: { min: 480, ideal: 720 }
-            width: {ideal: 1280}, height: {ideal: 720}
-        },
-        fhd: {
-            // width: {exact: 1920}, height: {exact: 1080}
-            // width: { min: 1280, ideal: 1920}, height: { min: 720, ideal: 1080 }
-            width: {ideal: 1920}, height: {ideal: 1080}
-        }
+      vga: {
+        // width: {exact: 640}, height: {exact: 480}
+        // width: { min: 0, ideal: 640}, height: { min: 0, ideal: 480 }
+        width: { ideal: 640 }, height: { ideal: 480 }
+      },
+      hd: {
+        // width: {exact: 1280}, height: {exact: 720}
+        // width: { min: 640, ideal: 1280}, height: { min: 480, ideal: 720 }
+        width: { ideal: 1280 }, height: { ideal: 720 }
+      },
+      fhd: {
+        // width: {exact: 1920}, height: {exact: 1080}
+        // width: { min: 1280, ideal: 1920}, height: { min: 720, ideal: 1080 }
+        width: { ideal: 1920 }, height: { ideal: 1080 }
+      }
     };
 
     const displayResolutions = {
-        vga: {
-            width: 640, height: 480
-        },
-        hd: {
-            width: 1280, height: 720
-        },
-        fhd: {
-            width: 1920, height: 1080
-        }
+      vga: {
+        width: 640, height: 480
+      },
+      hd: {
+        width: 1280, height: 720
+      },
+      fhd: {
+        width: 1920, height: 1080
+      }
     };
 
     let streamingStarted = false;
@@ -418,66 +414,66 @@
     ovenLiveKitVersion.text(OvenLiveKit.getVersion());
 
     if (savedWebRtcUrl) {
-        webRtcUrlInput.val(savedWebRtcUrl);
+      webRtcUrlInput.val(savedWebRtcUrl);
     }
 
     webRtcUrlInput.on('change', function () {
-        localStorage.setItem('savedWebRtcUrl', $(this).val());
+      localStorage.setItem('savedWebRtcUrl', $(this).val());
     });
 
     videoSourceSelect.on('change', function () {
-        localStorage.setItem('savedVideoSource', $(this).val());
+      localStorage.setItem('savedVideoSource', $(this).val());
 
-        if ($(this).val() === 'displayCapture') {
-            audioSourceSelectArea.hide();
-        } else {
-            audioSourceSelectArea.show();
-        }
+      if ($(this).val() === 'displayCapture') {
+        audioSourceSelectArea.hide();
+      } else {
+        audioSourceSelectArea.show();
+      }
 
-        if ($(this).val() === 'no') {
+      if ($(this).val() === 'no') {
 
-            enableVideoControl(false);
-        } else {
+        enableVideoControl(false);
+      } else {
 
-            enableVideoControl(true);
-        }
+        enableVideoControl(true);
+      }
     });
 
     videoResolutionSelect.on('change', function () {
-        localStorage.setItem('savedVideoResolution', $(this).val());
+      localStorage.setItem('savedVideoResolution', $(this).val());
     });
 
     videoBitrateInput.on('change', function () {
-        localStorage.setItem('savedVideoBitrate', $(this).val());
+      localStorage.setItem('savedVideoBitrate', $(this).val());
     });
 
     videoFrameInput.on('change', function () {
-        localStorage.setItem('savedVideoFrame', $(this).val());
+      localStorage.setItem('savedVideoFrame', $(this).val());
     });
 
     audioSourceSelect.on('change', function () {
-        localStorage.setItem('savedAudioSource', $(this).val());
+      localStorage.setItem('savedAudioSource', $(this).val());
     });
 
     $('.constraintSelect').on('change', function () {
-        resetOvenLiveKit();
+      resetOvenLiveKit();
     });
 
     $('.streamingConfigSelect').on('change', function () {
-        stopStreaming();
+      stopStreaming();
     });
 
     $('#useDemoOME').on('click', function (e) {
-        e.preventDefault();
-        webRtcUrlInput.val('wss://demo.ovenplayer.com:3333/app/test-input-stream?direction=send&transport=tcp');
-        webRtcUrlInput.focus();
-        webRtcUrlInput.change();
+      e.preventDefault();
+      webRtcUrlInput.val('wss://demo.ovenplayer.com:3333/app/test-input-stream?direction=send&transport=tcp');
+      webRtcUrlInput.focus();
+      webRtcUrlInput.change();
     });
 
     function enableVideoControl(enable) {
-        videoResolutionSelect.prop('disabled', !enable);
-        videoBitrateInput.prop('disabled', !enable);
-        videoFrameInput.prop('disabled', !enable);
+      videoResolutionSelect.prop('disabled', !enable);
+      videoBitrateInput.prop('disabled', !enable);
+      videoFrameInput.prop('disabled', !enable);
     }
 
 
@@ -486,394 +482,394 @@
 
     function getResolutionAndCalculateFrame(videoElement) {
 
-        if (frameCalculatorTimer) {
+      if (frameCalculatorTimer) {
 
-            clearInterval(frameCalculatorTimer);
-            videoResolutionSpan.text('-');
-            videoFrameRateSpan.empty('-');
-            frameCalculatorTimer = null;
-            totalVideoFrames = 0;
+        clearInterval(frameCalculatorTimer);
+        videoResolutionSpan.text('-');
+        videoFrameRateSpan.empty('-');
+        frameCalculatorTimer = null;
+        totalVideoFrames = 0;
+      }
+
+      frameCalculatorTimer = setInterval(function () {
+
+        videoResolutionSpan.text(videoElement.videoWidth + 'x' + videoElement.videoHeight);
+
+        if (totalVideoFrames === 0) {
+
+          totalVideoFrames = videoElement.getVideoPlaybackQuality().totalVideoFrames;
+        } else {
+
+          let currentTotalFrame = videoElement.getVideoPlaybackQuality().totalVideoFrames;
+          let frameRate = currentTotalFrame - totalVideoFrames;
+
+          videoFrameRateSpan.text(frameRate + 'fps');
+
+          totalVideoFrames = currentTotalFrame;
         }
 
-        frameCalculatorTimer = setInterval(function () {
-
-            videoResolutionSpan.text(videoElement.videoWidth + 'x' + videoElement.videoHeight);
-
-            if (totalVideoFrames === 0) {
-
-                totalVideoFrames = videoElement.getVideoPlaybackQuality().totalVideoFrames;
-            } else {
-
-                let currentTotalFrame = videoElement.getVideoPlaybackQuality().totalVideoFrames;
-                let frameRate = currentTotalFrame - totalVideoFrames;
-
-                videoFrameRateSpan.text(frameRate + 'fps');
-
-                totalVideoFrames = currentTotalFrame;
-            }
-
-        }, 1000);
+      }, 1000);
     }
 
     function getUserConstraints() {
 
-        let videoDeviceId = videoSourceSelect.val();
-        let videoResolution = videoResolutionSelect.val();
-        let videoFrame = videoFrameInput.val();
-        let audioDeviceId = audioSourceSelect.val();
+      let videoDeviceId = videoSourceSelect.val();
+      let videoResolution = videoResolutionSelect.val();
+      let videoFrame = videoFrameInput.val();
+      let audioDeviceId = audioSourceSelect.val();
 
-        let newConstraint = {};
+      let newConstraint = {};
 
-        if (videoDeviceId !== 'no') {
-            if (videoDeviceId) {
-                newConstraint.video = {
-                    deviceId: {
-                        exact: videoDeviceId
-                    }
-                };
+      if (videoDeviceId !== 'no') {
+        if (videoDeviceId) {
+          newConstraint.video = {
+            deviceId: {
+              exact: videoDeviceId
             }
-
-            if (videoResolution) {
-
-                const resolution = userResolutions[videoResolution];
-
-                newConstraint.video.width = resolution.width;
-                newConstraint.video.height = resolution.height;
-            }
-
-            if (videoFrame) {
-                newConstraint.video.frameRate = {exact: parseInt(videoFrame)};
-            }
+          };
         }
 
-        if (audioDeviceId !== 'no') {
-            if (audioDeviceId) {
-                newConstraint.audio = {
-                    deviceId: {
-                        exact: audioDeviceId
-                    }
-                };
-            }
+        if (videoResolution) {
+
+          const resolution = userResolutions[videoResolution];
+
+          newConstraint.video.width = resolution.width;
+          newConstraint.video.height = resolution.height;
         }
 
-        return newConstraint;
+        if (videoFrame) {
+          newConstraint.video.frameRate = { exact: parseInt(videoFrame) };
+        }
+      }
+
+      if (audioDeviceId !== 'no') {
+        if (audioDeviceId) {
+          newConstraint.audio = {
+            deviceId: {
+              exact: audioDeviceId
+            }
+          };
+        }
+      }
+
+      return newConstraint;
     }
 
     function getDisplayConstraints() {
 
-        let videoResolution = videoResolutionSelect.val();
-        let videoFrame = videoFrameInput.val();
+      let videoResolution = videoResolutionSelect.val();
+      let videoFrame = videoFrameInput.val();
 
-        let newConstraint = {};
+      let newConstraint = {};
 
-        newConstraint.video = {};
+      newConstraint.video = {};
 
-        if (videoResolution) {
+      if (videoResolution) {
 
-            const resolution = displayResolutions[videoResolution];
+        const resolution = displayResolutions[videoResolution];
 
-            newConstraint.video.width = resolution.width;
-            newConstraint.video.height = resolution.height;
-        } else {
+        newConstraint.video.width = resolution.width;
+        newConstraint.video.height = resolution.height;
+      } else {
 
-            newConstraint.video = true;
+        newConstraint.video = true;
+      }
+
+      if (videoFrame) {
+
+        if (!newConstraint.video) {
+
+          newConstraint.video = {};
         }
 
-        if (videoFrame) {
+        newConstraint.video.frameRate = parseInt(videoFrame);
+      }
 
-            if (!newConstraint.video) {
+      newConstraint.audio = true;
 
-                newConstraint.video = {};
-            }
-
-            newConstraint.video.frameRate = parseInt(videoFrame);
-        }
-
-        newConstraint.audio = true;
-
-        return newConstraint;
+      return newConstraint;
     }
 
     function setDevice(type, select, devices) {
 
-        select.empty();
+      select.empty();
 
-        if (type === 'audio' && devices.length === 0) {
+      if (type === 'audio' && devices.length === 0) {
 
-            select.append('<option value="">No Source Available</option>')
-        } else {
+        select.append('<option value="">No Source Available</option>')
+      } else {
 
-            _.each(devices, function (device) {
+        _.each(devices, function (device) {
 
-                let option = $('<option></option>');
+          let option = $('<option></option>');
 
-                option.text(device.label);
-                option.val(device.deviceId);
+          option.text(device.label);
+          option.val(device.deviceId);
 
-                select.append(option);
-            });
-
-            if (type === 'video') {
-
-                let option = $('<option></option>');
-
-                option.text('Display capture');
-                option.val('displayCapture');
-
-                if (!navigator.mediaDevices.getDisplayMedia) {
-
-                    option.text('Display capture (Not supported)');
-                    option.attr('disabled', 'disabled');
-                }
-
-
-                select.append(option);
-            }
-        }
+          select.append(option);
+        });
 
         if (type === 'video') {
 
-            let option = $('<option></option>');
+          let option = $('<option></option>');
 
-            option.text('Without video');
-            option.val('no');
+          option.text('Display capture');
+          option.val('displayCapture');
 
-            select.append(option);
+          if (!navigator.mediaDevices.getDisplayMedia) {
+
+            option.text('Display capture (Not supported)');
+            option.attr('disabled', 'disabled');
+          }
+
+
+          select.append(option);
         }
+      }
 
-        if (type === 'audio') {
+      if (type === 'video') {
 
-            let option = $('<option></option>');
+        let option = $('<option></option>');
 
-            option.text('Without audio');
-            option.val('no');
+        option.text('Without video');
+        option.val('no');
 
-            select.append(option);
-        }
+        select.append(option);
+      }
 
-        select.find('option').eq(0).prop('selected', true);
+      if (type === 'audio') {
+
+        let option = $('<option></option>');
+
+        option.text('Without audio');
+        option.val('no');
+
+        select.append(option);
+      }
+
+      select.find('option').eq(0).prop('selected', true);
     }
 
     function checkDevice(devices, deviceId) {
 
-        if (deviceId === 'displayCapture') {
-            return true;
-        }
+      if (deviceId === 'displayCapture') {
+        return true;
+      }
 
-        let filtered = _.filter(devices, function (device) {
+      let filtered = _.filter(devices, function (device) {
 
-            return device.deviceId === deviceId;
-        });
+        return device.deviceId === deviceId;
+      });
 
-        return filtered.length > 0;
+      return filtered.length > 0;
     }
 
     function resetMessages() {
 
-        errorTextSpan.empty();
+      errorTextSpan.empty();
 
-        clearInterval(frameCalculatorTimer);
-        frameCalculatorTimer = null;
+      clearInterval(frameCalculatorTimer);
+      frameCalculatorTimer = null;
 
 
-        videoResolutionSpan.text('-');
-        videoFrameRateSpan.text('-');
-        bitrateSpan.text('-');
-        iceStateSpan.text('-');
+      videoResolutionSpan.text('-');
+      videoFrameRateSpan.text('-');
+      bitrateSpan.text('-');
+      iceStateSpan.text('-');
 
     }
 
 
     function createInput() {
 
-        if (input) {
-            input.remove();
-            input = null;
-        }
+      if (input) {
+        input.remove();
+        input = null;
+      }
 
-        resetMessages();
+      resetMessages();
 
-        input = OvenLiveKit.create({
-            callbacks: {
-                error: function (error) {
+      input = OvenLiveKit.create({
+        callbacks: {
+          error: function (error) {
 
-                    let errorMessage = '';
+            let errorMessage = '';
 
-                    if (error.message) {
+            if (error.message) {
 
-                        errorMessage = error.message;
-                    } else if (error.name) {
+              errorMessage = error.message;
+            } else if (error.name) {
 
-                        errorMessage = error.name;
-                    } else {
-
-                        errorMessage = error.toString();
-                    }
-
-                    if (errorMessage === 'OverconstrainedError') {
-
-                        errorMessage = 'The input device does not support the specified resolution or frame rate.';
-                    }
-
-                    resetMessages();
-
-                    errorTextSpan.text(errorMessage);
-                },
-                connectionClosed: function (type, event) {
-                    if (type === 'websocket') {
-                        let reason;
-                        // See http://tools.ietf.org/html/rfc6455#section-7.4.1
-                        if (event.code === 1000)
-                            reason = "Normal closure, meaning that the purpose for which the connection was established has been fulfilled.";
-                        else if (event.code === 1001)
-                            reason = "An endpoint is \"going away\", such as a server going down or a browser having navigated away from a page.";
-                        else if (event.code === 1002)
-                            reason = "An endpoint is terminating the connection due to a protocol error";
-                        else if (event.code === 1003)
-                            reason = "An endpoint is terminating the connection because it has received a type of data it cannot accept (e.g., an endpoint that understands only text data MAY send this if it receives a binary message).";
-                        else if (event.code === 1004)
-                            reason = "Reserved. The specific meaning might be defined in the future.";
-                        else if (event.code === 1005)
-                            reason = "No status code was actually present.";
-                        else if (event.code === 1006)
-                            reason = "The connection was closed abnormally, e.g., without sending or receiving a Close control frame";
-                        else if (event.code === 1007)
-                            reason = "An endpoint is terminating the connection because it has received data within a message that was not consistent with the type of the message (e.g., non-UTF-8 [http://tools.ietf.org/html/rfc3629] data within a text message).";
-                        else if (event.code === 1008)
-                            reason = "An endpoint is terminating the connection because it has received a message that \"violates its policy\". This reason is given either if there is no other sutible reason, or if there is a need to hide specific details about the policy.";
-                        else if (event.code === 1009)
-                            reason = "An endpoint is terminating the connection because it has received a message that is too big for it to process.";
-                        else if (event.code === 1010) // Note that this status code is not used by the server, because it can fail the WebSocket handshake instead.
-                            reason = "An endpoint (client) is terminating the connection because it has expected the server to negotiate one or more extension, but the server didn't return them in the response message of the WebSocket handshake. <br /> Specifically, the extensions that are needed are: " + event.reason;
-                        else if (event.code === 1011)
-                            reason = "A server is terminating the connection because it encountered an unexpected condition that prevented it from fulfilling the request.";
-                        else if (event.code === 1015)
-                            reason = "The connection was closed due to a failure to perform a TLS handshake (e.g., the server certificate can't be verified).";
-                        else
-                            reason = "Unknown reason";
-                        $('#errorText').html('Web Socket is closed. ' + reason);
-                    }
-                    if (type === 'ice') {
-                        $('#errorText').html('Peer Connection is closed. State: ' + input.peerConnection.iceConnectionState);
-                    }
-                },
-                iceStateChange: function (state) {
-                    iceStateSpan.text(state);
-                    if (state === 'connected') {
-                        testPlaybackButtonArea.show();
-                    }
-                }
-            }
-        });
-
-        input.attachMedia(videoElement);
-
-        if (videoSourceSelect.val()) {
-
-            if (videoSourceSelect.val() === 'displayCapture') {
-
-
-                input.getDisplayMedia(getDisplayConstraints()).then(function (stream) {
-
-                    streamingButton.prop('disabled', false);
-                    getResolutionAndCalculateFrame(videoElement);
-                });
+              errorMessage = error.name;
             } else {
 
-                const userConstraints = getUserConstraints();
-
-                input.getUserMedia(userConstraints).then(function (stream) {
-
-                    streamingButton.prop('disabled', false);
-                    getResolutionAndCalculateFrame(videoElement);
-                });
+              errorMessage = error.toString();
             }
+
+            if (errorMessage === 'OverconstrainedError') {
+
+              errorMessage = 'The input device does not support the specified resolution or frame rate.';
+            }
+
+            resetMessages();
+
+            errorTextSpan.text(errorMessage);
+          },
+          connectionClosed: function (type, event) {
+            if (type === 'websocket') {
+              let reason;
+              // See http://tools.ietf.org/html/rfc6455#section-7.4.1
+              if (event.code === 1000)
+                reason = "Normal closure, meaning that the purpose for which the connection was established has been fulfilled.";
+              else if (event.code === 1001)
+                reason = "An endpoint is \"going away\", such as a server going down or a browser having navigated away from a page.";
+              else if (event.code === 1002)
+                reason = "An endpoint is terminating the connection due to a protocol error";
+              else if (event.code === 1003)
+                reason = "An endpoint is terminating the connection because it has received a type of data it cannot accept (e.g., an endpoint that understands only text data MAY send this if it receives a binary message).";
+              else if (event.code === 1004)
+                reason = "Reserved. The specific meaning might be defined in the future.";
+              else if (event.code === 1005)
+                reason = "No status code was actually present.";
+              else if (event.code === 1006)
+                reason = "The connection was closed abnormally, e.g., without sending or receiving a Close control frame";
+              else if (event.code === 1007)
+                reason = "An endpoint is terminating the connection because it has received data within a message that was not consistent with the type of the message (e.g., non-UTF-8 [http://tools.ietf.org/html/rfc3629] data within a text message).";
+              else if (event.code === 1008)
+                reason = "An endpoint is terminating the connection because it has received a message that \"violates its policy\". This reason is given either if there is no other sutible reason, or if there is a need to hide specific details about the policy.";
+              else if (event.code === 1009)
+                reason = "An endpoint is terminating the connection because it has received a message that is too big for it to process.";
+              else if (event.code === 1010) // Note that this status code is not used by the server, because it can fail the WebSocket handshake instead.
+                reason = "An endpoint (client) is terminating the connection because it has expected the server to negotiate one or more extension, but the server didn't return them in the response message of the WebSocket handshake. <br /> Specifically, the extensions that are needed are: " + event.reason;
+              else if (event.code === 1011)
+                reason = "A server is terminating the connection because it encountered an unexpected condition that prevented it from fulfilling the request.";
+              else if (event.code === 1015)
+                reason = "The connection was closed due to a failure to perform a TLS handshake (e.g., the server certificate can't be verified).";
+              else
+                reason = "Unknown reason";
+              $('#errorText').html('Web Socket is closed. ' + reason);
+            }
+            if (type === 'ice') {
+              $('#errorText').html('Peer Connection is closed. State: ' + input.peerConnection.iceConnectionState);
+            }
+          },
+          iceStateChange: function (state) {
+            iceStateSpan.text(state);
+            if (state === 'connected') {
+              testPlaybackButtonArea.show();
+            }
+          }
         }
+      });
+
+      input.attachMedia(videoElement);
+
+      if (videoSourceSelect.val()) {
+
+        if (videoSourceSelect.val() === 'displayCapture') {
+
+
+          input.getDisplayMedia(getDisplayConstraints()).then(function (stream) {
+
+            streamingButton.prop('disabled', false);
+            getResolutionAndCalculateFrame(videoElement);
+          });
+        } else {
+
+          const userConstraints = getUserConstraints();
+
+          input.getUserMedia(userConstraints).then(function (stream) {
+
+            streamingButton.prop('disabled', false);
+            getResolutionAndCalculateFrame(videoElement);
+          });
+        }
+      }
     }
 
     function startStreaming() {
 
-        streamingStarted = true;
-        streamingButton.removeClass('btn-primary').addClass('btn-danger');
-        streamingButton.text('STOP');
+      streamingStarted = true;
+      streamingButton.removeClass('btn-primary').addClass('btn-danger');
+      streamingButton.text('STOP');
 
-        if (input) {
+      if (input) {
 
-            let connectionConfig = {};
+        let connectionConfig = {};
 
-            if (videoBitrateInput.val()) {
-                connectionConfig.maxVideoBitrate = parseInt(videoBitrateInput.val());
-            }
-
-            if (videoPreferredCodecSelect.val() !== '') {
-                connectionConfig.preferredVideoFormat = videoPreferredCodecSelect.val();
-            }
-
-            input.startStreaming(webRtcUrlInput.val(), connectionConfig);
+        if (videoBitrateInput.val()) {
+          connectionConfig.maxVideoBitrate = parseInt(videoBitrateInput.val());
         }
+
+        if (videoPreferredCodecSelect.val() !== '') {
+          connectionConfig.preferredVideoFormat = videoPreferredCodecSelect.val();
+        }
+
+        input.startStreaming(webRtcUrlInput.val(), connectionConfig);
+      }
     }
 
     function stopStreaming() {
 
-        if (input) {
-            input.stopStreaming();
-        }
+      if (input) {
+        input.stopStreaming();
+      }
 
-        streamingStarted = false;
-        streamingButton.removeClass('btn-danger').addClass('btn-primary');
-        streamingButton.text('START');
-        testPlaybackButtonArea.hide();
+      streamingStarted = false;
+      streamingButton.removeClass('btn-danger').addClass('btn-primary');
+      streamingButton.text('START');
+      testPlaybackButtonArea.hide();
     }
 
     function resetOvenLiveKit() {
 
-        streamingStarted = false;
-        streamingButton.removeClass('btn-danger').addClass('btn-primary');
-        streamingButton.text('START');
-        testPlaybackButtonArea.hide();
-        streamingButton.prop('disabled', true);
+      streamingStarted = false;
+      streamingButton.removeClass('btn-danger').addClass('btn-primary');
+      streamingButton.text('START');
+      testPlaybackButtonArea.hide();
+      streamingButton.prop('disabled', true);
 
-        if (input) {
-            createInput();
-        }
+      if (input) {
+        createInput();
+      }
 
     }
 
 
     streamingButton.on('click', function () {
 
-        if (!streamingStarted) {
-            startStreaming();
-        } else {
-            stopStreaming();
-        }
+      if (!streamingStarted) {
+        startStreaming();
+      } else {
+        stopStreaming();
+      }
     });
 
     playStreamButton.on('click', function () {
-        const link = {};
+      const link = {};
 
-        const inputUrl = webRtcUrlInput.val();
+      const inputUrl = webRtcUrlInput.val();
 
-        const url = new URL(inputUrl);
+      const url = new URL(inputUrl);
 
-        let playbackUrl = url.protocol + '//' + url.host + url.pathname;
+      let playbackUrl = url.protocol + '//' + url.host + url.pathname;
 
-        if (url.searchParams.get('transport')) {
+      if (url.searchParams.get('transport')) {
 
-            playbackUrl += '?transport=' + url.searchParams.get('transport');
-        }
+        playbackUrl += '?transport=' + url.searchParams.get('transport');
+      }
 
-        link.playerOption = {
-            autoStart: true,
-            sources: [
-                {
-                    type: 'webrtc',
-                    file: playbackUrl
-                }
-            ]
-        };
+      link.playerOption = {
+        autoStart: true,
+        sources: [
+          {
+            type: 'webrtc',
+            file: playbackUrl
+          }
+        ]
+      };
 
-        window.open('https://demo.ovenplayer.com#' + encodeURIComponent(JSON.stringify(link)));
+      window.open('https://demo.ovenplayer.com#' + encodeURIComponent(JSON.stringify(link)));
 
     });
 
@@ -913,130 +909,130 @@
 
     setInterval(function () {
 
-        if (!input || !input.peerConnection) {
-            bitrateSpan.text('-');
-            return;
+      if (!input || !input.peerConnection) {
+        bitrateSpan.text('-');
+        return;
+      }
+
+      let sender = null;
+
+      input.peerConnection.getSenders().forEach(function (s) {
+
+        if (s.track && s.track.kind === 'video') {
+          sender = s;
         }
+      });
 
-        let sender = null;
+      if (!sender) {
+        bitrateSpan.text('-');
+        return;
+      }
 
-        input.peerConnection.getSenders().forEach(function (s) {
+      sender.getStats().then(res => {
+        res.forEach(report => {
+          let bytes;
+          let headerBytes;
+          let packets;
 
-            if (s.track && s.track.kind === 'video') {
-                sender = s;
+          if (report.type === 'outbound-rtp') {
+            if (report.isRemote) {
+              return;
             }
+
+            const now = report.timestamp;
+            bytes = report.bytesSent;
+            headerBytes = report.headerBytesSent;
+
+            packets = report.packetsSent;
+            if (lastResult && lastResult.has(report.id)) {
+              // calculate bitrate
+              const bitrate = 8 * (bytes - lastResult.get(report.id).bytesSent) /
+                (now - lastResult.get(report.id).timestamp);
+              const headerrate = 8 * (headerBytes - lastResult.get(report.id).headerBytesSent) /
+                (now - lastResult.get(report.id).timestamp);
+
+              const packetsSent = packets - lastResult.get(report.id).packetsSent;
+
+              bitrateSpan.text(bitrate.toFixed(2) + 'kbps');
+            }
+
+            // console.log('framesEncoded', report.framesEncoded, 'keyFramesEncoded', report.keyFramesEncoded, report.framesEncoded / report.keyFramesEncoded + '(' + report.framesPerSecond + 'fps)')
+          }
+
+          if (report.type === 'track') {
+            // console.log(report)
+          }
+
         });
-
-        if (!sender) {
-            bitrateSpan.text('-');
-            return;
-        }
-
-        sender.getStats().then(res => {
-            res.forEach(report => {
-                let bytes;
-                let headerBytes;
-                let packets;
-
-                if (report.type === 'outbound-rtp') {
-                    if (report.isRemote) {
-                        return;
-                    }
-
-                    const now = report.timestamp;
-                    bytes = report.bytesSent;
-                    headerBytes = report.headerBytesSent;
-
-                    packets = report.packetsSent;
-                    if (lastResult && lastResult.has(report.id)) {
-                        // calculate bitrate
-                        const bitrate = 8 * (bytes - lastResult.get(report.id).bytesSent) /
-                            (now - lastResult.get(report.id).timestamp);
-                        const headerrate = 8 * (headerBytes - lastResult.get(report.id).headerBytesSent) /
-                            (now - lastResult.get(report.id).timestamp);
-
-                        const packetsSent = packets - lastResult.get(report.id).packetsSent;
-
-                        bitrateSpan.text(bitrate.toFixed(2) + 'kbps');
-                    }
-
-                    // console.log('framesEncoded', report.framesEncoded, 'keyFramesEncoded', report.keyFramesEncoded, report.framesEncoded / report.keyFramesEncoded + '(' + report.framesPerSecond + 'fps)')
-                }
-
-                if (report.type === 'track') {
-                    // console.log(report)
-                }
-
-            });
-            lastResult = res;
-        });
+        lastResult = res;
+      });
     }, 2000);
 
 
     // get all devices at the first time
     OvenLiveKit.getDevices().then(function (devices) {
 
-        allDevices = devices;
-        initDemo();
+      allDevices = devices;
+      initDemo();
     }).catch(function (error) {
 
-        let errorMessage = '';
+      let errorMessage = '';
 
-        if (error.message) {
+      if (error.message) {
 
-            errorMessage = error.message;
-        } else if (error.name) {
+        errorMessage = error.message;
+      } else if (error.name) {
 
-            errorMessage = error.name;
-        } else {
+        errorMessage = error.name;
+      } else {
 
-            errorMessage = error.toString();
-        }
+        errorMessage = error.toString();
+      }
 
-        $('#errorText').text(errorMessage);
+      $('#errorText').text(errorMessage);
     });
 
     function initDemo() {
 
-        if (allDevices) {
+      if (allDevices) {
 
-            setDevice('video', videoSourceSelect, allDevices.videoinput,);
-            setDevice('audio', audioSourceSelect, allDevices.audioinput);
+        setDevice('video', videoSourceSelect, allDevices.videoinput,);
+        setDevice('audio', audioSourceSelect, allDevices.audioinput);
 
-            if (savedVideoSource && checkDevice(allDevices.videoinput, savedVideoSource)) {
-                videoSourceSelect.val(savedVideoSource);
-            }
-
-            if (savedVideoSource === 'no') {
-                enableVideoControl(false);
-            }
-
-            if (savedVideoSource === 'displayCapture') {
-                audioSourceSelectArea.hide();
-            }
-
-            if (savedVideoResolution) {
-                videoResolutionSelect.val(savedVideoResolution);
-            }
-
-            if (savedVideoBitrate) {
-                videoBitrateInput.val(savedVideoBitrate);
-            }
-
-            if (savedVideoFrame) {
-                videoFrameInput.val(savedVideoFrame);
-            }
-
-            if (savedAudioSource && checkDevice(allDevices.audioinput, savedAudioSource)) {
-                audioSourceSelect.val(savedAudioSource);
-            }
+        if (savedVideoSource && checkDevice(allDevices.videoinput, savedVideoSource)) {
+          videoSourceSelect.val(savedVideoSource);
         }
 
-        createInput();
+        if (savedVideoSource === 'no') {
+          enableVideoControl(false);
+        }
+
+        if (savedVideoSource === 'displayCapture') {
+          audioSourceSelectArea.hide();
+        }
+
+        if (savedVideoResolution) {
+          videoResolutionSelect.val(savedVideoResolution);
+        }
+
+        if (savedVideoBitrate) {
+          videoBitrateInput.val(savedVideoBitrate);
+        }
+
+        if (savedVideoFrame) {
+          videoFrameInput.val(savedVideoFrame);
+        }
+
+        if (savedAudioSource && checkDevice(allDevices.audioinput, savedAudioSource)) {
+          audioSourceSelect.val(savedAudioSource);
+        }
+      }
+
+      createInput();
     }
 
 
-</script>
+  </script>
 
 </body>
 
