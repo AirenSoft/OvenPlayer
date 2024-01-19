@@ -1,5 +1,5 @@
 import _ from "utils/underscore";
-import {analUserAgent} from "utils/browser";
+import { analUserAgent } from "utils/browser";
 import {
     ERRORS,
     PLAYER_WEBRTC_WS_ERROR,
@@ -15,17 +15,17 @@ import {
     PEER_CONNECTION_PREPARED
 } from "api/constants";
 import sizeHumanizer from "../../../../utils/sizeHumanizer";
-import {PEER_CONNECTION_DESTROYED} from "../../../constants";
+import { PEER_CONNECTION_DESTROYED } from "../../../constants";
 
 
 const WebRTCLoader = function (provider,
-                               webSocketUrl,
-                               loadCallback,
-                               connectedCallback,
-                               internalErrorCallback,
-                               errorTrigger,
-                               playerConfig,
-                               spec) {
+    webSocketUrl,
+    loadCallback,
+    connectedCallback,
+    internalErrorCallback,
+    errorTrigger,
+    playerConfig,
+    spec) {
 
     let defaultConnectionConfig = {};
 
@@ -673,7 +673,7 @@ const WebRTCLoader = function (provider,
 
                 if (message.command === 'ping') {
 
-                    sendMessage(ws, {command: 'pong'});
+                    sendMessage(ws, { command: 'pong' });
                     return;
                 }
 
@@ -759,9 +759,9 @@ const WebRTCLoader = function (provider,
 
                         let qualityIndex = -1;
 
-                        for (let i = 0; i < playlistFromOme.renditions.length; i ++) {
+                        for (let i = 0; i < playlistFromOme.renditions.length; i++) {
 
-                            if (rendition.rendition_name ===  playlistFromOme.renditions[i].name) {
+                            if (rendition.rendition_name === playlistFromOme.renditions[i].name) {
                                 qualityIndex = i;
                                 spec.currentQuality = i;
                                 break;
@@ -949,6 +949,10 @@ const WebRTCLoader = function (provider,
             return -1;
         }
 
+        if (!mainPeerConnectionInfo) {
+            return -1;
+        }
+
         let rendition = playlistFromOme.renditions[qualityIndex];
 
         if (!rendition) {
@@ -974,6 +978,10 @@ const WebRTCLoader = function (provider,
     };
 
     provider.setAutoQuality = (auto) => {
+
+        if (!mainPeerConnectionInfo) {
+            return;
+        }
 
         sendMessage(ws, {
             command: 'change_rendition',
