@@ -37,6 +37,7 @@ const Configurator = function(options, provider){
             fullscreenOption: null,
             showBigPlayButton: true,
             doubleTapToSeek: false,
+            showZoomSettings: false,
         };
         const serialize = function (val) {
             if (val === undefined) {
@@ -165,7 +166,13 @@ const Configurator = function(options, provider){
         spec.playbackRate = playbackRate;
         return playbackRate;
     };
-
+    that.getZoomFactor =()=>{
+        return spec.zoomFactor;
+    };
+    that.setZoomFactor =(zoomFactor)=>{
+        spec.zoomFactor = zoomFactor;
+        return zoomFactor;
+    };
     that.getQualityLabel = () => {
         return spec.qualityLabel;
     };

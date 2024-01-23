@@ -400,7 +400,22 @@ const Api = function (container) {
         OvenPlayerConsole.log("API : getPlaybackRate() ", currentProvider.getPlaybackRate());
         return currentProvider.getPlaybackRate();
     };
+    that.setZoomFactor = (zoomFactor) => {
+        if (!currentProvider) {
+            return null;
+        }
 
+        OvenPlayerConsole.log("API : setZoomFactor() ", zoomFactor);
+        return currentProvider.setZoomFactor(playerConfig.setZoomFactor(zoomFactor));
+    };
+    that.getZoomFactor = () => {
+        if (!currentProvider) {
+            return null;
+        }
+
+        OvenPlayerConsole.log("API : getZoomFactor() ", currentProvider.getZoomFactor());
+        return currentProvider.getZoomFactor();
+    };
     that.getPlaylist = () => {
         OvenPlayerConsole.log("API : getPlaylist() ", playlistManager.getPlaylist());
         return playlistManager.getPlaylist();

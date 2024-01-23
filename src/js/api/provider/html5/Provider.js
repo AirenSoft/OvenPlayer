@@ -10,7 +10,7 @@ import {
     WARN_MSG_MUTEDPLAY,
     UI_ICONS, PLAYER_WARNING,
     STATE_IDLE, STATE_PLAYING, STATE_PAUSED, STATE_COMPLETE, STATE_ERROR,
-    PLAYER_STATE, PLAYER_COMPLETE, PLAYER_PAUSE, PLAYER_PLAY, STATE_AD_PLAYING, STATE_AD_PAUSED,
+    PLAYER_STATE, PLAYER_COMPLETE, PLAYER_PAUSE, PLAYER_PLAY, PLAYER_ZOOM_CAHNGED, STATE_AD_PLAYING, STATE_AD_PAUSED,
     CONTENT_META, CONTENT_TIME, CONTENT_CAPTION_CUE_CHANGED, CONTENT_SOURCE_CHANGED,
     AD_CLIENT_GOOGLEIMA, AD_CLIENT_VAST,
     PLAYBACK_RATE_CHANGED, CONTENT_MUTE, PROVIDER_HTML5, PROVIDER_WEBRTC, PROVIDER_DASH, PROVIDER_HLS
@@ -50,6 +50,7 @@ const Provider = function (spec, playerConfig, onExtendedLoad) {
 
     listener = EventsListener(elVideo, that, ads ? ads.videoEndedCallback : null, playerConfig);
     elVideo.playbackRate = elVideo.defaultPlaybackRate = playerConfig.getPlaybackRate();
+    spec.zoomFactor = 1.0;
 
     const _load = (lastPlayPosition) => {
 
@@ -381,7 +382,13 @@ const Provider = function (spec, playerConfig, onExtendedLoad) {
         }
         return elVideo.playbackRate;
     };
-
+    that.getZoomFactor = () => {
+        return spec.zoomFactor;
+    };
+    that.setZoomFactor = (zoomFactor) => {
+        that.trigger(PLAYER_ZOOM_CAHNGED, { zoomFactor: zoomFactor });
+        return spec.zoomFactor = zoomFactor;
+    };
     that.getSources = () => {
         if (!elVideo) {
             return [];
