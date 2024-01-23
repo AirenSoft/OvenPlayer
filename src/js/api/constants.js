@@ -58,6 +58,7 @@ export const PLAYER_LOADING = "loading";
 export const PLAYER_FULLSCREEN_REQUEST = "fullscreenRequested";
 export const PLAYER_FULLSCREEN_CHANGED = "fullscreenChanged";
 export const PLAYER_WARNING = "warning";
+export const PLAYER_ZOOM_CAHNGED = "zoomChanged";
 
 export const AD_CHANGED = "adChanged";
 export const AD_TIME = "adTime";
@@ -141,7 +142,7 @@ export const SYSTEM_TEXT = [
         "audioTrack": "Audio",
         "caption": "Caption",
         "display": "Display",
-        "zoom" : "Zoom"
+        "zoom": "Zoom"
       }
     },
     "api": {
@@ -301,7 +302,7 @@ export const SYSTEM_TEXT = [
         "audioTrack": "오디오",
         "caption": "자막",
         "display": "표시",
-        "zoom" : "Zoom"
+        "zoom": "Zoom"
       }
     },
     "api": {
@@ -461,7 +462,7 @@ export const SYSTEM_TEXT = [
         "audioTrack": "Audio",
         "caption": "Podtytuł",
         "display": "Wyświetlacz",
-        "zoom" : "Zoom"
+        "zoom": "Zoom"
       }
     },
     "api": {

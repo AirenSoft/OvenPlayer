@@ -14,9 +14,9 @@ import AudioTrackPanel from "view/components/controls/settingPanel/audioTrackPan
 import CaptionPanel from "view/components/controls/settingPanel/captionPanel";
 import TimeDisplayPanel from "view/components/controls/settingPanel/timeDisplayPanel";
 import {
-    CONTENT_LEVEL_CHANGED, PROVIDER_RTMP
+    CONTENT_LEVEL_CHANGED, PLAYER_ZOOM_CAHNGED
 } from "api/constants";
-import {AUDIO_TRACK_CHANGED} from "../../../../api/constants";
+import { AUDIO_TRACK_CHANGED } from "../../../../api/constants";
 
 let PANEL_TITLE = {
     "speed": "Speed",
@@ -68,25 +68,25 @@ const Panels = function ($container, api, data) {
 
         } else if (panelType === "zoom") {
             let bodyIn = {
-                title : "+5%",
-                isCheck : false,
-                value : 0.05,
-                description : 0.05,
-                panelType : panelType
+                title: "+5%",
+                isCheck: false,
+                value: 0.05,
+                description: 0.05,
+                panelType: panelType
             };
             let body = {
-                title : "100%",
-                isCheck : false,
-                value : 0,
-                description : 1.0,
-                panelType : panelType
+                title: "100%",
+                isCheck: false,
+                value: 0,
+                description: 1.0,
+                panelType: panelType
             };
             let bodyOut = {
-                title : "-5%",
-                isCheck : false,
-                value : -0.05,
-                description : -0.05,
-                panelType : panelType
+                title: "-5%",
+                isCheck: false,
+                value: -0.05,
+                description: -0.05,
+                panelType: panelType
             };
             panel.body.push(bodyIn);
             panel.body.push(body);
@@ -210,8 +210,20 @@ const Panels = function ($container, api, data) {
 
                 let $panel = LA$(panel);
 
-                if($panel.attr("op-panel-type") === "audioTrack"){
+                if ($panel.attr("op-panel-type") === "audioTrack") {
                     $panel.find(".op-setting-item-value").text(api.getAudioTracks()[data.currentAudioTrack].label);
+                }
+            });
+        }, template);
+
+
+        api.on(PLAYER_ZOOM_CAHNGED, function (data) {
+            _.forEach($root.find("#" + template.data.id).find(".op-setting-item").get() || [], function (panel) {
+
+                let $panel = LA$(panel);
+
+                if ($panel.attr("op-panel-type") === "zoom") {
+                    $panel.find(".op-setting-item-value").text(Math.round(data.zoomFactor * 100) + "%");
                 }
             });
         }, template);
