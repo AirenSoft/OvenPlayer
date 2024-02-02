@@ -2,581 +2,579 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 
-    <title>OvenPlayer</title>
-    <link rel="icon" href="./assets/images/00_OvenPlayer_Favicon.svg">
+  <title>OvenPlayer</title>
+  <link rel="icon" href="./assets/images/00_OvenPlayer_Favicon.svg">
 
-    <!-- Font Awesome -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet"/>
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet"/>
-    <!-- MDB -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.10.0/mdb.min.css" rel="stylesheet"/>
-    <!-- highlightjs -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.3.1/styles/github.css">
-    <style>
-        .navbar-toggler-icon {
-            background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Cpath stroke='rgba(0, 0, 0, 0.55)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E") !important;
-        }
+  <!-- Font Awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet" />
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
+  <!-- MDB -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.10.0/mdb.min.css" rel="stylesheet" />
+  <!-- highlightjs -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.3.1/styles/github.css">
+  <style>
+    .navbar-toggler-icon {
+      background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Cpath stroke='rgba(0, 0, 0, 0.55)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E") !important;
+    }
 
-        .btn {
-            min-width: 0 !important;
-        }
+    .btn {
+      min-width: 0 !important;
+    }
 
-        fieldset {
-            padding-left: 0.5rem;
-            padding-bottom: 0.5rem;
-            font-size: 0.85rem;
-        }
+    fieldset {
+      padding-left: 0.5rem;
+      padding-bottom: 0.5rem;
+      font-size: 0.85rem;
+    }
 
-        .list-group-item {
-            padding: 0.5rem 1rem;
-        }
+    .list-group-item {
+      padding: 0.5rem 1rem;
+    }
 
-        .list-group-item h6 {
-            margin-top: 0.5rem;
-        }
+    .list-group-item h6 {
+      margin-top: 0.5rem;
+    }
 
-        .dummyPlayer {
-            padding-bottom: 56.25%;
-            background: #000;
-        }
+    .dummyPlayer {
+      padding-bottom: 56.25%;
+      background: #000;
+    }
 
-        .source-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-        }
+    .source-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
 
-        .source-protocol {
-        }
+    .source-protocol {}
 
-        .source-url {
-            margin-top: 0.25rem;
-            word-break: break-all;
-        }
+    .source-url {
+      margin-top: 0.25rem;
+      word-break: break-all;
+    }
 
-        .source-control {
-        }
+    .source-control {}
 
-        .player-area {
-            position: relative;
-        }
+    .player-area {
+      position: relative;
+    }
 
-        .player-wrapper {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            width: 100%;
-            height: 100%;
-        }
+    .player-wrapper {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      width: 100%;
+      height: 100%;
+    }
 
-        footer {
-            font-size: 0.85rem;
-        }
-    </style>
+    footer {
+      font-size: 0.85rem;
+    }
+  </style>
 
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-40491361-8"></script>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-40491361-8"></script>
 
-    <script>
-        window.dataLayer = window.dataLayer || [];
+  <script>
+    window.dataLayer = window.dataLayer || [];
 
-        function gtag() {
-            dataLayer.push(arguments);
-        }
+    function gtag() {
+      dataLayer.push(arguments);
+    }
 
-        gtag('js', new Date());
+    gtag('js', new Date());
 
-        gtag('config', 'UA-40491361-8');
-    </script>
+    gtag('config', 'UA-40491361-8');
+  </script>
 
-    <!-- VUE -->
-    <script src="https://cdn.jsdelivr.net/npm/vue@3.2.23/dist/vue.global.prod.min.js"></script>
+  <!-- VUE -->
+  <script src="https://cdn.jsdelivr.net/npm/vue@3.2.23/dist/vue.global.prod.min.js"></script>
 
-    <!-- underscore -->
-    <script src="https://cdn.jsdelivr.net/npm/underscore@1.13.1/underscore-umd-min.js"></script>
+  <!-- underscore -->
+  <script src="https://cdn.jsdelivr.net/npm/underscore@1.13.1/underscore-umd-min.js"></script>
 
-    <!-- highlightjs -->
-    <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.3.1/build/highlight.min.js"></script>
+  <!-- highlightjs -->
+  <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.3.1/build/highlight.min.js"></script>
 
-    <!-- js-beautify -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.0/beautify.min.js"></script>
+  <!-- js-beautify -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.0/beautify.min.js"></script>
 
-    <!-- clipboard -->
-    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js"></script>
+  <!-- clipboard -->
+  <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js"></script>
 
-    <!-- popperjs -->
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+  <!-- popperjs -->
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
 
-    <!-- hls.js -->
-    <script src="./hls.js"></script>
+  <!-- hls.js -->
+  <script src="https://cdn.jsdelivr.net/npm/hls.js/dist/hls.min.js"></script>
 
-    <!-- OvenPlayer -->
-    <script src="../dev/ovenplayer.js"></script>
+  <!-- OvenPlayer -->
+  <script src="https://cdn.jsdelivr.net/npm/ovenplayer/dist/ovenplayer.js"></script>
 </head>
 
 <body>
-<div id="app">
+  <div id="app">
     <nav class="navbar navbar-expand-md navbar-light bg-light">
-        <div class="container-lg">
-            <a class="navbar-brand" href="/">OVENPLAYER</a>
-            <button class="navbar-toggler" type="button" data-mdb-toggle="collapse" data-mdb-target="#navbarNav"
-                    aria-controls="navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
+      <div class="container-lg">
+        <a class="navbar-brand" href="/">OVENPLAYER</a>
+        <button class="navbar-toggler" type="button" data-mdb-toggle="collapse" data-mdb-target="#navbarNav"
+          aria-controls="navbarNav">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
 
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="./demo.html">Test Player</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="https://space.ovenplayer.com" target="_blank">Demo</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="https://github.com/AirenSoft/OvenPlayer" target="_blank">GitHub</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="https://airensoft.gitbook.io/ovenplayer/" target="_blank">Docs</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-    <div class="container-lg mt-4">
-        <ul class="nav nav-pills mb-3">
+          <ul class="navbar-nav ms-auto">
             <li class="nav-item">
-                <a class="nav-link active" href="demo.html" target="_blank">Player</a>
+              <a class="nav-link active" href="./demo.html">Test Player</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link position-relative" href="demo_input.html" target="_blank">
+              <a class="nav-link" href="https://space.ovenplayer.com" target="_blank">Demo</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="https://github.com/AirenSoft/OvenPlayer" target="_blank">GitHub</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="https://airensoft.gitbook.io/ovenplayer/" target="_blank">Docs</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <div class="container-lg mt-4">
+      <ul class="nav nav-pills mb-3">
+        <li class="nav-item">
+          <a class="nav-link active" href="demo.html" target="_blank">Player</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link position-relative" href="demo_input.html" target="_blank">
             <span>
               WebRTC Input
             </span>
-                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-info">Beta</span>
-                </a>
-            </li>
-        </ul>
-        <div class="row g-3 mb-3">
-            <div class="col-12">
-                <div class="input-group">
-                    <div class="form-outline flex-grow-1">
-                        <input type="text" id="playbackUrl" class="form-control bg-white" v-model="source"
-                               @keyup.enter="addSource"/>
-                        <label class="form-label" for="playbackUrl">Playback URL</label>
-                    </div>
-                    <button class="btn btn-primary px-2 px-md-4" type="button" @click="addSource">
-                        ADD SOURCE
-                    </button>
-                </div>
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-info">Beta</span>
+          </a>
+        </li>
+      </ul>
+      <div class="row g-3 mb-3">
+        <div class="col-12">
+          <div class="input-group">
+            <div class="form-outline flex-grow-1">
+              <input type="text" id="playbackUrl" class="form-control bg-white" v-model="source"
+                @keyup.enter="addSource" />
+              <label class="form-label" for="playbackUrl">Playback URL</label>
             </div>
-            <div class="col-12 col-md-6">
-                <div class="player-area rounded shadow overflow-hidden mb-2">
-                    <div class="dummyPlayer d-flex justify-content-center text-center">
+            <button class="btn btn-primary px-2 px-md-4" type="button" @click="addSource">
+              ADD SOURCE
+            </button>
+          </div>
+        </div>
+        <div class="col-12 col-md-6">
+          <div class="player-area rounded shadow overflow-hidden mb-2">
+            <div class="dummyPlayer d-flex justify-content-center text-center">
               <span v-if="playerMessage" class="text-white position-absolute"
-                    style="left: 1rem; right: 1rem; bottom: 28.125%">
+                style="left: 1rem; right: 1rem; bottom: 28.125%">
                 <i class="fas fa-info-circle me-1 text-info"></i>
                 {{playerMessage}}
               </span>
-                    </div>
-                    <div class="player-wrapper">
-                        <div id="player">
+            </div>
+            <div class="player-wrapper">
+              <div id="player">
 
-                        </div>
+              </div>
+            </div>
+          </div>
+          <button class="btn btn-primary w-100" type="button" @click="reloadPlayer">
+            <i class="fas me-2" :class="loadButtonIcon"></i>
+            {{loadButtonMsg}}
+          </button>
+        </div>
+        <div class="col-12 col-md-6">
+
+          <ul class="list-group">
+            <li class="list-group-item bg-light d-flex justify-content-between align-items-center">
+              <h5 class="mb-0 fs-6">Sources</h5>
+              <small v-if="playerVersion">OvenPlayer
+                <span class="badge badge-info ms-1 align-middle">{{playerVersion}}</span>
+              </small>
+            </li>
+            <div class="list-group-item" v-if="playerOption.sources.length === 0">
+              <p class="lead">Test streams with OvenPlayer</p>
+
+              <ul>
+                <li>
+                  <strong>Sub-Second Latency</strong>: WebRTC (Signalling Protocol Conforms to the OME
+                  Specification)
+                </li>
+                <li>
+                  Low-Latency HLS
+                </li>
+              </ul>
+              <p class="mt-4">To play the stream of OvenMediaEngine, please refer to the following
+                documents.</p>
+              <ul class="mb-2">
+                <li>
+                  WebRTC <a href="https://airensoft.gitbook.io/ovenmediaengine/streaming/webrtc-publishing#playback"
+                    class="ms-1" target="_blank">
+                    <i class="fas fa-external-link-alt"></i>
+                  </a>
+                </li>
+                <li>
+                  Low-Latency HLS <a href="https://airensoft.gitbook.io/ovenmediaengine/streaming/low-latency-hls"
+                    class="ms-1" target="_blank">
+                    <i class="fas fa-external-link-alt"></i>
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <source-item v-for="(source, index) in playerOption.sources" :source="source" :index="index"
+              @remove-source="removeSource(index)">
+            </source-item>
+          </ul>
+        </div>
+      </div>
+
+      <div class="row row-cols-1 g-3">
+        <div class="col">
+          <ul class="list-group">
+            <li class="list-group-item bg-light">
+              <h5 class="mb-0 fs-6">Player Options</h5>
+            </li>
+            <li class="list-group-item">
+
+              <div class="row">
+                <div class="col-lg-4 border-start border-2 mb-3 mb-lg-0">
+                  <!--General Config -->
+                  <h6>General Options</h6>
+                  <fieldset>
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" value="" id="autoStart"
+                        v-model="playerOption.autoStart" @change="changeOptions" />
+                      <label class="form-check-label" for="autoStart">
+                        autoStart
+                      </label>
+                      <a href="https://airensoft.gitbook.io/ovenplayer/initialization#autostart" class="ms-1"
+                        target="_blank">
+                        <i class="fas fa-external-link-alt"></i>
+                      </a>
                     </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" value="" id="autoFallback"
+                        v-model="playerOption.autoFallback" @change="changeOptions" />
+                      <label class="form-check-label" for="autoFallback">
+                        autoFallback
+                      </label>
+                      <a href="https://airensoft.gitbook.io/ovenplayer/initialization#autofallback" class="ms-1"
+                        target="_blank">
+                        <i class="fas fa-external-link-alt"></i>
+                      </a>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" value="" id="mute" v-model="playerOption.mute"
+                        @change="changeOptions" />
+                      <label class="form-check-label" for="mute">
+                        mute
+                      </label>
+                      <a href="https://airensoft.gitbook.io/ovenplayer/initialization#mute" class="ms-1"
+                        target="_blank">
+                        <i class="fas fa-external-link-alt"></i>
+                      </a>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" value="" id="doubleTapToSeek"
+                        v-model="playerOption.doubleTapToSeek" @change="changeOptions" />
+                      <label class="form-check-label" for="doubleTapToSeek">
+                        doubleTapToSeek
+                      </label>
+                      <a href="https://airensoft.gitbook.io/ovenplayer/initialization#doubletaptoseek" class="ms-1"
+                        target="_blank">
+                        <i class="fas fa-external-link-alt"></i>
+                      </a>
+                    </div>
+                  </fieldset>
                 </div>
-                <button class="btn btn-primary w-100" type="button" @click="reloadPlayer">
-                    <i class="fas me-2" :class="loadButtonIcon"></i>
-                    {{loadButtonMsg}}
-                </button>
-            </div>
-            <div class="col-12 col-md-6">
-
-                <ul class="list-group">
-                    <li class="list-group-item bg-light d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0 fs-6">Sources</h5>
-                        <small v-if="playerVersion">OvenPlayer
-                            <span class="badge badge-info ms-1 align-middle">{{playerVersion}}</span>
-                        </small>
-                    </li>
-                    <div class="list-group-item" v-if="playerOption.sources.length === 0">
-                        <p class="lead">Test streams with OvenPlayer</p>
-
-                        <ul>
-                            <li>
-                                <strong>Sub-Second Latency</strong>: WebRTC (Signalling Protocol Conforms to the OME
-                                Specification)
-                            </li>
-                            <li>
-                                Low-Latency HLS
-                            </li>
-                        </ul>
-                        <p class="mt-4">To play the stream of OvenMediaEngine, please refer to the following
-                            documents.</p>
-                        <ul class="mb-2">
-                            <li>
-                                WebRTC <a href="https://airensoft.gitbook.io/ovenmediaengine/streaming/webrtc-publishing#playback"
-                                          class="ms-1" target="_blank">
-                                <i class="fas fa-external-link-alt"></i>
-                            </a>
-                            </li>
-                            <li>
-                                Low-Latency HLS <a href="https://airensoft.gitbook.io/ovenmediaengine/streaming/low-latency-hls"
-                                                   class="ms-1" target="_blank">
-                                <i class="fas fa-external-link-alt"></i>
-                            </a>
-                            </li>
-                        </ul>
+                <div class="col-lg-4 border-start border-2 mb-3 mb-lg-0">
+                  <!--WebRTC Config -->
+                  <h6>WebRTC Options</h6>
+                  <fieldset class="mb-3">
+                    <div class="form-check mb-2">
+                      <input class="form-check-input" type="checkbox" value="" id="reloadOnConnectionTimeoutCheck"
+                        v-model="reloadOnConnectionTimeoutCheck" />
+                      <label class="form-check-label" for="reloadOnConnectionTimeoutCheck">
+                        Reload On Connection Timeout
+                      </label>
+                      <a href="https://airensoft.gitbook.io/ovenplayer/initialization#webrtcconfig.timeoutmaxretry-and-webrtcconfig.connectiontimeout"
+                        class="ms-1" target="_blank">
+                        <i class="fas fa-external-link-alt"></i>
+                      </a>
                     </div>
-                    <source-item v-for="(source, index) in playerOption.sources" :source="source" :index="index"
-                                 @remove-source="removeSource(index)">
-                    </source-item>
-                </ul>
-            </div>
+                    <div class="form-outline ms-4 mb-3">
+                      <input :disabled="!reloadOnConnectionTimeoutCheck" type="number" id="webrtcLoadingTimeout"
+                        class="form-control active" v-model="webrtcLoadingTimeout">
+                      <label class="form-label" for="webrtcLoadingTimeout">Timeout
+                        (Millisecond)</label>
+                    </div>
+                    <div class="form-outline ms-4">
+                      <input :disabled="!reloadOnConnectionTimeoutCheck" type="number" id="webrtcLoadingRetryCount"
+                        class="form-control active" v-model="webrtcLoadingRetryCount">
+                      <label class="form-label" for="webrtcLoadingRetryCount">Retry count</label>
+                    </div>
+                  </fieldset>
+                  <fieldset>
+                    <div class="form-check mb-2">
+                      <input class="form-check-input" type="checkbox" value="" id="playoutDelayHintCheck"
+                        v-model="playoutDelayHintCheck" />
+                      <label class="form-check-label" for="playoutDelayHintCheck">
+                        Enable Playout Delay Hint
+                      </label>
+                      <a href="https://airensoft.gitbook.io/ovenplayer/initialization#webrtcconfig.playoutdelayhint"
+                        class="ms-1" target="_blank">
+                        <i class="fas fa-external-link-alt"></i>
+                      </a>
+                    </div>
+                    <div class="form-outline ms-4">
+                      <input :disabled="!playoutDelayHintCheck" type="number" id="playOutDelayHintInput"
+                        class="form-control active" v-model="playOutDelayHintInput">
+                      <label class="form-label" for="playOutDelayHintInput">Delay (Second)</label>
+                    </div>
+                  </fieldset>
+                </div>
+                <div class="col-lg-4 border-start border-2 mb-3 mb-lg-0">
+                  <!--HLS Config -->
+                  <h6>HLS Options</h6>
+                  <fieldset class="mb-3">
+                    <div class="form-check mb-2">
+                      <input class="form-check-input" type="checkbox" value="" id="hlsManageLatencyCheck"
+                        v-model="hlsManageLatencyCheck" />
+                      <label class="form-check-label" for="hlsManageLatencyCheck">
+                        Manage Latency
+                      </label>
+                    </div>
+                    <div class="form-outline ms-4 mb-3">
+                      <input :disabled="!hlsManageLatencyCheck" type="number" id="hlsTargetLatency"
+                        class="form-control active" v-model="hlsTargetLatency">
+                      <label class="form-label" for="hlsTargetLatency">Target latency
+                        (Second)</label>
+                    </div>
+                    <div class="form-outline ms-4 mb-3">
+                      <input :disabled="!hlsManageLatencyCheck" type="number" id="hlsMaxLatency"
+                        class="form-control active" v-model="hlsMaxLatency">
+                      <label class="form-label" for="hlsMaxLatency">Max latency (Second)</label>
+                    </div>
+                    <div class="form-outline ms-4">
+                      <input :disabled="!hlsManageLatencyCheck" type="number" id="hlsLiveSyncCatchupRate"
+                        class="form-control active" min="1" max="2" step="0.1" v-model="hlsLiveSyncCatchupRate">
+                      <label class="form-label" for="hlsLiveSyncCatchupRate">Sync catch up rate
+                        (min:1, max:2)</label>
+                    </div>
+                  </fieldset>
+                  <fieldset>
+                    <div class="form-check mb-2">
+                      <input class="form-check-input" type="checkbox" id="enableDrmCheck" v-model="hlsEnableDrmCheck" />
+                      <label class="form-check-label" for="enableDrmCheck">
+                        Enable DRM
+                      </label>
+                    </div>
+                    <div class="mb-3">
+                      <strong>FairPlay</strong>
+                    </div>
+                    <div class="form-outline ms-4 mb-3">
+                      <input :disabled="!hlsEnableDrmCheck" type="text" id="hlsFairPlayLicenseUrlInput"
+                        class="form-control active" v-model="hlsFairPlayLicenseUrl">
+                      <label class="form-label" for="hlsFairPlayLicenseUrlInput">License URL</label>
+                    </div>
+                    <div class="form-outline ms-4 mb-3">
+                      <input :disabled="!hlsEnableDrmCheck" type="text" id="hlsFairPlayServerCertificateUrlInput"
+                        class="form-control active" v-model="hlsFairPlayServerCertificateUrl">
+                      <label class="form-label" for="hlsFairPlayServerCertificateUrlInput">Server Certificate
+                        URL</label>
+                    </div>
+                    <div class="mb-3">
+                      <strong>Widevine</strong>
+                    </div>
+                    <div class="form-outline ms-4 mb-2">
+                      <input :disabled="!hlsEnableDrmCheck" type="text" id="hlsWidevineLicenseUrlInput"
+                        class="form-control active" v-model="hlsWidevineLicenseUrl">
+                      <label class="form-label" for="hlsWidevineLicenseUrlInput">License URL</label>
+                    </div>
+                    <div class="mb-3">
+                      <strong>Custom Header</strong>
+                    </div>
+                    <div class="form-outline ms-4 mb-3">
+                      <input :disabled="!hlsEnableDrmCheck" type="text" id="hlsCustomHeaderKeyInput"
+                        class="form-control active" v-model="hlsCustomHeaderKey">
+                      <label class="form-label" for="hlsCustomHeaderKeyInput">Key</label>
+                    </div>
+                    <div class="form-outline ms-4 mb-3">
+                      <input :disabled="!hlsEnableDrmCheck" type="text" id="hlsCustomHeaderValueInput"
+                        class="form-control active" v-model="hlsCustomHeaderValue">
+                      <label class="form-label" for="hlsCustomHeaderValueInput">Value</label>
+                    </div>
+                  </fieldset>
+                </div>
+              </div>
+            </li>
+            <li class="list-group-item bg-light">
+              <h5 class="mb-0 fs-6">Demo Options</h5>
+            </li>
+            <li class="list-group-item">
+              <div class="row">
+                <div class="col border-start border-2">
+                  <h6>Reload the player when error occurred</h6>
+                  <fieldset>
+                    <div class="form-check mb-2">
+                      <input class="form-check-input" type="checkbox" value="" id="autoReload"
+                        v-model="demoOption.autoReload" @change="changeOptions" />
+                      <label class="form-check-label" for="autoReload">
+                        Enable auto reload
+                      </label>
+                    </div>
+                    <div class="form-outline ms-4">
+                      <input type="text" id="playerReloadInterval" class="form-control"
+                        :class="demoOption.autoReloadInterval ? 'active': ''" v-model="demoOption.autoReloadInterval"
+                        @change="changeOptions">
+                      <label class="form-label" for="playerReloadInterval">
+                        Reload interval (millisecond)
+                      </label>
+                    </div>
+                  </fieldset>
+                </div>
+              </div>
+            </li>
+          </ul>
         </div>
-
-        <div class="row row-cols-1 g-3">
-            <div class="col">
-                <ul class="list-group">
-                    <li class="list-group-item bg-light">
-                        <h5 class="mb-0 fs-6">Player Options</h5>
-                    </li>
-                    <li class="list-group-item">
-
-                        <div class="row">
-                            <div class="col-lg-4 border-start border-2 mb-3 mb-lg-0">
-                                <!--General Config -->
-                                <h6>General Options</h6>
-                                <fieldset>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="" id="autoStart"
-                                               v-model="playerOption.autoStart" @change="changeOptions"/>
-                                        <label class="form-check-label" for="autoStart">
-                                            autoStart
-                                        </label>
-                                        <a href="https://airensoft.gitbook.io/ovenplayer/initialization#autostart" class="ms-1"
-                                           target="_blank">
-                                            <i class="fas fa-external-link-alt"></i>
-                                        </a>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="" id="autoFallback"
-                                               v-model="playerOption.autoFallback" @change="changeOptions"/>
-                                        <label class="form-check-label" for="autoFallback">
-                                            autoFallback
-                                        </label>
-                                        <a href="https://airensoft.gitbook.io/ovenplayer/initialization#autofallback" class="ms-1"
-                                           target="_blank">
-                                            <i class="fas fa-external-link-alt"></i>
-                                        </a>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="" id="mute" v-model="playerOption.mute"
-                                               @change="changeOptions"/>
-                                        <label class="form-check-label" for="mute">
-                                            mute
-                                        </label>
-                                        <a href="https://airensoft.gitbook.io/ovenplayer/initialization#mute" class="ms-1"
-                                           target="_blank">
-                                            <i class="fas fa-external-link-alt"></i>
-                                        </a>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="" id="doubleTapToSeek"
-                                               v-model="playerOption.doubleTapToSeek" @change="changeOptions"/>
-                                        <label class="form-check-label" for="doubleTapToSeek">
-                                            doubleTapToSeek
-                                        </label>
-                                        <a href="https://airensoft.gitbook.io/ovenplayer/initialization#doubletaptoseek" class="ms-1"
-                                           target="_blank">
-                                            <i class="fas fa-external-link-alt"></i>
-                                        </a>
-                                    </div>
-                                </fieldset>
-                            </div>
-                            <div class="col-lg-4 border-start border-2 mb-3 mb-lg-0">
-                                <!--WebRTC Config -->
-                                <h6>WebRTC Options</h6>
-                                <fieldset class="mb-3">
-                                    <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" value="" id="reloadOnConnectionTimeoutCheck"
-                                               v-model="reloadOnConnectionTimeoutCheck"/>
-                                        <label class="form-check-label" for="reloadOnConnectionTimeoutCheck">
-                                            Reload On Connection Timeout
-                                        </label>
-                                        <a href="https://airensoft.gitbook.io/ovenplayer/initialization#webrtcconfig.timeoutmaxretry-and-webrtcconfig.connectiontimeout"
-                                           class="ms-1" target="_blank">
-                                            <i class="fas fa-external-link-alt"></i>
-                                        </a>
-                                    </div>
-                                    <div class="form-outline ms-4 mb-3">
-                                        <input :disabled="!reloadOnConnectionTimeoutCheck" type="number" id="webrtcLoadingTimeout"
-                                               class="form-control active" v-model="webrtcLoadingTimeout">
-                                        <label class="form-label" for="webrtcLoadingTimeout">Timeout
-                                            (Millisecond)</label>
-                                    </div>
-                                    <div class="form-outline ms-4">
-                                        <input :disabled="!reloadOnConnectionTimeoutCheck" type="number" id="webrtcLoadingRetryCount"
-                                               class="form-control active" v-model="webrtcLoadingRetryCount">
-                                        <label class="form-label" for="webrtcLoadingRetryCount">Retry count</label>
-                                    </div>
-                                </fieldset>
-                                <fieldset>
-                                    <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" value="" id="playoutDelayHintCheck"
-                                               v-model="playoutDelayHintCheck"/>
-                                        <label class="form-check-label" for="playoutDelayHintCheck">
-                                            Enable Playout Delay Hint
-                                        </label>
-                                        <a href="https://airensoft.gitbook.io/ovenplayer/initialization#webrtcconfig.playoutdelayhint"
-                                           class="ms-1" target="_blank">
-                                            <i class="fas fa-external-link-alt"></i>
-                                        </a>
-                                    </div>
-                                    <div class="form-outline ms-4">
-                                        <input :disabled="!playoutDelayHintCheck" type="number" id="playOutDelayHintInput"
-                                               class="form-control active" v-model="playOutDelayHintInput">
-                                        <label class="form-label" for="playOutDelayHintInput">Delay (Second)</label>
-                                    </div>
-                                </fieldset>
-                            </div>
-                            <div class="col-lg-4 border-start border-2 mb-3 mb-lg-0">
-                                <!--HLS Config -->
-                                <h6>HLS Options</h6>
-                                <fieldset class="mb-3">
-                                    <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" value="" id="hlsManageLatencyCheck"
-                                               v-model="hlsManageLatencyCheck"/>
-                                        <label class="form-check-label" for="hlsManageLatencyCheck">
-                                            Manage Latency
-                                        </label>
-                                    </div>
-                                    <div class="form-outline ms-4 mb-3">
-                                        <input :disabled="!hlsManageLatencyCheck" type="number" id="hlsTargetLatency"
-                                               class="form-control active" v-model="hlsTargetLatency">
-                                        <label class="form-label" for="hlsTargetLatency">Target latency
-                                            (Second)</label>
-                                    </div>
-                                    <div class="form-outline ms-4 mb-3">
-                                        <input :disabled="!hlsManageLatencyCheck" type="number" id="hlsMaxLatency"
-                                               class="form-control active" v-model="hlsMaxLatency">
-                                        <label class="form-label" for="hlsMaxLatency">Max latency (Second)</label>
-                                    </div>
-                                    <div class="form-outline ms-4">
-                                        <input :disabled="!hlsManageLatencyCheck" type="number" id="hlsLiveSyncCatchupRate"
-                                               class="form-control active" min="1" max="2" step="0.1" v-model="hlsLiveSyncCatchupRate">
-                                        <label class="form-label" for="hlsLiveSyncCatchupRate">Sync catch up rate
-                                            (min:1, max:2)</label>
-                                    </div>
-                                </fieldset>
-                                <fieldset>
-                                    <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" id="enableDrmCheck" v-model="hlsEnableDrmCheck"/>
-                                        <label class="form-check-label" for="enableDrmCheck">
-                                            Enable DRM
-                                        </label>
-                                    </div>
-                                    <div class="mb-3">
-                                        <strong>FairPlay</strong>
-                                    </div>
-                                    <div class="form-outline ms-4 mb-3">
-                                        <input :disabled="!hlsEnableDrmCheck" type="text" id="hlsFairPlayLicenseUrlInput"
-                                               class="form-control active" v-model="hlsFairPlayLicenseUrl">
-                                        <label class="form-label" for="hlsFairPlayLicenseUrlInput">License URL</label>
-                                    </div>
-                                    <div class="form-outline ms-4 mb-3">
-                                        <input :disabled="!hlsEnableDrmCheck" type="text" id="hlsFairPlayServerCertificateUrlInput"
-                                               class="form-control active" v-model="hlsFairPlayServerCertificateUrl">
-                                        <label class="form-label" for="hlsFairPlayServerCertificateUrlInput">Server Certificate
-                                            URL</label>
-                                    </div>
-                                    <div class="mb-3">
-                                        <strong>Widevine</strong>
-                                    </div>
-                                    <div class="form-outline ms-4 mb-2">
-                                        <input :disabled="!hlsEnableDrmCheck" type="text" id="hlsWidevineLicenseUrlInput"
-                                               class="form-control active" v-model="hlsWidevineLicenseUrl">
-                                        <label class="form-label" for="hlsWidevineLicenseUrlInput">License URL</label>
-                                    </div>
-                                    <div class="mb-3">
-                                        <strong>Custom Header</strong>
-                                    </div>
-                                    <div class="form-outline ms-4 mb-3">
-                                        <input :disabled="!hlsEnableDrmCheck" type="text" id="hlsCustomHeaderKeyInput"
-                                               class="form-control active" v-model="hlsCustomHeaderKey">
-                                        <label class="form-label" for="hlsCustomHeaderKeyInput">Key</label>
-                                    </div>
-                                    <div class="form-outline ms-4 mb-3">
-                                        <input :disabled="!hlsEnableDrmCheck" type="text" id="hlsCustomHeaderValueInput"
-                                               class="form-control active" v-model="hlsCustomHeaderValue">
-                                        <label class="form-label" for="hlsCustomHeaderValueInput">Value</label>
-                                    </div>
-                                </fieldset>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="list-group-item bg-light">
-                        <h5 class="mb-0 fs-6">Demo Options</h5>
-                    </li>
-                    <li class="list-group-item">
-                        <div class="row">
-                            <div class="col border-start border-2">
-                                <h6>Reload the player when error occurred</h6>
-                                <fieldset>
-                                    <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" value="" id="autoReload"
-                                               v-model="demoOption.autoReload" @change="changeOptions"/>
-                                        <label class="form-check-label" for="autoReload">
-                                            Enable auto reload
-                                        </label>
-                                    </div>
-                                    <div class="form-outline ms-4">
-                                        <input type="text" id="playerReloadInterval" class="form-control"
-                                               :class="demoOption.autoReloadInterval ? 'active': ''" v-model="demoOption.autoReloadInterval"
-                                               @change="changeOptions">
-                                        <label class="form-label" for="playerReloadInterval">
-                                            Reload interval (millisecond)
-                                        </label>
-                                    </div>
-                                </fieldset>
-                            </div>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-            <div v-show="createScriptHTML" class="col">
-                <ul class="list-group">
-                    <li class="list-group-item bg-light">
-                        <h5 class="mb-0 fs-6">Usage</h5>
-                    </li>
-                    <li class="list-group-item position-relative">
-                        <div v-html="createScriptHTML" class="my-2 small font-monospace w-100 overflow-auto"
-                             style="white-space: pre;">
-                        </div>
-                        <button ref="copyCodeButton" class="btn btn-light text-dark position-absolute px-2 px-md-4"
-                                style="top: 0.5rem; right: 1rem" :data-clipboard-text="createScript">
-                            <i class="far fa-copy me-1"></i>COPY
-                        </button>
-                    </li>
-                </ul>
-            </div>
-            <div class="col">
-                <ul class="list-group">
-                    <li class="list-group-item bg-light">
-                        <h5 class="mb-0 fs-6">Export permanent link</h5>
-                    </li>
-                    <li class="list-group-item">
-
-                        <div class="input-group">
-                            <div class="form-outline flex-grow-1">
-                                <input type="text" id="permanentLinkInput" readonly class="form-control bg-white"
-                                       v-model="permanentLink"/>
-                            </div>
-                            <button id="exportButton" ref="exportButton" data-clipboard-target="#permanentLinkInput"
-                                    class="btn btn-primary px-2 px-md-4" type="button">
-                                <i class="far fa-copy me-1"></i>COPY
-                            </button>
-                        </div>
-
-                    </li>
-                </ul>
-            </div>
+        <div v-show="createScriptHTML" class="col">
+          <ul class="list-group">
+            <li class="list-group-item bg-light">
+              <h5 class="mb-0 fs-6">Usage</h5>
+            </li>
+            <li class="list-group-item position-relative">
+              <div v-html="createScriptHTML" class="my-2 small font-monospace w-100 overflow-auto"
+                style="white-space: pre;">
+              </div>
+              <button ref="copyCodeButton" class="btn btn-light text-dark position-absolute px-2 px-md-4"
+                style="top: 0.5rem; right: 1rem" :data-clipboard-text="createScript">
+                <i class="far fa-copy me-1"></i>COPY
+              </button>
+            </li>
+          </ul>
         </div>
+        <div class="col">
+          <ul class="list-group">
+            <li class="list-group-item bg-light">
+              <h5 class="mb-0 fs-6">Export permanent link</h5>
+            </li>
+            <li class="list-group-item">
+
+              <div class="input-group">
+                <div class="form-outline flex-grow-1">
+                  <input type="text" id="permanentLinkInput" readonly class="form-control bg-white"
+                    v-model="permanentLink" />
+                </div>
+                <button id="exportButton" ref="exportButton" data-clipboard-target="#permanentLinkInput"
+                  class="btn btn-primary px-2 px-md-4" type="button">
+                  <i class="far fa-copy me-1"></i>COPY
+                </button>
+              </div>
+
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
     <div class="bg-light border-top mt-5">
-        <div class="container-lg mt-3">
-            <footer class="text-center text-lg-start">
-                <section class="">
-                    <div class="row">
-                        <div class="col-md-5 col-lg-5 col-xl-5 mx-auto mt-3">
-                            <h6 class="text-uppercase mb-4 font-weight-bold">
-                                AirenSoft
-                            </h6>
-                            <p class="lead">
-                                Media Technology Expert Group
-                            </p>
-                            <p>
-                                Our mission is to build a powerful media world by making it easier for everyone to
-                                use all the complex and demanding media technologies of the world.
-                            </p>
-                        </div>
+      <div class="container-lg mt-3">
+        <footer class="text-center text-lg-start">
+          <section class="">
+            <div class="row">
+              <div class="col-md-5 col-lg-5 col-xl-5 mx-auto mt-3">
+                <h6 class="text-uppercase mb-4 font-weight-bold">
+                  AirenSoft
+                </h6>
+                <p class="lead">
+                  Media Technology Expert Group
+                </p>
+                <p>
+                  Our mission is to build a powerful media world by making it easier for everyone to
+                  use all the complex and demanding media technologies of the world.
+                </p>
+              </div>
 
-                        <hr class="w-100 clearfix d-lg-none"/>
+              <hr class="w-100 clearfix d-lg-none" />
 
-                        <div class="col-md-5 col-lg-2 col-xl-2 mx-auto mt-3">
-                            <h6 class="text-uppercase mb-4 font-weight-bold">OPEN SOURCE PROJECTS</h6>
-                            <p>
-                                <a class="" target="_blank" href="https://github.com/AirenSoft/OvenMediaEngine">OvenMediaEngine</a>
-                            </p>
-                            <p>
-                                <a class="" target="_blank" href="https://github.com/AirenSoft/OvenPlayer">OvenPlayer</a>
-                            </p>
-                            <p>
-                                <a class="" target="_blank" href="https://github.com/AirenSoft/OvenLiveKit-Web">OvenLiveKit-Web</a>
-                            </p>
-                            <p>
-                                <a class="" target="_blank" href="https://github.com/AirenSoft/OvenSpace">OvenSpace</a>
-                            </p>
-                        </div>
+              <div class="col-md-5 col-lg-2 col-xl-2 mx-auto mt-3">
+                <h6 class="text-uppercase mb-4 font-weight-bold">OPEN SOURCE PROJECTS</h6>
+                <p>
+                  <a class="" target="_blank" href="https://github.com/AirenSoft/OvenMediaEngine">OvenMediaEngine</a>
+                </p>
+                <p>
+                  <a class="" target="_blank" href="https://github.com/AirenSoft/OvenPlayer">OvenPlayer</a>
+                </p>
+                <p>
+                  <a class="" target="_blank" href="https://github.com/AirenSoft/OvenLiveKit-Web">OvenLiveKit-Web</a>
+                </p>
+                <p>
+                  <a class="" target="_blank" href="https://github.com/AirenSoft/OvenSpace">OvenSpace</a>
+                </p>
+              </div>
 
-                        <hr class="w-100 clearfix d-lg-none"/>
+              <hr class="w-100 clearfix d-lg-none" />
 
-                        <div class="col-md-5 col-lg-3 col-xl-3 mx-auto mt-3">
-                            <h6 class="text-uppercase mb-4 font-weight-bold">Contact</h6>
-                            <p><i class="fas fa-home mr-3"></i> #1203, Twenty First Valley, 157, Yangpyeong-ro,
-                                Yeongdeungpo-gu, Seoul, 07207 Republic of Korea</p>
-                            <p><i class="fas fa-envelope mr-3"></i> contact@airensoft.com</p>
-                            <p><i class="fas fa-phone mr-3"></i> +82-2-6378-5227</p>
-                        </div>
-                    </div>
+              <div class="col-md-5 col-lg-3 col-xl-3 mx-auto mt-3">
+                <h6 class="text-uppercase mb-4 font-weight-bold">Contact</h6>
+                <p><i class="fas fa-home mr-3"></i> #1203, Twenty First Valley, 157, Yangpyeong-ro,
+                  Yeongdeungpo-gu, Seoul, 07207 Republic of Korea</p>
+                <p><i class="fas fa-envelope mr-3"></i> contact@airensoft.com</p>
+                <p><i class="fas fa-phone mr-3"></i> +82-2-6378-5227</p>
+              </div>
+            </div>
 
-                </section>
+          </section>
 
-                <hr class="my-3">
+          <hr class="my-3">
 
-                <section class="p-3 pt-0">
-                    <div class="row d-flex align-items-center">
-                        <div class="col-md-7 col-lg-8 text-center text-md-start">
-                            <div class="p-3">
-                                © 2023 Copyright:
-                                <a class="" href="https://www.airensoft.com">AirenSoft</a>
-                                Co., Ltd. All rights reserved.
-                            </div>
-                        </div>
+          <section class="p-3 pt-0">
+            <div class="row d-flex align-items-center">
+              <div class="col-md-7 col-lg-8 text-center text-md-start">
+                <div class="p-3">
+                  © Copyright
+                  <a class="" href="https://www.airensoft.com">AirenSoft</a>
+                  Co., Ltd. All rights reserved.
+                </div>
+              </div>
 
-                        <div class="col-md-5 col-lg-4 ml-lg-0 text-center text-md-end">
-                            <!-- linked in -->
-                            <a class="btn btn-floating m-1" class="" role="button" target="_blank"
-                               href="https://www.linkedin.com/company/airensoft"><i class="fab fa-linkedin-in"></i></a>
+              <div class="col-md-5 col-lg-4 ml-lg-0 text-center text-md-end">
+                <!-- linked in -->
+                <a class="btn btn-floating m-1" class="" role="button" target="_blank"
+                  href="https://www.linkedin.com/company/airensoft"><i class="fab fa-linkedin-in"></i></a>
 
-                            <!-- Facebook -->
-                            <a class="btn btn-floating m-1" class="" role="button" target="_blank"
-                               href="https://www.facebook.com/airensoft/"><i class="fab fa-facebook-f"></i></a>
+                <!-- Facebook -->
+                <a class="btn btn-floating m-1" class="" role="button" target="_blank"
+                  href="https://www.facebook.com/airensoft/"><i class="fab fa-facebook-f"></i></a>
 
-                            <!-- Twitter -->
-                            <a class="btn btn-floating m-1" class="" role="button" target="_blank"
-                               href="https://twitter.com/AirenSoft"><i class="fab fa-twitter"></i></a>
+                <!-- Twitter -->
+                <a class="btn btn-floating m-1" class="" role="button" target="_blank"
+                  href="https://twitter.com/AirenSoft"><i class="fab fa-twitter"></i></a>
 
-                            <!-- Instagram -->
-                            <a class="btn btn-floating m-1" class="" role="button" target="_blank"
-                               href="https://www.instagram.com/airensoft"><i class="fab fa-instagram"></i></a>
-                        </div>
-                    </div>
-                </section>
-            </footer>
-        </div>
+                <!-- Instagram -->
+                <a class="btn btn-floating m-1" class="" role="button" target="_blank"
+                  href="https://www.instagram.com/airensoft"><i class="fab fa-instagram"></i></a>
+              </div>
+            </div>
+          </section>
+        </footer>
+      </div>
     </div>
-</div>
+  </div>
 
-<script id="source-item" type="text/template">
+  <script id="source-item" type="text/template">
     <li class="list-group-item">
         <div class="source-item">
             <div class="source-header">
@@ -603,804 +601,816 @@
     </li>
 </script>
 
-<!-- MDB -->
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.10.0/mdb.min.js"></script>
+  <!-- MDB -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.10.0/mdb.min.js"></script>
 
-<script>
+  <script>
 
     const hash = location.hash;
 
     let urlOption = null;
 
     if (hash) {
-        urlOption = JSON.parse(decodeURIComponent(hash.replace('#', '')));
+      urlOption = JSON.parse(decodeURIComponent(hash.replace('#', '')));
     }
 
     let playerOption = {
-        autoStart: true,
-        autoFallback: true,
-        mute: false,
-        sources: [],
-        doubleTapToSeek: false
+      autoStart: true,
+      autoFallback: true,
+      mute: false,
+      sources: [],
+      doubleTapToSeek: false
     };
 
     if (urlOption && urlOption.playerOption) {
 
-        playerOption = _.extend(playerOption, urlOption.playerOption);
+      playerOption = _.extend(playerOption, urlOption.playerOption);
     }
 
     let demoOption = {
-        autoReload: true,
-        autoReloadInterval: 2000
+      autoReload: true,
+      autoReloadInterval: 2000
     };
 
     if (urlOption && urlOption.demoOption) {
 
-        demoOption = _.extend(demoOption, urlOption.demoOption);
+      demoOption = _.extend(demoOption, urlOption.demoOption);
     }
 
     function makeCopyButton(element) {
 
-        const tooltip = new mdb.Tooltip(element, {
-            placement: 'bottom',
-            title: 'copied!',
-            trigger: 'manual'
-        });
+      const tooltip = new mdb.Tooltip(element, {
+        placement: 'bottom',
+        title: 'copied!',
+        trigger: 'manual'
+      });
 
-        tooltip.timer = null;
+      tooltip.timer = null;
 
-        const clipboard = new ClipboardJS(element);
+      const clipboard = new ClipboardJS(element);
 
-        clipboard.on('success', function () {
+      clipboard.on('success', function () {
 
-            if (tooltip.timer) {
-                clearTimeout(tooltip.timer);
-            }
+        if (tooltip.timer) {
+          clearTimeout(tooltip.timer);
+        }
 
-            tooltip.show();
+        tooltip.show();
 
-            tooltip.timer = setTimeout(function () {
-                tooltip.hide();
-            }, 1000);
-        });
+        tooltip.timer = setTimeout(function () {
+          tooltip.hide();
+        }, 1000);
+      });
     }
 
     const app = {
-        data: function () {
-            return {
-                reloadTimer: null,
-                player: null,
-                source: null,
-                loadButtonMsg: 'LOAD PLAYER',
-                loadButtonColor: 'btn-primary',
-                loadButtonIcon: 'fa-play',
-                playerMessage: null,
-                playerOption: playerOption,
-                demoOption: demoOption,
-                permanentLink: location.href,
-                createScript: null,
-                createScriptHTML: null,
-                playerVersion: null
+      data: function () {
+        return {
+          reloadTimer: null,
+          player: null,
+          source: null,
+          loadButtonMsg: 'LOAD PLAYER',
+          loadButtonColor: 'btn-primary',
+          loadButtonIcon: 'fa-play',
+          playerMessage: null,
+          playerOption: playerOption,
+          demoOption: demoOption,
+          permanentLink: location.href,
+          createScript: null,
+          createScriptHTML: null,
+          playerVersion: null
+        }
+      },
+      methods: {
+        addSource: function () {
+
+          if (!this.source) {
+            return;
+          }
+
+          const url = this.source.trim();
+
+          let protocol = null;
+
+          if (url.indexOf('ws:') === 0 || url.indexOf('wss:') === 0) {
+
+            protocol = "webrtc";
+          } else if (url.indexOf('http:') === 0 || url.indexOf('https:') === 0) {
+
+            if (url.indexOf('.m3u8') > 0) {
+
+              protocol = "hls";
+
+              if (url.endsWith('llhls.m3u8')) {
+                protocol = 'll-hls'
+              }
+            } else if (url.indexOf('.mpd') > 0) {
+
+              protocol = "dash";
+            } else if (url.indexOf('.mp4') > 0) {
+
+              protocol = "http";
             }
+          }
+
+          if (!protocol) {
+
+            this.unLoadPlayer();
+            this.playerMessage = "Invalid playback url";
+
+            return;
+          }
+
+          const source = {
+            type: protocol,
+            file: url
+          };
+
+          this.playerOption.sources.push(source);
+          this.source = null;
+
+          this.unLoadPlayer(true);
+          this.makePermanentLink();
         },
-        methods: {
-            addSource: function () {
+        removeSource: function (index) {
 
-                if (!this.source) {
-                    return;
-                }
+          this.playerOption.sources.splice(index, 1);
 
-                const url = this.source.trim();
-
-                let protocol = null;
-
-                if (url.indexOf('ws:') === 0 || url.indexOf('wss:') === 0) {
-
-                    protocol = "webrtc";
-                } else if (url.indexOf('http:') === 0 || url.indexOf('https:') === 0) {
-
-                    if (url.indexOf('.m3u8') > 0) {
-
-                        protocol = "hls";
-
-                        if (url.endsWith('llhls.m3u8')) {
-                            protocol = 'll-hls'
-                        }
-                    } else if (url.indexOf('.mpd') > 0) {
-
-                        protocol = "dash";
-                    } else if (url.indexOf('.mp4') > 0) {
-
-                        protocol = "http";
-                    }
-                }
-
-                if (!protocol) {
-
-                    this.unLoadPlayer();
-                    this.playerMessage = "Invalid playback url";
-
-                    return;
-                }
-
-                const source = {
-                    type: protocol,
-                    file: url
-                };
-
-                this.playerOption.sources.push(source);
-                this.source = null;
-
-                this.unLoadPlayer(true);
-                this.makePermanentLink();
-            },
-            removeSource: function (index) {
-
-                this.playerOption.sources.splice(index, 1);
-
-                this.unLoadPlayer(true);
-                this.makePermanentLink();
-            },
-            loadPlayer: function () {
-
-                if (this.player) {
-                    this.player.remove();
-                    this.player = null;
-                }
-
-                if (this.playerOption.sources.length === 0) {
-                    this.playerMessage = 'Please add the playback sources.';
-                    return;
-                }
-
-                const playerOption = JSON.parse(JSON.stringify(this.playerOption));
-
-                this.player = OvenPlayer.create('player', playerOption);
-
-                this.playerVersion = this.player.getVersion();
-
-                this.player.on('ready', function () {
-                    vm.loadButtonMsg = 'UNLOAD PLAYER';
-                    vm.loadButtonColor = 'btn-success';
-                    vm.loadButtonIcon = 'fa-stop';
-                    vm.playerMessage = null;
-                });
-
-                if (this.demoOption.autoReload && this.demoOption.autoReloadInterval > 0) {
-
-                    this.player.once('error', function (e) {
-
-                        console.log(e);
-
-                        if (this.reloadTimer) {
-                            clearInterval(this.reloadTimer);
-                            this.reloadTimer = null;
-                        }
-
-                        vm.reloadTimer = setTimeout(function () {
-
-                            vm.unLoadPlayer();
-                            vm.loadPlayer();
-                        }, vm.demoOption.autoReloadInterval);
-                    });
-                }
-            },
-            unLoadPlayer: function (optionChanged) {
-
-                if (this.reloadTimer) {
-                    clearInterval(this.reloadTimer);
-                    this.reloadTimer = null;
-                }
-
-                if (this.player) {
-
-                    this.player.remove();
-                    this.player = null;
-                    this.loadButtonMsg = 'LOAD PLAYER';
-                    this.loadButtonColor = 'btn-primary';
-                    this.loadButtonIcon = 'fa-play';
-                }
-
-                if (optionChanged) {
-                    this.playerMessage = 'The options have changed. Please reload the player.';
-                }
-            },
-            reloadPlayer: function () {
-
-                if (this.player) {
-
-                    this.unLoadPlayer();
-                } else {
-
-                    this.loadPlayer();
-                }
-            },
-            makePermanentLink: function () {
-
-                const link = {};
-                link.playerOption = this.playerOption;
-                link.demoOption = this.demoOption;
-
-                location.hash = encodeURIComponent(JSON.stringify(link));
-                this.permanentLink = location.href;
-
-                let script = 'const player = OvenPlayer.create("player_el_id", '
-                    + JSON.stringify(this.playerOption) + ');';
-                this.createScript = js_beautify(script);
-                this.createScriptHTML = hljs.highlight(this.createScript, {
-                    language: 'javascript'
-                }).value;
-            },
-            changeOptions: function () {
-
-                this.unLoadPlayer(true);
-                this.makePermanentLink();
-            }
+          this.unLoadPlayer(true);
+          this.makePermanentLink();
         },
-        computed: {
-            playoutDelayHintCheck: {
-                get: function () {
+        loadPlayer: function () {
 
-                    if (this.playerOption.webrtcConfig &&
-                        this.playerOption.webrtcConfig.playoutDelayHint > -1) {
+          if (this.player) {
+            this.player.remove();
+            this.player = null;
+          }
 
-                        return true;
-                    } else {
-                        return false;
-                    }
-                },
-                set: function (value) {
+          if (this.playerOption.sources.length === 0) {
+            this.playerMessage = 'Please add the playback sources.';
+            return;
+          }
 
-                    if (value) {
-                        if (!this.playerOption.webrtcConfig) {
-                            this.playerOption.webrtcConfig = {};
-                        }
-                        this.playerOption.webrtcConfig.playoutDelayHint = 3;
-                    } else {
-                        delete this.playerOption.webrtcConfig.playoutDelayHint;
+          const playerOption = JSON.parse(JSON.stringify(this.playerOption));
 
-                        if (_.isEmpty(this.playerOption.webrtcConfig)) {
+          this.player = OvenPlayer.create('player', playerOption);
 
-                            delete this.playerOption.webrtcConfig;
-                        }
-                    }
+          this.playerVersion = this.player.getVersion();
 
-                    this.unLoadPlayer(true);
-                    this.makePermanentLink();
-                }
-            },
-            playOutDelayHintInput: {
-                get: function () {
+          this.player.on('ready', function () {
+            vm.loadButtonMsg = 'UNLOAD PLAYER';
+            vm.loadButtonColor = 'btn-success';
+            vm.loadButtonIcon = 'fa-stop';
+            vm.playerMessage = null;
+          });
 
-                    if (this.playoutDelayHintCheck) {
+          this.player.on('hlsPrepared', function (hls) {
+            hls.on(Hls.Events.FRAG_PARSING_METADATA, function (data, meta) {
+              console.log(data, meta);
+              if (meta && meta.samples) {
+                meta.samples.forEach(function (sample) {
+                  console.log(new TextDecoder("utf-8").decode(sample.data))
+                })
+              }
 
-                        return this.playerOption.webrtcConfig.playoutDelayHint;
-                    }
-                },
-                set: function (value) {
-                    if (value > 0) {
+            });
+          });
 
-                        this.playerOption.webrtcConfig.playoutDelayHint = value;
-                        this.unLoadPlayer(true);
-                        this.makePermanentLink();
-                    }
-                }
-            },
-            reloadOnConnectionTimeoutCheck: {
-                get: function () {
+          if (this.demoOption.autoReload && this.demoOption.autoReloadInterval > 0) {
 
-                    if (this.playerOption.webrtcConfig &&
-                        (_.isNumber(this.playerOption.webrtcConfig.connectionTimeout)
-                            || _.isNumber(this.playerOption.webrtcConfig.timeoutMaxRetry))) {
+            this.player.once('error', function (e) {
 
-                        return true;
-                    } else {
-                        return false;
-                    }
-                },
-                set: function (value) {
+              console.log(e);
 
-                    if (value) {
-                        if (!this.playerOption.webrtcConfig) {
-                            this.playerOption.webrtcConfig = {};
-                        }
-                        this.playerOption.webrtcConfig.timeoutMaxRetry = 4;
-                        this.playerOption.webrtcConfig.connectionTimeout = 10000;
-                    } else {
+              if (this.reloadTimer) {
+                clearInterval(this.reloadTimer);
+                this.reloadTimer = null;
+              }
 
-                        delete this.playerOption.webrtcConfig.timeoutMaxRetry;
-                        delete this.playerOption.webrtcConfig.connectionTimeout;
+              vm.reloadTimer = setTimeout(function () {
 
-                        if (_.isEmpty(this.playerOption.webrtcConfig)) {
-
-                            delete this.playerOption.webrtcConfig;
-                        }
-                    }
-
-                    this.unLoadPlayer(true);
-                    this.makePermanentLink();
-                }
-            },
-            webrtcLoadingRetryCount: {
-                get: function () {
-
-                    if (this.playerOption.webrtcConfig &&
-                        _.isNumber(this.playerOption.webrtcConfig.timeoutMaxRetry)) {
-
-                        return this.playerOption.webrtcConfig.timeoutMaxRetry;
-                    }
-                },
-                set: function (value) {
-                    if (!this.playerOption.webrtcConfig) {
-                        this.playerOption.webrtcConfig = {};
-                    }
-
-                    this.playerOption.webrtcConfig.timeoutMaxRetry = value;
-                    this.unLoadPlayer(true);
-                    this.makePermanentLink();
-                }
-            },
-            webrtcLoadingTimeout: {
-                get: function () {
-
-                    if (this.playerOption.webrtcConfig &&
-                        _.isNumber(this.playerOption.webrtcConfig.connectionTimeout)) {
-
-                        return this.playerOption.webrtcConfig.connectionTimeout;
-                    }
-                },
-                set: function (value) {
-                    if (!this.playerOption.webrtcConfig) {
-                        this.playerOption.webrtcConfig = {};
-                    }
-
-                    this.playerOption.webrtcConfig.connectionTimeout = value;
-                    this.unLoadPlayer(true);
-                    this.makePermanentLink();
-                }
-            },
-            llDashCheck: {
-                get: function () {
-
-                    let value = false;
-
-                    if (this.playerOption &&
-                        this.playerOption.sources) {
-
-                        _.each(this.playerOption.sources, function (source) {
-
-                            if (source.type === 'dash' && source.lowLatency === true) {
-
-                                value = true;
-                                return;
-                            }
-                        });
-                    }
-
-                    return value;
-                },
-                set: function (value) {
-
-                    if (this.playerOption &&
-                        this.playerOption.sources) {
-
-                        _.each(this.playerOption.sources, function (source) {
-
-                            if (source.type === 'dash') {
-
-                                if (value) {
-                                    source.lowLatency = true;
-                                } else {
-                                    delete source.lowLatency;
-                                }
-                            }
-                        });
-
-                        if (!value) {
-
-                            if (this.playerOption.lowLatencyMpdLiveDelay) {
-
-                                delete this.playerOption.lowLatencyMpdLiveDelay;
-                            }
-                        }
-
-                        this.unLoadPlayer(true);
-                        this.makePermanentLink();
-                    }
-                }
-            },
-            llDashLiveDelay: {
-                get: function () {
-
-                    if (this.playerOption.lowLatencyMpdLiveDelay &&
-                        _.isNumber(this.playerOption.lowLatencyMpdLiveDelay)) {
-
-                        return this.playerOption.lowLatencyMpdLiveDelay;
-                    }
-                },
-                set: function (value) {
-
-                    if (value) {
-
-                        this.playerOption.lowLatencyMpdLiveDelay = value;
-
-                    } else {
-
-                        delete this.playerOption.lowLatencyMpdLiveDelay;
-                    }
-
-                    this.unLoadPlayer(true);
-                    this.makePermanentLink();
-                }
-            },
-            hlsManageLatencyCheck: {
-                get: function () {
-
-                    if (this.playerOption.hlsConfig &&
-                        (_.isNumber(this.playerOption.hlsConfig.liveSyncDuration)
-                            || _.isNumber(this.playerOption.hlsConfig.liveMaxLatencyDuration)
-                            || _.isNumber(this.playerOption.hlsConfig.maxLiveSyncPlaybackRate))) {
-
-                        return true;
-                    } else {
-                        return false;
-                    }
-                },
-                set: function (value) {
-
-                    if (value) {
-                        if (!this.playerOption.hlsConfig) {
-                            this.playerOption.hlsConfig = {};
-                        }
-                        this.playerOption.hlsConfig.liveSyncDuration = 1.5;
-                        this.playerOption.hlsConfig.liveMaxLatencyDuration = 3;
-                        this.playerOption.hlsConfig.maxLiveSyncPlaybackRate = 1.5;
-                    } else {
-
-                        delete this.playerOption.hlsConfig.liveSyncDuration;
-                        delete this.playerOption.hlsConfig.liveMaxLatencyDuration;
-                        delete this.playerOption.hlsConfig.maxLiveSyncPlaybackRate;
-
-                        if (_.isEmpty(this.playerOption.hlsConfig)) {
-
-                            delete this.playerOption.hlsConfig;
-                        }
-                    }
-
-                    this.unLoadPlayer(true);
-                    this.makePermanentLink();
-                }
-            },
-            hlsTargetLatency: {
-                get: function () {
-
-                    if (this.playerOption.hlsConfig &&
-                        _.isNumber(this.playerOption.hlsConfig.liveSyncDuration)) {
-
-                        return this.playerOption.hlsConfig.liveSyncDuration;
-                    }
-                },
-                set: function (value) {
-                    if (!this.playerOption.hlsConfig) {
-                        this.playerOption.hlsConfig = {};
-                    }
-
-                    this.playerOption.hlsConfig.liveSyncDuration = value;
-                    this.unLoadPlayer(true);
-                    this.makePermanentLink();
-                }
-            },
-            hlsMaxLatency: {
-                get: function () {
-
-                    if (this.playerOption.hlsConfig &&
-                        _.isNumber(this.playerOption.hlsConfig.liveMaxLatencyDuration)) {
-
-                        return this.playerOption.hlsConfig.liveMaxLatencyDuration;
-                    }
-                },
-                set: function (value) {
-                    if (!this.playerOption.hlsConfig) {
-                        this.playerOption.hlsConfig = {};
-                    }
-
-                    this.playerOption.hlsConfig.liveMaxLatencyDuration = value;
-                    this.unLoadPlayer(true);
-                    this.makePermanentLink();
-                }
-            },
-            hlsLiveSyncCatchupRate: {
-                get: function () {
-
-                    if (this.playerOption.hlsConfig &&
-                        _.isNumber(this.playerOption.hlsConfig.maxLiveSyncPlaybackRate)) {
-
-                        return this.playerOption.hlsConfig.maxLiveSyncPlaybackRate;
-                    }
-                },
-                set: function (value) {
-                    if (!this.playerOption.hlsConfig) {
-                        this.playerOption.hlsConfig = {};
-                    }
-
-                    this.playerOption.hlsConfig.maxLiveSyncPlaybackRate = value;
-                    this.unLoadPlayer(true);
-                    this.makePermanentLink();
-                }
-            },
-            hlsEnableDrmCheck: {
-                get: function () {
-
-                    return this.playerOption.hlsConfig && this.playerOption.hlsConfig.emeEnabled;
-                },
-                set: function (value) {
-                    if (value) {
-
-                        if (!this.playerOption.hlsConfig) {
-                            this.playerOption.hlsConfig = {};
-                        }
-                        this.playerOption.hlsConfig.emeEnabled = true;
-                    } else {
-
-                        delete this.playerOption.hlsConfig.emeEnabled;
-
-                        if (this.playerOption.hlsConfig.drmSystems) {
-                            delete this.playerOption.hlsConfig.drmSystems;
-                        }
-
-                        if (_.isEmpty(this.playerOption.hlsConfig)) {
-
-                            delete this.playerOption.hlsConfig;
-                        }
-
-                        delete this.playerOption.licenseCustomHeader;
-                    }
-
-                    this.unLoadPlayer(true);
-                    this.makePermanentLink();
-                }
-            },
-            hlsFairPlayLicenseUrl: {
-                get: function () {
-
-                    if (this.playerOption.hlsConfig && this.playerOption.hlsConfig.drmSystems
-                        && this.playerOption.hlsConfig.drmSystems["com.apple.fps"]) {
-                        return this.playerOption.hlsConfig.drmSystems["com.apple.fps"].licenseUrl
-                    }
-                },
-                set: function (value) {
-                    if (value) {
-
-                        if (!this.playerOption.hlsConfig) {
-                            this.playerOption.hlsConfig = {};
-                        }
-
-                        if (!this.playerOption.hlsConfig.drmSystems) {
-                            this.playerOption.hlsConfig.drmSystems = {};
-                        }
-
-                        if (!this.playerOption.hlsConfig.drmSystems["com.apple.fps"]) {
-                            this.playerOption.hlsConfig.drmSystems["com.apple.fps"] = {};
-                        }
-
-                        this.playerOption.hlsConfig.drmSystems["com.apple.fps"].licenseUrl = value;
-                    } else {
-
-                        if (this.playerOption.hlsConfig.drmSystems["com.apple.fps"].licenseUrl) {
-                            delete this.playerOption.hlsConfig.drmSystems["com.apple.fps"].licenseUrl;
-                        }
-
-                        if (_.isEmpty(this.playerOption.hlsConfig.drmSystems["com.apple.fps"])) {
-
-                            delete this.playerOption.hlsConfig.drmSystems["com.apple.fps"];
-                        }
-
-                        if (_.isEmpty(this.playerOption.hlsConfig.drmSystems)) {
-
-                            delete this.playerOption.hlsConfig.drmSystems;
-                        }
-
-                        if (_.isEmpty(this.playerOption.hlsConfig)) {
-
-                            delete this.playerOption.hlsConfig;
-                        }
-                    }
-
-                    this.unLoadPlayer(true);
-                    this.makePermanentLink();
-                }
-            },
-            hlsFairPlayServerCertificateUrl: {
-                get: function () {
-
-                    if (this.playerOption.hlsConfig && this.playerOption.hlsConfig.drmSystems
-                        && this.playerOption.hlsConfig.drmSystems["com.apple.fps"]) {
-                        return this.playerOption.hlsConfig.drmSystems["com.apple.fps"].serverCertificateUrl
-                    }
-                },
-                set: function (value) {
-                    if (value) {
-
-                        if (!this.playerOption.hlsConfig) {
-                            this.playerOption.hlsConfig = {};
-                        }
-
-                        if (!this.playerOption.hlsConfig.drmSystems) {
-                            this.playerOption.hlsConfig.drmSystems = {};
-                        }
-
-                        if (!this.playerOption.hlsConfig.drmSystems["com.apple.fps"]) {
-                            this.playerOption.hlsConfig.drmSystems["com.apple.fps"] = {};
-                        }
-
-                        this.playerOption.hlsConfig.drmSystems["com.apple.fps"].serverCertificateUrl = value;
-                    } else {
-
-                        if (this.playerOption.hlsConfig.drmSystems["com.apple.fps"].serverCertificateUrl) {
-                            delete this.playerOption.hlsConfig.drmSystems["com.apple.fps"].serverCertificateUrl;
-                        }
-
-                        if (_.isEmpty(this.playerOption.hlsConfig.drmSystems["com.apple.fps"])) {
-
-                            delete this.playerOption.hlsConfig.drmSystems["com.apple.fps"];
-                        }
-
-                        if (_.isEmpty(this.playerOption.hlsConfig.drmSystems)) {
-
-                            delete this.playerOption.hlsConfig.drmSystems;
-                        }
-
-                        if (_.isEmpty(this.playerOption.hlsConfig)) {
-
-                            delete this.playerOption.hlsConfig;
-                        }
-                    }
-
-                    this.unLoadPlayer(true);
-                    this.makePermanentLink();
-                }
-            },
-            hlsWidevineLicenseUrl: {
-                get: function () {
-
-                    if (this.playerOption.hlsConfig && this.playerOption.hlsConfig.drmSystems
-                        && this.playerOption.hlsConfig.drmSystems["com.widevine.alpha"]) {
-                        return this.playerOption.hlsConfig.drmSystems["com.widevine.alpha"].licenseUrl
-                    }
-                },
-                set: function (value) {
-                    if (value) {
-
-                        if (!this.playerOption.hlsConfig) {
-                            this.playerOption.hlsConfig = {};
-                        }
-
-                        if (!this.playerOption.hlsConfig.drmSystems) {
-                            this.playerOption.hlsConfig.drmSystems = {};
-                        }
-
-                        if (!this.playerOption.hlsConfig.drmSystems["com.widevine.alpha"]) {
-                            this.playerOption.hlsConfig.drmSystems["com.widevine.alpha"] = {};
-                        }
-
-                        this.playerOption.hlsConfig.drmSystems["com.widevine.alpha"].licenseUrl = value;
-                    } else {
-
-                        if (this.playerOption.hlsConfig.drmSystems["com.widevine.alpha"].licenseUrl) {
-                            delete this.playerOption.hlsConfig.drmSystems["com.widevine.alpha"].licenseUrl;
-                        }
-
-                        if (_.isEmpty(this.playerOption.hlsConfig.drmSystems["com.widevine.alpha"])) {
-
-                            delete this.playerOption.hlsConfig.drmSystems["com.widevine.alpha"];
-                        }
-
-                        if (_.isEmpty(this.playerOption.hlsConfig.drmSystems)) {
-
-                            delete this.playerOption.hlsConfig.drmSystems;
-                        }
-
-                        if (_.isEmpty(this.playerOption.hlsConfig)) {
-
-                            delete this.playerOption.hlsConfig;
-                        }
-                    }
-
-                    this.unLoadPlayer(true);
-                    this.makePermanentLink();
-                }
-            },
-            hlsCustomHeaderKey: {
-                get: function () {
-
-                    if (this.playerOption.licenseCustomHeader && this.playerOption.licenseCustomHeader.key) {
-                        return this.playerOption.licenseCustomHeader.key
-                    }
-                },
-                set: function (value) {
-                    if (value) {
-
-                        if (!this.playerOption.licenseCustomHeader) {
-                            this.playerOption.licenseCustomHeader = {};
-                        }
-
-                        this.playerOption.licenseCustomHeader.key = value;
-                    } else {
-
-                        if (this.playerOption.licenseCustomHeader.key) {
-                            delete this.playerOption.licenseCustomHeader.key;
-                        }
-
-                        if (_.isEmpty(this.playerOption.licenseCustomHeader)) {
-
-                            delete this.playerOption.licenseCustomHeader;
-                        }
-                    }
-
-                    this.unLoadPlayer(true);
-                    this.makePermanentLink();
-                }
-            },
-            hlsCustomHeaderValue: {
-                get: function () {
-
-                    if (this.playerOption.licenseCustomHeader && this.playerOption.licenseCustomHeader.value) {
-                        return this.playerOption.licenseCustomHeader.value
-                    }
-                },
-                set: function (value) {
-                    if (value) {
-
-                        if (!this.playerOption.licenseCustomHeader) {
-                            this.playerOption.licenseCustomHeader = {};
-                        }
-
-                        this.playerOption.licenseCustomHeader.value = value;
-                    } else {
-
-                        if (this.playerOption.licenseCustomHeader.value) {
-                            delete this.playerOption.licenseCustomHeader.value;
-                        }
-
-                        if (_.isEmpty(this.playerOption.licenseCustomHeader)) {
-
-                            delete this.playerOption.licenseCustomHeader;
-                        }
-                    }
-
-                    this.unLoadPlayer(true);
-                    this.makePermanentLink();
-                }
-            }
+                vm.unLoadPlayer();
+                vm.loadPlayer();
+              }, vm.demoOption.autoReloadInterval);
+            });
+          }
         },
-        mounted: function () {
+        unLoadPlayer: function (optionChanged) {
+
+          if (this.reloadTimer) {
+            clearInterval(this.reloadTimer);
+            this.reloadTimer = null;
+          }
+
+          if (this.player) {
+
+            this.player.remove();
+            this.player = null;
+            this.loadButtonMsg = 'LOAD PLAYER';
+            this.loadButtonColor = 'btn-primary';
+            this.loadButtonIcon = 'fa-play';
+          }
+
+          if (optionChanged) {
+            this.playerMessage = 'The options have changed. Please reload the player.';
+          }
+        },
+        reloadPlayer: function () {
+
+          if (this.player) {
+
+            this.unLoadPlayer();
+          } else {
 
             this.loadPlayer();
+          }
+        },
+        makePermanentLink: function () {
 
-            if (urlOption) {
-                this.makePermanentLink();
+          const link = {};
+          link.playerOption = this.playerOption;
+          link.demoOption = this.demoOption;
+
+          location.hash = encodeURIComponent(JSON.stringify(link));
+          this.permanentLink = location.href;
+
+          let script = 'const player = OvenPlayer.create("player_el_id", '
+            + JSON.stringify(this.playerOption) + ');';
+          this.createScript = js_beautify(script);
+          this.createScriptHTML = hljs.highlight(this.createScript, {
+            language: 'javascript'
+          }).value;
+        },
+        changeOptions: function () {
+
+          this.unLoadPlayer(true);
+          this.makePermanentLink();
+        }
+      },
+      computed: {
+        playoutDelayHintCheck: {
+          get: function () {
+
+            if (this.playerOption.webrtcConfig &&
+              this.playerOption.webrtcConfig.playoutDelayHint > -1) {
+
+              return true;
+            } else {
+              return false;
+            }
+          },
+          set: function (value) {
+
+            if (value) {
+              if (!this.playerOption.webrtcConfig) {
+                this.playerOption.webrtcConfig = {};
+              }
+              this.playerOption.webrtcConfig.playoutDelayHint = 3;
+            } else {
+              delete this.playerOption.webrtcConfig.playoutDelayHint;
+
+              if (_.isEmpty(this.playerOption.webrtcConfig)) {
+
+                delete this.playerOption.webrtcConfig;
+              }
             }
 
-            makeCopyButton(this.$refs.copyCodeButton);
-            makeCopyButton(this.$refs.exportButton);
+            this.unLoadPlayer(true);
+            this.makePermanentLink();
+          }
+        },
+        playOutDelayHintInput: {
+          get: function () {
+
+            if (this.playoutDelayHintCheck) {
+
+              return this.playerOption.webrtcConfig.playoutDelayHint;
+            }
+          },
+          set: function (value) {
+            if (value > 0) {
+
+              this.playerOption.webrtcConfig.playoutDelayHint = value;
+              this.unLoadPlayer(true);
+              this.makePermanentLink();
+            }
+          }
+        },
+        reloadOnConnectionTimeoutCheck: {
+          get: function () {
+
+            if (this.playerOption.webrtcConfig &&
+              (_.isNumber(this.playerOption.webrtcConfig.connectionTimeout)
+                || _.isNumber(this.playerOption.webrtcConfig.timeoutMaxRetry))) {
+
+              return true;
+            } else {
+              return false;
+            }
+          },
+          set: function (value) {
+
+            if (value) {
+              if (!this.playerOption.webrtcConfig) {
+                this.playerOption.webrtcConfig = {};
+              }
+              this.playerOption.webrtcConfig.timeoutMaxRetry = 4;
+              this.playerOption.webrtcConfig.connectionTimeout = 10000;
+            } else {
+
+              delete this.playerOption.webrtcConfig.timeoutMaxRetry;
+              delete this.playerOption.webrtcConfig.connectionTimeout;
+
+              if (_.isEmpty(this.playerOption.webrtcConfig)) {
+
+                delete this.playerOption.webrtcConfig;
+              }
+            }
+
+            this.unLoadPlayer(true);
+            this.makePermanentLink();
+          }
+        },
+        webrtcLoadingRetryCount: {
+          get: function () {
+
+            if (this.playerOption.webrtcConfig &&
+              _.isNumber(this.playerOption.webrtcConfig.timeoutMaxRetry)) {
+
+              return this.playerOption.webrtcConfig.timeoutMaxRetry;
+            }
+          },
+          set: function (value) {
+            if (!this.playerOption.webrtcConfig) {
+              this.playerOption.webrtcConfig = {};
+            }
+
+            this.playerOption.webrtcConfig.timeoutMaxRetry = value;
+            this.unLoadPlayer(true);
+            this.makePermanentLink();
+          }
+        },
+        webrtcLoadingTimeout: {
+          get: function () {
+
+            if (this.playerOption.webrtcConfig &&
+              _.isNumber(this.playerOption.webrtcConfig.connectionTimeout)) {
+
+              return this.playerOption.webrtcConfig.connectionTimeout;
+            }
+          },
+          set: function (value) {
+            if (!this.playerOption.webrtcConfig) {
+              this.playerOption.webrtcConfig = {};
+            }
+
+            this.playerOption.webrtcConfig.connectionTimeout = value;
+            this.unLoadPlayer(true);
+            this.makePermanentLink();
+          }
+        },
+        llDashCheck: {
+          get: function () {
+
+            let value = false;
+
+            if (this.playerOption &&
+              this.playerOption.sources) {
+
+              _.each(this.playerOption.sources, function (source) {
+
+                if (source.type === 'dash' && source.lowLatency === true) {
+
+                  value = true;
+                  return;
+                }
+              });
+            }
+
+            return value;
+          },
+          set: function (value) {
+
+            if (this.playerOption &&
+              this.playerOption.sources) {
+
+              _.each(this.playerOption.sources, function (source) {
+
+                if (source.type === 'dash') {
+
+                  if (value) {
+                    source.lowLatency = true;
+                  } else {
+                    delete source.lowLatency;
+                  }
+                }
+              });
+
+              if (!value) {
+
+                if (this.playerOption.lowLatencyMpdLiveDelay) {
+
+                  delete this.playerOption.lowLatencyMpdLiveDelay;
+                }
+              }
+
+              this.unLoadPlayer(true);
+              this.makePermanentLink();
+            }
+          }
+        },
+        llDashLiveDelay: {
+          get: function () {
+
+            if (this.playerOption.lowLatencyMpdLiveDelay &&
+              _.isNumber(this.playerOption.lowLatencyMpdLiveDelay)) {
+
+              return this.playerOption.lowLatencyMpdLiveDelay;
+            }
+          },
+          set: function (value) {
+
+            if (value) {
+
+              this.playerOption.lowLatencyMpdLiveDelay = value;
+
+            } else {
+
+              delete this.playerOption.lowLatencyMpdLiveDelay;
+            }
+
+            this.unLoadPlayer(true);
+            this.makePermanentLink();
+          }
+        },
+        hlsManageLatencyCheck: {
+          get: function () {
+
+            if (this.playerOption.hlsConfig &&
+              (_.isNumber(this.playerOption.hlsConfig.liveSyncDuration)
+                || _.isNumber(this.playerOption.hlsConfig.liveMaxLatencyDuration)
+                || _.isNumber(this.playerOption.hlsConfig.maxLiveSyncPlaybackRate))) {
+
+              return true;
+            } else {
+              return false;
+            }
+          },
+          set: function (value) {
+
+            if (value) {
+              if (!this.playerOption.hlsConfig) {
+                this.playerOption.hlsConfig = {};
+              }
+              this.playerOption.hlsConfig.liveSyncDuration = 1.5;
+              this.playerOption.hlsConfig.liveMaxLatencyDuration = 3;
+              this.playerOption.hlsConfig.maxLiveSyncPlaybackRate = 1.5;
+            } else {
+
+              delete this.playerOption.hlsConfig.liveSyncDuration;
+              delete this.playerOption.hlsConfig.liveMaxLatencyDuration;
+              delete this.playerOption.hlsConfig.maxLiveSyncPlaybackRate;
+
+              if (_.isEmpty(this.playerOption.hlsConfig)) {
+
+                delete this.playerOption.hlsConfig;
+              }
+            }
+
+            this.unLoadPlayer(true);
+            this.makePermanentLink();
+          }
+        },
+        hlsTargetLatency: {
+          get: function () {
+
+            if (this.playerOption.hlsConfig &&
+              _.isNumber(this.playerOption.hlsConfig.liveSyncDuration)) {
+
+              return this.playerOption.hlsConfig.liveSyncDuration;
+            }
+          },
+          set: function (value) {
+            if (!this.playerOption.hlsConfig) {
+              this.playerOption.hlsConfig = {};
+            }
+
+            this.playerOption.hlsConfig.liveSyncDuration = value;
+            this.unLoadPlayer(true);
+            this.makePermanentLink();
+          }
+        },
+        hlsMaxLatency: {
+          get: function () {
+
+            if (this.playerOption.hlsConfig &&
+              _.isNumber(this.playerOption.hlsConfig.liveMaxLatencyDuration)) {
+
+              return this.playerOption.hlsConfig.liveMaxLatencyDuration;
+            }
+          },
+          set: function (value) {
+            if (!this.playerOption.hlsConfig) {
+              this.playerOption.hlsConfig = {};
+            }
+
+            this.playerOption.hlsConfig.liveMaxLatencyDuration = value;
+            this.unLoadPlayer(true);
+            this.makePermanentLink();
+          }
+        },
+        hlsLiveSyncCatchupRate: {
+          get: function () {
+
+            if (this.playerOption.hlsConfig &&
+              _.isNumber(this.playerOption.hlsConfig.maxLiveSyncPlaybackRate)) {
+
+              return this.playerOption.hlsConfig.maxLiveSyncPlaybackRate;
+            }
+          },
+          set: function (value) {
+            if (!this.playerOption.hlsConfig) {
+              this.playerOption.hlsConfig = {};
+            }
+
+            this.playerOption.hlsConfig.maxLiveSyncPlaybackRate = value;
+            this.unLoadPlayer(true);
+            this.makePermanentLink();
+          }
+        },
+        hlsEnableDrmCheck: {
+          get: function () {
+
+            return this.playerOption.hlsConfig && this.playerOption.hlsConfig.emeEnabled;
+          },
+          set: function (value) {
+            if (value) {
+
+              if (!this.playerOption.hlsConfig) {
+                this.playerOption.hlsConfig = {};
+              }
+              this.playerOption.hlsConfig.emeEnabled = true;
+            } else {
+
+              delete this.playerOption.hlsConfig.emeEnabled;
+
+              if (this.playerOption.hlsConfig.drmSystems) {
+                delete this.playerOption.hlsConfig.drmSystems;
+              }
+
+              if (_.isEmpty(this.playerOption.hlsConfig)) {
+
+                delete this.playerOption.hlsConfig;
+              }
+
+              delete this.playerOption.licenseCustomHeader;
+            }
+
+            this.unLoadPlayer(true);
+            this.makePermanentLink();
+          }
+        },
+        hlsFairPlayLicenseUrl: {
+          get: function () {
+
+            if (this.playerOption.hlsConfig && this.playerOption.hlsConfig.drmSystems
+              && this.playerOption.hlsConfig.drmSystems["com.apple.fps"]) {
+              return this.playerOption.hlsConfig.drmSystems["com.apple.fps"].licenseUrl
+            }
+          },
+          set: function (value) {
+            if (value) {
+
+              if (!this.playerOption.hlsConfig) {
+                this.playerOption.hlsConfig = {};
+              }
+
+              if (!this.playerOption.hlsConfig.drmSystems) {
+                this.playerOption.hlsConfig.drmSystems = {};
+              }
+
+              if (!this.playerOption.hlsConfig.drmSystems["com.apple.fps"]) {
+                this.playerOption.hlsConfig.drmSystems["com.apple.fps"] = {};
+              }
+
+              this.playerOption.hlsConfig.drmSystems["com.apple.fps"].licenseUrl = value;
+            } else {
+
+              if (this.playerOption.hlsConfig.drmSystems["com.apple.fps"].licenseUrl) {
+                delete this.playerOption.hlsConfig.drmSystems["com.apple.fps"].licenseUrl;
+              }
+
+              if (_.isEmpty(this.playerOption.hlsConfig.drmSystems["com.apple.fps"])) {
+
+                delete this.playerOption.hlsConfig.drmSystems["com.apple.fps"];
+              }
+
+              if (_.isEmpty(this.playerOption.hlsConfig.drmSystems)) {
+
+                delete this.playerOption.hlsConfig.drmSystems;
+              }
+
+              if (_.isEmpty(this.playerOption.hlsConfig)) {
+
+                delete this.playerOption.hlsConfig;
+              }
+            }
+
+            this.unLoadPlayer(true);
+            this.makePermanentLink();
+          }
+        },
+        hlsFairPlayServerCertificateUrl: {
+          get: function () {
+
+            if (this.playerOption.hlsConfig && this.playerOption.hlsConfig.drmSystems
+              && this.playerOption.hlsConfig.drmSystems["com.apple.fps"]) {
+              return this.playerOption.hlsConfig.drmSystems["com.apple.fps"].serverCertificateUrl
+            }
+          },
+          set: function (value) {
+            if (value) {
+
+              if (!this.playerOption.hlsConfig) {
+                this.playerOption.hlsConfig = {};
+              }
+
+              if (!this.playerOption.hlsConfig.drmSystems) {
+                this.playerOption.hlsConfig.drmSystems = {};
+              }
+
+              if (!this.playerOption.hlsConfig.drmSystems["com.apple.fps"]) {
+                this.playerOption.hlsConfig.drmSystems["com.apple.fps"] = {};
+              }
+
+              this.playerOption.hlsConfig.drmSystems["com.apple.fps"].serverCertificateUrl = value;
+            } else {
+
+              if (this.playerOption.hlsConfig.drmSystems["com.apple.fps"].serverCertificateUrl) {
+                delete this.playerOption.hlsConfig.drmSystems["com.apple.fps"].serverCertificateUrl;
+              }
+
+              if (_.isEmpty(this.playerOption.hlsConfig.drmSystems["com.apple.fps"])) {
+
+                delete this.playerOption.hlsConfig.drmSystems["com.apple.fps"];
+              }
+
+              if (_.isEmpty(this.playerOption.hlsConfig.drmSystems)) {
+
+                delete this.playerOption.hlsConfig.drmSystems;
+              }
+
+              if (_.isEmpty(this.playerOption.hlsConfig)) {
+
+                delete this.playerOption.hlsConfig;
+              }
+            }
+
+            this.unLoadPlayer(true);
+            this.makePermanentLink();
+          }
+        },
+        hlsWidevineLicenseUrl: {
+          get: function () {
+
+            if (this.playerOption.hlsConfig && this.playerOption.hlsConfig.drmSystems
+              && this.playerOption.hlsConfig.drmSystems["com.widevine.alpha"]) {
+              return this.playerOption.hlsConfig.drmSystems["com.widevine.alpha"].licenseUrl
+            }
+          },
+          set: function (value) {
+            if (value) {
+
+              if (!this.playerOption.hlsConfig) {
+                this.playerOption.hlsConfig = {};
+              }
+
+              if (!this.playerOption.hlsConfig.drmSystems) {
+                this.playerOption.hlsConfig.drmSystems = {};
+              }
+
+              if (!this.playerOption.hlsConfig.drmSystems["com.widevine.alpha"]) {
+                this.playerOption.hlsConfig.drmSystems["com.widevine.alpha"] = {};
+              }
+
+              this.playerOption.hlsConfig.drmSystems["com.widevine.alpha"].licenseUrl = value;
+            } else {
+
+              if (this.playerOption.hlsConfig.drmSystems["com.widevine.alpha"].licenseUrl) {
+                delete this.playerOption.hlsConfig.drmSystems["com.widevine.alpha"].licenseUrl;
+              }
+
+              if (_.isEmpty(this.playerOption.hlsConfig.drmSystems["com.widevine.alpha"])) {
+
+                delete this.playerOption.hlsConfig.drmSystems["com.widevine.alpha"];
+              }
+
+              if (_.isEmpty(this.playerOption.hlsConfig.drmSystems)) {
+
+                delete this.playerOption.hlsConfig.drmSystems;
+              }
+
+              if (_.isEmpty(this.playerOption.hlsConfig)) {
+
+                delete this.playerOption.hlsConfig;
+              }
+            }
+
+            this.unLoadPlayer(true);
+            this.makePermanentLink();
+          }
+        },
+        hlsCustomHeaderKey: {
+          get: function () {
+
+            if (this.playerOption.licenseCustomHeader && this.playerOption.licenseCustomHeader.key) {
+              return this.playerOption.licenseCustomHeader.key
+            }
+          },
+          set: function (value) {
+            if (value) {
+
+              if (!this.playerOption.licenseCustomHeader) {
+                this.playerOption.licenseCustomHeader = {};
+              }
+
+              this.playerOption.licenseCustomHeader.key = value;
+            } else {
+
+              if (this.playerOption.licenseCustomHeader.key) {
+                delete this.playerOption.licenseCustomHeader.key;
+              }
+
+              if (_.isEmpty(this.playerOption.licenseCustomHeader)) {
+
+                delete this.playerOption.licenseCustomHeader;
+              }
+            }
+
+            this.unLoadPlayer(true);
+            this.makePermanentLink();
+          }
+        },
+        hlsCustomHeaderValue: {
+          get: function () {
+
+            if (this.playerOption.licenseCustomHeader && this.playerOption.licenseCustomHeader.value) {
+              return this.playerOption.licenseCustomHeader.value
+            }
+          },
+          set: function (value) {
+            if (value) {
+
+              if (!this.playerOption.licenseCustomHeader) {
+                this.playerOption.licenseCustomHeader = {};
+              }
+
+              this.playerOption.licenseCustomHeader.value = value;
+            } else {
+
+              if (this.playerOption.licenseCustomHeader.value) {
+                delete this.playerOption.licenseCustomHeader.value;
+              }
+
+              if (_.isEmpty(this.playerOption.licenseCustomHeader)) {
+
+                delete this.playerOption.licenseCustomHeader;
+              }
+            }
+
+            this.unLoadPlayer(true);
+            this.makePermanentLink();
+          }
         }
+      },
+      mounted: function () {
+
+        this.loadPlayer();
+
+        if (urlOption) {
+          this.makePermanentLink();
+        }
+
+        makeCopyButton(this.$refs.copyCodeButton);
+        makeCopyButton(this.$refs.exportButton);
+      }
     };
 
     const demo = Vue.createApp(app);
 
     demo.component('source-item', {
-        props: ['source', 'index'],
-        emits: ['removeSource'],
-        template: document.getElementById('source-item').innerText,
-        mounted: function () {
-            makeCopyButton(this.$refs.copyButton);
-        }
+      props: ['source', 'index'],
+      emits: ['removeSource'],
+      template: document.getElementById('source-item').innerText,
+      mounted: function () {
+        makeCopyButton(this.$refs.copyButton);
+      }
     });
 
     const vm = demo.mount('#app');
 
 
-</script>
+  </script>
 
 </body>
 
