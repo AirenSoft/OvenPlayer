@@ -74,7 +74,11 @@ large(>992), medium(<992), small(<768), xsmall(<576)
 
 ### **on('playbackRateChanged')**&#x20;
 
-**Returns** Number **:** The new playback rate
+**Returns `Object`:**&#x20;
+
+| Params       | Type    | memo                  |
+| ------------ | ------- | --------------------- |
+| playbackRate | Number  | The new playback rate |
 
 Fired when the playback rate has been changed.
 
