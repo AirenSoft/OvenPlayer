@@ -2,7 +2,7 @@
  * Created by hoho on 2018. 6. 7..
  */
 import Provider from "api/provider/html5/Provider";
-import {errorTrigger} from "api/provider/utils";
+import { errorTrigger } from "api/provider/utils";
 import {
     PROVIDER_HLS,
     PLAYER_STATE, STATE_IDLE, STATE_LOADING,
@@ -214,7 +214,7 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
                 }
 
                 let tempError = ERRORS.codes[errorType];
-                tempError.error = data.details;
+                tempError.error = data;
                 errorTrigger(tempError, that);
             });
 
