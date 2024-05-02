@@ -49,6 +49,10 @@ const Controls = function ($container, api) {
         hasPlaylist = false;
     }
 
+    if (api.getConfig().legacyUI === true) {
+        hasPlaylist = true;
+    }
+
     let playlistPanel = "";
 
     const onRendered = function ($current, template) {
@@ -149,9 +153,9 @@ const Controls = function ($container, api) {
 
         function resetControlUI() {
 
-            if (timeDisplay) {
-                timeDisplay.destroy();
-            }
+            // if (timeDisplay) {
+            //     timeDisplay.destroy();
+            // }
 
             if (progressBar) {
                 progressBar.destroy();
@@ -161,6 +165,8 @@ const Controls = function ($container, api) {
             initFullscreenButton();
 
             $root.removeClass("linear-ad");
+
+            initProgressBar(false);
         }
 
         playButton = PlayButton($current.find(".op-left-controls"), api);
@@ -248,9 +254,9 @@ const Controls = function ($container, api) {
                 $root.addClass("linear-ad");
 
                 initProgressBar(true);
-                if (timeDisplay) {
-                    timeDisplay.destroy();
-                }
+                // if (timeDisplay) {
+                //     timeDisplay.destroy();
+                // }
                 if (settingButton) {
                     settingButton.destroy();
                 }

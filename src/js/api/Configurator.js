@@ -9,35 +9,36 @@ import {
  * @param   options
  *
  * */
-const Configurator = function(options, provider){
+const Configurator = function (options, provider) {
 
-    const composeSourceOptions = function(options){
+    const composeSourceOptions = function (options) {
         const Defaults = {
-            mediaContainer : "",
+            mediaContainer: "",
             playbackRates: [2, 1.5, 1, 0.5, 0.25],
             playbackRate: 1,
             mute: false,
             volume: 100,
-            loop : false,
-            controls : true,
-            autoStart : false,
+            loop: false,
+            controls: true,
+            autoStart: false,
             autoFallback: true,
-            timecode : true,
-            sourceIndex : -1,
-            browser : "",
-            hidePlaylistIcon : false,
-            rtmpBufferTime : 1,
-            rtmpBufferTimeMax : 3,
-            adClient : "googleima",
-            currentProtocolOnly : false,
-            systemText : null,
-            lang : "en",
+            timecode: true,
+            sourceIndex: -1,
+            browser: "",
+            hidePlaylistIcon: false,
+            rtmpBufferTime: 1,
+            rtmpBufferTimeMax: 3,
+            adClient: "googleima",
+            currentProtocolOnly: false,
+            systemText: null,
+            lang: "en",
             loadingRetryCount: 0,
             expandFullScreenUI: true,
             fullscreenOption: null,
             showBigPlayButton: true,
             doubleTapToSeek: false,
             showZoomSettings: false,
+            legacyUI: false,
         };
         const serialize = function (val) {
             if (val === undefined) {
@@ -69,25 +70,25 @@ const Configurator = function(options, provider){
         deserialize(options);
         let config = Object.assign({}, Defaults, options);
         let userCustumSystemText = [];
-        if(config.systemText){
+        if (config.systemText) {
             userCustumSystemText = _.isArray(config.systemText) ? config.systemText : [config.systemText];
         }
 
-        for(let i = 0; i < userCustumSystemText.length; i ++){
-            if(userCustumSystemText[i].lang){
-                let currentSystemText = _.findWhere(SYSTEM_TEXT , {"lang": userCustumSystemText[i].lang});
-                if(currentSystemText){
+        for (let i = 0; i < userCustumSystemText.length; i++) {
+            if (userCustumSystemText[i].lang) {
+                let currentSystemText = _.findWhere(SYSTEM_TEXT, { "lang": userCustumSystemText[i].lang });
+                if (currentSystemText) {
                     //validate & update
                     Object.assign(currentSystemText, userCustumSystemText[i]);
-                }else{
+                } else {
                     //create
-                    currentSystemText = _.findWhere(SYSTEM_TEXT , {"lang": "en"});
+                    currentSystemText = _.findWhere(SYSTEM_TEXT, { "lang": "en" });
                     currentSystemText.lang = userCustumSystemText[i].lang;
                     SYSTEM_TEXT.push(Object.assign(userCustumSystemText[i], currentSystemText));
                 }
             }
         }
-        config.systemText = _.findWhere(SYSTEM_TEXT , {"lang": config.lang});
+        config.systemText = _.findWhere(SYSTEM_TEXT, { "lang": config.lang });
 
         let playbackRates = config.playbackRates;
 
@@ -124,7 +125,7 @@ const Configurator = function(options, provider){
                 'adTagUrl'
             ]);
 
-            config.playlist = [ obj ];
+            config.playlist = [obj];
         } else if (_.isArray(configPlaylist.playlist)) {
             config.feedData = configPlaylist;
             config.playlist = configPlaylist.playlist;
@@ -159,17 +160,17 @@ const Configurator = function(options, provider){
         return spec.isFullscreen = isFullscreen;
     }*/
 
-    that.getPlaybackRate =()=>{
+    that.getPlaybackRate = () => {
         return spec.playbackRate;
     };
-    that.setPlaybackRate =(playbackRate)=>{
+    that.setPlaybackRate = (playbackRate) => {
         spec.playbackRate = playbackRate;
         return playbackRate;
     };
-    that.getZoomFactor =()=>{
+    that.getZoomFactor = () => {
         return spec.zoomFactor;
     };
-    that.setZoomFactor =(zoomFactor)=>{
+    that.setZoomFactor = (zoomFactor) => {
         spec.zoomFactor = zoomFactor;
         return zoomFactor;
     };
@@ -197,7 +198,7 @@ const Configurator = function(options, provider){
         spec.sourceIndex = index;
     };
     that.setTimecodeMode = (timecode) => {
-        if(spec.timecode !== timecode){
+        if (spec.timecode !== timecode) {
             spec.timecode = timecode;
             provider.trigger(CONTENT_TIME_MODE_CHANGED, timecode);
         }
@@ -211,29 +212,29 @@ const Configurator = function(options, provider){
     that.getRtmpBufferTimeMax = () => {
         return spec.rtmpBufferTimeMax;
     };
-    that.setMute = (mute) =>{
+    that.setMute = (mute) => {
         spec.mute = mute;
     };
-    that.isMute = () =>{
+    that.isMute = () => {
         return spec.mute;
     };
-    that.getVolume = () =>{
+    that.getVolume = () => {
         return spec.volume;
     };
-    that.setVolume = (volume) =>{
+    that.setVolume = (volume) => {
         spec.volume = volume;
     };
-    that.isLoop = () =>{
+    that.isLoop = () => {
         return spec.loop;
     };
-    that.isAutoStart = () =>{
+    that.isAutoStart = () => {
         return spec.autoStart;
     };
-    that.isControls = () =>{
+    that.isControls = () => {
         return spec.controls;
     };
 
-    that.getPlaybackRates =()=>{
+    that.getPlaybackRates = () => {
         return spec.playbackRates;
     };
     that.getBrowser = () => {
@@ -246,13 +247,13 @@ const Configurator = function(options, provider){
         return spec.lang;
     };
 
-    that.getPlaylist =()=>{
+    that.getPlaylist = () => {
         return spec.playlist;
     };
-    that.setPlaylist =(playlist)=>{
-        if(_.isArray(playlist)){
+    that.setPlaylist = (playlist) => {
+        if (_.isArray(playlist)) {
             spec.playlist = playlist;
-        }else{
+        } else {
             spec.playlist = [playlist];
         }
         return spec.playlist;
