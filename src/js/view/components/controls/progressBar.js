@@ -282,7 +282,7 @@ const ProgressBar = function ($container, api, isAd, metadata) {
 
         if (isAd) {
             api.on(AD_TIME, function (data) {
-                if (data && data.duration && data.position) {
+                if (data && data.duration && typeof data.position === "number") {
                     positionElements(data.position / data.duration);
                     adDuration = data.duration;
                 }
@@ -290,7 +290,7 @@ const ProgressBar = function ($container, api, isAd, metadata) {
         } else {
 
             api.on(CONTENT_TIME, function (data) {
-                if (data && data.duration && data.position) {
+                if (data && data.duration && typeof data.position === "number") {
 
                     durationForCalc = data.duration;
                     let percentage = data.position / data.duration;
