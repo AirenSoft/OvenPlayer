@@ -25,10 +25,12 @@ player.once('EventName', function(data){
 ### Cancel a registered event
 
 ```
+// Remove all listeners for event type
 player.off('EventName');
+
+// Remove specific listener for event type
+player.off('EventName', listener)
 ```
-
-
 
 ### **on('ready')**
 
