@@ -298,6 +298,14 @@ You can set seek interval of the quickly seek button.
 
 You can enable users to enter or exit the full screen with double click the player.
 
+### **iOSFakeFullScreen**
+
+| pe      | Default | Required |
+| ------- | ------- | -------- |
+| boolean | false   | false    |
+
+You can use fake full screen ui (Make player full size on screen) on iOS.
+
 ### **mute**
 
 | Type    | Default | Required |
