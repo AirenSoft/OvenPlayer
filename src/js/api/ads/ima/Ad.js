@@ -88,7 +88,9 @@ const Ad = function(elVideo, provider, playerConfig, adTagUrl, errorCallback){
             adsErrorOccurred = true;
             let innerError = adErrorEvent.getError().getInnerError();
             if(innerError){
-                console.log(innerError.getErrorCode(), innerError.getMessage());
+                try {
+                    console.log(innerError.getErrorCode(), innerError.getMessage());
+                } catch (error) { }
             }
             /*if (adsManager) {
                 adsManager.destroy();
