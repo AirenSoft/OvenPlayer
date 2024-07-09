@@ -59,13 +59,19 @@ const FullScreenButton = function ($container, api) {
     function resetFullscreenButtonState() {
         OvenPlayerConsole.log("FULLSCREEN STATE : ", checkFullScreen());
         if (checkFullScreen()) {
+            if (isForceMode) {
+                document.body.classList.add('op-fullscreen-helper');
+            }
             $root.addClass("op-fullscreen");
             isFullScreen = true;
             $iconExpand.hide();
             $iconCompress.show();
 
         } else {
-            $root.removeClass("op-fullscreen");
+            if (isForceMode) {
+                $root.removeClass("op-fullscreen");
+            }
+            document.body.classList.remove('op-fullscreen-helper');
             isFullScreen = false;
             $iconExpand.show();
             $iconCompress.hide();
@@ -80,12 +86,14 @@ const FullScreenButton = function ($container, api) {
 
     function forcedFakeFullscreenToggle() {
         if (!isFullScreen) {
+            document.body.classList.add('op-fullscreen-helper');
             $root.addClass("op-fullscreen");
             isFullScreen = true;
             $iconExpand.hide();
             $iconCompress.show();
         } else {
             $root.removeClass("op-fullscreen");
+            document.body.classList.remove('op-fullscreen-helper');
             isFullScreen = false;
             $iconExpand.show();
             $iconCompress.hide();

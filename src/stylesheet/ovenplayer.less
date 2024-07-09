@@ -95,6 +95,12 @@
   --op-accent-color: #50e3c2;
 }
 
+.op-fullscreen-helper {
+  overflow: hidden;
+  // for preventing scroll on iOS
+  position: fixed;
+}
+
 .op-wrapper.ovenplayer {
   position: relative;
   max-height: 100%;
@@ -142,8 +148,8 @@
   }
 
   &.op-fullscreen {
-    width: 100% !important;
-    height: 100% !important;
+    width: 100vw !important;
+    height: 100vh !important;
     top: 0;
     right: 0;
     bottom: 0;
