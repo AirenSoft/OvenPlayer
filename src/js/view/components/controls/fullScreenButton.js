@@ -69,9 +69,9 @@ const FullScreenButton = function ($container, api) {
 
         } else {
             if (isForceMode) {
-                $root.removeClass("op-fullscreen");
+                document.body.classList.remove('op-fullscreen-helper');
             }
-            document.body.classList.remove('op-fullscreen-helper');
+            $root.removeClass("op-fullscreen");
             isFullScreen = false;
             $iconExpand.show();
             $iconCompress.hide();
