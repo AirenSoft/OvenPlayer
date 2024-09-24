@@ -124,7 +124,7 @@ var player = OvenPlayer.create("player", {
         image: '/path/to/watermark/image.png',
         position: 'top-left',
         y: '20px',
-        x: '20px'
+        x: '20px',
         width: '40px',
         height: '30px',
         opacity: 0.7
