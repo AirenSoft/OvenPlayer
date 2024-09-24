@@ -23,10 +23,10 @@ const player = OvenPlayer.create(container, options);
 
 {% tabs %}
 {% tab title="Request" %}
-| Params    | Type   | Memo                                        |
-| --------- | ------ | ------------------------------------------- |
-| container | String | DOM Element                                 |
-| options   | Object | Please see the _**Options**_ section below. |
+| Params    | Type                  | Memo                                        |
+| --------- | ------                | ------------------------------------------- |
+| container | String \| HTMLElement | DOM Element                                 |
+| options   | Object                | Please see the _**Options**_ section below. |
 {% endtab %}
 {% endtabs %}
 
