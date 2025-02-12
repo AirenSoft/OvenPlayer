@@ -71,7 +71,11 @@ const config = {
             {
                 test: /\.(ttf|eot|svg|gif)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
                 type: 'asset/inline'
-            }
+            },
+            {
+                test: /\.worker\.js$/,
+                use: { loader: "worker-loader" }
+            },
         ]
     },
     plugins: [
