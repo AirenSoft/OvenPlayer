@@ -117,7 +117,6 @@
           <span>
             WebRTC Input
           </span>
-          <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-info">Beta</span>
         </a>
       </li>
     </ul>
@@ -127,7 +126,7 @@
         <div class="input-group">
           <div class="form-outline flex-grow-1">
             <input type="text" id="webRtcUrlInput" class="form-control bg-white" />
-            <label class="form-label" for="webRtcUrlInput">WebRTC input URL</label>
+            <label class="form-label" for="webRtcUrlInput">WebRTC ingress URL</label>
           </div>
           <button id="streamingButton" class="btn btn-primary px-2 px-md-4" type="button">
             Start
@@ -202,6 +201,35 @@
       <div class="col-12">
         <ul class="list-group">
           <li class="list-group-item bg-light">
+            <h5 class="mb-0 fs-6">WHIP settings</h5>
+          </li>
+          <li class="list-group-item">
+            <div class="row">
+              <div class="col-lg-6 border-start border-2 mb-3 mb-lg-0">
+                <h6>Simulcast</h6>
+                <fieldset>
+                  <label for="numberOfLayersInput">Number of layers</label>
+                  <input id="numberOfLayersInput" type="number" class="form-control streamingConfigSelect mb-2"
+                    placeholder="Not set">
+                </fieldset>
+              </div>
+
+              <div class="col-lg-6 border-start border-2 mb-3 mb-lg-0">
+                <h6>Authentication</h6>
+                <fieldset>
+                  <label for="bearerTokenInput">Bearer token</label>
+                  <input id="bearerTokenInput" type="text" class="form-control streamingConfigSelect mb-2"
+                    placeholder="Token">
+                </fieldset>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <div class="col-12">
+        <ul class="list-group">
+          <li class="list-group-item bg-light">
             <h5 class="mb-0 fs-6">Input stream settings</h5>
           </li>
           <li class="list-group-item">
@@ -231,8 +259,7 @@
 
                   <label for="videoPreferredCodecSelect">Preferred video codec</label>
                   <select id="videoPreferredCodecSelect" class="form-control streamingConfigSelect mb-2">
-                    <option selected value="">Not Set</option>
-                    <option value="H264">H264</option>
+                    <option value="H264" selected>H264 (default)</option>
                     <option value="VP8">VP8</option>
                   </select>
                 </fieldset>
@@ -318,17 +345,9 @@
             </div>
 
             <div class="col-md-5 col-lg-4 ml-lg-0 text-center text-md-end">
-              <!-- Facebook -->
+              <!-- linked in -->
               <a class="btn btn-floating m-1" class="" role="button" target="_blank"
-                href="https://www.facebook.com/airensoft/"><i class="fab fa-facebook-f"></i></a>
-
-              <!-- Twitter -->
-              <a class="btn btn-floating m-1" class="" role="button" target="_blank"
-                href="https://twitter.com/AirenSoft"><i class="fab fa-twitter"></i></a>
-
-              <!-- Instagram -->
-              <a class="btn btn-floating m-1" class="" role="button" target="_blank"
-                href="https://www.instagram.com/airensoft"><i class="fab fa-instagram"></i></a>
+                href="https://www.linkedin.com/company/airensoft"><i class="fab fa-linkedin-in"></i></a>
             </div>
           </div>
         </section>
@@ -340,7 +359,8 @@
   <script src="https://cdn.jsdelivr.net/npm/underscore@1.12.0/underscore-min.js"></script>
   <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js"
     integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/ovenlivekit@1.1.0/dist/OvenLiveKit.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/ovenlivekit@1.4.0/dist/OvenLiveKit.min.js"></script>
+
 
   <script>
 
@@ -403,12 +423,18 @@
     let testPlaybackButtonArea = $('#testPlaybackButtonArea');
     let playStreamButton = $('#playStreamButton');
 
+    let bearerTokenInput = $('#bearerTokenInput');
+    let numberOfLayersInput = $('#numberOfLayersInput');
+
     let savedWebRtcUrl = localStorage.getItem('savedWebRtcUrl');
     let savedVideoSource = localStorage.getItem('savedVideoSource');
     let savedVideoResolution = localStorage.getItem('savedVideoResolution');
     let savedVideoBitrate = localStorage.getItem('savedVideoBitrate');
     let savedVideoFrame = localStorage.getItem('savedVideoFrame');
     let savedAudioSource = localStorage.getItem('savedAudioSource');
+
+    let savedBearerToken = localStorage.getItem('savedBearerToken');
+    let savedNumberOfLayersInput = localStorage.getItem('savedNumberOfLayersInput');
 
     let ovenLiveKitVersion = $('#ovenLiveKitVersion');
     ovenLiveKitVersion.text(OvenLiveKit.getVersion());
@@ -417,8 +443,24 @@
       webRtcUrlInput.val(savedWebRtcUrl);
     }
 
+    if (savedBearerToken) {
+      bearerTokenInput.val(savedBearerToken);
+    }
+
+    if (savedNumberOfLayersInput) {
+      numberOfLayersInput.val(savedNumberOfLayersInput);
+    }
+
     webRtcUrlInput.on('change', function () {
       localStorage.setItem('savedWebRtcUrl', $(this).val());
+    });
+
+    bearerTokenInput.on('change', function () {
+      localStorage.setItem('savedBearerToken', $(this).val());
+    });
+
+    numberOfLayersInput.on('change', function () {
+      localStorage.setItem('savedNumberOfLayersInput', $(this).val());
     });
 
     videoSourceSelect.on('change', function () {
@@ -750,13 +792,16 @@
               $('#errorText').html('Web Socket is closed. ' + reason);
             }
             if (type === 'ice') {
-              $('#errorText').html('Peer Connection is closed. State: ' + input.peerConnection.iceConnectionState);
+              if (input && input.peerConnection) {
+                $('#errorText').html('Peer Connection is closed. State: ' + input.peerConnection.iceConnectionState);
+              }
             }
           },
           iceStateChange: function (state) {
             iceStateSpan.text(state);
             if (state === 'connected') {
               testPlaybackButtonArea.show();
+              errorTextSpan.text('');
             }
           }
         }
@@ -805,13 +850,27 @@
           connectionConfig.preferredVideoFormat = videoPreferredCodecSelect.val();
         }
 
+        if (bearerTokenInput.val()) {
+          connectionConfig.httpHeaders = {
+            'Authorization': 'Bearer ' + bearerTokenInput.val()
+          };
+        }
+
+        if (numberOfLayersInput.val()) {
+          connectionConfig.simulcast = [];
+
+          for (let i = 0; i < parseInt(numberOfLayersInput.val()); i++) {
+            connectionConfig.simulcast.push({});
+          }
+        }
+
         input.startStreaming(webRtcUrlInput.val(), connectionConfig);
       }
     }
 
     function stopStreaming() {
 
-      if (input) {
+      if (input && streamingStarted) {
         input.stopStreaming();
       }
 
@@ -834,7 +893,6 @@
       }
 
     }
-
 
     streamingButton.on('click', function () {
 
@@ -989,7 +1047,7 @@
         errorMessage = error.toString();
       }
 
-      $('#errorText').text(errorMessage);
+      errorTextSpan.text(errorMessage);
     });
 
     function initDemo() {
