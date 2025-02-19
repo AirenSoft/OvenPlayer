@@ -88,6 +88,12 @@ $ npm install ovenplayer@0.10.0
 $ npm install ovenplayer-vue3
 ```
 
+#### React component
+
+```
+$ npm install ovenplayer-react
+```
+
 ## Quick Start
 
 Below is a list of simple OvenPlayer initialization methods for each situation. For detailed options when initializing the OvenPlayer, please refer to the [Initialization](https://airensoft.gitbook.io/ovenplayer/initialization) chapter.
@@ -197,6 +203,51 @@ this component provides three exposed member:
 - createPlayer(): create player.
   - Note: please call `removePlayer` first, ensure there's no active instance.
 - removePlayer(): remove player.
+
+### OvenPlayer for React
+
+You can use OvenPlayer as a reusable [React](https://react.dev/) component.
+
+```jsx
+import React from 'react'
+import OvenPlayer from 'ovenplayer-react'
+
+export default function App() {
+  const config = {
+    sources: [
+      {
+        type: 'hls',
+        file: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
+      },
+    ],
+  }
+
+  const handleReady = () => {
+    console.log('Player is ready')
+  }
+
+  const handleError = (err) => {
+    console.error('Error:', err)
+  }
+
+  return (
+    <div style={{ width: '640px', margin: '20px auto' }}>
+      <h1>OvenPlayer Demo</h1>
+      <OvenPlayer
+        config={config}
+        onReady={handleReady}
+        onError={handleError}
+      />
+    </div>
+  )
+}
+```
+This React component provides the same functionality as the Vue version, including:
+
+- Props such as config (OvenPlayer configuration) and callbacks like onReady, onError, onStateChanged, etc.
+- Internally, it creates and manages the OvenPlayer instance, listening to all relevant events.
+If you need direct access to the internal OvenPlayer instance or want to re-create/remove it programmatically, you can manage it via a React ref or by re-rendering the component with updated props.
+
 
 ### Initialize for OME
 
