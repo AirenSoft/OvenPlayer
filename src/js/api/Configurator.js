@@ -1,4 +1,5 @@
 import _ from "utils/underscore";
+import deepMerge from "utils/deepMerge";
 
 import {
     CONTENT_TIME_MODE_CHANGED, SYSTEM_TEXT
@@ -82,12 +83,13 @@ const Configurator = function (options, provider) {
                 let currentSystemText = _.findWhere(SYSTEM_TEXT, { "lang": userCustumSystemText[i].lang });
                 if (currentSystemText) {
                     //validate & update
-                    Object.assign(currentSystemText, userCustumSystemText[i]);
+                    deepMerge(currentSystemText, userCustumSystemText[i]);
                 } else {
                     //create
                     currentSystemText = _.findWhere(SYSTEM_TEXT, { "lang": "en" });
                     currentSystemText.lang = userCustumSystemText[i].lang;
-                    SYSTEM_TEXT.push(Object.assign(userCustumSystemText[i], currentSystemText));
+                    const newMerged = deepMerge({}, currentSystemText, userCustumSystemText[i]);
+                    SYSTEM_TEXT.push(newMerged);
                 }
             }
         }
