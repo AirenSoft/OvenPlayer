@@ -11,7 +11,7 @@
   },
   "main": "dist/ovenplayer-react.umd.js",
   "module": "dist/ovenplayer-react.es.js",
-  "types": "dist/types/src/index.d.ts",
+  "types": "dist/types/index.d.ts",
   "peerDependencies": {
     "react": "^18.0.0",
     "react-dom": "^18.0.0"
