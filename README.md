@@ -52,7 +52,7 @@ We need your help to keep and develop our open-source project, and we want to te
 We always hope that OvenPlayer will make your project a success.
 
 ## For more information
-* [AirenSoft Website](https://airensoft.com) 
+* [AirenSoft Website](https://airensoft.com)
   * About OvenMediaEngine, OvenMediaEngine Enterprise, OvenVideo, AirenBlog and more
 * [OvenPlayer Getting Started](https://airensoft.gitbook.io/ovenplayer)
   * User guide for OvenPlayer UI Customize, API Reference, Examples, and more
@@ -73,6 +73,6 @@ AirenSoft aims to make it easier for you to build a stable broadcasting/streamin
 Therefore, we will continue developing and providing the most optimized tools for smooth Sub-Second Latency Streaming.
 
 Would you please click on each link below for details:
-* ["JavaScript-based Live Streaming Encdoer" **OvenLiveKit**](https://github.com/AirenSoft/OvenLiveKit-Web)
+* ["JavaScript-based Live Streaming Encoder" **OvenLiveKit**](https://github.com/AirenSoft/OvenLiveKit-Web)
 * ["Sub-Second Latency Streaming Server with LLHLS and WebRTC" **OvenMediaEngine**](https://github.com/AirenSoft/OvenMediaEngine)
 * ["JavaScript-based Player with LLHLS and WebRTC" **OvenPlayer**](https://github.com/AirenSoft/OvenPlayer)
