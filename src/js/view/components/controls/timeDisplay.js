@@ -19,6 +19,8 @@ const TimeDisplay = function ($container, api, data) {
   let hlsLive = false;
   let nativeHlsLive = false;
 
+  let currVodPosition = 0;
+
   function convertHumanizeTime(time) {
     return naturalHms(time);
   }
@@ -29,6 +31,7 @@ const TimeDisplay = function ($container, api, data) {
   }
 
   const onRendered = function ($current, template) {
+    currVodPosition = 0;
     let isTimecode = api.isTimecodeMode();
     $position = $current.find(".op-time-current");
     $duration = $current.find(".op-time-duration");
@@ -48,19 +51,25 @@ const TimeDisplay = function ($container, api, data) {
       if (isTimecode) {
         $duration.text(convertHumanizeTime(data.duration));
       } else {
+        $position.text(0);
         $duration.text(Math.round(data.duration * api.getFramerate()) + " (" + api.getFramerate() + "fps)");
       }
 
       api.on(CONTENT_TIME_MODE_CHANGED, function (isTimecodeMode) {
         isTimecode = isTimecodeMode;
         if (isTimecode) {
+          $position.text(convertHumanizeTime(currVodPosition));
           $duration.text(convertHumanizeTime(data.duration));
         } else {
+          $position.text(Math.round(currVodPosition * api.getFramerate()));
           $duration.text(Math.round(data.duration * api.getFramerate()) + " (" + api.getFramerate() + "fps)");
         }
       }, template);
 
       api.on(CONTENT_TIME, function (data) {
+
+        currVodPosition = data.position;
+
         if (isTimecode) {
           $position.text(convertHumanizeTime(data.position));
         } else {
