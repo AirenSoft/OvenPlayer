@@ -35,6 +35,7 @@ const Loader = function () {
                         };
                         // Parse calls onflush internally
                         parser.parse(body);
+                        parser.flush();
                     } else if (body.indexOf('SAMI') >= 0) {
                         OvenPlayerConsole.log("SAMI LOADED");
                         let parsedData = SmiParser(body, {fixedLang: language});

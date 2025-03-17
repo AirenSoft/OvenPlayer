@@ -1,6 +1,6 @@
 {
   "name": "ovenplayer",
-  "version": "0.10.37.2",
+  "version": "0.10.39",
   "description": "OvenPlayer is Open-Source HTML5 Player. OvenPlayer supports WebRTC Signaling from OvenMediaEngine for Sub-Second Latency Streaming.",
   "main": "dist/ovenplayer.js",
   "scripts": {
@@ -39,7 +39,8 @@
     "webpack": "^5.51.1",
     "webpack-bundle-analyzer": "^3.0.3",
     "webpack-cli": "^4.8.0",
-    "webpack-merge": "^5.8.0"
+    "webpack-merge": "^5.8.0",
+    "worker-loader": "^3.0.8"
   },
   "dependencies": {
     "core-js": "^3.16.3",

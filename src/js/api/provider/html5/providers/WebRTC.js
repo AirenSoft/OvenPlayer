@@ -3,10 +3,11 @@
  */
 import Provider from "api/provider/html5/Provider";
 import WebRTCLoader from "api/provider/html5/providers/WebRTCLoader";
-import {isWebRTC} from "utils/validator";
-import {errorTrigger} from "api/provider/utils";
-import {PROVIDER_WEBRTC, ERROR, PLAYER_STATE, STATE_IDLE, STATE_LOADING} from "api/constants";
-import {ERRORS, PLAYER_WEBRTC_TIMEOUT} from "../../../constants";
+import { isWebRTC } from "utils/validator";
+import { errorTrigger } from "api/provider/utils";
+import { PROVIDER_WEBRTC, ERROR, PLAYER_STATE, STATE_IDLE, CONTENT_META_DATA, CONTENT_META_DATA_TYPE_SEI } from "api/constants";
+import { ERRORS, PLAYER_WEBRTC_TIMEOUT } from "../../../constants";
+import RTCTransformWorker from "../../../worker/RTCTransformWorker.worker";
 
 /**
  * @brief   webrtc provider extended core.
@@ -84,7 +85,7 @@ const WebRTC = function (element, playerConfig, adTagUrl) {
                 webrtcLoader = null;
             }
 
-            const loadCallback = function (stream) {
+            const loadCallback = function (e) {
 
                 if (element.srcObject) {
                     element.srcObject = null;
@@ -94,6 +95,8 @@ const WebRTC = function (element, playerConfig, adTagUrl) {
                     audioCtx.close();
                     audioCtx = null;
                 }
+
+                const stream = e.streams[0];
 
                 element.srcObject = stream;
 
@@ -112,6 +115,37 @@ const WebRTC = function (element, playerConfig, adTagUrl) {
                     audioCtx.createMediaStreamSource(stream);
                 }
 
+                if (e.receiver.track.kind === 'video') {
+
+                    if (playerConfig.getConfig().parseStream.enabled) {
+                        const worker = new RTCTransformWorker();
+
+                        if ('RTCRtpScriptTransform' in window) {
+
+                            e.receiver.transform = new RTCRtpScriptTransform(worker);
+
+                        } else {
+
+                            const { readable, writable } = e.receiver.createEncodedStreams();
+
+                            worker.postMessage({
+                                action: 'rtctransform',
+                                readable,
+                                writable
+                            }, [readable, writable]);
+                        }
+
+                        worker.addEventListener('message', (event) => {
+
+                            if (event.data.action === 'sei') {
+                                that.trigger(CONTENT_META_DATA, {
+                                    ...event.data.data,
+                                    type: CONTENT_META_DATA_TYPE_SEI,
+                                });
+                            }
+                        });
+                    }
+                }
             };
 
             let internalErrorCallback = null;
@@ -203,13 +237,13 @@ const WebRTC = function (element, playerConfig, adTagUrl) {
         if (config.webrtcConfig) {
 
             if (typeof config.webrtcConfig.connectionTimeout === 'number'
-                    && config.webrtcConfig.connectionTimeout > 0) {
+                && config.webrtcConfig.connectionTimeout > 0) {
 
                 connectionTimeout = config.webrtcConfig.connectionTimeout;
             }
 
             if (typeof config.webrtcConfig.timeoutMaxRetry === 'number'
-                    && config.webrtcConfig.timeoutMaxRetry > 0) {
+                && config.webrtcConfig.timeoutMaxRetry > 0) {
 
                 timeoutMaxRetry = config.webrtcConfig.timeoutMaxRetry;
             }

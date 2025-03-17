@@ -409,10 +409,11 @@ const View = function($container){
             }
         }
 
-        api.showControls = function (show) {
+        api.showControls = function (show, keepOpen) {
             if (show) {
                 $playerRoot.removeClass("op-no-controls");
-                setHide(false, true);
+                let autoHide = !keepOpen
+                setHide(false, autoHide);
             } else {
                 $playerRoot.addClass("op-no-controls");
             }

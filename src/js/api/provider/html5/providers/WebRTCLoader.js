@@ -359,7 +359,6 @@ const WebRTCLoader = function (provider,
 
                 peerConnection.setLocalDescription(desc).then(function () {
 
-
                 }).catch(function (error) {
 
                     let tempError = ERRORS.codes[PLAYER_WEBRTC_SET_LOCAL_DESC_ERROR];
@@ -457,8 +456,7 @@ const WebRTCLoader = function (provider,
                 extractLossPacketsOnNetworkStatus(mainPeerConnectionInfo);
             }
 
-            mainStream = e.streams[0];
-            loadCallback(e.streams[0]);
+            loadCallback(e);
 
             if (playerConfig.getConfig().webrtcConfig && playerConfig.getConfig().webrtcConfig.playoutDelayHint) {
 
@@ -481,9 +479,8 @@ const WebRTCLoader = function (provider,
 
                     OvenPlayerConsole.log("WebRTC playoutDelayHint", receiver, hint);
                 }
-
             }
-        };
+        }; // end of ontrack
     }
 
     function createClientPeerConnection(hostId, clientId) {
