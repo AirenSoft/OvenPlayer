@@ -320,7 +320,7 @@ If you set this option to true, it will run in mute mode.
 | ------- | ------- | -------- |
 | boolean | true    | false    |
 
-You set whether to display time or frame information in the control bar on OvenPlayer. Of course, framerate information is required when registering sources to display the correct frame information.
+You set whether to display time or frame information in the control bar on OvenPlayer. If framerate is not provide to source this option will always be `true`.
 
 ### **playbackRate**
 
@@ -348,68 +348,32 @@ It shows only current protocols. (\*If you want to show only quality information
 
 ### **sources**
 
-| Type                      | Default | Required |
-| ------------------------- | ------- | -------- |
-| Object \| Array of Object | -       | true     |
-
-#### source
-
-You can register the URL of the content playback URL as shown below:
-
-{% code title="example" %}
-```
-let player = OvenPlayer.create("player", {
-    type : "mp4", 
-    file :  "https://path.to/your_video", 
-    label : "360P"
-});
-```
-{% endcode %}
-
-#### sources
-
 If you have multiple protocols or multiple resolutions for a single content, you can register them at once using `sources`. Also, multiple protocols can support a broader range of browsers, and multiple resolutions allow viewers to select video quality.
 
 OvenPlayer will play a video in the order of the protocol or resolution you entered in `sources` and will automatically play the next source if playback fails.
+
+If a `label` is set, it will be displayed in the player source selection UI. The `framerate` setting only works on VOD and is required to display the time in frames in the progress bar.
 
 {% code title="example" %}
 ```
 let player = OvenPlayer.create("player", {sources : [
     {
-        type : "mp4", 
-        file :  "https://path.to/your_video", 
-        label : "360P"
-    },
-    {
-        type : "mpd", 
-        file :  "https://path.to/your_video.mpd", 
-        label: "360P DASH"
+        type : "webrtc", 
+        file : "wss://demo.ovenmediaengine.com/app/stream",
+        label: "WebRTC Stream", // optional
+        framerate: 60 // optional
     },
     {
         type : "hls", 
-        file :  "https://path.to/your_video.m3u8", 
-        label: "360P HLS"
-    },
-    {
-        type : "rtmp", 
-        file :  "rtmp://path.to/your_video", 
-        label: "360P RTMP"
+        file : "wss://demo.ovenmediaengine.com/app/stream/playlist.m3u8",
+        label: "HLS Stream", // optional
+        framerate: 60 // optional
     }
 ] });
 ```
 {% endcode %}
 
 ### **tracks**
-
-{% code title="example" %}
-```javascript
-let player = OvenPlayer.create("player", {sources : {
-    type : "mp4", 
-    file :  "https://path.to/your_video", 
-    label : "360P"
-}});
-```
-{% endcode %}
 
 | **Type**        | Default | Required |
 | --------------- | ------- | -------- |
