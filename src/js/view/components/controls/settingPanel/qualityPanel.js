@@ -31,7 +31,7 @@ const QualityPanel = function($container, api, data){
                     if( $panel.find(".op-setting-item-checked").hasClass("op-show")){
                         $panel.find(".op-setting-item-checked").removeClass("op-show");
                     }
-                    if(newQuality === parseInt($panel.attr("op-data-value"))){
+                    if(!data.isAuto && newQuality === parseInt($panel.attr("op-data-value"))){
                         $panel.find(".op-setting-item-checked").addClass("op-show");
                     }
                     if(data.isAuto && $panel.attr("op-data-value") === "AUTO"){

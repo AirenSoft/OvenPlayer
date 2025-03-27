@@ -135,6 +135,9 @@ export const SYSTEM_TEXT = [
         "low_latency_p2p": "Sub-Second Latency P2P",
       },
       "playlist": "Playlist",
+      "quality": {
+        "auto": "Auto"
+      },
       "setting": {
         "title": "Settings",
         "speed": "Speed",
@@ -295,6 +298,9 @@ export const SYSTEM_TEXT = [
         "low_latency_p2p": "초저지연 P2P",
       },
       "playlist": "플레이리스트",
+      "quality": {
+        "auto": "자동"
+      },
       "setting": {
         "title": "설정",
         "speed": "재생 속도",
@@ -455,6 +461,9 @@ export const SYSTEM_TEXT = [
         "low_latency_p2p": "Transmisja z niskim opóźnieniem P2P",
       },
       "playlist": "Playlista",
+      "quality": {
+        "auto": "Auto"
+      },
       "setting": {
         "title": "Ustawienia",
         "speed": "Prędkość",
