@@ -106,16 +106,17 @@ const Panels = function ($container, api, data) {
 
         } else if (panelType === "quality") {
             let qualityLevels = api.getQualityLevels();
+            let isQualityCheck = api.isAutoQuality();
             panel.body.push({
-                title: "AUTO",
-                isCheck: api.isAutoQuality(),
+                title: playerConfig.systemText.ui.quality.auto,
+                isCheck: isQualityCheck,
                 value: "AUTO",
                 panelType: panelType
             });
             for (let i = 0; i < qualityLevels.length; i++) {
                 let body = {
                     title: qualityLevels[i].label,
-                    isCheck: api.getCurrentQuality() === i,
+                    isCheck: !isQualityCheck && api.getCurrentQuality() === i,
                     value: i,
                     panelType: panelType
                 };
