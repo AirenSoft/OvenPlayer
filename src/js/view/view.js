@@ -30,7 +30,7 @@ import {
 
 import '../../stylesheet/ovenplayer.less';
 
-const View = function($container){
+const View = function ($container) {
     let viewTemplate = "", controls = "", helper = "", $playerRoot, contextPanel = "", api = null, autoHideTimer = "", playerState = STATE_IDLE;
     let isShiftPressed = false;
     let panelManager = PanelManager();
@@ -48,7 +48,7 @@ const View = function($container){
         }
 
         if (hide) {
-            if(panelManager.size() > 0){
+            if (panelManager.size() > 0) {
                 return false;
             }
             $playerRoot.addClass("op-autohide");
@@ -56,8 +56,8 @@ const View = function($container){
             $playerRoot.removeClass("op-autohide");
 
             if (autoHide) {
-                autoHideTimer = setTimeout(function() {
-                    if(panelManager.size()> 0){
+                autoHideTimer = setTimeout(function () {
+                    if (panelManager.size() > 0) {
                         return false;
                     }
                     $playerRoot.addClass("op-autohide");
@@ -75,7 +75,7 @@ const View = function($container){
             }
 
             api.play();
-        }else if(currentState === STATE_PLAYING){
+        } else if (currentState === STATE_PLAYING) {
             api.pause();
         }
     }
@@ -85,35 +85,35 @@ const View = function($container){
         const currentPosition = api.getPosition();
         let position = 0;
 
-        if(isRewind){
+        if (isRewind) {
             position = Math.max(currentPosition - seconds, 0);
-        }else{
+        } else {
             position = Math.min(currentPosition + seconds, duration);
         }
 
         api.seek(position);
     }
-    function volume(isUp){
+    function volume(isUp) {
         const currentVolumn = api.getVolume();
         let newVolume = 0;
-        if(isUp){
-            newVolume =  Math.min(currentVolumn + 5, 100);
-        }else{
+        if (isUp) {
+            newVolume = Math.min(currentVolumn + 5, 100);
+        } else {
             newVolume = Math.max(currentVolumn - 5, 0);
         }
         api.setVolume(newVolume);
     }
-    function createContextPanel(pageX, pageY){
-        if(contextPanel){
+    function createContextPanel(pageX, pageY) {
+        if (contextPanel) {
             contextPanel.destroy();
             contextPanel = null;
         }
-        contextPanel = ContextPanel($playerRoot, api, {pageX : pageX, pageY : pageY});
+        contextPanel = ContextPanel($playerRoot, api, { pageX: pageX, pageY: pageY });
     }
 
-    function calcPlayerWidth(){
+    function calcPlayerWidth() {
         let playerWidth = $playerRoot.width();
-        if(playerWidth < 576){
+        if (playerWidth < 576) {
             screenSize = "xsmall";
             $playerRoot.addClass("xsmall");
 
@@ -121,24 +121,24 @@ const View = function($container){
                 $playerRoot.addClass("xxsmall");
             }
 
-        }else if(playerWidth < 768){
+        } else if (playerWidth < 768) {
             screenSize = "small";
             $playerRoot.addClass("small");
-        }else if(playerWidth < 992){
+        } else if (playerWidth < 992) {
             screenSize = "medium";
             $playerRoot.addClass("medium");
-        }else{
+        } else {
             screenSize = "large";
             $playerRoot.addClass("large");
         }
     }
 
-    const onRendered = function($current, template){
+    const onRendered = function ($current, template) {
         $playerRoot = $current;
         viewTemplate = template;
         calcPlayerWidth();
         currentPlayerSize = screenSize;
-        resizeSensor = new ResizeSensor($playerRoot.get(), function() {
+        resizeSensor = new ResizeSensor($playerRoot.get(), function () {
 
             $playerRoot.removeClass("large");
             $playerRoot.removeClass("medium");
@@ -146,47 +146,47 @@ const View = function($container){
             $playerRoot.removeClass("xsmall");
             $playerRoot.removeClass("xxsmall");
             calcPlayerWidth();
-            if(screenSize !== currentPlayerSize){
+            if (screenSize !== currentPlayerSize) {
                 currentPlayerSize = screenSize;
-                if(api){
+                if (api) {
                     api.trigger(PLAYER_RESIZED, currentPlayerSize);
                 }
             }
         });
 
     };
-    const onDestroyed = function(){
-        if(resizeSensor) {
+    const onDestroyed = function () {
+        if (resizeSensor) {
             resizeSensor.detach();
             resizeSensor = null;
         }
 
-        if(helper){
+        if (helper) {
             helper.destroy();
             helper = null;
         }
-        if(controls){
+        if (controls) {
             controls.destroy();
             controls = null;
         }
     };
     const events = {
-        "click .ovenplayer" : function(event, $current, template){
+        "click .ovenplayer": function (event, $current, template) {
 
-            if(api){
+            if (api) {
                 api.trigger(PLAYER_CLICKED, event);
             }
 
-            if(contextPanel){
+            if (contextPanel) {
                 event.preventDefault();
                 contextPanel.destroy();
                 contextPanel = null;
                 return false;
             }
 
-            if(!(LA$(event.target).closest(".op-controls-container") || LA$(event.target).closest(".op-setting-panel")  )){
+            if (!(LA$(event.target).closest(".op-controls-container") || LA$(event.target).closest(".op-setting-panel"))) {
 
-                if(panelManager.size() > 0){
+                if (panelManager.size() > 0) {
                     event.preventDefault();
                     panelManager.clear();
                     return false;
@@ -198,46 +198,46 @@ const View = function($container){
 
             }
         },
-        "dblclick .ovenplayer" : function(event, $current, template){
+        "dblclick .ovenplayer": function (event, $current, template) {
             if (api) {
-                    const touchPosition = getTouchSection(event);
-                    const currentPosition = api.getPosition();
-                    const tapToSeekEnabled = api.getConfig().doubleTapToSeek;
+                const touchPosition = getTouchSection(event);
+                const currentPosition = api.getPosition();
+                const tapToSeekEnabled = api.getConfig().doubleTapToSeek;
 
-                    // seek back 10s
-                    if (tapToSeekEnabled && touchPosition == 'left') {
-                        const newPosition = Math.max(currentPosition - 10, 0);
-                        OvenPlayerConsole.log(`Seeking to ${newPosition}`);
-                        api.seek(newPosition);
-                    }
+                // seek back 10s
+                if (tapToSeekEnabled && touchPosition == 'left') {
+                    const newPosition = Math.max(currentPosition - 10, 0);
+                    OvenPlayerConsole.log(`Seeking to ${newPosition}`);
+                    api.seek(newPosition);
+                }
 
-                    // seek forward 10s
-                    if (tapToSeekEnabled && touchPosition === 'right') {
-                        const newPosition = Math.min(currentPosition + 10, api.getDuration());
-                        OvenPlayerConsole.log(`Seeking to ${newPosition}`);
-                        api.seek(newPosition);
-                    }
+                // seek forward 10s
+                if (tapToSeekEnabled && touchPosition === 'right') {
+                    const newPosition = Math.min(currentPosition + 10, api.getDuration());
+                    OvenPlayerConsole.log(`Seeking to ${newPosition}`);
+                    api.seek(newPosition);
+                }
 
-                    if (touchPosition === 'middle' || !tapToSeekEnabled) {
-                        OvenPlayerConsole.log(`Toggling fullscreen`);
-                if (api.getConfig().expandFullScreenUI && api.toggleFullScreen) {
+                if (touchPosition === 'middle' || !tapToSeekEnabled) {
+                    OvenPlayerConsole.log(`Toggling fullscreen`);
+                    if (api.getConfig().expandFullScreenUI && api.toggleFullScreen) {
 
-                    if(!(LA$(event.target).closest(".op-controls-container") || LA$(event.target).closest(".op-setting-panel") )){
-                        api.toggleFullScreen();
+                        if (!(LA$(event.target).closest(".op-controls-container") || LA$(event.target).closest(".op-setting-panel"))) {
+                            api.toggleFullScreen();
+                        }
                     }
                 }
             }
-            }
         },
         //For iOS safari
-        "touchstart .ovenplayer" : function(event, $current, template){
-            if (playerState === STATE_PLAYING || playerState === STATE_IDLE  || playerState === STATE_LOADING || (playerState === STATE_AD_PLAYING && screenSize === "xsmall")) {
+        "touchstart .ovenplayer": function (event, $current, template) {
+            if (playerState === STATE_PLAYING || playerState === STATE_IDLE || playerState === STATE_LOADING || (playerState === STATE_AD_PLAYING && screenSize === "xsmall")) {
                 setHide(false, true);
             } else {
                 setHide(false);
             }
         },
-        "mouseenter .ovenplayer" : function(event, $current, template){
+        "mouseenter .ovenplayer": function (event, $current, template) {
             event.preventDefault();
 
             //small screen with STATE_AD_PLAYING setHide too. becuase mobile hide ad ui.
@@ -247,7 +247,7 @@ const View = function($container){
                 setHide(false);
             }
         },
-        "mousemove .ovenplayer" : function(event, $current, template){
+        "mousemove .ovenplayer": function (event, $current, template) {
             event.preventDefault();
 
             if (playerState === STATE_PLAYING || playerState === STATE_IDLE || playerState === STATE_LOADING || (playerState === STATE_AD_PLAYING && screenSize === "xsmall")) {
@@ -256,71 +256,71 @@ const View = function($container){
                 setHide(false);
             }
         },
-        "mouseleave .ovenplayer" : function(event, $current, template){
+        "mouseleave .ovenplayer": function (event, $current, template) {
             event.preventDefault();
 
-            if(playerState === STATE_PLAYING  || playerState === STATE_IDLE || playerState === STATE_LOADING || (playerState === STATE_AD_PLAYING && screenSize === "xsmall")){
+            if (playerState === STATE_PLAYING || playerState === STATE_IDLE || playerState === STATE_LOADING || (playerState === STATE_AD_PLAYING && screenSize === "xsmall")) {
                 setHide(true);
             }
         },
-        "keydown .ovenplayer" : function(event, $current, template){
+        "keydown .ovenplayer": function (event, $current, template) {
             let frameMode = api.getFramerate();
-            switch(event.keyCode){
-                case 16 :   //shift
+            switch (event.keyCode) {
+                case 16:   //shift
                     event.preventDefault();
                     isShiftPressed = true;
                     break;
-                case 32 :   //space
+                case 32:   //space
                     event.preventDefault();
                     togglePlayPause();
                     break;
-                case 37 : //arrow left
+                case 37: //arrow left
                     event.preventDefault();
 
                     if (!api.getConfig().disableSeekUI) {
-                        if(isShiftPressed && frameMode){
+                        if (isShiftPressed && frameMode) {
                             api.seekFrame(-1);
-                        }else{
+                        } else {
                             seek(5, true);
                         }
                     }
                     break;
-                case 39 : //arrow right
+                case 39: //arrow right
                     event.preventDefault();
 
                     if (!api.getConfig().disableSeekUI) {
 
-                        if(isShiftPressed && frameMode){
+                        if (isShiftPressed && frameMode) {
                             api.seekFrame(1);
-                        }else{
+                        } else {
                             seek(5, false);
                         }
                     }
 
                     break;
-                case 38 : //arrow up
+                case 38: //arrow up
                     event.preventDefault();
                     volume(true);
                     break;
-                case 40 : //arrow up
+                case 40: //arrow up
                     event.preventDefault();
                     volume(false);
                     break;
             }
 
         },
-        "keyup .ovenplayer" : function(event, $current, template){
-            switch(event.keyCode) {
-                case 16 :   //shift
+        "keyup .ovenplayer": function (event, $current, template) {
+            switch (event.keyCode) {
+                case 16:   //shift
                     event.preventDefault();
                     isShiftPressed = false;
                     break;
             }
 
         },
-        "contextmenu .ovenplayer" : function(event, $current, template){
+        "contextmenu .ovenplayer": function (event, $current, template) {
             event.stopPropagation();
-            if(!LA$(event.currentTarget).find("object")){
+            if (!LA$(event.currentTarget).find("object")) {
                 event.preventDefault();
                 createContextPanel(event.pageX, event.pageY);
                 return false;
@@ -345,9 +345,9 @@ const View = function($container){
             return $playerRoot.get().id;
         };
 
-        api.on(READY, function(data) {
+        api.on(READY, function (data) {
 
-            if(!controls){
+            if (!controls) {
                 controls = Controls($playerRoot.find(".op-ui"), playerInstance);
             }
 
@@ -355,12 +355,13 @@ const View = function($container){
                 $playerRoot.addClass("op-no-controls");
             }
 
+            setHide(false, true);
         });
 
-        api.on(ERROR, function(error) {
-            if(api){
-                let sources = api.getSources()||[];
-                if(controls && (sources.length <= 1)){
+        api.on(ERROR, function (error) {
+            if (api) {
+                let sources = api.getSources() || [];
+                if (controls && (sources.length <= 1)) {
                     // controls.destroy();
                     // controls = null;
                 }
@@ -368,26 +369,27 @@ const View = function($container){
 
         });
 
-        api.on(DESTROY, function(data) {
+        api.on(DESTROY, function (data) {
             viewTemplate.destroy();
         });
 
         api.on(PLAYER_PLAY, function (data) {
-            if(!controls && showControlBar){
+            if (!controls && showControlBar) {
                 controls = Controls($playerRoot.find(".op-ui"), playerInstance);
             }
         });
 
-        api.on(PLAYER_STATE, function(data){
-            if(data && data.newstate){
-                playerState = data.newstate;
-                if(data.newstate === STATE_PLAYING || (data.newstate === STATE_AD_PLAYING && screenSize === "xsmall")){
-                    setHide(false, true);
-                }else{
-                    setHide(false);
-                }
-            }
-        });
+        // Don't need to setHide on each state change
+        // api.on(PLAYER_STATE, function(data){
+        //     if(data && data.newstate){
+        //         playerState = data.newstate;
+        //         if(data.newstate === STATE_PLAYING || (data.newstate === STATE_AD_PLAYING && screenSize === "xsmall")){
+        //             setHide(false, true);
+        //         }else{
+        //             setHide(false);
+        //         }
+        //     }
+        // });
 
         let showControlBar = api.getConfig() && api.getConfig().controls;
 

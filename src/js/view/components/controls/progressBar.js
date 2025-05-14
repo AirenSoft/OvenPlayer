@@ -231,28 +231,6 @@ const ProgressBar = function ($container, api, isAd, metadata) {
 
         let time = (durationForCalc || 0) * percentage;
 
-        if (hlsLive && !nativeHlsLive) {
-
-            // if latency control is on. temporarily disable latency control
-            const config = api.getConfig();
-            if (config.hlsConfig) {
-
-                if (typeof config.hlsConfig.liveSyncDuration === 'number') {
-                    api.getMseInstance().config.liveSyncDuration = undefined;
-                }
-
-                if (typeof config.hlsConfig.liveMaxLatencyDuration === 'number') {
-                    api.getMseInstance().config.liveMaxLatencyDuration = undefined;
-                }
-
-                if (typeof config.hlsConfig.maxLiveSyncPlaybackRate === 'number') {
-                    api.getMseInstance().config.maxLiveSyncPlaybackRate = 1;
-                }
-            }
-
-            time = (durationForCalc - api.getDvrWindow()) + api.getDvrWindow() * percentage;
-        }
-
         if (hlsLive && nativeHlsLive) {
             const dvrWindow = getNativeHlsDvrWindow();
             time = (durationForCalc - dvrWindow) + dvrWindow * percentage;

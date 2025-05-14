@@ -28,7 +28,7 @@ import {
     PROVIDER_DASH,
     PROVIDER_HLS
 } from "api/constants";
-import {extractVideoElement, errorTrigger} from "api/provider/utils";
+import { extractVideoElement, errorTrigger } from "api/provider/utils";
 
 /**
  * @brief   Trigger on various video events.
@@ -37,18 +37,18 @@ import {extractVideoElement, errorTrigger} from "api/provider/utils";
  * */
 
 
-const Listener = function(element, provider, videoEndedCallback, playerConfig){
+const Listener = function (element, provider, videoEndedCallback, playerConfig) {
     const lowLevelEvents = {};
 
-    OvenPlayerConsole.log("EventListener loaded.",element ,provider );
+    OvenPlayerConsole.log("EventListener loaded.", element, provider);
     const that = {};
 
     let stalled = -1;
-    let elVideo =  element;
+    let elVideo = element;
     const between = function (num, min, max) {
         return Math.max(Math.min(num, max), min);
     };
-    const compareStalledTime = function(stalled, position){
+    const compareStalledTime = function (stalled, position) {
         //Original Code is stalled !== position
         //Because Dashjs is very meticulous. Then always diffrence stalled and position.
         //That is why when I use toFixed(2).
@@ -77,12 +77,12 @@ const Listener = function(element, provider, videoEndedCallback, playerConfig){
         // IE doesn't set paused property to true. So force set it.
         elVideo.pause();
 
-        if(provider.getState() !== STATE_IDLE && provider.getState() !== STATE_COMPLETE && provider.getState() !== STATE_ERROR) {
-            if(videoEndedCallback){
-                videoEndedCallback(function(){
+        if (provider.getState() !== STATE_IDLE && provider.getState() !== STATE_COMPLETE && provider.getState() !== STATE_ERROR) {
+            if (videoEndedCallback) {
+                videoEndedCallback(function () {
                     provider.setState(STATE_COMPLETE);
                 });
-            }else{
+            } else {
                 provider.setState(STATE_COMPLETE);
             }
         }
@@ -107,8 +107,8 @@ const Listener = function(element, provider, videoEndedCallback, playerConfig){
         let sourceIndex = provider.getCurrentSource();
         let type = sourceIndex > -1 ? sources[sourceIndex].type : "";
         var metadata = {
-            duration: provider.isLive() ?  Infinity : elVideo.duration,
-            type :type
+            duration: provider.isLive() ? Infinity : elVideo.duration,
+            type: type
         };
 
         provider.setMetaLoaded();
@@ -119,16 +119,16 @@ const Listener = function(element, provider, videoEndedCallback, playerConfig){
 
     lowLevelEvents.pause = () => {
         //Fires when the audio/video has been paused
-        if(provider.getState() === STATE_COMPLETE || provider.getState() === STATE_ERROR){
+        if (provider.getState() === STATE_COMPLETE || provider.getState() === STATE_ERROR) {
             return false;
         }
-        if(elVideo.ended){
+        if (elVideo.ended) {
             return false;
         }
-        if(elVideo.error){
+        if (elVideo.error) {
             return false;
         }
-        if(elVideo.currentTime === elVideo.duration){
+        if (elVideo.currentTime === elVideo.duration) {
             return false;
         }
         OvenPlayerConsole.log("EventListener : on pause");
@@ -157,7 +157,7 @@ const Listener = function(element, provider, videoEndedCallback, playerConfig){
     lowLevelEvents.playing = () => {
         //Fires when the audio/video is playing after having been paused or stopped for buffering
         OvenPlayerConsole.log("EventListener : on playing");
-        if(stalled < 0){
+        if (stalled < 0) {
             provider.setState(STATE_PLAYING);
         }
     };
@@ -165,20 +165,20 @@ const Listener = function(element, provider, videoEndedCallback, playerConfig){
     lowLevelEvents.progress = () => {
         //Fires when the browser is downloading the audio/video
         let timeRanges = elVideo.buffered;
-        if(!timeRanges ){
+        if (!timeRanges) {
             return false;
         }
 
         let duration = elVideo.duration, position = elVideo.currentTime;
-        let buffered = between( (timeRanges.length> 0 ? timeRanges.end(timeRanges.length - 1) : 0 ) / duration, 0, 1);
+        let buffered = between((timeRanges.length > 0 ? timeRanges.end(timeRanges.length - 1) : 0) / duration, 0, 1);
 
-        provider.setBuffer(buffered*100);
+        provider.setBuffer(buffered * 100);
         provider.trigger(CONTENT_BUFFER, {
-            bufferPercent: buffered*100,
-            position:  position,
+            bufferPercent: buffered * 100,
+            position: position,
             duration: duration
         });
-        OvenPlayerConsole.log("EventListener : on progress", buffered*100);
+        OvenPlayerConsole.log("EventListener : on progress", buffered * 100);
     };
 
 
@@ -213,12 +213,12 @@ const Listener = function(element, provider, videoEndedCallback, playerConfig){
         }
 
         //Sometimes dash live gave to me crazy duration. (9007199254740991...) why???
-        if(duration > 9000000000000000){    //9007199254740991
+        if (duration > 9000000000000000) {    //9007199254740991
             duration = Infinity;
         }
 
-        if(!provider.isSeeking() && !elVideo.paused && (provider.getState() === STATE_STALLED || provider.getState() === STATE_LOADING || provider.getState() === STATE_AD_PLAYING) &&
-            !compareStalledTime(stalled, position) ){
+        if (!provider.isSeeking() && !elVideo.paused && (provider.getState() === STATE_STALLED || provider.getState() === STATE_LOADING || provider.getState() === STATE_AD_PLAYING) &&
+            !compareStalledTime(stalled, position)) {
             stalled = -1;
             provider.setState(STATE_PLAYING);
         }
@@ -252,12 +252,12 @@ const Listener = function(element, provider, videoEndedCallback, playerConfig){
     lowLevelEvents.seeking = () => {
         provider.setSeeking(true);
         OvenPlayerConsole.log("EventListener : on seeking", elVideo.currentTime);
-        provider.trigger(CONTENT_SEEK,{
-            position : elVideo.currentTime
+        provider.trigger(CONTENT_SEEK, {
+            position: elVideo.currentTime
         });
     };
     lowLevelEvents.seeked = () => {
-        if(!provider.isSeeking()){
+        if (!provider.isSeeking()) {
             return;
         }
         OvenPlayerConsole.log("EventListener : on seeked");
@@ -273,11 +273,10 @@ const Listener = function(element, provider, videoEndedCallback, playerConfig){
     lowLevelEvents.waiting = () => {
         //Fires when the video stops because it needs to buffer the next frame
         OvenPlayerConsole.log("EventListener : on waiting", provider.getState());
-        if(provider.isSeeking()){
+        if (provider.isSeeking()) {
             provider.setState(STATE_LOADING);
-        }else if(provider.getState() === STATE_PLAYING){
+        } else if (provider.getState() === STATE_PLAYING) {
             stalled = elVideo.currentTime;
-            provider.setState(STATE_STALLED);
         }
     };
 
@@ -297,7 +296,7 @@ const Listener = function(element, provider, videoEndedCallback, playerConfig){
             2: PLAYER_UNKNWON_NETWORK_ERROR,
             3: PLAYER_UNKNWON_DECODE_ERROR,
             4: PLAYER_FILE_ERROR
-        }[code]||0);
+        }[code] || 0);
 
         OvenPlayerConsole.log("EventListener : on error", convertedErroCode);
         errorTrigger(ERRORS.codes[convertedErroCode], provider);
@@ -308,7 +307,7 @@ const Listener = function(element, provider, videoEndedCallback, playerConfig){
         elVideo.addEventListener(eventName, lowLevelEvents[eventName]);
     });
 
-    that.destroy = () =>{
+    that.destroy = () => {
         OvenPlayerConsole.log("EventListener : destroy()");
 
         Object.keys(lowLevelEvents).forEach(eventName => {
