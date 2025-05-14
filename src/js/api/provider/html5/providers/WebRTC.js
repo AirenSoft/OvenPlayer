@@ -20,6 +20,7 @@ const WebRTC = function (element, playerConfig, adTagUrl) {
     let webrtcLoader = null;
     let superDestroy_func = null;
     let superPlay_func = null;
+    let superStop_func = null;
 
     let sourceFile = null;
 
@@ -255,6 +256,7 @@ const WebRTC = function (element, playerConfig, adTagUrl) {
 
     superDestroy_func = that.super('destroy');
     superPlay_func = that.super('play');
+    superStop_func = that.super('stop');
 
     OvenPlayerConsole.log("WEBRTC PROVIDER LOADED.");
 
@@ -277,12 +279,17 @@ const WebRTC = function (element, playerConfig, adTagUrl) {
 
     that.play = () => {
 
-        if (timeoutMaxRetry > 0 && !connected) {
-
+        if (!webrtcLoader || (timeoutMaxRetry > 0 && !connected)) {
             loadWebRTCLoader();
         }
 
         superPlay_func();
+    };
+
+    that.stop = () => {
+        clearTimeout(connectionCheckTimer);
+        destroyWebRtcLoader();
+        superStop_func();
     };
 
     return that;
