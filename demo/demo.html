@@ -593,6 +593,10 @@
 
   <script>
 
+    function toAsciiString(byteArray) {
+      return String.fromCharCode.apply(null, byteArray);
+    }
+
     const hash = location.hash;
 
     let urlOption = null;
@@ -606,7 +610,10 @@
       autoFallback: true,
       mute: false,
       sources: [],
-      doubleTapToSeek: false
+      doubleTapToSeek: false,
+      parseStream: {
+        enabled: true
+      },
     };
 
     if (urlOption && urlOption.playerOption) {
@@ -761,6 +768,17 @@
               }
 
             });
+          });
+
+          this.player.on('metaData', function (metadata) {
+
+            console.log('MetaData', metadata);
+
+            if (metadata.type === 'sei' && metadata.registered) {
+              // Parse BASE64 encoded JSON data
+              const base64String = toAsciiString(metadata.userdata);
+              console.log(base64String);
+            }
           });
 
           if (this.demoOption.autoReload && this.demoOption.autoReloadInterval > 0) {
