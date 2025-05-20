@@ -158,11 +158,6 @@ const Api = function (container) {
                 that.trigger(name, data);
             });
 
-            that.trigger(CONTENT_SOURCE_CHANGED, {
-                currentSource: currentSourceIndex
-            });
-
-
         }).then(() => {
 
             //provider's preload() have to made Promise. Cuz it overcomes 'flash loading timing problem'.

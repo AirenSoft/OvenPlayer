@@ -152,17 +152,6 @@ const Manager = function(provider){
                 playlistItem.title = playlistItem.sources[0].label;
             }
 
-            // default 가 없을때 webrtc가 있다면 webrtc default : true로 자동 설정
-            /*let haveDefault = _.find(playlistItem.sources, function(source){return source.default == true;});
-            let webrtcSource = [];
-            if(!haveDefault){
-                webrtcSource = _.find(playlistItem.sources, function(source){return source.type == "webrtc";});
-                if(webrtcSource){
-                    webrtcSource.default = true;
-                }
-            }*/
-
-
             function extractOnlyOneProtocol(sources){
                 if(!!sources){
                     let highPriorityType = playlistItem.sources[0].type;
