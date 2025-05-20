@@ -379,18 +379,6 @@ const View = function ($container) {
             }
         });
 
-        // Don't need to setHide on each state change
-        // api.on(PLAYER_STATE, function(data){
-        //     if(data && data.newstate){
-        //         playerState = data.newstate;
-        //         if(data.newstate === STATE_PLAYING || (data.newstate === STATE_AD_PLAYING && screenSize === "xsmall")){
-        //             setHide(false, true);
-        //         }else{
-        //             setHide(false);
-        //         }
-        //     }
-        // });
-
         let showControlBar = api.getConfig() && api.getConfig().controls;
 
         helper = Helpers($playerRoot.find(".op-ui"), playerInstance);

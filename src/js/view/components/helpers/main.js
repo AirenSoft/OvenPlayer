@@ -182,7 +182,7 @@ const Helpers = function ($container, api) {
           createBigButton(data.newstate);
         } else {
 
-          if (data.newstate === STATE_STALLED || data.newstate === STATE_LOADING || data.newstate === STATE_AD_LOADING) {
+          if (data.newstate === STATE_LOADING || data.newstate === STATE_AD_LOADING) {
 
             dont_show_message = false;
             if (messageBox) {

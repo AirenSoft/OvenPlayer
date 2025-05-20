@@ -277,6 +277,7 @@ const Listener = function (element, provider, videoEndedCallback, playerConfig) 
             provider.setState(STATE_LOADING);
         } else if (provider.getState() === STATE_PLAYING) {
             stalled = elVideo.currentTime;
+            provider.setState(STATE_STALLED);
         }
     };
 
