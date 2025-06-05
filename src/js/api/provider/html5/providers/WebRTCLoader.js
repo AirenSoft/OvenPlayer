@@ -475,6 +475,7 @@ const WebRTCLoader = function (provider,
                     } else {
 
                         receiver.playoutDelayHint = hint;
+                        receiver.jitterBufferDelayHint = hint;
                     }
 
                     OvenPlayerConsole.log("WebRTC playoutDelayHint", receiver, hint);
