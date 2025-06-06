@@ -7,7 +7,7 @@ import { isWebRTC } from "utils/validator";
 import { errorTrigger } from "api/provider/utils";
 import { PROVIDER_WEBRTC, ERROR, PLAYER_STATE, STATE_IDLE, CONTENT_META_DATA, CONTENT_META_DATA_TYPE_SEI } from "api/constants";
 import { ERRORS, PLAYER_WEBRTC_TIMEOUT } from "../../../constants";
-import RTCTransformWorker from "../../../worker/RTCTransformWorker.worker";
+import workerScript from '!!raw-loader!../../../worker/RTCTransform.worker.js';
 
 /**
  * @brief   webrtc provider extended core.
@@ -119,7 +119,9 @@ const WebRTC = function (element, playerConfig, adTagUrl) {
                 if (e.receiver.track.kind === 'video') {
 
                     if (playerConfig.getConfig().parseStream.enabled) {
-                        const worker = new RTCTransformWorker();
+                        const blob = new Blob([workerScript], { type: 'application/javascript' });
+                        const url = URL.createObjectURL(blob);
+                        const worker = new Worker(url);
 
                         if ('RTCRtpScriptTransform' in window) {
 

@@ -40,7 +40,7 @@
     "webpack-bundle-analyzer": "^3.0.3",
     "webpack-cli": "^4.8.0",
     "webpack-merge": "^5.8.0",
-    "worker-loader": "^3.0.8"
+    "raw-loader": "^4.0.2"
   },
   "dependencies": {
     "core-js": "^3.16.3",
