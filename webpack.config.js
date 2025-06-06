@@ -74,7 +74,8 @@ const config = {
             },
             {
                 test: /\.worker\.js$/,
-                use: { loader: "worker-loader" }
+                use: { loader: 'raw-loader' },
+                type: 'javascript/auto'
             },
         ]
     },
