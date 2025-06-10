@@ -18,12 +18,12 @@
   },
   "dependencies": {
     "hls.js": "^1.5.20",
-    "ovenplayer": "^0.10.38"
+    "ovenplayer": "^0.10.43"
   },
   "devDependencies": {
     "@eslint/js": "^9.19.0",
     "@types/node": "^22.13.4",
-    "@types/ovenplayer": "^0.10.12",
+    "@types/ovenplayer": "^0.10.13",
     "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.11",
     "@vitejs/plugin-react": "^4.3.4",
