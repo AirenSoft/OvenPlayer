@@ -27,7 +27,7 @@
     "@types/ovenplayer": "^0.10.8",
     "@vitejs/plugin-vue": "^5.2.2",
     "typescript": "^5.2.2",
-    "vite": "^6.2.2",
+    "vite": "^6.3.5",
     "vue-tsc": "^2.1.6"
   }
 }
