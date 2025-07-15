@@ -232,6 +232,7 @@ const Panels = function ($container, api, data) {
     const onDestroyed = function (template) {
         api.off(CONTENT_LEVEL_CHANGED, null, template);
         api.off(AUDIO_TRACK_CHANGED, null, template);
+        api.off(PLAYER_ZOOM_CAHNGED, null, template);
     };
     const events = {
         "click .op-setting-item": function (event, $current, template) {
