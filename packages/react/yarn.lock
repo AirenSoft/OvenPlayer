@@ -582,10 +582,10 @@
   dependencies:
     undici-types "~6.20.0"
 
-"@types/ovenplayer@^0.10.12":
-  version "0.10.12"
-  resolved "https://registry.npmjs.org/@types/ovenplayer/-/ovenplayer-0.10.12.tgz#d9c5c4c7e384e57fa19da824202a2a6c5ec86dd7"
-  integrity sha512-8DHfi+SzoNNCkydtshSCc7hKMMPfQ5jRUORv2O7XPyAqJkU258zuMjwFc94j1pZI9XgGuOv3PVJhAmMPko4LPw==
+"@types/ovenplayer@^0.10.13":
+  version "0.10.13"
+  resolved "https://registry.yarnpkg.com/@types/ovenplayer/-/ovenplayer-0.10.13.tgz#5f069b7b424d2a3d5a414b18163f83567982a387"
+  integrity sha512-XunTSipcr/JdcKDqjXwiJdYFGWZYurdk7P4zs8Oelc5Px7ImctKs9DbzFV8Ae2i5M0IWAwJFM6sKJGGCqVFnYQ==
 
 "@types/prop-types@*":
   version "15.7.14"
@@ -1283,10 +1283,10 @@ optionator@^0.9.3:
     type-check "^0.4.0"
     word-wrap "^1.2.5"
 
-ovenplayer@^0.10.38:
-  version "0.10.38"
-  resolved "https://registry.npmjs.org/ovenplayer/-/ovenplayer-0.10.38.tgz#1478adc01f43f55a6d4b6d9648680aba10870bf4"
-  integrity sha512-IU4qcJ+2n61Ujr1J4QcUm/suDeyXftPM8aXXOc0vwzaWMuLMwNRFkaIAN56tprId/6qj7xVaeX69PKMM+MZ5eA==
+ovenplayer@^0.10.43:
+  version "0.10.43"
+  resolved "https://registry.yarnpkg.com/ovenplayer/-/ovenplayer-0.10.43.tgz#55a8bcfd8c24cdd070826446f34e00c8a2d90548"
+  integrity sha512-tGIusXuk54AU59LBFhovF4pGSpiN78cXxEE1dm7CsaMHROfHeRwaOHqbMn5FFaLeGt+TtDwxHlJ3T/7sWfEJJg==
   dependencies:
     core-js "^3.16.3"
     whatwg-fetch "^3.6.2"
@@ -1520,10 +1520,10 @@ uri-js@^4.2.2:
   dependencies:
     punycode "^2.1.0"
 
-vite@^6.1.5:
-  version "6.1.5"
-  resolved "https://registry.yarnpkg.com/vite/-/vite-6.1.5.tgz#3791609c7a5f434d2c6ed0610c2570cd083541b4"
-  integrity sha512-H/gAFpW5I4ow/8Bz4t4i8k2St5JThMlqUT8gsH5v0rkqbqpf4qLrFozjq/V2KG1iOXF+3Ko9mlG0kmGerktWJw==
+vite@^6.1.6:
+  version "6.1.6"
+  resolved "https://registry.yarnpkg.com/vite/-/vite-6.1.6.tgz#72c3171390aaa80f4a829ab45c21e61477cae5bd"
+  integrity sha512-u+jokLMwHVFUoUkfL+m/1hzucejL2639g9QXcrRdtN3WPHfW7imI83V96Oh1R0xVZqDjvcgp+7S8bSQpdVlmPA==
   dependencies:
     esbuild "^0.24.2"
     postcss "^8.5.2"
