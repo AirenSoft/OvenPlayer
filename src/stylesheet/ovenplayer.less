@@ -1218,6 +1218,7 @@ i.op-con {
       width: 14px;
       height: 14px;
       border-radius: 7px;
+      cursor: pointer;
     }
   }
 
@@ -1446,6 +1447,10 @@ i.op-con {
 
     &.op-live-badge-delayed:before {
       background: #fff;
+    }
+
+    &.op-live-badge-none:before {
+      display: none;
     }
 
     .op-live-badge-lowlatency {

@@ -4,6 +4,7 @@
 import OvenTemplate from "view/engine/OvenTemplate";
 import PanelManager from "view/global/PanelManager";
 import { naturalHms } from "utils/strings"
+import { getSeekableStartEnd } from "api/provider/utils";
 import LA$ from "utils/likeA$";
 import {
     CONTENT_TIME,
@@ -30,6 +31,7 @@ const ProgressBar = function ($container, api, isAd, metadata) {
     let adDuration = 0;
     let lastGridThumbnail = "";
     let durationForCalc = 0;
+    let lastEventForTime = null;
 
     let $progressBar = "",
         $progressLoad = "",
@@ -58,14 +60,22 @@ const ProgressBar = function ($container, api, isAd, metadata) {
 
     function positionElements(percentage) {
 
+        if (percentage < 0) {
+            percentage = 0;
+        }
+
+        if (percentage > 1) {
+            percentage = 1;
+        }
+
         let progressBarWidth = $progressBar.width();
         let position = progressBarWidth * percentage;
 
         $progressPlay.css("width", position + "px");
         $progressHover.css("left", position + "px");
 
-        let knobPostion = (progressBarWidth - knobWidth) * percentage;
-        $knobContainer.css("left", knobPostion + "px");
+        let knobPosition = (progressBarWidth - knobWidth) * percentage;
+        $knobContainer.css("left", knobPosition + "px");
 
         currentPlayingPosition = position;
         currentPlayingPercentage = percentage;
@@ -113,11 +123,8 @@ const ProgressBar = function ($container, api, isAd, metadata) {
         return percentage;
     }
 
-    function getNativeHlsDvrWindow() {
-        return mediaElement.seekable.end(mediaElement.seekable.length - 1) - mediaElement.seekable.start(0);
-    }
-
     function drawTimeIndicator(percentage, event) {
+
         if (panelManager.size() > 0 || percentage < 0) {
             $time.hide();
             $preview.hide();
@@ -130,7 +137,7 @@ const ProgressBar = function ($container, api, isAd, metadata) {
         let duration = 0;
         let second = 0;
 
-        const result = getTimeText(percentage);
+        const result = setTimeText(percentage);
 
         duration = result.duration;
         second = result.second;
@@ -206,13 +213,17 @@ const ProgressBar = function ($container, api, isAd, metadata) {
 
         let time = (durationForCalc || 0) * percentage;
 
-        if (hlsLive && !nativeHlsLive) {
-            const dvrWindow = api.getDvrWindow();
-            time = (durationForCalc - dvrWindow) + dvrWindow * percentage;
+        if (hlsLive) {
+            if (!nativeHlsLive) {
 
-        } else if (hlsLive && nativeHlsLive) {
-            const dvrWindow = getNativeHlsDvrWindow();
-            time = (durationForCalc - dvrWindow) + dvrWindow * percentage;
+                const dvrWindow = api.getDvrWindow();
+                time = (durationForCalc - dvrWindow) + dvrWindow * percentage;
+            } else {
+
+                const seekable = getSeekableStartEnd(mediaElement);
+                const seekableRange = seekable.end - seekable.start;
+                time = seekable.start + seekableRange * percentage;
+            }
         }
 
         let sectionStart = api.getSources()[api.getCurrentSource()].sectionStart;
@@ -221,12 +232,10 @@ const ProgressBar = function ($container, api, isAd, metadata) {
             time = time + sectionStart;
         }
 
-        // console.log('Seeking to:', time, 'Percentage:', percentage, 'DVR Window:', api.getDvrWindow());
-
         api.seek(time);
     }
 
-    function getTimeText(percentage) {
+    function setTimeText(percentage) {
 
         let duration = 0;
         let second = 0;
@@ -235,6 +244,7 @@ const ProgressBar = function ($container, api, isAd, metadata) {
 
             duration = api.getDvrWindow();
             second = duration * (1 - percentage);
+
             if (api.isTimecodeMode()) {
                 $time.text('- ' + naturalHms(second));
             } else {
@@ -242,8 +252,11 @@ const ProgressBar = function ($container, api, isAd, metadata) {
             }
         } else if (hlsLive && nativeHlsLive) {
 
-            duration = getNativeHlsDvrWindow();
+            const seekable = getSeekableStartEnd(mediaElement);
+
+            duration = seekable.end - seekable.start;
             second = duration * (1 - percentage);
+
             if (api.isTimecodeMode()) {
                 $time.text('- ' + naturalHms(second));
             } else {
@@ -267,7 +280,6 @@ const ProgressBar = function ($container, api, isAd, metadata) {
         };
     }
 
-
     const onRendered = function ($current, template) {
 
         $progressBar = $current;
@@ -280,6 +292,8 @@ const ProgressBar = function ($container, api, isAd, metadata) {
         $time = $current.find(".op-progressbar-time");
         $preview = $current.find(".op-progressbar-preview");
 
+        $knob.hide();
+
         if (isAd) {
             api.on(AD_TIME, function (data) {
                 if (data && data.duration && typeof data.position === "number") {
@@ -288,9 +302,11 @@ const ProgressBar = function ($container, api, isAd, metadata) {
                 }
             }, template);
         } else {
-
             api.on(CONTENT_TIME, function (data) {
+
                 if (data && data.duration && typeof data.position === "number") {
+
+                    $knob.show();
 
                     durationForCalc = data.duration;
                     let percentage = data.position / data.duration;
@@ -298,14 +314,17 @@ const ProgressBar = function ($container, api, isAd, metadata) {
                     if (hlsLive) {
 
                         if (!nativeHlsLive) {
+
+                            if (mouseInside && lastEventForTime) {
+                                setTimeText(calculatePercentage(lastEventForTime));
+                            }
+
                             percentage = (api.getDvrWindow() - (data.duration - data.position)) / api.getDvrWindow();
-                            // console.log('DVR Window:', api.getDvrWindow(), 'delta:', (data.duration - data.position), 'Percentage:', percentage,
-                            //     'duration:', data.duration, 'Position:', data.position);
+
                         } else {
-                            const dvrWindow = getNativeHlsDvrWindow();
-                            durationForCalc = dvrWindow;
-                            const position = Math.min(dvrWindow, data.position);
-                            percentage = (dvrWindow - (dvrWindow - position)) / dvrWindow;
+                            const seekable = getSeekableStartEnd(mediaElement);
+                            const relativePosition = data.position - seekable.start;
+                            percentage = relativePosition / (seekable.end - seekable.start);
                         }
                     }
 
@@ -357,6 +376,7 @@ const ProgressBar = function ($container, api, isAd, metadata) {
                 positionElements(percentage);
                 drawHoverProgress(0);
                 seek(percentage);
+                lastEventForTime = event;
                 drawTimeIndicator(percentage, event);
             }
         },
@@ -423,6 +443,7 @@ const ProgressBar = function ($container, api, isAd, metadata) {
             if (!mouseDown && !isAd && !isMobile) {
                 const percentage = calculatePercentage(event);
                 drawHoverProgress(percentage);
+                lastEventForTime = event;
                 drawTimeIndicator(percentage, event);
             }
 
@@ -435,6 +456,7 @@ const ProgressBar = function ($container, api, isAd, metadata) {
                 positionElements(percentage);
                 drawHoverProgress(0);
                 seek(percentage);
+                lastEventForTime = event;
                 drawTimeIndicator(percentage, event);
             }
         },

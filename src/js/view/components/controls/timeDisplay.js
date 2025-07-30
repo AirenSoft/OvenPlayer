@@ -3,6 +3,7 @@
  */
 import OvenTemplate from "view/engine/OvenTemplate";
 import { naturalHms } from "utils/strings";
+import { getSeekableStartEnd } from "api/provider/utils";
 import {
   CONTENT_TIME,
   CONTENT_TIME_MODE_CHANGED,
@@ -23,11 +24,6 @@ const TimeDisplay = function ($container, api, data) {
 
   function convertHumanizeTime(time) {
     return naturalHms(time);
-  }
-
-
-  function getNativeHlsDvrWindow() {
-    return mediaElement.seekable.end(mediaElement.seekable.length - 1) - mediaElement.seekable.start(0);
   }
 
   const onRendered = function ($current, template) {
@@ -78,7 +74,9 @@ const TimeDisplay = function ($container, api, data) {
       }, template);
     } else {
       if (hlsLive && !nativeHlsLive) {
+
         api.on(CONTENT_TIME, function (data) {
+
           if (!api.getConfig().legacyUI) {
             if (api.getMseInstance().liveSyncPosition - data.position > api.getMseInstance().targetLatency) {
               $liveBadge.addClass('op-live-badge-delayed');
@@ -89,17 +87,7 @@ const TimeDisplay = function ($container, api, data) {
         }, template);
       } else if (hlsLive && nativeHlsLive) {
 
-        api.on(CONTENT_TIME, function (data) {
-
-          if (!api.getConfig().legacyUI) {
-            const dvrWindow = getNativeHlsDvrWindow();
-            if (dvrWindow - data.position > 3) {
-              $liveBadge.addClass('op-live-badge-delayed');
-            } else {
-              $liveBadge.removeClass('op-live-badge-delayed');
-            }
-          }
-        }, template);
+        $liveBadge.addClass('op-live-badge-none');
       }
     }
 
@@ -117,6 +105,8 @@ const TimeDisplay = function ($container, api, data) {
       if (hlsLive && !nativeHlsLive) {
         const syncPosition = api.getMseInstance().liveSyncPosition;
         api.seek(syncPosition);
+      } else if (hlsLive && nativeHlsLive) {
+        api.seek(getSeekableStartEnd(mediaElement).end);
       }
     }
   };
