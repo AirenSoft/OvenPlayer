@@ -733,10 +733,14 @@ const WebRTCLoader = function (provider,
 
                             let rendition = renditions[i];
 
+                            if (!rendition.video_track && !rendition.audio_track) {
+                                continue;
+                            }
+
                             spec.qualityLevels.push({
-                                bitrate: rendition.video_track.video.bitrate,
-                                height: rendition.video_track.video.height,
-                                width: rendition.video_track.video.width,
+                                bitrate: rendition.video_track ? rendition.video_track.video.bitrate : rendition.audio_track.bitrate,
+                                height: rendition.video_track ? rendition.video_track.video.height : 0,
+                                width: rendition.video_track ? rendition.video_track.video.width : 0,
                                 index: i,
                                 label: rendition.name
                             });
