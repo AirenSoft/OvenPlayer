@@ -60,8 +60,6 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
 
         hls = new Hls(hlsConfig);
 
-        window.op_hls = hls;
-
         hls.attachMedia(element);
 
         let spec = {
