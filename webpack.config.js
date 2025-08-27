@@ -22,7 +22,9 @@ const config = {
             type: 'umd',
             export: 'default'
         },
-        clean: true
+        clean: true,
+        globalObject: 'typeof self !== \'undefined\' ? self : this',
+        chunkLoading: false,
     },
     devtool: 'source-map',
     module: {

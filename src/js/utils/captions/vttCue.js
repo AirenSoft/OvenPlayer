@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-let VTTCue = window.VTTCue;
+let VTTCue = typeof window !== 'undefined' ? window?.VTTCue : undefined;
 
 var autoKeyword = "auto";
 var directionSetting = {
