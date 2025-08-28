@@ -5,7 +5,7 @@ const packageInfo = require('./package.json');
 const config = {
     mode: 'production',
     entry: {
-        'ovenplayer': ['core-js/stable', 'whatwg-fetch', './src/js/ovenplayer.js']
+        'ovenplayer': ['core-js/stable', './src/js/ovenplayer.js']
     },
     target: ['web', 'es5'],
     resolve: {
@@ -22,7 +22,8 @@ const config = {
             type: 'umd',
             export: 'default'
         },
-        clean: true
+        clean: true,
+        chunkLoading: false,
     },
     devtool: 'source-map',
     module: {

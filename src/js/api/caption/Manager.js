@@ -3,7 +3,7 @@
  */
 import CaptionLoader from 'api/caption/Loader';
 import {READY, ERRORS, ERROR, PLAYER_CAPTION_ERROR, CONTENT_META, CONTENT_TIME, CONTENT_CAPTION_CUE_CHANGED, CONTENT_CAPTION_CHANGED} from "api/constants";
-import _ from "utils/underscore";
+import _ from "underscore";
 
 const isSupport = function(kind){
     return kind === 'subtitles' || kind === 'captions';

@@ -18,7 +18,7 @@ import {
     DASH_PREPARED,
     DASH_DESTROYED
 } from "api/constants";
-import _ from "utils/underscore";
+import _ from "underscore";
 import {STATE_LOADING} from "../../../constants";
 
 /**

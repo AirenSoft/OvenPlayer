@@ -3,7 +3,7 @@
  */
 import SrtParser from "api/caption/parser/SrtParser";
 import WebVTT from 'api/caption/parser/VttParser'
-import VTTCue from 'utils/captions/vttCue'
+import {VTTCue} from 'media-captions'
 import SmiParser from 'api/caption/parser/SmiParser'
 
 const Loader = function () {

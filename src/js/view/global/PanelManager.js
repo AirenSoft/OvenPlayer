@@ -1,7 +1,7 @@
 /**
  * Created by hoho on 2018. 7. 26..
  */
-import _ from "utils/underscore";
+import _ from "underscore";
 
 let settingPanelList = [];
 

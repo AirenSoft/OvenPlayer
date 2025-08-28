@@ -4,7 +4,7 @@
 
 import Templates from "view/engine/Templates";
 import LA$ from 'utils/likeA$';
-import _ from "utils/underscore";
+import _ from "underscore";
 
 /**
  * @brief   This is simple ui renderer. This returns onRendered callback, onDestroyed callback on Template. And this bind events for Templates.
