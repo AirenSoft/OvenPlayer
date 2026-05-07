@@ -7,7 +7,7 @@ import LA$ from 'utils/likeA$';
 import {
     SUBTITLE_TRACK_CHANGED
 } from "api/constants";
-import _ from "utils/underscore";
+import _ from "underscore";
 
 const SubtitleTrackPanel = function ($container, api, data) {
     const $root = LA$(api.getContainerElement());
