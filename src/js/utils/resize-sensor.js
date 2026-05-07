@@ -1,4 +1,4 @@
-export default function () {
+export default (function () {
     'use strict';
     /**
      *
@@ -142,4 +142,4 @@ export default function () {
         }
     };
     return ResizeSensor;
-}
+})();
