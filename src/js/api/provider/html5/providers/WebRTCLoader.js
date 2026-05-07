@@ -1,4 +1,4 @@
-import _ from "utils/underscore";
+import _ from "underscore";
 import { analUserAgent } from "utils/browser";
 import {
     ERRORS,

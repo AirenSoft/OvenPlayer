@@ -2,7 +2,7 @@
  * Created by Sangwon Oh on 2020. 11. 10..
  */
 import OvenTemplate from 'view/engine/OvenTemplate';
-import _ from 'utils/underscore';
+import _ from 'underscore';
 import {
     STATE_IDLE,
     STATE_PLAYING,

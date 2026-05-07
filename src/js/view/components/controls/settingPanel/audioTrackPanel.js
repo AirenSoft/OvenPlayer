@@ -7,7 +7,7 @@ import LA$ from 'utils/likeA$';
 import {
     AUDIO_TRACK_CHANGED
 } from "api/constants";
-import _ from "utils/underscore";
+import _ from "underscore";
 
 const AudioTrackPanel = function ($container, api, data) {
     const $root = LA$(api.getContainerElement());
