@@ -1,6 +1,5 @@
 /* vtt.js - v0.12.1 (https://github.com/mozilla/vtt.js) built on 03-12-2015 */
-import VTTCue from 'utils/captions/vttCue';
-import VTTRegion from 'utils/captions/vttRegion';
+import {VTTCue, VTTRegion} from 'media-captions';
 
 /**
  * Copyright 2013 vtt.js Contributors

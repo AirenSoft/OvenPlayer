@@ -1,4 +1,4 @@
-import _ from "utils/underscore";
+import _ from "underscore";
 import deepMerge from "utils/deepMerge";
 
 import {

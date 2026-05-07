@@ -1,4 +1,4 @@
-import _ from "utils/underscore";
+import _ from "underscore";
 import {isRtmp, isWebRTC, isDash, isHls } from "utils/validator";
 import {extractExtension ,trim} from "../../utils/strings";
 import SupportChecker from "../SupportChecker";
