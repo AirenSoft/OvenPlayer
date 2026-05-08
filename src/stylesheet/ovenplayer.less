@@ -109,7 +109,7 @@
   zoom: 1 !important;
   width: 100%;
   display: block;
-  font-family: Helvetica, Arial, sans-serif;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   background-color: #000;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
@@ -191,6 +191,10 @@
     }
 
     .op-caption-text-container {
+      bottom: 25px;
+    }
+
+    .op-caption-cue:not(.op-caption-cue-positioned) {
       bottom: 25px;
     }
   }
@@ -1588,25 +1592,52 @@ i.op-con {
 
   .op-caption-text-container {
     position: absolute;
-    bottom: 60px;
+    top: 0;
+    left: 0;
     width: 100%;
-    padding: 0 12px;
-    text-align: center;
-    -moz-transition: bottom .25s cubic-bezier(0.0, 0.0, 0.2, 1);
-    -webkit-transition: bottom .25s cubic-bezier(0.0, 0.0, 0.2, 1);
-    transition: bottom .25s cubic-bezier(0.0, 0.0, 0.2, 1);
+    height: 100%;
+    overflow: visible;
+    pointer-events: none;
+
+    .op-caption-cue {
+      position: absolute;
+      bottom: 60px;
+      width: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+      padding: 0 8%;
+      -moz-transition: bottom .25s cubic-bezier(0.0, 0.0, 0.2, 1);
+      -webkit-transition: bottom .25s cubic-bezier(0.0, 0.0, 0.2, 1);
+      transition: bottom .25s cubic-bezier(0.0, 0.0, 0.2, 1);
+
+      &.op-caption-cue-positioned {
+        bottom: auto;
+        padding: 0;
+        transition: none;
+      }
+    }
 
     .op-caption-text {
+      display: inline-block;
       color: #fff;
-      font-size: 1em;
-      line-height: 1.2em;
-      text-shadow: 2px 2px 2px gray;
-      padding: .1em .3em;
+      font-size: 1.5em;
+      line-height: 1.5em;
+      font-weight: 400;
+      text-shadow: none;
+      background: rgba(8, 8, 8, 0.75);
+      padding: .25em .6em;
+      border-radius: .25em;
       user-select: none;
-      word-break: break-word;
+      word-break: keep-all;
+      overflow-wrap: break-word;
       white-space: pre-line;
       border: none;
-      background: none;
+
+      &:empty {
+        background: none;
+        padding: 0;
+      }
     }
   }
 }
@@ -1634,8 +1665,8 @@ i.op-con {
   font-size: 14px;
 
   .op-caption-text {
-    font-size: 2em;
-    line-height: 2em;
+    font-size: 2em;     /* 14px × 2 = 28px */
+    line-height: 1.5em;
   }
 
 }
@@ -1644,8 +1675,8 @@ i.op-con {
   font-size: 12px;
 
   .op-caption-text {
-    font-size: 1.4em;
-    line-height: 1.4em;
+    font-size: 1.75em;  /* 12px × 1.75 = 21px */
+    line-height: 1.5em;
   }
 }
 
@@ -1653,8 +1684,8 @@ i.op-con {
   font-size: 10px;
 
   .op-caption-text {
-    font-size: 1.4em;
-    line-height: 1.4em;
+    font-size: 1.6em;   /* 10px × 1.6 = 16px */
+    line-height: 1.5em;
   }
 
   .op-playlist {
@@ -1681,8 +1712,8 @@ i.op-con {
   }
 
   .op-caption-text {
-    font-size: 1.4em;
-    line-height: 1.4em;
+    font-size: 1.3em;   /* 10px × 1.3 = 13px */
+    line-height: 1.5em;
   }
 
   .op-playlist {

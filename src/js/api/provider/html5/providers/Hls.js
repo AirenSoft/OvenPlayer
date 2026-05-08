@@ -16,7 +16,11 @@ import {
     PLAYER_NOT_ACCEPTABLE_ERROR,
     CONTENT_LEVEL_CHANGED,
     AUDIO_TRACK_CHANGED,
-    SUBTITLE_TRACK_CHANGED
+    SUBTITLE_TRACK_CHANGED,
+    CONTENT_CAPTION_CHANGED,
+    CONTENT_CAPTION_CUE_CHANGED,
+    CONTENT_TIME,
+    CONTENT_SEEKED
 } from "api/constants";
 
 import sizeHumanizer from "utils/sizeHumanizer";
@@ -36,11 +40,17 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
     let loadRetryer = null;
     let isManifestLoaded = false;
     let firstLoaded = false;
+    let subtitleCuesMap = {};   // { [trackId: number]: VTTCue[] }
+    let activeSubtitleTrackId = -1;
+    let _lastActiveCue = null;
+    let _subtitleDebugTimer = 0;
+    const SUBTITLE_CUES_MAX = 200; // sliding window limit per track (live stream guard)
 
     try {
 
         let hlsConfig = {
-            debug: false
+            debug: false,
+            renderTextTracksNatively: false // Disable native TextTrack rendering so subtitles are drawn via DOM
         };
 
         let hlsConfigFromPlayerConfig = playerConfig.getConfig().hlsConfig;
@@ -182,10 +192,104 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
             });
 
             hls.on(Hls.Events.SUBTITLE_TRACK_SWITCH, function (event, data) {
+                activeSubtitleTrackId = data.id;
                 spec.currentSubtitleTrack = data.id;
+                _lastActiveCue = null; // reset so the new track's cue fires immediately
+                // Discard cues from tracks no longer in use to free memory
+                var keepId = data.id;
+                Object.keys(subtitleCuesMap).forEach(function (key) {
+                    if (Number(key) !== keepId) {
+                        delete subtitleCuesMap[key];
+                    }
+                });
                 that.trigger(SUBTITLE_TRACK_CHANGED, {
                     currentSubtitleTrack: spec.currentSubtitleTrack
                 });
+                // Enable or clear the DOM caption viewer based on track selection
+                that.trigger(CONTENT_CAPTION_CHANGED, data.id >= 0 ? 0 : -1);
+            });
+
+            hls.on(Hls.Events.CUES_PARSED, function (event, data) {
+                // Use the numeric index from hls.subtitleTrack as the key,
+                // because data.track can be a string like "default" while
+                // hls.subtitleTrack is always the numeric index (e.g. 0).
+                var trackId = hls ? hls.subtitleTrack : data.track;
+                if (!subtitleCuesMap[trackId]) {
+                    subtitleCuesMap[trackId] = [];
+                }
+                data.cues.forEach(function (cue) {
+                    var exists = subtitleCuesMap[trackId].some(function (c) {
+                        return c.startTime === cue.startTime && c.text === cue.text;
+                    });
+                    if (!exists) {
+                        subtitleCuesMap[trackId].push(cue);
+                    }
+                });
+                // Sliding window: drop oldest cues beyond limit to prevent
+                // unbounded growth during long live streams.
+                if (subtitleCuesMap[trackId].length > SUBTITLE_CUES_MAX) {
+                    subtitleCuesMap[trackId].splice(0,
+                        subtitleCuesMap[trackId].length - SUBTITLE_CUES_MAX);
+                }
+            });
+
+            // Reset on seek so that:
+            // (a) the same cue re-fires after seeking back into its range, and
+            // (b) deleteTimer is recalculated from the new position.
+            that.on(CONTENT_SEEKED, function () {
+                _lastActiveCue = null;
+            });
+
+            that.on(CONTENT_TIME, function (data) {
+                // Read the active track directly from hls.js (more reliable than event-based tracking)
+                var currentTrackId = hls ? hls.subtitleTrack : -1;
+                
+                if (currentTrackId < 0) {
+                    return;
+                }
+
+                var cues = subtitleCuesMap[currentTrackId] || [];
+                
+                if (!cues.length) { return; }
+                // Use raw video element time to match against hls.js cue timestamps.
+                // data.position may be offset by sectionStart, causing a mismatch.
+                var position = element.currentTime;
+
+                // Collect ALL cues active at this position (handles simultaneous & overlapping cues)
+                var activeCueObjects = [];
+                var maxEndTime = 0;
+                for (var i = 0; i < cues.length; i++) {
+                    if (position >= cues[i].startTime && position < cues[i].endTime) {
+                        activeCueObjects.push({
+                            text: cues[i].text,
+                            line: cues[i].line,
+                            snapToLines: cues[i].snapToLines,
+                            position: cues[i].position,
+                            size: cues[i].size,
+                            align: cues[i].align,
+                            vertical: cues[i].vertical
+                        });
+                        if (cues[i].endTime > maxEndTime) {
+                            maxEndTime = cues[i].endTime;
+                        }
+                    }
+                }
+
+                if (activeCueObjects.length === 0) {
+                    _lastActiveCue = null;
+                    return;
+                }
+
+                var combinedText = activeCueObjects.map(function(c) { return c.text; }).join('\n');
+                if (_lastActiveCue !== combinedText) {
+                    _lastActiveCue = combinedText;
+                    that.trigger(CONTENT_CAPTION_CUE_CHANGED, {
+                        text: combinedText,
+                        cues: activeCueObjects,
+                        startTime: position,
+                        endTime: maxEndTime
+                    });
+                }
             });
 
             hls.on(Hls.Events.LEVEL_UPDATED, function (event, data) {
@@ -304,6 +408,10 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
             if (hls) {
                 hls.stopLoad();
             }
+
+            subtitleCuesMap = {};
+            activeSubtitleTrackId = -1;
+            _lastActiveCue = null;
 
             superStop_func();
         };
