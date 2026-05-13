@@ -94,7 +94,7 @@ $ npm install ovenplayer-react
 
 ## Quick Start
 
-Below is a list of simple OvenPlayer initialization methods for each situation. For detailed options when initializing the OvenPlayer, please refer to the [Initialization](https://docs.ovenplayer.com/initialization) chapter.
+Below is a list of simple OvenPlayer initialization methods for each situation. For detailed options when initializing the OvenPlayer, please refer to the [Initialization](/docs/ovenplayer/initialization) chapter.
 
 ### Basic Concept
 
@@ -249,7 +249,7 @@ If you need direct access to the internal OvenPlayer instance or want to re-crea
 
 ### Initialize for OME
 
-To play Sub-Second Latency Stream of OvenMediaEngine, set the source `type` to `webrtc` and set the `file` to the WebRTC Signaling URL with OvenMediaEngine. An explanation of the WebRTC Signaling URL can be found [here](https://docs.ovenmediaengine.com/getting-started#playback).
+To play Sub-Second Latency Stream of OvenMediaEngine, set the source `type` to `webrtc` and set the `file` to the WebRTC Signaling URL with OvenMediaEngine. An explanation of the WebRTC Signaling URL can be found [here](/docs/ome/getting-started#playback).
 
 ```markup
 <!DOCTYPE html>
