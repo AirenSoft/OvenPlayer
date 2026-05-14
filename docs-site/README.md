@@ -18,7 +18,7 @@ The script clones ovenmedialabs.com into a per-product cache, sym-
 links your `docs-site/` into it, and starts a dev server. When it's
 ready you'll see:
 
-    [SUCCESS] Docusaurus website is running at: http://localhost:3002/
+    [SUCCESS] Docusaurus website is running at: http://localhost:3000/
 
 Open that URL in a browser — the page reloads automatically as you
 save edits in `docs-site/`.
@@ -37,6 +37,6 @@ minutes (clone + npm install); subsequent runs ~10 seconds.
 
 Env var overrides:
 
-- `OML_PREVIEW_PORT` (default `3002`)
+- `OML_PREVIEW_PORT` (default `3000`)
 - `OML_PREVIEW_BRANCH` (which branch of ovenmedialabs.com to clone)
 - `OML_PREVIEW_CACHE` (cache root path)
