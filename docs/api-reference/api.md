@@ -1,10 +1,10 @@
 ---
-description: >-
-  This chapter lists information about the OvenPlayer API, which you can control
-  with OvenPlayerInstance.
+title: API
+sidebar_position: 6
 ---
 
-# API
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
 
 ## API Reference
 
@@ -24,14 +24,17 @@ playerInstance.getConfig()
 
 This command returns the configured option value when OvenPlayer is initialized.
 
-{% tabs %}
-{% tab title="Request" %}
+
+<Tabs>
+<TabItem value="request" label="Request">
+
 | Type | Memo |
 | ---- | ---- |
 | null |      |
-{% endtab %}
 
-{% tab title="Response" %}
+</TabItem>
+<TabItem value="response" label="Response">
+
 | **Attribute**  | Type              | Memo |
 | -------------- | ----------------- | ---- |
 | autoStart      | Boolean           |      |
@@ -46,8 +49,7 @@ This command returns the configured option value when OvenPlayer is initialized.
 | timecode       | Boolean           |      |
 | volume         | Number            |      |
 
-{% code title="example" %}
-```
+``` title="example"
 {
     autoStart: false
     browser: {screen: "1440 x 900", browser: "Chrome", browserVersion: "73.0.3683.103", browserMajorVersion: 73, mobile: false, …}
@@ -62,9 +64,10 @@ This command returns the configured option value when OvenPlayer is initialized.
     volume: 100
 }
 ```
-{% endcode %}
-{% endtab %}
-{% endtabs %}
+
+</TabItem>
+</Tabs>
+
 
 ### **load**()
 
@@ -74,14 +77,15 @@ playerInstance.load(playlist)
 
 This command initializes OvenPlayer with a new playlist.
 
-{% tabs %}
-{% tab title="Request" %}
+
+<Tabs>
+<TabItem value="request" label="Request">
+
 | Type  | Memo                |
 | ----- | ------------------- |
 | Array | playlist or sources |
 
-{% code title="example" %}
-```
+``` title="example"
 playlist = [
         {
                 title : "01",
@@ -147,15 +151,17 @@ sources = [
     }
 ];
 ```
-{% endcode %}
-{% endtab %}
 
-{% tab title="Response" %}
+</TabItem>
+<TabItem value="response" label="Response">
+
 ```
 null
 ```
-{% endtab %}
-{% endtabs %}
+
+</TabItem>
+</Tabs>
+
 
 ### getMediaElement()
 
@@ -163,13 +169,17 @@ null
 const videoElement = playerInstance.getMediaElement()
 ```
 
-{% tabs %}
-{% tab title="Response" %}
+
+<Tabs>
+<TabItem value="response" label="Response">
+
 | Type               | Memo              |
 | ------------------ | ----------------- |
 | HTML Video Element | \<video>\</video> |
-{% endtab %}
-{% endtabs %}
+
+</TabItem>
+</Tabs>
+
 
 ### **getState**()
 
@@ -179,19 +189,24 @@ playerInstance.getState()
 
 This command gets information about what OvenPlayer is currently doing.
 
-{% tabs %}
-{% tab title="Request" %}
+
+<Tabs>
+<TabItem value="request" label="Request">
+
 | Type | Memo |
 | ---- | ---- |
 | null |      |
-{% endtab %}
 
-{% tab title="Response" %}
+</TabItem>
+<TabItem value="response" label="Response">
+
 | Type   | Memo                                                                                                                         |
 | ------ | ---------------------------------------------------------------------------------------------------------------------------- |
 | String | <p></p><p>"idle", "paused", "playing", "error", "loading", "complete", "adLoaded", "adPlaying", "adPaused", "adComplete"</p> |
-{% endtab %}
-{% endtabs %}
+
+</TabItem>
+</Tabs>
+
 
 ### getBrowser()
 
@@ -201,20 +216,22 @@ playerInstance.getBrowser()
 
 This command returns the analyzed information from the user agent. However, this information is not necessarily correct because the user agent can hide or misleading information.
 
-{% tabs %}
-{% tab title="Request" %}
+
+<Tabs>
+<TabItem value="request" label="Request">
+
 | Type | Memo |
 | ---- | ---- |
 | null |      |
-{% endtab %}
 
-{% tab title="Response" %}
+</TabItem>
+<TabItem value="response" label="Response">
+
 | Type   | Memo                   |
 | ------ | ---------------------- |
 | Object | User Agent Information |
 
-{% code title="example" %}
-```
+``` title="example"
 {
         browser: "Chrome",
         browserMajorVersion: 73,
@@ -229,9 +246,10 @@ This command returns the analyzed information from the user agent. However, this
         webview: false
 }
 ```
-{% endcode %}
-{% endtab %}
-{% endtabs %}
+
+</TabItem>
+</Tabs>
+
 
 ### **setTimecodeMode**()
 
@@ -241,19 +259,24 @@ playerInstance.setTimecodeMode(isShow)
 
 You can use this command to set whether the time-code or frame-code is displayed in the OvenPlayer control bar. However, if you want to use frame-code, the source must contain frame rate information.
 
-{% tabs %}
-{% tab title="Request" %}
+
+<Tabs>
+<TabItem value="request" label="Request">
+
 | Type    | Memo |
 | ------- | ---- |
 | Boolean |      |
-{% endtab %}
 
-{% tab title="Response" %}
+</TabItem>
+<TabItem value="response" label="Response">
+
 | Type | Memo |
 | ---- | ---- |
 | null |      |
-{% endtab %}
-{% endtabs %}
+
+</TabItem>
+</Tabs>
+
 
 ### isTimecodeMode()
 
@@ -263,19 +286,24 @@ playerInstance.isTimecodeMode()
 
 This command checks whether OvenPlayer is currently running in time-code or frame-code.
 
-{% tabs %}
-{% tab title="Request" %}
+
+<Tabs>
+<TabItem value="request" label="Request">
+
 | Type | Memo |
 | ---- | ---- |
 | null |      |
-{% endtab %}
 
-{% tab title="Response" %}
+</TabItem>
+<TabItem value="response" label="Response">
+
 | Type    | Memo                           |
 | ------- | ------------------------------ |
 | Boolean | true : timecode, false : frame |
-{% endtab %}
-{% endtabs %}
+
+</TabItem>
+</Tabs>
+
 
 ### **getFramerate**()
 
@@ -285,19 +313,24 @@ playerInstance.getFramerate()
 
 This command gets the frame-rate value of playing video. However, if you want to see frame-rate, the source or playlist must have information about frame-rate.
 
-{% tabs %}
-{% tab title="Request" %}
+
+<Tabs>
+<TabItem value="request" label="Request">
+
 | Type | Memo |
 | ---- | ---- |
 | null |      |
-{% endtab %}
 
-{% tab title="Response" %}
+</TabItem>
+<TabItem value="response" label="Response">
+
 | Type   | Memo |
 | ------ | ---- |
 | Number |      |
-{% endtab %}
-{% endtabs %}
+
+</TabItem>
+</Tabs>
+
 
 ### seekFrame()
 
@@ -307,19 +340,24 @@ playerInstance.seekFrame(frameCount)
 
 This command moves the playback to frameCount.
 
-{% tabs %}
-{% tab title="Request" %}
+
+<Tabs>
+<TabItem value="request" label="Request">
+
 | Type   | Memo               |
 | ------ | ------------------ |
 | Number | frameCount to move |
-{% endtab %}
 
-{% tab title="Response" %}
+</TabItem>
+<TabItem value="response" label="Response">
+
 | Type   | Memo             |
 | ------ | ---------------- |
 | Number | Moved frameCount |
-{% endtab %}
-{% endtabs %}
+
+</TabItem>
+</Tabs>
+
 
 ### getDuration()
 
@@ -329,19 +367,24 @@ playerInstance.getDuration()
 
 This command gets the duration of the content.
 
-{% tabs %}
-{% tab title="Request" %}
+
+<Tabs>
+<TabItem value="request" label="Request">
+
 | Type | Memo |
 | ---- | ---- |
 | null |      |
-{% endtab %}
 
-{% tab title="Response" %}
+</TabItem>
+<TabItem value="response" label="Response">
+
 | Type   | Memo                                |
 | ------ | ----------------------------------- |
 | Number | In live-broadcast, mark as Infinity |
-{% endtab %}
-{% endtabs %}
+
+</TabItem>
+</Tabs>
+
 
 ### **getPosition**()
 
@@ -351,19 +394,24 @@ playerInstance.getPosition()
 
 This command gets the current playing time of content.
 
-{% tabs %}
-{% tab title="Request" %}
+
+<Tabs>
+<TabItem value="request" label="Request">
+
 | Type | Memo |
 | ---- | ---- |
 | null |      |
-{% endtab %}
 
-{% tab title="Response" %}
+</TabItem>
+<TabItem value="response" label="Response">
+
 | Type   | Memo |
 | ------ | ---- |
 | Number |      |
-{% endtab %}
-{% endtabs %}
+
+</TabItem>
+</Tabs>
+
 
 ### **getVolume**()
 
@@ -373,19 +421,24 @@ playerInstance.getVolume()
 
 This command gets the volume value set in OvenPlayer.
 
-{% tabs %}
-{% tab title="Request" %}
+
+<Tabs>
+<TabItem value="request" label="Request">
+
 | Type | Memo |
 | ---- | ---- |
 | null |      |
-{% endtab %}
 
-{% tab title="Response" %}
+</TabItem>
+<TabItem value="response" label="Response">
+
 | Type   | Memo     |
 | ------ | -------- |
-| Number | 0 \~ 100 |
-{% endtab %}
-{% endtabs %}
+| Number | 0 \&#126; 100 |
+
+</TabItem>
+</Tabs>
+
 
 ### **setVolume**()
 
@@ -395,19 +448,24 @@ playerInstance.setVolume(volume)
 
 You can use this command to control volume in OvenPlayer.
 
-{% tabs %}
-{% tab title="Request" %}
+
+<Tabs>
+<TabItem value="request" label="Request">
+
 | Type   | Memo     |
 | ------ | -------- |
-| Number | 0 \~ 100 |
-{% endtab %}
+| Number | 0 \&#126; 100 |
 
-{% tab title="Response" %}
+</TabItem>
+<TabItem value="response" label="Response">
+
 | Type | Memo |
 | ---- | ---- |
 | null |      |
-{% endtab %}
-{% endtabs %}
+
+</TabItem>
+</Tabs>
+
 
 ### **getMute**()
 
@@ -417,19 +475,24 @@ playerInstance.getMute()
 
 This command gets if OvenPlayer is currently muted (or volume: 0).
 
-{% tabs %}
-{% tab title="Request" %}
+
+<Tabs>
+<TabItem value="request" label="Request">
+
 | Type | Memo |
 | ---- | ---- |
 | null |      |
-{% endtab %}
 
-{% tab title="Response" %}
+</TabItem>
+<TabItem value="response" label="Response">
+
 | Type    | Memo |
 | ------- | ---- |
 | Boolean |      |
-{% endtab %}
-{% endtabs %}
+
+</TabItem>
+</Tabs>
+
 
 ### **setMute**()
 
@@ -439,19 +502,24 @@ playerInstance.setMute(isMute)
 
 You can use this command to set mute.
 
-{% tabs %}
-{% tab title="Request" %}
+
+<Tabs>
+<TabItem value="request" label="Request">
+
 | Type    | Memo |
 | ------- | ---- |
 | Boolean |      |
-{% endtab %}
 
-{% tab title="Response" %}
+</TabItem>
+<TabItem value="response" label="Response">
+
 | Type    | Memo         |
 | ------- | ------------ |
 | Boolean | muted or not |
-{% endtab %}
-{% endtabs %}
+
+</TabItem>
+</Tabs>
+
 
 ### play()
 
@@ -463,19 +531,24 @@ This command plays OvenPlayer.
 
 If OvenPlayer is not ready to play, OvenPlayer will wait until it is prepared and then play.
 
-{% tabs %}
-{% tab title="Request" %}
-| Type | Memo |
-| ---- | ---- |
-| null |      |
-{% endtab %}
 
-{% tab title="Response" %}
+<Tabs>
+<TabItem value="request" label="Request">
+
 | Type | Memo |
 | ---- | ---- |
 | null |      |
-{% endtab %}
-{% endtabs %}
+
+</TabItem>
+<TabItem value="response" label="Response">
+
+| Type | Memo |
+| ---- | ---- |
+| null |      |
+
+</TabItem>
+</Tabs>
+
 
 ### **pause**()
 
@@ -485,19 +558,24 @@ playerInstance.pause()
 
 This command pauses the playing content.
 
-{% tabs %}
-{% tab title="Request" %}
-| Type | Memo |
-| ---- | ---- |
-| null |      |
-{% endtab %}
 
-{% tab title="Response" %}
+<Tabs>
+<TabItem value="request" label="Request">
+
 | Type | Memo |
 | ---- | ---- |
 | null |      |
-{% endtab %}
-{% endtabs %}
+
+</TabItem>
+<TabItem value="response" label="Response">
+
+| Type | Memo |
+| ---- | ---- |
+| null |      |
+
+</TabItem>
+</Tabs>
+
 
 ### **seek**()
 
@@ -507,19 +585,24 @@ playerInstance.seek(position)
 
 This command moves the playback to a position.
 
-{% tabs %}
-{% tab title="Request" %}
+
+<Tabs>
+<TabItem value="request" label="Request">
+
 | Type   | Memo    |
 | ------ | ------- |
 | Number | Seconds |
-{% endtab %}
 
-{% tab title="Response" %}
+</TabItem>
+<TabItem value="response" label="Response">
+
 | Type | Memo |
 | ---- | ---- |
 | null |      |
-{% endtab %}
-{% endtabs %}
+
+</TabItem>
+</Tabs>
+
 
 ### **getPlaybackRate**()
 
@@ -529,19 +612,24 @@ playerInstance.getPlaybackRate()
 
 This command gets the playback speed information of content.
 
-{% tabs %}
-{% tab title="Request" %}
+
+<Tabs>
+<TabItem value="request" label="Request">
+
 | Type | Memo |
 | ---- | ---- |
 | null |      |
-{% endtab %}
 
-{% tab title="Response" %}
+</TabItem>
+<TabItem value="response" label="Response">
+
 | Type   | Memo |
 | ------ | ---- |
 | Number |      |
-{% endtab %}
-{% endtabs %}
+
+</TabItem>
+</Tabs>
+
 
 ### **setPlaybackRate**()
 
@@ -551,19 +639,24 @@ playerInstance.setPlaybackRate(playbackRate)
 
 You can use this command to adjust the playback speed in OvenPlayer.
 
-{% tabs %}
-{% tab title="Request" %}
+
+<Tabs>
+<TabItem value="request" label="Request">
+
 | Type   | Memo                     |
 | ------ | ------------------------ |
 | Number | Playback speed to change |
-{% endtab %}
 
-{% tab title="Response" %}
+</TabItem>
+<TabItem value="response" label="Response">
+
 | Type   | Memo                   |
 | ------ | ---------------------- |
 | Number | Changed playback speed |
-{% endtab %}
-{% endtabs %}
+
+</TabItem>
+</Tabs>
+
 
 ### **getPlaylist**()
 
@@ -573,20 +666,22 @@ playerInstance.getPlaylist()
 
 This command gets a registered playlist.
 
-{% tabs %}
-{% tab title="Request" %}
+
+<Tabs>
+<TabItem value="request" label="Request">
+
 | Type | Memo |
 | ---- | ---- |
 | null |      |
-{% endtab %}
 
-{% tab title="Response" %}
+</TabItem>
+<TabItem value="response" label="Response">
+
 | Type  | Memo |
 | ----- | ---- |
 | Array |      |
 
-{% code title="example" %}
-```
+``` title="example"
 [
         {
                 title : "01",
@@ -607,9 +702,10 @@ This command gets a registered playlist.
 ...
  ]
 ```
-{% endcode %}
-{% endtab %}
-{% endtabs %}
+
+</TabItem>
+</Tabs>
+
 
 ### **getCurrentPlaylist**()
 
@@ -619,19 +715,24 @@ playerInstance.getCurrentPlaylist()
 
 This command gets the index information of the playlist currently playing.
 
-{% tabs %}
-{% tab title="Request" %}
+
+<Tabs>
+<TabItem value="request" label="Request">
+
 | Type | Memo |
 | ---- | ---- |
 | null |      |
-{% endtab %}
 
-{% tab title="Response" %}
+</TabItem>
+<TabItem value="response" label="Response">
+
 | Type   | Memo |
 | ------ | ---- |
 | Number |      |
-{% endtab %}
-{% endtabs %}
+
+</TabItem>
+</Tabs>
+
 
 ### setCurrentPlaylist()
 
@@ -641,19 +742,24 @@ playerInstance.setCurrentPlaylist(playlistIndex)
 
 This command changes the playlist currently playing.
 
-{% tabs %}
-{% tab title="Request" %}
+
+<Tabs>
+<TabItem value="request" label="Request">
+
 | Type   | Memo |
 | ------ | ---- |
 | Number |      |
-{% endtab %}
 
-{% tab title="Response" %}
+</TabItem>
+<TabItem value="response" label="Response">
+
 | Type | Memo |
 | ---- | ---- |
 | null |      |
-{% endtab %}
-{% endtabs %}
+
+</TabItem>
+</Tabs>
+
 
 ### **getSources**()
 
@@ -663,20 +769,22 @@ playerInstance.getSources()
 
 This command gets information about sources from the playlist or sources of a single content currently playing.
 
-{% tabs %}
-{% tab title="Request" %}
+
+<Tabs>
+<TabItem value="request" label="Request">
+
 | Type | Memo |
 | ---- | ---- |
 | null |      |
-{% endtab %}
 
-{% tab title="Response" %}
+</TabItem>
+<TabItem value="response" label="Response">
+
 | Type  | Memo |
 | ----- | ---- |
 | Array |      |
 
-{% code title="example" %}
-```
+``` title="example"
 [{
 file: "https://bitmovin-a.akamaihd.net/content/MI201109210084_1/mpds/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.mpd",
 index: 0,
@@ -684,9 +792,10 @@ label: "MPD test",
 type: "dash"
 }]
 ```
-{% endcode %}
-{% endtab %}
-{% endtabs %}
+
+</TabItem>
+</Tabs>
+
 
 ### **getCurrentSource**()
 
@@ -696,19 +805,24 @@ playerInstance.getCurrentSource()
 
 This command gets the index information of the currently playing source.
 
-{% tabs %}
-{% tab title="Request" %}
+
+<Tabs>
+<TabItem value="request" label="Request">
+
 | Type | Memo |
 | ---- | ---- |
 | null |      |
-{% endtab %}
 
-{% tab title="Response" %}
+</TabItem>
+<TabItem value="response" label="Response">
+
 | Type   | Memo |
 | ------ | ---- |
 | Number |      |
-{% endtab %}
-{% endtabs %}
+
+</TabItem>
+</Tabs>
+
 
 ### **setCurrentSource**()
 
@@ -718,19 +832,24 @@ playerInstance.setCurrentSource(index)
 
 This command changes the source of the playing content. It depends on your settings, but the protocol and video quality (resolution) will change by default.
 
-{% tabs %}
-{% tab title="Request" %}
+
+<Tabs>
+<TabItem value="request" label="Request">
+
 | Type   | Memo |
 | ------ | ---- |
 | Number |      |
-{% endtab %}
 
-{% tab title="Response" %}
+</TabItem>
+<TabItem value="response" label="Response">
+
 | Type   | Memo                    |
 | ------ | ----------------------- |
 | Number | Configured source index |
-{% endtab %}
-{% endtabs %}
+
+</TabItem>
+</Tabs>
+
 
 ### **getQualityLevels**()
 
@@ -740,20 +859,22 @@ playerInstance.getQualityLevels()
 
 This command gets a list of resolutions if the metadata in the playing content contains quality information. And it is available when using the MPEG-DASH protocol.
 
-{% tabs %}
-{% tab title="Request" %}
+
+<Tabs>
+<TabItem value="request" label="Request">
+
 | Type | Memo |
 | ---- | ---- |
 | null |      |
-{% endtab %}
 
-{% tab title="Response" %}
+</TabItem>
+<TabItem value="response" label="Response">
+
 | Type  | Memo |
 | ----- | ---- |
 | Array |      |
 
-{% code title="example" %}
-```
+``` title="example"
 [
     {
         bitrate: 250000,
@@ -765,9 +886,10 @@ This command gets a list of resolutions if the metadata in the playing content c
     ...
 ]
 ```
-{% endcode %}
-{% endtab %}
-{% endtabs %}
+
+</TabItem>
+</Tabs>
+
 
 ### **getCurrentQuality**()
 
@@ -777,19 +899,24 @@ playerInstance.getCurrentQuality()
 
 This command gets the index of the current video quality information.
 
-{% tabs %}
-{% tab title="Request" %}
+
+<Tabs>
+<TabItem value="request" label="Request">
+
 | Type | Memo |
 | ---- | ---- |
 | null |      |
-{% endtab %}
 
-{% tab title="Response" %}
+</TabItem>
+<TabItem value="response" label="Response">
+
 | Type   | Memo |
 | ------ | ---- |
 | Number |      |
-{% endtab %}
-{% endtabs %}
+
+</TabItem>
+</Tabs>
+
 
 ### **setCurrentQuality**()
 
@@ -799,19 +926,24 @@ playerInstance.setCurrentQuality(index)
 
 You can use this command to set to play as index quality.
 
-{% tabs %}
-{% tab title="Request" %}
+
+<Tabs>
+<TabItem value="request" label="Request">
+
 | Type   | Memo |
 | ------ | ---- |
 | Number |      |
-{% endtab %}
 
-{% tab title="Response" %}
+</TabItem>
+<TabItem value="response" label="Response">
+
 | Type | Memo |
 | ---- | ---- |
 | null |      |
-{% endtab %}
-{% endtabs %}
+
+</TabItem>
+</Tabs>
+
 
 ### **isAutoQuality**()
 
@@ -821,19 +953,24 @@ playerInstance.isAutoQuality()
 
 This command checks whether the video quality has been set to change automatically based on internet status, condition, and more.
 
-{% tabs %}
-{% tab title="Request" %}
+
+<Tabs>
+<TabItem value="request" label="Request">
+
 | Type | Memo |
 | ---- | ---- |
 | null |      |
-{% endtab %}
 
-{% tab title="Response" %}
+</TabItem>
+<TabItem value="response" label="Response">
+
 | Type    | Memo |
 | ------- | ---- |
 | Boolean |      |
-{% endtab %}
-{% endtabs %}
+
+</TabItem>
+</Tabs>
+
 
 ### **setAutoQuality**()
 
@@ -843,19 +980,24 @@ playerInstance.setAutoQuality(isAuto)
 
 You can use this command to set whether to change the video quality automatically.
 
-{% tabs %}
-{% tab title="Request" %}
+
+<Tabs>
+<TabItem value="request" label="Request">
+
 | Type    | Memo |
 | ------- | ---- |
 | Boolean |      |
-{% endtab %}
 
-{% tab title="Response" %}
+</TabItem>
+<TabItem value="response" label="Response">
+
 | Type | Memo |
 | ---- | ---- |
 | null |      |
-{% endtab %}
-{% endtabs %}
+
+</TabItem>
+</Tabs>
+
 
 ### **getCaptionList**()
 
@@ -865,14 +1007,17 @@ playerInstance.getCaptionList()
 
 It reads the list of registered subtitles in the current playlist.
 
-{% tabs %}
-{% tab title="Request" %}
+
+<Tabs>
+<TabItem value="request" label="Request">
+
 | Type | Memo |
 | ---- | ---- |
 | null |      |
-{% endtab %}
 
-{% tab title="Response" %}
+</TabItem>
+<TabItem value="response" label="Response">
+
 | Type  | Memo |
 | ----- | ---- |
 | Array |      |
@@ -889,8 +1034,10 @@ It reads the list of registered subtitles in the current playlist.
     }
 ]
 ```
-{% endtab %}
-{% endtabs %}
+
+</TabItem>
+</Tabs>
+
 
 ### getCurrentCaption()
 
@@ -900,19 +1047,24 @@ playerInstance.getCurrentCaption()
 
 This command gets the index of the using subtitle in the current playlist.
 
-{% tabs %}
-{% tab title="Request" %}
+
+<Tabs>
+<TabItem value="request" label="Request">
+
 | Type | Memo |
 | ---- | ---- |
 | null |      |
-{% endtab %}
 
-{% tab title="Response" %}
+</TabItem>
+<TabItem value="response" label="Response">
+
 | Type   | Memo |
 | ------ | ---- |
 | Number |      |
-{% endtab %}
-{% endtabs %}
+
+</TabItem>
+</Tabs>
+
 
 ### **setCurrentCaption**()
 
@@ -922,19 +1074,24 @@ playerInstance.setCurrentCaption(index)
 
 You can use this command to set the subtitle of the current playlist to the caption of the index.
 
-{% tabs %}
-{% tab title="Request" %}
+
+<Tabs>
+<TabItem value="request" label="Request">
+
 | Type   | Memo |
 | ------ | ---- |
 | Number |      |
-{% endtab %}
 
-{% tab title="Response" %}
+</TabItem>
+<TabItem value="response" label="Response">
+
 | Type | Memo |
 | ---- | ---- |
 | null |      |
-{% endtab %}
-{% endtabs %}
+
+</TabItem>
+</Tabs>
+
 
 ### addCaption()
 
@@ -944,8 +1101,10 @@ playerInstance.addCaption(track)
 
 You can use this command to add subtitles to the current playlist.
 
-{% tabs %}
-{% tab title="Request" %}
+
+<Tabs>
+<TabItem value="request" label="Request">
+
 | Type   | Memo |
 | ------ | ---- |
 | Object |      |
@@ -957,14 +1116,17 @@ You can use this command to add subtitles to the current playlist.
     label: "KO vtt"
 }
 ```
-{% endtab %}
 
-{% tab title="Response" %}
+</TabItem>
+<TabItem value="response" label="Response">
+
 | Type | Memo |
 | ---- | ---- |
 |      |      |
-{% endtab %}
-{% endtabs %}
+
+</TabItem>
+</Tabs>
+
 
 ### removeCaption()
 
@@ -974,19 +1136,24 @@ playerInstance.removeCaption(index)
 
 You can use this command to remove the subtitle corresponding to the index from the current playlist.
 
-{% tabs %}
-{% tab title="Request" %}
+
+<Tabs>
+<TabItem value="request" label="Request">
+
 | Type   | Memo |
 | ------ | ---- |
 | Number |      |
-{% endtab %}
 
-{% tab title="Response" %}
+</TabItem>
+<TabItem value="response" label="Response">
+
 | Type | Memo |
 | ---- | ---- |
 | null |      |
-{% endtab %}
-{% endtabs %}
+
+</TabItem>
+</Tabs>
+
 
 ### **stop**()
 
@@ -996,19 +1163,24 @@ playerInstance.stop()
 
 This command stops playing and moves the playback position to 0.
 
-{% tabs %}
-{% tab title="Request" %}
-| Type | Memo |
-| ---- | ---- |
-| null |      |
-{% endtab %}
 
-{% tab title="Response" %}
+<Tabs>
+<TabItem value="request" label="Request">
+
 | Type | Memo |
 | ---- | ---- |
 | null |      |
-{% endtab %}
-{% endtabs %}
+
+</TabItem>
+<TabItem value="response" label="Response">
+
+| Type | Memo |
+| ---- | ---- |
+| null |      |
+
+</TabItem>
+</Tabs>
+
 
 ### showControls()
 
@@ -1018,19 +1190,24 @@ playerInstance.showControls(show)
 
 This API can show or hide the player's control area.
 
-{% tabs %}
-{% tab title="Request" %}
+
+<Tabs>
+<TabItem value="request" label="Request">
+
 | Type    | Memo                                       |
 | ------- | ------------------------------------------ |
 | Boolean | set true or false to show or hide controls |
-{% endtab %}
 
-{% tab title="Response" %}
+</TabItem>
+<TabItem value="response" label="Response">
+
 | Type | Memo |
 | ---- | ---- |
 | null |      |
-{% endtab %}
-{% endtabs %}
+
+</TabItem>
+</Tabs>
+
 
 ### remove()
 
@@ -1042,4 +1219,4 @@ This command removes the player and releases all resources.
 
 ## Architectures
 
-![](../.gitbook/assets/ovenplayer\_0.9.png)
+![](../images/ovenplayer_0.9.png)
