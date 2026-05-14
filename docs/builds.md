@@ -1,8 +1,7 @@
 ---
-description: This section describes the development and builds process.
+title: Builds
+sidebar_position: 4
 ---
-
-# Builds
 
 ## How to write code
 

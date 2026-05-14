@@ -1,12 +1,11 @@
 ---
-description: This example shows how to register and use subtitles without conversion.
+title: Captions
+sidebar_position: 9
 ---
-
-# Captions
 
 OvenPlayer supports webVTT, SRT, and SMI subtitles, so you can register and use subtitles without conversion. If you want to know more details, please refer to the [Captions API](../api-reference/api.md#getcaptionlist) chapter.
 
-{% code title="" %}
+
 ```
 let player = OvenPlayer.create("player", {sources : {
         type : "mp4", 
@@ -32,4 +31,4 @@ let player = OvenPlayer.create("player", {sources : {
     ] 
 });
 ```
-{% endcode %}
+
