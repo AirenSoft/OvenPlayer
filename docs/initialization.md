@@ -1,5 +1,6 @@
 ---
 title: Initialization
+description: "Create and access an OvenPlayer instance with OvenPlayer.create(), and configure playback through its initialization options."
 sidebar_position: 2
 ---
 

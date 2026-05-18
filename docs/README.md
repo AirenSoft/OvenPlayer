@@ -22,7 +22,13 @@ description: How to initialize OvenPlayer on a web page.
 
 - `title` — page title shown in browser tab and as H1
 - `sidebar_position` — order within the section (smaller = higher)
-- `description` — SEO meta description; appears in search snippets
+- `description` — **required.** A one-sentence meta description
+  (~120–155 chars) stating what the page covers; include "OvenPlayer".
+  This is what search engines show in snippets and what AI answer
+  engines quote, so **always write one.** If omitted, the site falls
+  back to a low-quality auto-excerpt of the first line (often a bare
+  heading like "How to write code"), which hurts search and AI
+  discoverability.
 - `slug` (optional) — override URL path; useful for `intro.md` (`slug: /`)
 
 ### Admonitions

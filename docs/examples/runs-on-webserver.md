@@ -1,5 +1,6 @@
 ---
 title: Run-on WebServer
+description: "Run OvenPlayer from a web server: install Nginx, deploy the player files, and serve a working example over HTTP/HTTPS."
 sidebar_position: 11
 ---
 

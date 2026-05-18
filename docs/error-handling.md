@@ -1,5 +1,6 @@
 ---
 title: Error Handling
+description: "How OvenPlayer detects playback errors and performs automatic recovery and protocol fallback across WebRTC, HLS, and DASH."
 sidebar_position: 3
 ---
 

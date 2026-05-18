@@ -1,5 +1,6 @@
 ---
 title: Playlist
+description: "Configure OvenPlayer playback sources — single source, multi-protocol/resolution sources, and playlists with automatic fallback."
 sidebar_position: 8
 ---
 

@@ -1,5 +1,6 @@
 ---
 title: Ads
+description: "Monetize OvenPlayer with ads: VAST 4/3/2, VPAID 2, and VMAP 1.0.1 are supported through the adTagUrl option."
 sidebar_position: 10
 ---
 
