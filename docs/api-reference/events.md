@@ -1,5 +1,6 @@
 ---
 title: Event
+description: "OvenPlayer event reference: subscribe with player.on()/once() and remove listeners with off() to react to playback state changes."
 sidebar_position: 7
 ---
 

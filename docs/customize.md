@@ -1,5 +1,6 @@
 ---
 title: UI Customize
+description: "Customize the OvenPlayer UI with CSS skinning — change the accent color and restyle controls via CSS variables."
 sidebar_position: 5
 ---
 

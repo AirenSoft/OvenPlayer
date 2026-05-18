@@ -1,5 +1,6 @@
 ---
 title: Captions
+description: "Add subtitles to OvenPlayer: register WebVTT, SRT, and SMI caption tracks directly without conversion."
 sidebar_position: 9
 ---
 

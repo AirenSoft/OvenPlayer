@@ -1,5 +1,6 @@
 ---
 title: API
+description: "OvenPlayer JavaScript API reference: control playback, query state, and manage sources and captions via player instance methods."
 sidebar_position: 6
 ---
 
