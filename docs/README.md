@@ -1,485 +1,178 @@
+# `docs/` — OvenPlayer docs source
+
+This folder holds the **MDX source** for the OvenPlayer user
+guide published at <https://ovenmedialabs.com/docs/ovenplayer/>.
+
+## Editing
+
+Each page is a markdown / MDX file under this directory; the folder
+tree maps to the URL structure of the published docs.
+
+### Frontmatter
+
+Every page should have YAML frontmatter at the top:
+
+```yaml
 ---
-description: >-
-  OvenPlayer is an Open-Source and JavaScript-based WebRTC Player for
-  OvenMediaEngine.
+title: Initialization
+sidebar_position: 2
+description: How to initialize OvenPlayer on a web page.
 ---
-
-# Introduction
-
-## Features
-
-* Supports WebRTC Signaling from OvenMediaEngine for Sub-Second Latency Streaming
-* Various protocols: WebRTC, HLS, Low Latency MPEG-DASH (LLDASH), MPEG-DASH
-* Customizable UI
-* Supports streaming regardless of browser and media type
-* Receives the Signaling Protocol from OME (Signaling Protocol conforms to the OME specification)
-* Automatically Fallback using HLS, MPEG-DASH
-* Easily create profit by adding Ads in various formats
-* Supports various subtitle formats: SMI, VTT, SRT
-* Responsive player regardless of screen size
-
-## Installation
-
-There are several ways to install OvenPlayer. Use the one you are comfortable with.
-
-### Download from GitHub
-
-You can download it from [OvenPlayer GitHub](https://github.com/OvenMediaLabs/OvenPlayer).
-
-If you have access to [OvenPlayer GitHub](https://github.com/OvenMediaLabs/OvenPlayer), you can download the latest version in development by pressing the Clone or Download button and clicking Download ZIP in the menu that appears.
-
-> You can also download specific version of OvenPlayer by from [OvenPlayer GitHub Release](https://github.com/OvenMediaLabs/OvenPlayer/releases).
-
-When you download and decompress it, you will see:
-
-```
-OvenPlayer
-└── dist/
-     ├── ovenplayer.js
-     └── ovenplayer.js.map
-...
 ```
 
-`ovenplayer.js` uses UMD (Universal Module Definition) pattern that various module loaders can import (e.g., Plain HTML, AMD, CommonJS).
+- `title` — page title shown in browser tab and as H1
+- `sidebar_position` — order within the section (smaller = higher)
+- `description` — **required.** A one-sentence meta description
+  (~120–155 chars) stating what the page covers; include "OvenPlayer".
+  This is what search engines show in snippets and what AI answer
+  engines quote, so **always write one.** If omitted, the site falls
+  back to a low-quality auto-excerpt of the first line (often a bare
+  heading like "How to write code"), which hurts search and AI
+  discoverability.
+- `slug` (optional) — override URL path; useful for `intro.md` (`slug: /`)
 
-`ovenplayer.js.map` is the source map for debugging to see what's going on in OvenPlayer.
+### Admonitions
 
-Just put `ovenplayer.js` in your static directory of a web server and load `ovenplayer.js` in your HTML, you're ready to use OvenPlayer.
+```mdx
+:::note
+General note.
+:::
 
-```markup
-<script src="your_path_to/ovenplayer.js"></script>
+:::tip
+Helpful tip.
+:::
+
+:::info
+Neutral info.
+:::
+
+:::warning
+Warning.
+:::
+
+:::danger
+Critical warning.
+:::
 ```
 
-### Use CDN
+Optionally with a title: `:::info[Custom title]`
 
-You can also download the `ovenplayer.js` and source map via [CDN](https://www.jsdelivr.com/package/npm/ovenplayer).
+### Tabs
 
-#### Latest version
+```mdx
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
 
-```markup
-<script src="https://cdn.jsdelivr.net/npm/ovenplayer/dist/ovenplayer.js"></script>
+<Tabs>
+  <TabItem value="cdn" label="CDN" default>
+
+  CDN-specific instructions here.
+
+  </TabItem>
+  <TabItem value="npm" label="npm">
+
+  npm-specific instructions here.
+
+  </TabItem>
+</Tabs>
 ```
 
-#### Version specified
+The two `import` lines are required once per file that uses tabs.
 
-```markup
-<script src="https://cdn.jsdelivr.net/npm/ovenplayer@0.10.0/dist/ovenplayer.js"></script>
+### Code blocks
+
+Standard fenced code with optional language, title, and highlights:
+
+````mdx
+```javascript title="Initialize OvenPlayer"
+const player = OvenPlayer.create('player_id', {
+  sources: [{ type: 'webrtc', file: 'ws://...' }],
+});
+```
+````
+
+### Images
+
+Put images in `docs/images/` and reference them with a relative path:
+
+```mdx
+![Player screenshot](./images/screenshot.png)
 ```
 
-### Install via npm
+**Filename rule**: no spaces, no parens. Use `kebab-case` or
+`snake_case`. (Spaces and `()` need URL-encoding, which is a footgun.)
 
-For more advanced workflows, installing via [npm](https://www.npmjs.com/package/ovenplayer) is recommended.
+### Characters that need escaping
 
-#### Latest version
+MDX parses `<`, `{`, `}` as JSX. In plain text:
 
-```
-$ npm install ovenplayer
-```
+- `<` → `&lt;` (or wrap in backticks: `` `<992` ``)
+- `{` → `&#123;`
+- `}` → `&#125;`
 
-#### Version specified
+Inside fenced code blocks (` ``` `) or inline code (`` ` ``), escape
+nothing — those are raw.
 
-```
-$ npm install ovenplayer@0.10.0
-```
+### Sidebar order
 
-#### Vuejs component
+Page order within a section follows `sidebar_position:` in frontmatter.
+For directory labels and order, add a `_category_.json` to the folder:
 
-```
-$ npm install ovenplayer-vue3
-```
-
-#### React component
-
-```
-$ npm install ovenplayer-react
-```
-
-## Quick Start
-
-Below is a list of simple OvenPlayer initialization methods for each situation. For detailed options when initializing the OvenPlayer, please refer to the [Initialization](https://docs.ovenplayer.com/initialization) chapter.
-
-### Basic Concept
-
-#### HTML
-
-You need an HTML element where the OvenPlayer will be initialized.
-
-```markup
-<div id="player_id"></div>
-```
-
-Specifying the size or position of the player is possible by changing the style of the wrapper element.
-
-```markup
-<!-- Wrapper element for sizing or positioning the player -->
-<div class="player-wrapper">
-    <!-- OvenPlayer will be initialized inside this element. -->
-    <div id="player_id"></div>
-</div>
-```
-
-The width of the OvenPlayer is set equal to the width of the container. So with style below, the OvenPlayer will have a width of 1280px.
-
-```css
-.player-wrapper {
-    margin: 0 auto;
-    width: 1280px;
+```json
+{
+  "label": "Examples",
+  "position": 8,
+  "link": { "type": "doc", "id": "README" }
 }
 ```
 
-#### JavaScript
+For **section dividers** — decorative headers (API Reference, Examples)
+that appear above a group of pages without being collapsible themselves
+— add `customProps.sidebarHeader: true` to the folder's `_category_.json`:
 
-You can import `ovenplayer.js` and initialize OvenPlayer by calling `OvenPlayer.create()` as shown below:
-
-```markup
-<script src="https://cdn.jsdelivr.net/npm/ovenplayer/dist/ovenplayer.js"></script>
-
-<script>
-    // Initialize OvenPlayer
-    const player = OvenPlayer.create('player_id', options)
-</script>
-```
-
-Alternatively, you can use OvenPlayer as an ES6 module as follows:
-
-```javascript
-import OvenPlayer from 'ovenplayer';
-
-// Initialize OvenPlayer
-const player = OvenPlayer.create('player_id', options)
-```
-
-### OvenPlayer for Vue.js
-
-You can use OvenPlayer as a reusable [Vue.js](https://vuejs.org/) component.
-
-```vue
-<script setup>
-import OvenPlayerVue3 from "ovenplayer-vue3";
-</script>
-
-<template>
-    <OvenPlayerVue3
-    ref="ovenplayer"
-    :config="playerConfig"
-    @ready="readyHandler"
-    @error="errorHandler"
-    >
-    </OvenPlayerVue3>
-</template>
-
-<script>
-export default {
-  data() {
-    return {
-      playerConfig: {
-        sources: [
-          {
-            type: '...',
-            file: '...',
-          },
-        ],
-      },
-    };
-  },
-  methods: {
-    readyHandler(event) {
-      //
-    },
-    errorHandler(event) {
-      //
-    },
-    getQualityLevels() {
-      return this.$refs.ovenplayer.playerInstance.getQualityLevels()
-    }
+```json
+{
+  "label": "API Reference",
+  "position": 6,
+  "customProps": {
+    "sidebarHeader": true
   }
-};
-</script>
-```
-
-this component provides three exposed member:
-
-- playerInstance: `ovenplayer.js` instance.
-- createPlayer(): create player.
-  - Note: please call `removePlayer` first, ensure there's no active instance.
-- removePlayer(): remove player.
-
-### OvenPlayer for React
-
-You can use OvenPlayer as a reusable [React](https://react.dev/) component.
-
-```jsx
-import React from 'react'
-import OvenPlayer from 'ovenplayer-react'
-
-export default function App() {
-  const config = {
-    sources: [
-      {
-        type: 'hls',
-        file: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
-      },
-    ],
-  }
-
-  const handleReady = () => {
-    console.log('Player is ready')
-  }
-
-  const handleError = (err) => {
-    console.error('Error:', err)
-  }
-
-  return (
-    <div style={{ width: '640px', margin: '20px auto' }}>
-      <h1>OvenPlayer Demo</h1>
-      <OvenPlayer
-        config={config}
-        onReady={handleReady}
-        onError={handleError}
-      />
-    </div>
-  )
 }
 ```
-This React component provides the same functionality as the Vue version, including:
 
-- Props such as config (OvenPlayer configuration) and callbacks like onReady, onError, onStateChanged, etc.
-- Internally, it creates and manages the OvenPlayer instance, listening to all relevant events.
-If you need direct access to the internal OvenPlayer instance or want to re-create/remove it programmatically, you can manage it via a React ref or by re-rendering the component with updated props.
+A folder with this flag is rendered as a visual section header and its
+children are promoted to the same sidebar level (not nested inside a
+collapsible category). Do **not** add a `link:` field to section-header
+entries — they are not clickable.
 
+## Local preview
 
-### Initialize for OME
+Run `./docs/preview.sh` from the repo root.
 
-To play Sub-Second Latency Stream of OvenMediaEngine, set the source `type` to `webrtc` and set the `file` to the WebRTC Signaling URL with OvenMediaEngine. An explanation of the WebRTC Signaling URL can be found [here](https://docs.ovenmediaengine.com/getting-started#playback).
+The script clones the [ovenmedialabs.com](https://github.com/OvenMediaLabs/ovenmedialabs.com)
+repo into a per-product cache, copies your `docs/` into it (and
+watches it so your edits hot-reload), and starts a dev server. When
+it's ready you'll see:
 
-```markup
-<!DOCTYPE html>
-<html lang="en">
+    [SUCCESS] Docusaurus website is running at: http://localhost:3000/
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OvenPlayer</title>
-</head>
+Open that URL in a browser — the page reloads automatically as you
+save edits in `docs/`.
 
-<body>
-    <!-- OvenPlayer will be initialized inside this element. -->
-    <div id="player_id"></div>
+Stop the preview with **Ctrl-C** in the terminal.
 
-    <!-- Load OvenPlayer via CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/ovenplayer/dist/ovenplayer.js"></script>
+> **What about broken links?** A broken markdown link (e.g. a typo'd
+> `.md` path or a missing image) shows up in the preview terminal
+> immediately and stops the page from compiling — you'll know right
+> away. A broken anchor (`#missing-section`) is only flagged by the
+> full production build, so click your anchor links once before
+> merging.
 
-    <script>
+Requirements: bash, git, Node 20+, npm. macOS/Linux. First run ~5
+minutes (clone + npm install); subsequent runs ~10 seconds.
 
-        // Initialize OvenPlayer
-        const player = OvenPlayer.create('player_id', {
-            sources: [
-                {
-                    label: 'label_for_webrtc',
-                    // Set the type to 'webrtc'
-                    type: 'webrtc',
-                    // Set the file to WebRTC Signaling URL with OvenMediaEngine 
-                    file: 'ws://ome_host:signaling_port/app/stream'
-                }
-            ]
-        });
-    </script>
-</body>
+Env var overrides:
 
-</html>
-```
-
-### Initialize for Video File
-
-This is a way to play video files in progressive download mode.
-
-```markup
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OvenPlayer</title>
-</head>
-
-<body>
-    <!-- OvenPlayer will be initialized inside this element. -->
-    <div id="player_id"></div>
-
-    <!-- Load OvenPlayer via CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/ovenplayer/dist/ovenplayer.js"></script>
-
-    <script>
-
-        // Initialize OvenPlayer
-        const player = OvenPlayer.create('player_id', {
-            sources: [
-                {
-                    label: 'label_for_video',
-                    // Set the type to 'mp4', 'webm' or etc
-                    type: 'mp4', 
-                    file: 'https://github.com/OvenMediaLabs/OvenPlayer/raw/master/docs/assets/OCP_480.mp4'
-                }
-            ]
-        });
-    </script>
-</body>
-
-</html>
-```
-
-### Initialize for DASH
-
-If you want to play MPEG-DASH, you need the [dash.js](https://github.com/Dash-Industry-Forum/dash.js).
-
-You need to place the `dash.js` first, and then `ovenplayer.js` as shown below:
-
-```markup
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OvenPlayer</title>
-</head>
-
-<body>
-    <!-- OvenPlayer will be initialized inside this element. -->
-    <div id="player_id"></div>
-
-    <!-- You need dash.js to play MPEG-DASH. -->
-    <script src="https://cdn.jsdelivr.net/npm/dashjs@latest/dist/dash.all.debug.min.js"></script>
-
-    <!-- Load OvenPlayer via CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/ovenplayer/dist/ovenplayer.js"></script>
-
-    <script>
-
-        // Initialize OvenPlayer
-        const player = OvenPlayer.create('player_id', {
-            sources: [
-                {
-                    label: 'label_for_dash',
-                    // Set the type to 'dash'
-                    type: 'dash',
-                    file: 'https://dash.akamaized.net/akamai/bbb_30fps/bbb_30fps.mpd'
-
-                }
-            ]
-        });
-    </script>
-</body>
-
-</html>
-```
-
-### Initialize for HLS
-
-If you want to play HLS, you need the [hls.js](https://github.com/video-dev/hls.js).
-
-You need to place the `hls.js` first, and then `ovenplayer.js` as shown below:
-
-```markup
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OvenPlayer</title>
-</head>
-
-<body>
-    <!-- OvenPlayer will be initialized inside this element -->
-    <div id="player_id"></div>
-
-    <!-- You need hls.js to play HLS. -->
-    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest/dist/hls.min.js"></script>
-
-    <!-- Load OvenPlayer via CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/ovenplayer/dist/ovenplayer.js"></script>
-
-    <script>
-
-        // Initialize OvenPlayer
-        const player = OvenPlayer.create('player_id', {
-            sources: [
-                {
-                    label: 'label_for_hls',
-                    // Set the type to 'hls'
-                    type: 'hls',
-                    file: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8'
-
-                }
-            ]
-        });
-    </script>
-</body>
-
-</html>
-```
-
-### Initialize for Ads
-
-If you want to use Ads in OvenPlayer, you need the [Google IMA](https://developers.google.com/interactive-media-ads/docs/sdks/html5/client-side).
-
-You need to set the `IMA` first, and then `ovenplayer.js`, as shown below:
-
-```markup
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OvenPlayer</title>
-</head>
-
-<body>
-    <!-- Wrapper element for resizing and positioning the player -->
-    <div class="player-wrapper">
-        <!-- OvenPlayer will be initialized inside this element. -->
-        <div id="player_id"></div>
-    </div>
-
-    <script type="text/javascript" src="//imasdk.googleapis.com/js/sdkloader/ima3.js"></script>
-
-    <!-- Load OvenPlayer via CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/ovenplayer/dist/ovenplayer.js"></script>
-
-    <script>
-
-        // Initialize OvenPlayer
-        const player = OvenPlayer.create('player_id', {
-            sources: [
-                {
-                    label: 'label_for_video',
-                    // Set the type to 'mp4', 'webm' or etc
-                    type: 'mp4',
-                    file: 'https://github.com/OvenMediaLabs/OvenPlayer/raw/master/docs/assets/OCP_480.mp4'
-                }
-            ],
-            // Set the AD tag URL
-            adTagUrl: "https://pubads.g.doubleclick.net/gampad/ads?sz=640x480&iu=/124319096/external/single_ad_samples&ciu_szs=300x250&impl=s&gdfp_req=1&env=vp&output=vast&unviewed_position_start=1&cust_params=deployment%3Ddevsite%26sample_ct%3Dlinear&correlator="
-        });
-    </script>
-</body>
-
-</html>
-```
-
-## How to Contribute
-
-Please read our [Guidelines](https://github.com/OvenMediaLabs/OvenPlayer/blob/0.9/CONTRIBUTING.md) and [Rules](https://github.com/OvenMediaLabs/OvenPlayer/blob/0.9/CODE\_OF\_CONDUCT.md).
-
-## License
-
-OvenPlayer is under the [MIT license](https://github.com/OvenMediaLabs/OvenPlayer/blob/0.9/LICENSE).
+- `OML_PREVIEW_PORT` (default `3000`)
+- `OML_PREVIEW_HOST` (default `localhost`; set `0.0.0.0` to open the preview from another machine)
+- `OML_PREVIEW_CACHE` (cache root path)

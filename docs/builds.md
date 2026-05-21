@@ -1,8 +1,8 @@
 ---
-description: This section describes the development and builds process.
+title: Builds
+description: "Build OvenPlayer from source with npm and webpack, including production and watch-mode development builds."
+sidebar_position: 4
 ---
-
-# Builds
 
 ## How to write code
 

@@ -1,18 +1,19 @@
 ---
-description: This example shows you how to build a simple web server using Nginx.
+title: Run-on WebServer
+description: "Run OvenPlayer from a web server: install Nginx, deploy the player files, and serve a working example over HTTP/HTTPS."
+sidebar_position: 11
 ---
 
-# Run-on WebServer
+:::tip
 
-
-
-{% hint style="success" %}
 If you cannot install a web server in your environment, please use our demo player.
 
 · OvenPlayer for testing without TLS: [http://demo.ovenplayer.com](http://demo.ovenplayer.com)
 
 · OvenPlayer for testing with TLS: [https://demo.ovenplayer.com](https://demo.ovenplayer.com)
-{% endhint %}
+
+:::
+
 
 ### Install Nginx
 
@@ -41,4 +42,4 @@ git clone https://github.com/OvenMediaLabs/OvenPlayer.git
 http://YOUR_IP/OvenPlayer/docs/demo.html
 ```
 
-![](<../.gitbook/assets/demo_player.png>)
+![](../images/demo_player.png)

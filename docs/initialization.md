@@ -1,11 +1,11 @@
 ---
-description: >-
-  This section describes how to run OvenPlayer and explains various
-  configuration options. Also, it includes a way to access an OvenPlayer
-  instance.
+title: Initialization
+description: "Create and access an OvenPlayer instance with OvenPlayer.create(), and configure playback through its initialization options."
+sidebar_position: 2
 ---
 
-# Initialization
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
 
 ## Instance Methods
 
@@ -21,14 +21,18 @@ You need to obtain the OvenPlayer Instance to use the OvenPlayer API. You can ty
 const player = OvenPlayer.create(container, options);
 ```
 
-{% tabs %}
-{% tab title="Request" %}
+
+<Tabs>
+<TabItem value="request" label="Request">
+
 | Params    | Type                  | Memo                                        |
 | --------- | ------                | ------------------------------------------- |
 | container | String \| HTMLElement | DOM Element                                 |
 | options   | Object                | Please see the _**Options**_ section below. |
-{% endtab %}
-{% endtabs %}
+
+</TabItem>
+</Tabs>
+
 
 #### Accessing default instance
 
@@ -51,13 +55,11 @@ OvenPlayer.getPlayerList()
 length: 3
 ```
 
-{% code title="example" %}
-```javascript
+```javascript title="example"
 for(let i = 0 ; i < OvenPlayer.getPlayerList().length; i++){
     OvenPlayer.getPlayerList()[i].pause();
 }
 ```
-{% endcode %}
 
 #### Querying a single instance using an index
 
@@ -66,13 +68,11 @@ OvenPlayer.getPlayerByIndex(0)
 {on: ƒ, trigger: ƒ, off: ƒ, once: ƒ, init: ƒ, …}
 ```
 
-{% code title="// example" %}
-```javascript
+```javascript title="// example"
 if(OvenPlayer.getPlayerByIndex(0)){
     OvenPlayer.getPlayerByIndex(0).pause();
 }
 ```
-{% endcode %}
 
 #### Querying a single instance using the DOM Element ID
 
@@ -89,7 +89,7 @@ You set up to show all logs that occur in the OvenPlayer that is on the web page
 OvenPlayer.debug(true);
 ```
 
-![](<.gitbook/assets/web_inspector.png>)
+![](./images/web_inspector.png)
 
 ## Options
 
@@ -354,8 +354,7 @@ OvenPlayer will play a video in the order of the protocol or resolution you ente
 
 If a `label` is set, it will be displayed in the player source selection UI. The `framerate` setting only works on VOD and is required to display the time in frames in the progress bar.
 
-{% code title="example" %}
-```
+``` title="example"
 let player = OvenPlayer.create("player", {sources : [
     {
         type : "webrtc", 
@@ -371,7 +370,6 @@ let player = OvenPlayer.create("player", {sources : [
     }
 ] });
 ```
-{% endcode %}
 
 ### **tracks**
 
@@ -381,8 +379,7 @@ let player = OvenPlayer.create("player", {sources : [
 
 You can register the URL information of the subtitle file shown with a video. OvenPlayer supports `*.vtt`, `*.srt`, and `*.smi` as subtitle file formats.
 
-{% code title="example" %}
-```javascript
+```javascript title="example"
 let player = OvenPlayer.create("player", {sources : {
         type : "mp4", 
         file :  "https://path.to/your_video", 
@@ -407,7 +404,6 @@ let player = OvenPlayer.create("player", {sources : {
     ] 
 });
 ```
-{% endcode %}
 
 ### **section**
 
@@ -458,8 +454,7 @@ You can set the URL of the Video Ad Serving Template (VAST) to play in OvenPlaye
 
 For more information, see [Support and Compatibility](https://developers.google.com/interactive-media-ads/docs/sdks/html5/compatibility).
 
-{% code title="example" %}
-```
+``` title="example"
 let player = OvenPlayer.create("player", {
     adTagUrl : "https://pubads.g.doubleclick.net/gampad/ads?...",
     sources : {
@@ -469,7 +464,6 @@ let player = OvenPlayer.create("player", {
     ]
 });
 ```
-{% endcode %}
 
 ### **adClient**
 
@@ -504,8 +498,7 @@ You can set the URL of a poster image / thumbnail. The image file is displayed p
 
 `playlist` has multiple `sources` mentioned above. You can explore between playlists, and it automatically plays the next content. Also, you can assign ads and captions for each `playlist`.
 
-{% code title="example" %}
-```
+``` title="example"
 let player = OvenPlayer.create("player", {
     playlist : [
         {
@@ -556,7 +549,6 @@ let player = OvenPlayer.create("player", {
     ]
 });
 ```
-{% endcode %}
 
 ### **hidePlaylistIcon**
 

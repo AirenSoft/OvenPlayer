@@ -1,10 +1,8 @@
 ---
-description: >-
-  This section describes the various events that occur in the OvenPlayer
-  instance.
+title: Event
+description: "OvenPlayer event reference: subscribe with player.on()/once() and remove listeners with off() to react to playback state changes."
+sidebar_position: 7
 ---
-
-# Event
 
 ## Prerequisites
 
@@ -59,20 +57,28 @@ It occurs when new metadata is received.
 
 It occurs when the state of a player changes.
 
-{% hint style="info" %}
+
+:::info
+
 ```
 idle, complete, paused, playing, error, loading, stalled, 
 adLoaded, adPlaying, adPaused, adComplete
 ```
-{% endhint %}
+
+:::
+
 
 ### **on('resized')**&#x20;
 
 **Returns String:** Fired when the player's size has been changed. ("large", "medium", "small", "xsmall")
 
-{% hint style="info" %}
-large(>992), medium(<992), small(<768), xsmall(<576)
-{% endhint %}
+
+:::info
+
+large(>992), medium(&lt;992), small(&lt;768), xsmall(&lt;576)
+
+:::
+
 
 ### **on('playbackRateChanged')**&#x20;
 
@@ -218,7 +224,7 @@ Fired when screen mode is changed.
 | ------------- | ---------------- |
 | `EventObject` | object of event  |
 
-Triggered when the player is clicked. If ad clicked, this returns {type : "adclick"}.
+Triggered when the player is clicked. If ad clicked, this returns &#x7B;type : "adclick"&#x7D;.
 
 ### on('allPlaylistEnded')
 

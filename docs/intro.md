@@ -1,6 +1,7 @@
 ---
 slug: /
 title: Introduction
+description: "OvenPlayer is an open-source HTML5 player for sub-second latency streaming from OvenMediaEngine over WebRTC, with HLS and LL-DASH fallback."
 sidebar_position: 1
 ---
 

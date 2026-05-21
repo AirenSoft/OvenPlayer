@@ -1,15 +1,14 @@
 ---
-description: This example shows how to set a playlist in OvenPlayer.
+title: Playlist
+description: "Configure OvenPlayer playback sources — single source, multi-protocol/resolution sources, and playlists with automatic fallback."
+sidebar_position: 8
 ---
-
-# Playlist
 
 ### Source
 
 It is the smallest unit for playing video from OvenPlayer. It is generally a single content.
 
-{% code title="example" %}
-```
+``` title="example"
 let player = OvenPlayer.create("player", {
         type : "mp4", 
         file :  "https://path.to/your_video", 
@@ -17,7 +16,6 @@ let player = OvenPlayer.create("player", {
         label : "360P"
     });
 ```
-{% endcode %}
 
 ### Sources
 
@@ -25,7 +23,7 @@ If you have multiple protocols or multiple resolutions for a single content, you
 
 OvenPlayer will play a video in the order of the protocol or resolution you entered in `sources`, and will automatically play the next source if playback fails.
 
-{% code title="" %}
+
 ```
 let player = OvenPlayer.create("player", {sources : [
     {
@@ -54,7 +52,7 @@ let player = OvenPlayer.create("player", {sources : [
     }
 ] });
 ```
-{% endcode %}
+
 
 ### Playlist&#x20;
 
@@ -62,7 +60,7 @@ let player = OvenPlayer.create("player", {sources : [
 
 For more information, please refer to the [Playlist API](../api-reference/api.md#getplaylist) chapter.
 
-{% code title="" %}
+
 ```
 let player = OvenPlayer.create("player", {
         playlist : [
@@ -106,4 +104,4 @@ let player = OvenPlayer.create("player", {
  ]
 });
 ```
-{% endcode %}
+

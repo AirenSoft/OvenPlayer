@@ -1,10 +1,8 @@
 ---
-description: >-
-  This section explains how to change the UI of OvenPlayer, such as modify
-  styles, view templates, and more.
+title: UI Customize
+description: "Customize the OvenPlayer UI with CSS skinning — change the accent color and restyle controls via CSS variables."
+sidebar_position: 5
 ---
-
-# UI Customize
 
 ## CSS Skinning
 
@@ -16,7 +14,7 @@ You can easily change the color by overriding the `--op-accent-color` class in y
 <!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <title>OvenPlayer</title>
     <style>
 
@@ -89,7 +87,7 @@ The view of OvenPlayer has consisted of a template that extended OvenTemplate.
 
 The template has a minimal life cycle starting with `onRendered()` and ending with `onDestroyed()`, and you can set an event callback with a valid scope in the template.
 
-![](<.gitbook/assets/player_template.png>)
+![](./images/player_template.png)
 
 The top-level parent template is `view/view.js`. View creates child `Controls` and `Helpers` templates. Also, Controls and Helpers create and control child templates, respectively.
 
@@ -119,8 +117,7 @@ You need to register `view` separately in Templates.
 
 We have configured `textviewTemplate.js` corresponding to the view in the TextView. So you register `textviewTemplate.js` in `view/engine/Templates.js`.
 
-{% code title="view/engine/Templates.js" %}
-```
+``` title="view/engine/Templates.js"
 import TextViewTemplate from 'view/example/textviewTemplate';
 import ViewTemplate from 'view/viewTemplate';
 import HelpersTemplate from 'view/components/helpers/mainTemplate';
@@ -136,7 +133,6 @@ const Templates = {
 
 export default Templates;
 ```
-{% endcode %}
 
 ### Use a template
 
@@ -144,8 +140,7 @@ In this part, we will show you how to create the TextView in `helpers/main.js`, 
 
 You import `textview.js` which is `controller` in the TextView.
 
-{% code title="view/components/helpers/main.js" %}
-```
+``` title="view/components/helpers/main.js"
 import OvenTemplate from "view/engine/OvenTemplate";
 import BigButton from "view/components/helpers/bigButton";
 import MessageBox from "view/components/helpers/messageBox";
@@ -184,12 +179,10 @@ let bigButton = "", messageBox = "",  captionViewer = "", spinner = "", textView
 
 export default Helpers;
 ```
-{% endcode %}
 
 The source of the `TextView` is:
 
-{% code title="/view/example/textview.js" %}
-```
+``` title="/view/example/textview.js"
 import OvenTemplate from 'view/engine/OvenTemplate';
 
 const TextView = function($container, api, text){
@@ -214,12 +207,10 @@ const TextView = function($container, api, text){
 
 export default TextView;
 ```
-{% endcode %}
 
 `$container` means the parent's element, and in onRendered(), onDestroyed(), and events(), `$current` means the element owned by each item.
 
-{% code title="/view/example/textviewTemplate.js" %}
-```
+``` title="/view/example/textviewTemplate.js"
 const TextViewTemplate = function(text){
     return `<div class="textView" style="padding : 5px; background: red; position : absolute; top: 0;">` +
                 `<h3>${text}</h3>` +
@@ -229,7 +220,6 @@ const TextViewTemplate = function(text){
 
 export default TextViewTemplate;
 ```
-{% endcode %}
 
 ### LikeA$&#x20;
 
@@ -274,6 +264,6 @@ npm run watch
 
 You can see the added TextView by building OvenPlayer and running `dist/development/ index.html`.
 
-![Test run screen](<.gitbook/assets/custom_ui.png>)
+![Test run screen](./images/custom_ui.png)
 
 In this way, you can add a new UI or customize the template.
