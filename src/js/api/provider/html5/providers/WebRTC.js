@@ -201,6 +201,7 @@ const WebRTC = function (element, playerConfig, adTagUrl) {
                 that.once(ERROR, function () {
 
                     connected = false;
+                    destroyWebRtcLoader();
                 });
 
                 connectionCheckTimer = setTimeout(function () {
@@ -281,7 +282,7 @@ const WebRTC = function (element, playerConfig, adTagUrl) {
 
     that.play = () => {
 
-        if (!webrtcLoader || (timeoutMaxRetry > 0 && !connected)) {
+        if (!webrtcLoader) {
             loadWebRTCLoader();
         }
 
