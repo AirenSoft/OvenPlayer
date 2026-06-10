@@ -769,9 +769,6 @@
 
               const params = sender.getParameters();
 
-              // Set degradationPreference to 'maintain-framerate' to ensure that changes to maxFramerate are applied correctly.
-              params.degradationPreference = 'maintain-framerate';
-
               const row = $input.closest('.simulcast-layer-row');
               const rid = row.find('.layer-rid').val();
               const scale = row.find('.layer-scale').val();
@@ -799,9 +796,7 @@
 
               await sender.setParameters(params);
 
-              // await new Promise(resolve => setTimeout(resolve, 3000));
-
-              // Temporarily nudge encoding framerates (for other RIDs only) by -1 then +1 to ensure setParameters is applied correctly.
+              // Temporarily nudge encoding maxFramerates (for other RIDs only) by -1 then +1 to ensure setParameters is applied correctly.
               const nudgeParams = sender.getParameters();
               nudgeParams.encodings.forEach(enc => {
                 if (enc.rid !== rid && typeof enc.maxFramerate === 'number') enc.maxFramerate -= 1;
@@ -810,12 +805,11 @@
               console.log('Nudging encoding parameters to ensure changes are applied', nudgeParams.encodings);
               await sender.setParameters(nudgeParams);
 
-              // await new Promise(resolve => setTimeout(resolve, 3000));
-
               const restoreParams = sender.getParameters();
               restoreParams.encodings.forEach(enc => {
                 if (enc.rid !== rid && typeof enc.maxFramerate === 'number') enc.maxFramerate += 1;
               });
+
               console.log('Restoring encoding parameters after nudge', restoreParams.encodings);
               await sender.setParameters(restoreParams);
 
