@@ -438,6 +438,7 @@
                     >H264 (default)</option>
                     <option value="H265">H265</option>
                     <option value="VP8">VP8</option>
+                    <option value="AV1">AV1</option>
                   </select>
 
                   <label for="videoBitrateInput">Bitrate limit (kbps)</label>
@@ -587,17 +588,17 @@
     integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI="
     crossorigin="anonymous"
   ></script>
-  <script src="https://cdn.jsdelivr.net/npm/ovenlivekit@1.5.6/dist/OvenLiveKit.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/ovenlivekit@1.5.8/dist/OvenLiveKit.min.js?20260615"></script>
 
 
   <script>
 
-    const DEMO_VERSION = '2026-04-28-1';
+    const DEMO_VERSION = '2026-06-15-1';
     $('#demoVersionSpan').text(DEMO_VERSION);
 
     if (localStorage.getItem('savedDemoVersion') !== DEMO_VERSION) {
       ['savedVideoSource', 'savedVideoResolution', 'savedVideoBitrate',
-        'savedVideoFrame', 'savedAudioSource', 'savedNumberOfLayersInput', 'savedBearerToken',
+        'savedVideoFrame', 'savedVideoPreferredCodec', 'savedAudioSource', 'savedNumberOfLayersInput', 'savedBearerToken',
         'savedSimulcastLayers'].forEach(function (key) {
           localStorage.removeItem(key);
         });
@@ -666,6 +667,7 @@
     let savedVideoResolution = localStorage.getItem('savedVideoResolution');
     let savedVideoBitrate = localStorage.getItem('savedVideoBitrate');
     let savedVideoFrame = localStorage.getItem('savedVideoFrame');
+    let savedVideoPreferredCodec = localStorage.getItem('savedVideoPreferredCodec');
     let savedAudioSource = localStorage.getItem('savedAudioSource');
 
     let savedNumberOfLayersInput = localStorage.getItem('savedNumberOfLayersInput');
@@ -690,6 +692,89 @@
         });
       });
       localStorage.setItem('savedSimulcastLayers', JSON.stringify(layers));
+    }
+
+    async function applyEncodingParametersWithNudge(sender, { rid, scale, framerate, bitrate }) {
+
+      console.log('Applying encoding parameters with nudge for RID', rid, { scale, framerate, bitrate });
+
+      const params = sender.getParameters();
+
+      const encoding = params.encodings.find(e => e.rid === rid);
+      if (!encoding) return;
+
+      if (scale) encoding.scaleResolutionDownBy = parseFloat(scale);
+      else delete encoding.scaleResolutionDownBy;
+
+      if (framerate) encoding.maxFramerate = parseFloat(framerate);
+      else delete encoding.maxFramerate;
+
+      if (bitrate) encoding.maxBitrate = parseInt(bitrate) * 1000;
+      else delete encoding.maxBitrate;
+
+      // log changes
+      console.log('Updating encoding parameters for RID', rid, {
+        scaleResolutionDownBy: encoding.scaleResolutionDownBy,
+        maxFramerate: encoding.maxFramerate,
+        maxBitrate: encoding.maxBitrate
+      });
+
+      await sender.setParameters(params);
+
+      // Temporarily nudge encoding maxFramerates (for other RIDs only) by -1 then +1 to ensure setParameters is applied correctly.
+      const nudgeParams = sender.getParameters();
+      nudgeParams.encodings.forEach(enc => {
+        if (enc.rid !== rid && typeof enc.maxFramerate === 'number') enc.maxFramerate -= 1;
+      });
+
+      console.log('Nudging encoding parameters to ensure changes are applied', nudgeParams.encodings);
+      await sender.setParameters(nudgeParams);
+
+      const restoreParams = sender.getParameters();
+      restoreParams.encodings.forEach(enc => {
+        if (enc.rid !== rid && typeof enc.maxFramerate === 'number') enc.maxFramerate += 1;
+      });
+
+      console.log('Restoring encoding parameters after nudge', restoreParams.encodings);
+      await sender.setParameters(restoreParams);
+    }
+
+    async function applyEncodingParametersWithActive(sender, { rid, scale, framerate, bitrate }) {
+
+      console.log('Applying encoding parameters with active toggle for RID', rid, { scale, framerate, bitrate });
+
+      // deactivate its own encoding to ensure setParameters is applied correctly.
+      const deactivateParams = sender.getParameters();
+      const deactivateEncoding = deactivateParams.encodings.find(e => e.rid === rid);
+      if (!deactivateEncoding) return;
+      deactivateEncoding.active = false;
+
+      console.log('Deactivating encoding temporarily for RID', rid);
+      await sender.setParameters(deactivateParams);
+
+      // apply the new parameters and reactivate the encoding.
+      const params = sender.getParameters();
+      const encoding = params.encodings.find(e => e.rid === rid);
+      if (!encoding) return;
+      encoding.active = true;
+
+      if (scale) encoding.scaleResolutionDownBy = parseFloat(scale);
+      else delete encoding.scaleResolutionDownBy;
+
+      if (framerate) encoding.maxFramerate = parseFloat(framerate);
+      else delete encoding.maxFramerate;
+
+      if (bitrate) encoding.maxBitrate = parseInt(bitrate) * 1000;
+      else delete encoding.maxBitrate;
+
+      // log changes
+      console.log('Activating and updating encoding parameters for RID', rid, {
+        scaleResolutionDownBy: encoding.scaleResolutionDownBy,
+        maxFramerate: encoding.maxFramerate,
+        maxBitrate: encoding.maxBitrate
+      });
+
+      await sender.setParameters(params);
     }
 
     function renderSimulcastLayerRows(count) {
@@ -767,51 +852,14 @@
               const sender = pc.getSenders().find(s => s.track && s.track.kind === 'video');
               if (!sender) return;
 
-              const params = sender.getParameters();
-
               const row = $input.closest('.simulcast-layer-row');
-              const rid = row.find('.layer-rid').val();
-              const scale = row.find('.layer-scale').val();
-              const framerate = row.find('.layer-framerate').val();
-              const bitrate = row.find('.layer-bitrate').val();
 
-              const encoding = params.encodings.find(e => e.rid === rid);
-              if (!encoding) return;
-
-              if (scale) encoding.scaleResolutionDownBy = parseFloat(scale);
-              else delete encoding.scaleResolutionDownBy;
-
-              if (framerate) encoding.maxFramerate = parseFloat(framerate);
-              else delete encoding.maxFramerate;
-
-              if (bitrate) encoding.maxBitrate = parseInt(bitrate) * 1000;
-              else delete encoding.maxBitrate;
-
-              // log changes
-              console.log('Updating encoding parameters for RID', rid, {
-                scaleResolutionDownBy: encoding.scaleResolutionDownBy,
-                maxFramerate: encoding.maxFramerate,
-                maxBitrate: encoding.maxBitrate
+              await applyEncodingParametersWithActive(sender, {
+                rid: row.find('.layer-rid').val(),
+                scale: row.find('.layer-scale').val(),
+                framerate: row.find('.layer-framerate').val(),
+                bitrate: row.find('.layer-bitrate').val()
               });
-
-              await sender.setParameters(params);
-
-              // Temporarily nudge encoding maxFramerates (for other RIDs only) by -1 then +1 to ensure setParameters is applied correctly.
-              const nudgeParams = sender.getParameters();
-              nudgeParams.encodings.forEach(enc => {
-                if (enc.rid !== rid && typeof enc.maxFramerate === 'number') enc.maxFramerate -= 1;
-              });
-
-              console.log('Nudging encoding parameters to ensure changes are applied', nudgeParams.encodings);
-              await sender.setParameters(nudgeParams);
-
-              const restoreParams = sender.getParameters();
-              restoreParams.encodings.forEach(enc => {
-                if (enc.rid !== rid && typeof enc.maxFramerate === 'number') enc.maxFramerate += 1;
-              });
-
-              console.log('Restoring encoding parameters after nudge', restoreParams.encodings);
-              await sender.setParameters(restoreParams);
 
             } catch (e) {
               console.error('Failed to update encoding parameters:', e);
@@ -874,6 +922,10 @@
 
     videoFrameInput.on('change', function () {
       localStorage.setItem('savedVideoFrame', $(this).val());
+    });
+
+    videoPreferredCodecSelect.on('change', function () {
+      localStorage.setItem('savedVideoPreferredCodec', $(this).val());
     });
 
     audioSourceSelect.on('change', function () {
@@ -1531,6 +1583,10 @@
 
         if (savedVideoFrame) {
           videoFrameInput.val(savedVideoFrame);
+        }
+
+        if (savedVideoPreferredCodec) {
+          videoPreferredCodecSelect.val(savedVideoPreferredCodec);
         }
 
         if (savedAudioSource && checkDevice(allDevices.audioinput, savedAudioSource)) {
