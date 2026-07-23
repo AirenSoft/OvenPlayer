@@ -564,6 +564,23 @@
                   <!--HLS Config -->
                   <h6>HLS Options</h6>
                   <fieldset class="mb-3">
+                    <div class="form-check">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        value=""
+                        id="hlsDebugCheck"
+                        v-model="hlsDebugCheck"
+                      />
+                      <label
+                        class="form-check-label"
+                        for="hlsDebugCheck"
+                      >
+                        Debug
+                      </label>
+                    </div>
+                  </fieldset>
+                  <fieldset class="mb-3">
                     <div class="form-check mb-2">
                       <input
                         class="form-check-input"
@@ -587,10 +604,40 @@
                         v-model="hlsVideoCodec"
                       >
                         <option value="avc1">avc1 (H.264)</option>
-                        <option value="hvc1">hvc1 (HEVC)</option>
+                        <option value="hev1">hev1 (HEVC)</option>
                         <option value="av01">av01 (AV1)</option>
                         <option value="vp09">vp09 (VP9)</option>
                       </select>
+                    </div>
+                  </fieldset>
+                  <fieldset class="mb-3">
+                    <div class="form-check mb-2">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        value=""
+                        id="hlsAbrEstimateCheck"
+                        v-model="hlsAbrEstimateCheck"
+                      />
+                      <label
+                        class="form-check-label"
+                        for="hlsAbrEstimateCheck"
+                      >
+                        Start Bandwidth Estimate
+                      </label>
+                    </div>
+                    <div class="form-outline ms-4">
+                      <input
+                        :disabled="!hlsAbrEstimateCheck"
+                        type="number"
+                        id="hlsAbrDefaultEstimate"
+                        class="form-control active"
+                        v-model="hlsAbrDefaultEstimate"
+                      >
+                      <label
+                        class="form-label"
+                        for="hlsAbrDefaultEstimate"
+                      >Estimate (bps)</label>
                     </div>
                   </fieldset>
                   <fieldset class="mb-3">
@@ -860,7 +907,7 @@
         <span
           id="ovenLiveKitVersion"
           class="badge badge-info align-middle ms-1"
-        >2026-06-23-1</span>
+        >2026-06-25-1</span>
       </small>
     </div>
 
@@ -1644,6 +1691,86 @@
             }
 
             this.playerOption.hlsConfig.videoPreference.videoCodec = value;
+            this.unLoadPlayer(true);
+            this.makePermanentLink();
+          }
+        },
+        hlsAbrEstimateCheck: {
+          get: function () {
+
+            if (this.playerOption.hlsConfig &&
+              _.isNumber(this.playerOption.hlsConfig.abrEwmaDefaultEstimate)) {
+
+              return true;
+            } else {
+              return false;
+            }
+          },
+          set: function (value) {
+
+            if (value) {
+              if (!this.playerOption.hlsConfig) {
+                this.playerOption.hlsConfig = {};
+              }
+              this.playerOption.hlsConfig.abrEwmaDefaultEstimate = 2000000;
+            } else {
+
+              delete this.playerOption.hlsConfig.abrEwmaDefaultEstimate;
+
+              if (_.isEmpty(this.playerOption.hlsConfig)) {
+
+                delete this.playerOption.hlsConfig;
+              }
+            }
+
+            this.unLoadPlayer(true);
+            this.makePermanentLink();
+          }
+        },
+        hlsAbrDefaultEstimate: {
+          get: function () {
+
+            if (this.playerOption.hlsConfig &&
+              _.isNumber(this.playerOption.hlsConfig.abrEwmaDefaultEstimate)) {
+
+              return this.playerOption.hlsConfig.abrEwmaDefaultEstimate;
+            }
+          },
+          set: function (value) {
+            if (!this.playerOption.hlsConfig) {
+              this.playerOption.hlsConfig = {};
+            }
+
+            this.playerOption.hlsConfig.abrEwmaDefaultEstimate = Number(value);
+            this.unLoadPlayer(true);
+            this.makePermanentLink();
+          }
+        },
+        hlsDebugCheck: {
+          get: function () {
+
+            return !!(this.playerOption.hlsConfig && this.playerOption.hlsConfig.debug);
+          },
+          set: function (value) {
+
+            if (value) {
+              if (!this.playerOption.hlsConfig) {
+                this.playerOption.hlsConfig = {};
+              }
+              this.playerOption.hlsConfig.debug = true;
+            } else {
+
+              if (this.playerOption.hlsConfig) {
+
+                delete this.playerOption.hlsConfig.debug;
+
+                if (_.isEmpty(this.playerOption.hlsConfig)) {
+
+                  delete this.playerOption.hlsConfig;
+                }
+              }
+            }
+
             this.unLoadPlayer(true);
             this.makePermanentLink();
           }
