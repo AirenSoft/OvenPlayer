@@ -15,6 +15,7 @@ sidebar_position: 1
 * Automatically Fallback using HLS, MPEG-DASH
 * Easily create profit by adding Ads in various formats
 * Supports various subtitle formats: SMI, VTT, SRT
+* Plays DRM-protected HLS with FairPlay, Widevine, and PlayReady
 * Responsive player regardless of screen size
 
 ## Installation

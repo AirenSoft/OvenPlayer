@@ -75,11 +75,12 @@ const Html5 = function (element, playerConfig, adTagUrl) {
 
     return new Promise(function (resolve, reject) {
 
-      const licenseServerUrl = playerConfig.getConfig().hlsConfig.drmSystems['com.apple.fps'].licenseUrl;
+      const fairPlayConfig = playerConfig.getConfig().hlsConfig.drmSystems['com.apple.fps'];
+      const licenseServerUrl = fairPlayConfig.licenseUrl;
       const headers = new Headers({ 'Content-Type': 'application/x-www-form-urlencoded' });
 
-      if (playerConfig.getConfig().licenseCustomHeader) {
-        headers.append(playerConfig.getConfig().licenseCustomHeader.key, playerConfig.getConfig().licenseCustomHeader.value);
+      if (fairPlayConfig.licenseHeaders) {
+        headers.append(fairPlayConfig.licenseHeaders.key, fairPlayConfig.licenseHeaders.value);
       }
 
       fetch(licenseServerUrl, {
