@@ -655,6 +655,46 @@ When playing HLS, you can set hls.js detailed tuning options ([https://github.co
 | -------- | ------- | -------- |
 | Object   | null    | false    |
 
+#### hlsConfig.emeEnabled & hlsConfig.drmSystems
+
+|               | Type    | Default | Required |
+| ------------- | ------- | ------- | -------- |
+| `emeEnabled`  | Boolean | false   | false    |
+| `drmSystems`  | Object  | null    | false    |
+
+Play DRM-protected HLS streams. `emeEnabled` turns on Encrypted Media Extensions — `drmSystems` is ignored without it — and `drmSystems` holds one entry per key system: `com.apple.fps` (FairPlay), `com.widevine.alpha` (Widevine), and `com.microsoft.playready` (PlayReady).
+
+Each entry takes a `licenseUrl`, a `serverCertificateUrl` (required for FairPlay), and an optional `licenseHeaders` `{ key, value }` pair that authenticates that key system's license request only.
+
+```javascript
+let player = OvenPlayer.create("player", {
+    sources : [
+        {
+            type : "hls", 
+            file : "https://path.to/your_stream/master.m3u8"
+        }
+    ],
+    hlsConfig: {
+        emeEnabled: true,
+        drmSystems: {
+            "com.widevine.alpha": {
+                licenseUrl: "https://path.to/your_license_server/widevine",
+                licenseHeaders: {
+                    key: "X-AxDRM-Message",
+                    value: "your_widevine_token"
+                }
+            }
+        }
+    }
+});
+```
+
+:::warning
+The top-level `licenseCustomHeader` option was removed in 0.10.53. Use the per-key-system `licenseHeaders` shown above instead.
+:::
+
+See [DRM](./examples/drm.md) for the full guide, including FairPlay on iOS and error handling.
+
 ### dashConfig
 
 When playing DASH, you can set configuration([https://cdn.dashjs.org/latest/jsdoc/module-Settings.html](https://cdn.dashjs.org/latest/jsdoc/module-Settings.html)) parameters of Dash.js MediaPlayer.

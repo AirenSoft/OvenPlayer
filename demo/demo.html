@@ -164,7 +164,7 @@
   <script src="https://cdn.jsdelivr.net/npm/hls.js@1.6.16/dist/hls.min.js"></script>
 
   <!-- OvenPlayer -->
-  <script src="https://cdn.jsdelivr.net/npm/ovenplayer@0.10.52/dist/ovenplayer.min.js?20270730"></script>
+  <script src="https://cdn.jsdelivr.net/npm/ovenplayer@0.10.53/dist/ovenplayer.min.js?20270730"></script>
   <!-- <script src="../dev/ovenplayer.js"></script> -->
 </head>
 
@@ -706,22 +706,19 @@
                       <input
                         class="form-check-input"
                         type="checkbox"
-                        id="enableDrmCheck"
-                        v-model="hlsEnableDrmCheck"
+                        id="enableFairPlayCheck"
+                        v-model="hlsEnableFairPlayCheck"
                       />
                       <label
                         class="form-check-label"
-                        for="enableDrmCheck"
+                        for="enableFairPlayCheck"
                       >
-                        Enable DRM
+                        Enable FairPlay
                       </label>
-                    </div>
-                    <div class="mb-3">
-                      <strong>FairPlay</strong>
                     </div>
                     <div class="form-outline ms-4 mb-3">
                       <input
-                        :disabled="!hlsEnableDrmCheck"
+                        :disabled="!hlsEnableFairPlayCheck"
                         type="text"
                         id="hlsFairPlayLicenseUrlInput"
                         class="form-control active"
@@ -734,7 +731,7 @@
                     </div>
                     <div class="form-outline ms-4 mb-3">
                       <input
-                        :disabled="!hlsEnableDrmCheck"
+                        :disabled="!hlsEnableFairPlayCheck"
                         type="text"
                         id="hlsFairPlayServerCertificateUrlInput"
                         class="form-control active"
@@ -746,12 +743,49 @@
                       >Server Certificate
                         URL</label>
                     </div>
-                    <div class="mb-3">
-                      <strong>Widevine</strong>
-                    </div>
-                    <div class="form-outline ms-4 mb-2">
+                    <div class="form-outline ms-4 mb-3">
                       <input
-                        :disabled="!hlsEnableDrmCheck"
+                        :disabled="!hlsEnableFairPlayCheck"
+                        type="text"
+                        id="hlsFairPlayCustomHeaderKeyInput"
+                        class="form-control active"
+                        v-model="hlsFairPlayCustomHeaderKey"
+                      >
+                      <label
+                        class="form-label"
+                        for="hlsFairPlayCustomHeaderKeyInput"
+                      >Custom Header Key</label>
+                    </div>
+                    <div class="form-outline ms-4 mb-3">
+                      <input
+                        :disabled="!hlsEnableFairPlayCheck"
+                        type="text"
+                        id="hlsFairPlayCustomHeaderValueInput"
+                        class="form-control active"
+                        v-model="hlsFairPlayCustomHeaderValue"
+                      >
+                      <label
+                        class="form-label"
+                        for="hlsFairPlayCustomHeaderValueInput"
+                      >Custom Header Value</label>
+                    </div>
+                    <div class="form-check mb-2 mt-3">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        id="enableWidevineCheck"
+                        v-model="hlsEnableWidevineCheck"
+                      />
+                      <label
+                        class="form-check-label"
+                        for="enableWidevineCheck"
+                      >
+                        Enable Widevine
+                      </label>
+                    </div>
+                    <div class="form-outline ms-4 mb-3">
+                      <input
+                        :disabled="!hlsEnableWidevineCheck"
                         type="text"
                         id="hlsWidevineLicenseUrlInput"
                         class="form-control active"
@@ -762,34 +796,84 @@
                         for="hlsWidevineLicenseUrlInput"
                       >License URL</label>
                     </div>
-                    <div class="mb-3">
-                      <strong>Custom Header</strong>
-                    </div>
                     <div class="form-outline ms-4 mb-3">
                       <input
-                        :disabled="!hlsEnableDrmCheck"
+                        :disabled="!hlsEnableWidevineCheck"
                         type="text"
-                        id="hlsCustomHeaderKeyInput"
+                        id="hlsWidevineCustomHeaderKeyInput"
                         class="form-control active"
-                        v-model="hlsCustomHeaderKey"
+                        v-model="hlsWidevineCustomHeaderKey"
                       >
                       <label
                         class="form-label"
-                        for="hlsCustomHeaderKeyInput"
-                      >Key</label>
+                        for="hlsWidevineCustomHeaderKeyInput"
+                      >Custom Header Key</label>
                     </div>
                     <div class="form-outline ms-4 mb-3">
                       <input
-                        :disabled="!hlsEnableDrmCheck"
+                        :disabled="!hlsEnableWidevineCheck"
                         type="text"
-                        id="hlsCustomHeaderValueInput"
+                        id="hlsWidevineCustomHeaderValueInput"
                         class="form-control active"
-                        v-model="hlsCustomHeaderValue"
+                        v-model="hlsWidevineCustomHeaderValue"
                       >
                       <label
                         class="form-label"
-                        for="hlsCustomHeaderValueInput"
-                      >Value</label>
+                        for="hlsWidevineCustomHeaderValueInput"
+                      >Custom Header Value</label>
+                    </div>
+                    <div class="form-check mb-2 mt-3">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        id="enablePlayReadyCheck"
+                        v-model="hlsEnablePlayReadyCheck"
+                      />
+                      <label
+                        class="form-check-label"
+                        for="enablePlayReadyCheck"
+                      >
+                        Enable PlayReady
+                      </label>
+                    </div>
+                    <div class="form-outline ms-4 mb-3">
+                      <input
+                        :disabled="!hlsEnablePlayReadyCheck"
+                        type="text"
+                        id="hlsPlayReadyLicenseUrlInput"
+                        class="form-control active"
+                        v-model="hlsPlayReadyLicenseUrl"
+                      >
+                      <label
+                        class="form-label"
+                        for="hlsPlayReadyLicenseUrlInput"
+                      >License URL</label>
+                    </div>
+                    <div class="form-outline ms-4 mb-3">
+                      <input
+                        :disabled="!hlsEnablePlayReadyCheck"
+                        type="text"
+                        id="hlsPlayReadyCustomHeaderKeyInput"
+                        class="form-control active"
+                        v-model="hlsPlayReadyCustomHeaderKey"
+                      >
+                      <label
+                        class="form-label"
+                        for="hlsPlayReadyCustomHeaderKeyInput"
+                      >Custom Header Key</label>
+                    </div>
+                    <div class="form-outline ms-4 mb-3">
+                      <input
+                        :disabled="!hlsEnablePlayReadyCheck"
+                        type="text"
+                        id="hlsPlayReadyCustomHeaderValueInput"
+                        class="form-control active"
+                        v-model="hlsPlayReadyCustomHeaderValue"
+                      >
+                      <label
+                        class="form-label"
+                        for="hlsPlayReadyCustomHeaderValueInput"
+                      >Custom Header Value</label>
                     </div>
                   </fieldset>
                 </div>
@@ -907,7 +991,7 @@
         <span
           id="ovenLiveKitVersion"
           class="badge badge-info align-middle ms-1"
-        >2026-06-25-1</span>
+        >2026-07-27-1</span>
       </small>
     </div>
 
@@ -1775,10 +1859,11 @@
             this.makePermanentLink();
           }
         },
-        hlsEnableDrmCheck: {
+        hlsEnableFairPlayCheck: {
           get: function () {
 
-            return this.playerOption.hlsConfig && this.playerOption.hlsConfig.emeEnabled;
+            return !!(this.playerOption.hlsConfig && this.playerOption.hlsConfig.drmSystems
+              && this.playerOption.hlsConfig.drmSystems["com.apple.fps"]);
           },
           set: function (value) {
             if (value) {
@@ -1786,21 +1871,126 @@
               if (!this.playerOption.hlsConfig) {
                 this.playerOption.hlsConfig = {};
               }
+
               this.playerOption.hlsConfig.emeEnabled = true;
+
+              if (!this.playerOption.hlsConfig.drmSystems) {
+                this.playerOption.hlsConfig.drmSystems = {};
+              }
+
+              if (!this.playerOption.hlsConfig.drmSystems["com.apple.fps"]) {
+                this.playerOption.hlsConfig.drmSystems["com.apple.fps"] = {};
+              }
             } else {
 
-              delete this.playerOption.hlsConfig.emeEnabled;
+              if (this.playerOption.hlsConfig && this.playerOption.hlsConfig.drmSystems) {
 
-              if (this.playerOption.hlsConfig.drmSystems) {
-                delete this.playerOption.hlsConfig.drmSystems;
+                delete this.playerOption.hlsConfig.drmSystems["com.apple.fps"];
+
+                if (_.isEmpty(this.playerOption.hlsConfig.drmSystems)) {
+                  delete this.playerOption.hlsConfig.drmSystems;
+                }
               }
 
-              if (_.isEmpty(this.playerOption.hlsConfig)) {
+              if (this.playerOption.hlsConfig && !this.playerOption.hlsConfig.drmSystems) {
+                delete this.playerOption.hlsConfig.emeEnabled;
+              }
 
+              if (this.playerOption.hlsConfig && _.isEmpty(this.playerOption.hlsConfig)) {
                 delete this.playerOption.hlsConfig;
               }
+            }
 
-              delete this.playerOption.licenseCustomHeader;
+            this.unLoadPlayer(true);
+            this.makePermanentLink();
+          }
+        },
+        hlsEnableWidevineCheck: {
+          get: function () {
+
+            return !!(this.playerOption.hlsConfig && this.playerOption.hlsConfig.drmSystems
+              && this.playerOption.hlsConfig.drmSystems["com.widevine.alpha"]);
+          },
+          set: function (value) {
+            if (value) {
+
+              if (!this.playerOption.hlsConfig) {
+                this.playerOption.hlsConfig = {};
+              }
+
+              this.playerOption.hlsConfig.emeEnabled = true;
+
+              if (!this.playerOption.hlsConfig.drmSystems) {
+                this.playerOption.hlsConfig.drmSystems = {};
+              }
+
+              if (!this.playerOption.hlsConfig.drmSystems["com.widevine.alpha"]) {
+                this.playerOption.hlsConfig.drmSystems["com.widevine.alpha"] = {};
+              }
+            } else {
+
+              if (this.playerOption.hlsConfig && this.playerOption.hlsConfig.drmSystems) {
+
+                delete this.playerOption.hlsConfig.drmSystems["com.widevine.alpha"];
+
+                if (_.isEmpty(this.playerOption.hlsConfig.drmSystems)) {
+                  delete this.playerOption.hlsConfig.drmSystems;
+                }
+              }
+
+              if (this.playerOption.hlsConfig && !this.playerOption.hlsConfig.drmSystems) {
+                delete this.playerOption.hlsConfig.emeEnabled;
+              }
+
+              if (this.playerOption.hlsConfig && _.isEmpty(this.playerOption.hlsConfig)) {
+                delete this.playerOption.hlsConfig;
+              }
+            }
+
+            this.unLoadPlayer(true);
+            this.makePermanentLink();
+          }
+        },
+        hlsEnablePlayReadyCheck: {
+          get: function () {
+
+            return !!(this.playerOption.hlsConfig && this.playerOption.hlsConfig.drmSystems
+              && this.playerOption.hlsConfig.drmSystems["com.microsoft.playready"]);
+          },
+          set: function (value) {
+            if (value) {
+
+              if (!this.playerOption.hlsConfig) {
+                this.playerOption.hlsConfig = {};
+              }
+
+              this.playerOption.hlsConfig.emeEnabled = true;
+
+              if (!this.playerOption.hlsConfig.drmSystems) {
+                this.playerOption.hlsConfig.drmSystems = {};
+              }
+
+              if (!this.playerOption.hlsConfig.drmSystems["com.microsoft.playready"]) {
+                this.playerOption.hlsConfig.drmSystems["com.microsoft.playready"] = {};
+              }
+            } else {
+
+              if (this.playerOption.hlsConfig && this.playerOption.hlsConfig.drmSystems) {
+
+                delete this.playerOption.hlsConfig.drmSystems["com.microsoft.playready"];
+
+                if (_.isEmpty(this.playerOption.hlsConfig.drmSystems)) {
+                  delete this.playerOption.hlsConfig.drmSystems;
+                }
+              }
+
+              if (this.playerOption.hlsConfig && !this.playerOption.hlsConfig.drmSystems) {
+                delete this.playerOption.hlsConfig.emeEnabled;
+              }
+
+              if (this.playerOption.hlsConfig && _.isEmpty(this.playerOption.hlsConfig)) {
+                delete this.playerOption.hlsConfig;
+              }
             }
 
             this.unLoadPlayer(true);
@@ -1957,30 +2147,49 @@
             this.makePermanentLink();
           }
         },
-        hlsCustomHeaderKey: {
+        hlsPlayReadyLicenseUrl: {
           get: function () {
 
-            if (this.playerOption.licenseCustomHeader && this.playerOption.licenseCustomHeader.key) {
-              return this.playerOption.licenseCustomHeader.key
+            if (this.playerOption.hlsConfig && this.playerOption.hlsConfig.drmSystems
+              && this.playerOption.hlsConfig.drmSystems["com.microsoft.playready"]) {
+              return this.playerOption.hlsConfig.drmSystems["com.microsoft.playready"].licenseUrl
             }
           },
           set: function (value) {
             if (value) {
 
-              if (!this.playerOption.licenseCustomHeader) {
-                this.playerOption.licenseCustomHeader = {};
+              if (!this.playerOption.hlsConfig) {
+                this.playerOption.hlsConfig = {};
               }
 
-              this.playerOption.licenseCustomHeader.key = value;
+              if (!this.playerOption.hlsConfig.drmSystems) {
+                this.playerOption.hlsConfig.drmSystems = {};
+              }
+
+              if (!this.playerOption.hlsConfig.drmSystems["com.microsoft.playready"]) {
+                this.playerOption.hlsConfig.drmSystems["com.microsoft.playready"] = {};
+              }
+
+              this.playerOption.hlsConfig.drmSystems["com.microsoft.playready"].licenseUrl = value;
             } else {
 
-              if (this.playerOption.licenseCustomHeader.key) {
-                delete this.playerOption.licenseCustomHeader.key;
+              if (this.playerOption.hlsConfig.drmSystems["com.microsoft.playready"].licenseUrl) {
+                delete this.playerOption.hlsConfig.drmSystems["com.microsoft.playready"].licenseUrl;
               }
 
-              if (_.isEmpty(this.playerOption.licenseCustomHeader)) {
+              if (_.isEmpty(this.playerOption.hlsConfig.drmSystems["com.microsoft.playready"])) {
 
-                delete this.playerOption.licenseCustomHeader;
+                delete this.playerOption.hlsConfig.drmSystems["com.microsoft.playready"];
+              }
+
+              if (_.isEmpty(this.playerOption.hlsConfig.drmSystems)) {
+
+                delete this.playerOption.hlsConfig.drmSystems;
+              }
+
+              if (_.isEmpty(this.playerOption.hlsConfig)) {
+
+                delete this.playerOption.hlsConfig;
               }
             }
 
@@ -1988,30 +2197,359 @@
             this.makePermanentLink();
           }
         },
-        hlsCustomHeaderValue: {
+        hlsFairPlayCustomHeaderKey: {
           get: function () {
 
-            if (this.playerOption.licenseCustomHeader && this.playerOption.licenseCustomHeader.value) {
-              return this.playerOption.licenseCustomHeader.value
+            if (this.playerOption.hlsConfig && this.playerOption.hlsConfig.drmSystems
+              && this.playerOption.hlsConfig.drmSystems["com.apple.fps"]
+              && this.playerOption.hlsConfig.drmSystems["com.apple.fps"].licenseHeaders) {
+              return this.playerOption.hlsConfig.drmSystems["com.apple.fps"].licenseHeaders.key
             }
           },
           set: function (value) {
             if (value) {
 
-              if (!this.playerOption.licenseCustomHeader) {
-                this.playerOption.licenseCustomHeader = {};
+              if (!this.playerOption.hlsConfig) {
+                this.playerOption.hlsConfig = {};
               }
 
-              this.playerOption.licenseCustomHeader.value = value;
+              if (!this.playerOption.hlsConfig.drmSystems) {
+                this.playerOption.hlsConfig.drmSystems = {};
+              }
+
+              if (!this.playerOption.hlsConfig.drmSystems["com.apple.fps"]) {
+                this.playerOption.hlsConfig.drmSystems["com.apple.fps"] = {};
+              }
+
+              if (!this.playerOption.hlsConfig.drmSystems["com.apple.fps"].licenseHeaders) {
+                this.playerOption.hlsConfig.drmSystems["com.apple.fps"].licenseHeaders = {};
+              }
+
+              this.playerOption.hlsConfig.drmSystems["com.apple.fps"].licenseHeaders.key = value;
             } else {
 
-              if (this.playerOption.licenseCustomHeader.value) {
-                delete this.playerOption.licenseCustomHeader.value;
+              if (this.playerOption.hlsConfig.drmSystems["com.apple.fps"].licenseHeaders.key) {
+                delete this.playerOption.hlsConfig.drmSystems["com.apple.fps"].licenseHeaders.key;
               }
 
-              if (_.isEmpty(this.playerOption.licenseCustomHeader)) {
+              if (_.isEmpty(this.playerOption.hlsConfig.drmSystems["com.apple.fps"].licenseHeaders)) {
 
-                delete this.playerOption.licenseCustomHeader;
+                delete this.playerOption.hlsConfig.drmSystems["com.apple.fps"].licenseHeaders;
+              }
+
+              if (_.isEmpty(this.playerOption.hlsConfig.drmSystems["com.apple.fps"])) {
+
+                delete this.playerOption.hlsConfig.drmSystems["com.apple.fps"];
+              }
+
+              if (_.isEmpty(this.playerOption.hlsConfig.drmSystems)) {
+
+                delete this.playerOption.hlsConfig.drmSystems;
+              }
+
+              if (_.isEmpty(this.playerOption.hlsConfig)) {
+
+                delete this.playerOption.hlsConfig;
+              }
+            }
+
+            this.unLoadPlayer(true);
+            this.makePermanentLink();
+          }
+        },
+        hlsFairPlayCustomHeaderValue: {
+          get: function () {
+
+            if (this.playerOption.hlsConfig && this.playerOption.hlsConfig.drmSystems
+              && this.playerOption.hlsConfig.drmSystems["com.apple.fps"]
+              && this.playerOption.hlsConfig.drmSystems["com.apple.fps"].licenseHeaders) {
+              return this.playerOption.hlsConfig.drmSystems["com.apple.fps"].licenseHeaders.value
+            }
+          },
+          set: function (value) {
+            if (value) {
+
+              if (!this.playerOption.hlsConfig) {
+                this.playerOption.hlsConfig = {};
+              }
+
+              if (!this.playerOption.hlsConfig.drmSystems) {
+                this.playerOption.hlsConfig.drmSystems = {};
+              }
+
+              if (!this.playerOption.hlsConfig.drmSystems["com.apple.fps"]) {
+                this.playerOption.hlsConfig.drmSystems["com.apple.fps"] = {};
+              }
+
+              if (!this.playerOption.hlsConfig.drmSystems["com.apple.fps"].licenseHeaders) {
+                this.playerOption.hlsConfig.drmSystems["com.apple.fps"].licenseHeaders = {};
+              }
+
+              this.playerOption.hlsConfig.drmSystems["com.apple.fps"].licenseHeaders.value = value;
+            } else {
+
+              if (this.playerOption.hlsConfig.drmSystems["com.apple.fps"].licenseHeaders.value) {
+                delete this.playerOption.hlsConfig.drmSystems["com.apple.fps"].licenseHeaders.value;
+              }
+
+              if (_.isEmpty(this.playerOption.hlsConfig.drmSystems["com.apple.fps"].licenseHeaders)) {
+
+                delete this.playerOption.hlsConfig.drmSystems["com.apple.fps"].licenseHeaders;
+              }
+
+              if (_.isEmpty(this.playerOption.hlsConfig.drmSystems["com.apple.fps"])) {
+
+                delete this.playerOption.hlsConfig.drmSystems["com.apple.fps"];
+              }
+
+              if (_.isEmpty(this.playerOption.hlsConfig.drmSystems)) {
+
+                delete this.playerOption.hlsConfig.drmSystems;
+              }
+
+              if (_.isEmpty(this.playerOption.hlsConfig)) {
+
+                delete this.playerOption.hlsConfig;
+              }
+            }
+
+            this.unLoadPlayer(true);
+            this.makePermanentLink();
+          }
+        },
+        hlsWidevineCustomHeaderKey: {
+          get: function () {
+
+            if (this.playerOption.hlsConfig && this.playerOption.hlsConfig.drmSystems
+              && this.playerOption.hlsConfig.drmSystems["com.widevine.alpha"]
+              && this.playerOption.hlsConfig.drmSystems["com.widevine.alpha"].licenseHeaders) {
+              return this.playerOption.hlsConfig.drmSystems["com.widevine.alpha"].licenseHeaders.key
+            }
+          },
+          set: function (value) {
+            if (value) {
+
+              if (!this.playerOption.hlsConfig) {
+                this.playerOption.hlsConfig = {};
+              }
+
+              if (!this.playerOption.hlsConfig.drmSystems) {
+                this.playerOption.hlsConfig.drmSystems = {};
+              }
+
+              if (!this.playerOption.hlsConfig.drmSystems["com.widevine.alpha"]) {
+                this.playerOption.hlsConfig.drmSystems["com.widevine.alpha"] = {};
+              }
+
+              if (!this.playerOption.hlsConfig.drmSystems["com.widevine.alpha"].licenseHeaders) {
+                this.playerOption.hlsConfig.drmSystems["com.widevine.alpha"].licenseHeaders = {};
+              }
+
+              this.playerOption.hlsConfig.drmSystems["com.widevine.alpha"].licenseHeaders.key = value;
+            } else {
+
+              if (this.playerOption.hlsConfig.drmSystems["com.widevine.alpha"].licenseHeaders.key) {
+                delete this.playerOption.hlsConfig.drmSystems["com.widevine.alpha"].licenseHeaders.key;
+              }
+
+              if (_.isEmpty(this.playerOption.hlsConfig.drmSystems["com.widevine.alpha"].licenseHeaders)) {
+
+                delete this.playerOption.hlsConfig.drmSystems["com.widevine.alpha"].licenseHeaders;
+              }
+
+              if (_.isEmpty(this.playerOption.hlsConfig.drmSystems["com.widevine.alpha"])) {
+
+                delete this.playerOption.hlsConfig.drmSystems["com.widevine.alpha"];
+              }
+
+              if (_.isEmpty(this.playerOption.hlsConfig.drmSystems)) {
+
+                delete this.playerOption.hlsConfig.drmSystems;
+              }
+
+              if (_.isEmpty(this.playerOption.hlsConfig)) {
+
+                delete this.playerOption.hlsConfig;
+              }
+            }
+
+            this.unLoadPlayer(true);
+            this.makePermanentLink();
+          }
+        },
+        hlsWidevineCustomHeaderValue: {
+          get: function () {
+
+            if (this.playerOption.hlsConfig && this.playerOption.hlsConfig.drmSystems
+              && this.playerOption.hlsConfig.drmSystems["com.widevine.alpha"]
+              && this.playerOption.hlsConfig.drmSystems["com.widevine.alpha"].licenseHeaders) {
+              return this.playerOption.hlsConfig.drmSystems["com.widevine.alpha"].licenseHeaders.value
+            }
+          },
+          set: function (value) {
+            if (value) {
+
+              if (!this.playerOption.hlsConfig) {
+                this.playerOption.hlsConfig = {};
+              }
+
+              if (!this.playerOption.hlsConfig.drmSystems) {
+                this.playerOption.hlsConfig.drmSystems = {};
+              }
+
+              if (!this.playerOption.hlsConfig.drmSystems["com.widevine.alpha"]) {
+                this.playerOption.hlsConfig.drmSystems["com.widevine.alpha"] = {};
+              }
+
+              if (!this.playerOption.hlsConfig.drmSystems["com.widevine.alpha"].licenseHeaders) {
+                this.playerOption.hlsConfig.drmSystems["com.widevine.alpha"].licenseHeaders = {};
+              }
+
+              this.playerOption.hlsConfig.drmSystems["com.widevine.alpha"].licenseHeaders.value = value;
+            } else {
+
+              if (this.playerOption.hlsConfig.drmSystems["com.widevine.alpha"].licenseHeaders.value) {
+                delete this.playerOption.hlsConfig.drmSystems["com.widevine.alpha"].licenseHeaders.value;
+              }
+
+              if (_.isEmpty(this.playerOption.hlsConfig.drmSystems["com.widevine.alpha"].licenseHeaders)) {
+
+                delete this.playerOption.hlsConfig.drmSystems["com.widevine.alpha"].licenseHeaders;
+              }
+
+              if (_.isEmpty(this.playerOption.hlsConfig.drmSystems["com.widevine.alpha"])) {
+
+                delete this.playerOption.hlsConfig.drmSystems["com.widevine.alpha"];
+              }
+
+              if (_.isEmpty(this.playerOption.hlsConfig.drmSystems)) {
+
+                delete this.playerOption.hlsConfig.drmSystems;
+              }
+
+              if (_.isEmpty(this.playerOption.hlsConfig)) {
+
+                delete this.playerOption.hlsConfig;
+              }
+            }
+
+            this.unLoadPlayer(true);
+            this.makePermanentLink();
+          }
+        },
+        hlsPlayReadyCustomHeaderKey: {
+          get: function () {
+
+            if (this.playerOption.hlsConfig && this.playerOption.hlsConfig.drmSystems
+              && this.playerOption.hlsConfig.drmSystems["com.microsoft.playready"]
+              && this.playerOption.hlsConfig.drmSystems["com.microsoft.playready"].licenseHeaders) {
+              return this.playerOption.hlsConfig.drmSystems["com.microsoft.playready"].licenseHeaders.key
+            }
+          },
+          set: function (value) {
+            if (value) {
+
+              if (!this.playerOption.hlsConfig) {
+                this.playerOption.hlsConfig = {};
+              }
+
+              if (!this.playerOption.hlsConfig.drmSystems) {
+                this.playerOption.hlsConfig.drmSystems = {};
+              }
+
+              if (!this.playerOption.hlsConfig.drmSystems["com.microsoft.playready"]) {
+                this.playerOption.hlsConfig.drmSystems["com.microsoft.playready"] = {};
+              }
+
+              if (!this.playerOption.hlsConfig.drmSystems["com.microsoft.playready"].licenseHeaders) {
+                this.playerOption.hlsConfig.drmSystems["com.microsoft.playready"].licenseHeaders = {};
+              }
+
+              this.playerOption.hlsConfig.drmSystems["com.microsoft.playready"].licenseHeaders.key = value;
+            } else {
+
+              if (this.playerOption.hlsConfig.drmSystems["com.microsoft.playready"].licenseHeaders.key) {
+                delete this.playerOption.hlsConfig.drmSystems["com.microsoft.playready"].licenseHeaders.key;
+              }
+
+              if (_.isEmpty(this.playerOption.hlsConfig.drmSystems["com.microsoft.playready"].licenseHeaders)) {
+
+                delete this.playerOption.hlsConfig.drmSystems["com.microsoft.playready"].licenseHeaders;
+              }
+
+              if (_.isEmpty(this.playerOption.hlsConfig.drmSystems["com.microsoft.playready"])) {
+
+                delete this.playerOption.hlsConfig.drmSystems["com.microsoft.playready"];
+              }
+
+              if (_.isEmpty(this.playerOption.hlsConfig.drmSystems)) {
+
+                delete this.playerOption.hlsConfig.drmSystems;
+              }
+
+              if (_.isEmpty(this.playerOption.hlsConfig)) {
+
+                delete this.playerOption.hlsConfig;
+              }
+            }
+
+            this.unLoadPlayer(true);
+            this.makePermanentLink();
+          }
+        },
+        hlsPlayReadyCustomHeaderValue: {
+          get: function () {
+
+            if (this.playerOption.hlsConfig && this.playerOption.hlsConfig.drmSystems
+              && this.playerOption.hlsConfig.drmSystems["com.microsoft.playready"]
+              && this.playerOption.hlsConfig.drmSystems["com.microsoft.playready"].licenseHeaders) {
+              return this.playerOption.hlsConfig.drmSystems["com.microsoft.playready"].licenseHeaders.value
+            }
+          },
+          set: function (value) {
+            if (value) {
+
+              if (!this.playerOption.hlsConfig) {
+                this.playerOption.hlsConfig = {};
+              }
+
+              if (!this.playerOption.hlsConfig.drmSystems) {
+                this.playerOption.hlsConfig.drmSystems = {};
+              }
+
+              if (!this.playerOption.hlsConfig.drmSystems["com.microsoft.playready"]) {
+                this.playerOption.hlsConfig.drmSystems["com.microsoft.playready"] = {};
+              }
+
+              if (!this.playerOption.hlsConfig.drmSystems["com.microsoft.playready"].licenseHeaders) {
+                this.playerOption.hlsConfig.drmSystems["com.microsoft.playready"].licenseHeaders = {};
+              }
+
+              this.playerOption.hlsConfig.drmSystems["com.microsoft.playready"].licenseHeaders.value = value;
+            } else {
+
+              if (this.playerOption.hlsConfig.drmSystems["com.microsoft.playready"].licenseHeaders.value) {
+                delete this.playerOption.hlsConfig.drmSystems["com.microsoft.playready"].licenseHeaders.value;
+              }
+
+              if (_.isEmpty(this.playerOption.hlsConfig.drmSystems["com.microsoft.playready"].licenseHeaders)) {
+
+                delete this.playerOption.hlsConfig.drmSystems["com.microsoft.playready"].licenseHeaders;
+              }
+
+              if (_.isEmpty(this.playerOption.hlsConfig.drmSystems["com.microsoft.playready"])) {
+
+                delete this.playerOption.hlsConfig.drmSystems["com.microsoft.playready"];
+              }
+
+              if (_.isEmpty(this.playerOption.hlsConfig.drmSystems)) {
+
+                delete this.playerOption.hlsConfig.drmSystems;
+              }
+
+              if (_.isEmpty(this.playerOption.hlsConfig)) {
+
+                delete this.playerOption.hlsConfig;
               }
             }
 

@@ -62,13 +62,39 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
             }
         }
 
-        if (playerConfig.getConfig().licenseCustomHeader) {
+        if (hlsConfig.drmSystems) {
 
-            const licenseXhrSetup = function (xhr, url, keyContext, licenseChallenge) {
-                xhr.setRequestHeader(playerConfig.getConfig().licenseCustomHeader.key, playerConfig.getConfig().licenseCustomHeader.value);
-            };
+            // Custom license headers must never be shared between key systems.
+            // hls.js only reads a single top-level licenseXhrSetup, so we collect
+            // each key system's headers and route them by keyContext.keySystem.
+            const drmSystems = {};
+            const licenseHeadersByKeySystem = {};
 
-            hlsConfig.licenseXhrSetup = licenseXhrSetup;
+            for (let keySystem in hlsConfig.drmSystems) {
+
+                const drmSystemConfig = Object.assign({}, hlsConfig.drmSystems[keySystem]);
+
+                if (drmSystemConfig.licenseHeaders) {
+
+                    // licenseHeaders is not a valid hls.js drmSystems field; strip it out.
+                    licenseHeadersByKeySystem[keySystem] = drmSystemConfig.licenseHeaders;
+                    delete drmSystemConfig.licenseHeaders;
+                }
+
+                drmSystems[keySystem] = drmSystemConfig;
+            }
+
+            hlsConfig.drmSystems = drmSystems;
+
+            if (Object.keys(licenseHeadersByKeySystem).length > 0) {
+
+                hlsConfig.licenseXhrSetup = function (xhr, url, keyContext, licenseChallenge) {
+                    const licenseHeaders = licenseHeadersByKeySystem[keyContext.keySystem];
+                    if (licenseHeaders) {
+                        xhr.setRequestHeader(licenseHeaders.key, licenseHeaders.value);
+                    }
+                };
+            }
         }
 
         hls = new Hls(hlsConfig);
