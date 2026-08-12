@@ -1,7 +1,7 @@
 # `docs/` — OvenPlayer docs source
 
 This folder holds the **MDX source** for the OvenPlayer user
-guide published at <https://ovenmedialabs.com/docs/ovenplayer/>.
+guide published at <https://ovenmedia.com/docs/ovenplayer/>.
 
 ## Editing
 
@@ -149,7 +149,7 @@ entries — they are not clickable.
 
 Run `./docs/preview.sh` from the repo root.
 
-The script clones the [ovenmedialabs.com](https://github.com/OvenMediaLabs/ovenmedialabs.com)
+The script clones the [ovenmedia.com](https://github.com/OvenMediaLabs/ovenmedialabs.com)
 repo into a per-product cache, copies your `docs/` into it (and
 watches it so your edits hot-reload), and starts a dev server. When
 it's ready you'll see:

@@ -251,7 +251,7 @@ If you need direct access to the internal OvenPlayer instance or want to re-crea
 
 ### Initialize for OME
 
-To play Sub-Second Latency Stream of OvenMediaEngine, set the source `type` to `webrtc` and set the `file` to the WebRTC Signaling URL with OvenMediaEngine. An explanation of the WebRTC Signaling URL can be found [here](https://ovenmedialabs.com/docs/ome/getting-started#playback).
+To play Sub-Second Latency Stream of OvenMediaEngine, set the source `type` to `webrtc` and set the `file` to the WebRTC Signaling URL with OvenMediaEngine. An explanation of the WebRTC Signaling URL can be found [here](https://ovenmedia.com/docs/ome/streaming/webrtc-publishing#playback).
 
 ```markup
 <!DOCTYPE html>
