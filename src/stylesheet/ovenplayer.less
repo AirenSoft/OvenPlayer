@@ -1603,15 +1603,19 @@ i.op-con {
       left: 50%;
       transform: translateX(-50%);
       text-align: center;
-      align-items: center;
 
       /* Simultaneous cues that share a box are stacked in cue order. */
       display: flex;
       flex-direction: column;
 
-      .op-caption-text {
+      /* The line box is the flex item and spans the cue, so the text inside it
+         stays an inline box. Flex items are blockified, and an inline box is what
+         lets every wrapped line carry its own background that ends with the text
+         instead of one rectangle padded out to the full cue width. Horizontal
+         placement of each line comes from text-align. */
+      .op-caption-line {
         flex: 0 0 auto;
-        max-width: 100%;
+        width: 100%;
       }
 
       /* The box spans the whole safe area and these spacers place the text at
@@ -1635,14 +1639,21 @@ i.op-con {
     }
 
     .op-caption-text {
-      display: inline-block;
+      /* An inline box, so its background is drawn per line and stops with the
+         text. box-decoration-break repeats the background, padding and radius on
+         every wrapped line rather than splitting one box across them. Vertical
+         padding is kept under (line-height - content area) so the per-line
+         backgrounds meet without overlapping into darker bands. */
+      display: inline;
+      -webkit-box-decoration-break: clone;
+      box-decoration-break: clone;
       color: #fff;
       font-size: 1.5em;
       line-height: 1.5em;
       font-weight: 400;
       text-shadow: none;
       background: rgba(8, 8, 8, 0.75);
-      padding: .25em .6em;
+      padding: .1em .6em;
       border-radius: .25em;
       user-select: none;
       word-break: keep-all;

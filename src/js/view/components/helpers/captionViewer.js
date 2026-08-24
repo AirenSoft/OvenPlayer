@@ -118,8 +118,6 @@ const CaptionViewer = function($container, api, playerState){
             if (cue.align === 'start' || cue.align === 'left') { textAlign = 'left'; }
             else if (cue.align === 'end' || cue.align === 'right') { textAlign = 'right'; }
             parts.push('text-align:' + textAlign);
-            parts.push('align-items:' + (textAlign === 'left' ? 'flex-start' :
-                textAlign === 'right' ? 'flex-end' : 'center'));
 
             // Horizontal position (left + translateX)
             // VTT spec: position:auto resolves based on align
@@ -157,8 +155,7 @@ const CaptionViewer = function($container, api, playerState){
 
         function renderCues(cues) {
             // Cues that resolve to the same box would be drawn on top of each other,
-            // so collect them into a single box and stack their texts in cue order,
-            // the way WebVTT lays out simultaneous cues.
+            // so collect them into a single box and join their texts in cue order.
             const boxes = [];
 
             cues.forEach(function(cue) {
@@ -173,11 +170,15 @@ const CaptionViewer = function($container, api, playerState){
             });
 
             const html = boxes.map(function(box) {
+                // Cues sharing a box become one text run rather than a box each, so a
+                // stack reads as one caption. white-space: pre-line turns the joins into
+                // line breaks, the same way it already handles a multi-line cue. The
+                // text is an inline box inside the line box so that each rendered line
+                // gets its own background (see the stylesheet).
                 return '<div class="op-caption-cue" style="' + box.style + '">' +
-                    box.texts.map(function(text) {
-                        return '<div class="op-caption-text">' + text + '</div>';
-                    }).join('') +
-                    '</div>';
+                    '<div class="op-caption-line">' +
+                    '<span class="op-caption-text">' + box.texts.join('\n') + '</span>' +
+                    '</div></div>';
             }).join('');
 
             setCueHtml(html);

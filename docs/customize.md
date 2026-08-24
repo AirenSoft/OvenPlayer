@@ -101,15 +101,17 @@ Use an absolute unit instead if you want one fixed size at every player width:
 
 #### Caption text box
 
-The same element draws the box behind the text.
+The same element draws the box behind the text. It is an inline box with `box-decoration-break: clone`, so the background is drawn **per rendered line** and ends where that line's text ends — a short last line does not get padded out to the width of the one above it.
 
 | Property | Default |
 | --- | --- |
 | `color` | `#fff` |
 | `background` | `rgba(8, 8, 8, 0.75)` |
-| `padding` | `.25em .6em` |
+| `padding` | `.1em .6em` |
 | `border-radius` | `.25em` |
 | `line-height` | `1.5em` |
+
+Keep the vertical padding below `line-height` minus the font's content area, or the per-line backgrounds overlap and the overlap shows as a darker band through a translucent background. Raise `line-height` along with the padding if you want a thicker box. `border-radius` likewise applies to every line, so reduce it if stacked lines should read as one block.
 
 ```
 /* Plain white text with a shadow instead of a filled box */
