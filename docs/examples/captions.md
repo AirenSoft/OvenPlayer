@@ -6,6 +6,8 @@ sidebar_position: 9
 
 OvenPlayer supports webVTT, SRT, and SMI subtitles, so you can register and use subtitles without conversion. If you want to know more details, please refer to the [Captions API](../api-reference/api.md#getcaptionlist) chapter.
 
+Font size, the margin kept between captions and the player edges, the box behind the text and WebVTT cue classes are all styled with CSS rather than player options. See [How to style captions](../customize.md#how-to-style-captions) in the UI Customize chapter.
+
 
 ```
 let player = OvenPlayer.create("player", {sources : {

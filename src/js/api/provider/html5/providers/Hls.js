@@ -44,6 +44,10 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
     let activeSubtitleTrackId = -1;
     let _lastActiveCue = null;
     let _subtitleDebugTimer = 0;
+    // Cue frame loop state. Provider scope, not load scope: destroy() has to be able
+    // to cancel the loop, and a reload must not leave the previous one running.
+    let cueFrameId = 0;
+    let lastCueTime = -1;
     const SUBTITLE_CUES_MAX = 200; // sliding window limit per track (live stream guard)
 
     try {
@@ -236,6 +240,7 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
                         delete subtitleCuesMap[key];
                     }
                 });
+                lastCueTime = -1;
                 that.trigger(SUBTITLE_TRACK_CHANGED, {
                     currentSubtitleTrack: spec.currentSubtitleTrack
                 });
@@ -265,6 +270,9 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
                     subtitleCuesMap[trackId].splice(0,
                         subtitleCuesMap[trackId].length - SUBTITLE_CUES_MAX);
                 }
+                // Force the next frame to re-evaluate, so cues that arrive while the
+                // clock is not moving (paused, or just after a seek) still show up.
+                lastCueTime = -1;
             });
 
             // Reset on seek so that:
@@ -274,57 +282,104 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
                 _lastActiveCue = null;
             });
 
-            that.on(CONTENT_TIME, function (data) {
+            // Cue display is driven by an animation frame loop rather than the media
+            // element's timeupdate event. timeupdate only fires about every 250ms, which
+            // cannot resolve short cues: a 100ms cue is missed outright more often than
+            // not, and a poll that does land inside one shows it for whatever little is
+            // left. Sampling every frame also means the active set is known exactly, so
+            // the view can be told to clear instead of guessing with a hide timer.
+            // cueFrameId and lastCueTime live at provider scope, see the top of the file.
+
+            // Consecutive cues from a live packager often overlap by a millisecond or
+            // two because their timestamps are rounded. An overlap that short is a
+            // hand-off, not two cues meant to be read together, so the outgoing cue is
+            // dropped instead of being stacked above the incoming one for a frame.
+            // Cues genuinely authored as simultaneous overlap by far more than this.
+            var CUE_HANDOFF_OVERLAP = 0.05;
+
+            function cueBoxKey(cue) {
+                return [cue.line, cue.snapToLines, cue.position,
+                    cue.size, cue.align, cue.vertical].join(',');
+            }
+
+            // Drop cues that are only still active because their end time runs a few
+            // milliseconds past the start of the next cue in the same spot.
+            function dropHandedOverCues(active) {
+                if (active.length < 2) { return active; }
+
+                return active.filter(function (cue) {
+                    return !active.some(function (other) {
+                        return other !== cue
+                            && other.startTime > cue.startTime
+                            && cue.endTime - other.startTime <= CUE_HANDOFF_OVERLAP
+                            && cueBoxKey(other) === cueBoxKey(cue);
+                    });
+                });
+            }
+
+            function collectActiveCues() {
                 // Read the active track directly from hls.js (more reliable than event-based tracking)
                 var currentTrackId = hls ? hls.subtitleTrack : -1;
-                
-                if (currentTrackId < 0) {
-                    return;
-                }
+                if (currentTrackId < 0) { return []; }
 
                 var cues = subtitleCuesMap[currentTrackId] || [];
-                
-                if (!cues.length) { return; }
+                if (!cues.length) { return []; }
+
                 // Use raw video element time to match against hls.js cue timestamps.
-                // data.position may be offset by sectionStart, causing a mismatch.
+                // The CONTENT_TIME position may be offset by sectionStart.
                 var position = element.currentTime;
 
                 // Collect ALL cues active at this position (handles simultaneous & overlapping cues)
-                var activeCueObjects = [];
-                var maxEndTime = 0;
+                var active = [];
                 for (var i = 0; i < cues.length; i++) {
                     if (position >= cues[i].startTime && position < cues[i].endTime) {
-                        activeCueObjects.push({
-                            text: cues[i].text,
-                            line: cues[i].line,
-                            snapToLines: cues[i].snapToLines,
-                            position: cues[i].position,
-                            size: cues[i].size,
-                            align: cues[i].align,
-                            vertical: cues[i].vertical
-                        });
-                        if (cues[i].endTime > maxEndTime) {
-                            maxEndTime = cues[i].endTime;
-                        }
+                        active.push(cues[i]);
                     }
                 }
+                return dropHandedOverCues(active);
+            }
 
-                if (activeCueObjects.length === 0) {
-                    _lastActiveCue = null;
-                    return;
-                }
+            function updateActiveCues() {
+                var active = collectActiveCues();
+                // Identify the set by cue boundaries as well as text, so a later cue
+                // repeating the same text is still recognised as a different cue.
+                var key = active.map(function (cue) {
+                    return cue.startTime + '-' + cue.endTime + '-' + cue.text;
+                }).join('|');
 
-                var combinedText = activeCueObjects.map(function(c) { return c.text; }).join('\n');
-                if (_lastActiveCue !== combinedText) {
-                    _lastActiveCue = combinedText;
-                    that.trigger(CONTENT_CAPTION_CUE_CHANGED, {
-                        text: combinedText,
-                        cues: activeCueObjects,
-                        startTime: position,
-                        endTime: maxEndTime
-                    });
-                }
-            });
+                if (key === _lastActiveCue) { return; }
+                _lastActiveCue = key;
+
+                // An empty cues array tells the view to clear straight away.
+                that.trigger(CONTENT_CAPTION_CUE_CHANGED, {
+                    text: active.map(function (cue) { return cue.text; }).join('\n'),
+                    cues: active.map(function (cue) {
+                        return {
+                            text: cue.text,
+                            line: cue.line,
+                            snapToLines: cue.snapToLines,
+                            position: cue.position,
+                            size: cue.size,
+                            align: cue.align,
+                            vertical: cue.vertical
+                        };
+                    })
+                });
+            }
+
+            function onCueFrame() {
+                cueFrameId = requestAnimationFrame(onCueFrame);
+                if (element.currentTime === lastCueTime) { return; }
+                lastCueTime = element.currentTime;
+                updateActiveCues();
+            }
+
+            // This runs again on every load, so retire the previous loop first.
+            if (cueFrameId) {
+                cancelAnimationFrame(cueFrameId);
+            }
+            lastCueTime = -1;
+            cueFrameId = requestAnimationFrame(onCueFrame);
 
             hls.on(Hls.Events.LEVEL_UPDATED, function (event, data) {
                 if (data && data.details) {
@@ -457,6 +512,12 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
 
                 clearTimeout(loadRetryer);
                 loadRetryer = null;
+            }
+
+            if (cueFrameId) {
+
+                cancelAnimationFrame(cueFrameId);
+                cueFrameId = 0;
             }
 
             if (hls) {

@@ -1,6 +1,6 @@
 ---
 title: UI Customize
-description: "Customize the OvenPlayer UI with CSS skinning — change the accent color and restyle controls via CSS variables."
+description: "Customize the OvenPlayer UI with CSS skinning — change the accent color, restyle controls via CSS variables, and restyle captions."
 sidebar_position: 5
 ---
 
@@ -41,6 +41,103 @@ You can easily change the color by overriding the `--op-accent-color` class in y
 </script>
 </body>
 </html>
+```
+
+### How to style captions
+
+Captions are drawn as DOM elements rather than by the browser's native caption renderer, so all of their styling can be overridden from your page — no player option is needed.
+
+One rule applies to every example below: OvenPlayer injects its own stylesheet at runtime, so it usually comes after the styles in your page. Give your override a higher specificity by prefixing it with the player id. OvenPlayer moves the id you pass to `create()` onto its own root element, so `#player_id` selects the player root and beats the player's own class-only selectors.
+
+#### Caption safe area
+
+`.op-caption-text-container` is inset on all four sides and acts as the caption safe area. Cue boxes fill it exactly, so a caption can never sit flush against a player edge whatever `line`, `position` and `size` the cue asks for. Percentages in cue settings resolve against this area, not against the whole player.
+
+| Property | Default |
+| --- | --- |
+| `top`, `right`, `bottom`, `left` | `2%` |
+
+```
+/* Hold captions clear of the control bar at the bottom */
+#player_id .op-caption-text-container {
+    top: 2%;
+    right: 2%;
+    bottom: 10%;
+    left: 2%;
+}
+```
+
+`top` and `bottom` percentages resolve against the player height, `left` and `right` against its width, so the same percentage is a smaller gap vertically. Use `px` or `em` if you want an identical gap on all four sides.
+
+#### Caption font size
+
+`.op-caption-text` carries the text style. Its size is expressed in `em` against the player root, whose font size OvenPlayer switches according to the player width. There is therefore a base rule plus one override per size class:
+
+| Selector | Player root | Caption `font-size` | Rendered |
+| --- | --- | --- | --- |
+| `.op-caption-text` | – | `1.5em` | base rule |
+| `.large .op-caption-text` | `14px` | `2em` | 28px |
+| `.medium .op-caption-text` | `12px` | `1.75em` | 21px |
+| `.small .op-caption-text` | `10px` | `1.6em` | 16px |
+| `.xsmall .op-caption-text` | `10px` | `1.3em` | 13px |
+
+A single id-prefixed rule outranks all of them, so you only need one. Keep the unit in `em` to stay responsive, since the player root font size still changes with the player width:
+
+```
+/* Larger than the default, still scaling with the player */
+#player_id .op-caption-text {
+    font-size: 2.5em;
+}
+```
+
+Use an absolute unit instead if you want one fixed size at every player width:
+
+```
+#player_id .op-caption-text {
+    font-size: 24px;
+    line-height: 1.4;
+}
+```
+
+#### Caption text box
+
+The same element draws the box behind the text.
+
+| Property | Default |
+| --- | --- |
+| `color` | `#fff` |
+| `background` | `rgba(8, 8, 8, 0.75)` |
+| `padding` | `.25em .6em` |
+| `border-radius` | `.25em` |
+| `line-height` | `1.5em` |
+
+```
+/* Plain white text with a shadow instead of a filled box */
+#player_id .op-caption-text {
+    background: none;
+    padding: 0;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.9);
+}
+```
+
+#### WebVTT cue classes
+
+Cue text markup is parsed, so `<b>`, `<i>`, `<u>`, `<ruby>`, `<rt>`, `<v Speaker>`, `<lang xx>` and `<c.class>` all take effect. The standard WebVTT colour classes are styled for you:
+
+`white`, `lime`, `cyan`, `red`, `yellow`, `magenta`, `blue`, `black`, and `bg_white` … `bg_black` for backgrounds.
+
+Any other class name is passed through to the DOM, so you can define your own:
+
+```
+00:00:01.000 --> 00:00:03.000
+<c.yellow>Yellow</c>, and <c.speaker>a class of your own</c>
+```
+
+```
+#player_id .op-caption-text .speaker {
+    color: #50e3c2;
+    font-weight: 700;
+}
 ```
 
 ### How to change the style

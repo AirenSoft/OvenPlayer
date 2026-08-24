@@ -19,6 +19,87 @@ const CaptionViewer = function($container, api, playerState){
     const onRendered = function($container, $current, template){
         let isDisable = false;
         let deleteTimer = 0;
+        let renderedHtml = '';
+
+        // WebVTT cue text markup: tag name -> element, plus the tags that carry an
+        // annotation ("<v Fred>", "<lang en>") and the character entities VTT defines.
+        const CUE_TAGS = {c: 'span', i: 'i', b: 'b', u: 'u', ruby: 'ruby', rt: 'rt', v: 'span', lang: 'span'};
+        const CUE_ANNOTATIONS = {v: 'title', lang: 'lang'};
+        const CUE_ENTITIES = {amp: '&', lt: '<', gt: '>', lrm: '\u200e', rlm: '\u200f', nbsp: '\u00a0'};
+        const CUE_TAG_RE = /^([a-zA-Z]+)((?:\.[^\s.]+)+)?(?:\s+([\s\S]*))?$/;
+        const CUE_TIMESTAMP_RE = /^\d+:\d{2}(:\d{2})?\.\d{3}$/;
+
+        function escapeHtml(text) {
+            return text.replace(/[&<>"]/g, function(ch) {
+                return ch === '&' ? '&amp;' : ch === '<' ? '&lt;' : ch === '>' ? '&gt;' : '&quot;';
+            });
+        }
+
+        // Decode the entities WebVTT defines, then escape for HTML so cue text can
+        // never inject markup of its own.
+        function escapeCueText(text) {
+            return escapeHtml(text.replace(/&(amp|lt|gt|lrm|rlm|nbsp);/g, function(match, name) {
+                return CUE_ENTITIES[name];
+            }));
+        }
+
+        // Turn WebVTT cue text markup into HTML. Known tags become elements and keep
+        // their class list so they can be styled (<c.yellow>, <b.loud>, …), timestamp
+        // tags are dropped, and anything that is not a tag we understand is left as
+        // literal text rather than silently swallowed.
+        function cueTextToHtml(text) {
+            const tokenizer = /<([^>]*)>/g;
+            const openTags = [];
+            let html = '';
+            let last = 0;
+            let match;
+
+            while ((match = tokenizer.exec(text)) !== null) {
+                html += escapeCueText(text.slice(last, match.index));
+                last = tokenizer.lastIndex;
+
+                const body = match[1];
+
+                if (body.charAt(0) === '/') {
+                    const closing = body.slice(1);
+                    if (openTags.length && openTags[openTags.length - 1].name === closing) {
+                        html += '</' + openTags.pop().tag + '>';
+                    } else {
+                        html += escapeCueText(match[0]);
+                    }
+                    continue;
+                }
+
+                if (CUE_TIMESTAMP_RE.test(body)) {
+                    continue;
+                }
+
+                const parsed = CUE_TAG_RE.exec(body);
+                const tag = parsed ? CUE_TAGS[parsed[1]] : null;
+                if (!tag) {
+                    html += escapeCueText(match[0]);
+                    continue;
+                }
+
+                let attrs = '';
+                if (parsed[2]) {
+                    attrs += ' class="' + escapeHtml(parsed[2].slice(1).split('.').join(' ')) + '"';
+                }
+                const annotation = CUE_ANNOTATIONS[parsed[1]];
+                if (annotation && parsed[3]) {
+                    attrs += ' ' + annotation + '="' + escapeHtml(parsed[3].trim()) + '"';
+                }
+
+                openTags.push({name: parsed[1], tag: tag});
+                html += '<' + tag + attrs + '>';
+            }
+
+            html += escapeCueText(text.slice(last));
+            while (openTags.length) {
+                html += '</' + openTags.pop().tag + '>';
+            }
+            return html;
+        }
 
         // Convert VTTCue settings to inline style string for .op-caption-cue wrapper
         function cueToStyleStr(cue) {
@@ -37,6 +118,8 @@ const CaptionViewer = function($container, api, playerState){
             if (cue.align === 'start' || cue.align === 'left') { textAlign = 'left'; }
             else if (cue.align === 'end' || cue.align === 'right') { textAlign = 'right'; }
             parts.push('text-align:' + textAlign);
+            parts.push('align-items:' + (textAlign === 'left' ? 'flex-start' :
+                textAlign === 'right' ? 'flex-end' : 'center'));
 
             // Horizontal position (left + translateX)
             // VTT spec: position:auto resolves based on align
@@ -51,22 +134,21 @@ const CaptionViewer = function($container, api, playerState){
             const xOff = textAlign === 'left' ? '0%' : textAlign === 'right' ? '-100%' : '-50%';
             parts.push('transform:translateX(' + xOff + ')');
 
-            // Vertical position — must explicitly set both top and bottom to override CSS bottom:60px
+            // Vertical position — the cue box always spans the full player height and
+            // the spacers described by these variables place the text inside it. The top
+            // spacer can shrink, so a cue whose text wraps onto more lines than fit below
+            // the line offset is pushed back into view instead of being clipped.
             if (cue.line !== 'auto' && typeof cue.line === 'number') {
                 if (!cue.snapToLines) {
                     // Percentage mode: line% = top edge of cue from top of player (VTT spec)
                     // Text grows downward from this point.
-                    parts.push('top:' + cue.line + '%');
-                    parts.push('bottom:auto');
+                    parts.push('--op-cue-space-top:' + cue.line + '%');
+                } else if (cue.line < 0) {
+                    // Integer line number counted from the bottom (e.g. line:-1)
+                    parts.push('--op-cue-space-top:100%');
+                    parts.push('--op-cue-space-bottom:' + (Math.abs(cue.line + 1) * 8) + '%');
                 } else {
-                    // Integer line number mode (e.g. line:-1)
-                    if (cue.line < 0) {
-                        parts.push('top:auto');
-                        parts.push('bottom:' + (Math.abs(cue.line + 1) * 8) + '%');
-                    } else {
-                        parts.push('top:' + (cue.line * 8) + '%');
-                        parts.push('bottom:auto');
-                    }
+                    parts.push('--op-cue-space-top:' + (cue.line * 8) + '%');
                 }
             }
 
@@ -74,24 +156,45 @@ const CaptionViewer = function($container, api, playerState){
         }
 
         function renderCues(cues) {
-            let html = '';
+            // Cues that resolve to the same box would be drawn on top of each other,
+            // so collect them into a single box and stack their texts in cue order,
+            // the way WebVTT lays out simultaneous cues.
+            const boxes = [];
+
             cues.forEach(function(cue) {
-                // A cue is "positioned" when line, position, or size is explicitly set
-                // (non-default values). Positioned cues skip the default padding/bottom CSS.
-                const hasLine = cue.line !== 'auto' && typeof cue.line === 'number';
-                const hasPosition = cue.position !== 'auto' && typeof cue.position === 'number';
-                const hasSize = typeof cue.size === 'number' && cue.size !== 100;
-                const isPositioned = hasLine || hasPosition || hasSize;
-                const cls = 'op-caption-cue' + (isPositioned ? ' op-caption-cue-positioned' : '');
-                html += '<div class="' + cls + '" style="' + cueToStyleStr(cue) + '">' +
-                        '<div class="op-caption-text">' + cue.text + '</div>' +
-                        '</div>';
+                const style = cueToStyleStr(cue);
+
+                let box = boxes.find(function(b) { return b.style === style; });
+                if (!box) {
+                    box = { style: style, texts: [] };
+                    boxes.push(box);
+                }
+                box.texts.push(cueTextToHtml(cue.text));
             });
-            $container.find(".op-caption-text-container").html(html);
+
+            const html = boxes.map(function(box) {
+                return '<div class="op-caption-cue" style="' + box.style + '">' +
+                    box.texts.map(function(text) {
+                        return '<div class="op-caption-text">' + text + '</div>';
+                    }).join('') +
+                    '</div>';
+            }).join('');
+
+            setCueHtml(html);
         }
 
         function clearCues() {
-            $container.find(".op-caption-text-container").html('');
+            setCueHtml('');
+        }
+
+        // Rewriting the container with markup it already holds makes the captions
+        // flash, and the cue set is re-checked far more often than it changes.
+        function setCueHtml(html) {
+            if (html === renderedHtml) {
+                return;
+            }
+            renderedHtml = html;
+            $container.find(".op-caption-text-container").html(html);
         }
 
         api.on(CONTENT_CAPTION_CHANGED, function(index) {
@@ -104,31 +207,47 @@ const CaptionViewer = function($container, api, playerState){
         }, template);
 
         api.on(CONTENT_CAPTION_CUE_CHANGED, function(data) {
-            if(!isDisable && data && (data.text || (data.cues && data.cues.length))){
-                let hideGap = data.endTime - data.startTime;
+            if(isDisable || !data){
+                return;
+            }
 
-                if(deleteTimer){
-                    clearTimeout(deleteTimer);
+            if(deleteTimer){
+                clearTimeout(deleteTimer);
+                deleteTimer = 0;
+            }
+
+            // A provider that sends a cue list tracks the active set itself and sends
+            // an empty list once nothing should be on screen. No hide timer is wanted
+            // there: it would cut a short cue off before its end time.
+            if(data.cues){
+                if(data.cues.length){
+                    renderCues(data.cues);
+                }else{
+                    clearCues();
                 }
+                return;
+            }
 
-                // Normalize: legacy data.text → single default-positioned cue
-                const cues = data.cues || [{
-                    text: data.text,
-                    line: 'auto',
-                    snapToLines: true,
-                    position: 'auto',
-                    size: 100,
-                    align: 'center',
-                    vertical: ''
-                }];
+            if(!data.text){
+                return;
+            }
 
-                renderCues(cues);
+            // Legacy payload: a single cue with no positioning, hidden on a timer.
+            renderCues([{
+                text: data.text,
+                line: 'auto',
+                snapToLines: true,
+                position: 'auto',
+                size: 100,
+                align: 'center',
+                vertical: ''
+            }]);
 
-                if(hideGap){
-                    deleteTimer = setTimeout(function(){
-                        clearCues();
-                    }, hideGap * 1000);
-                }
+            const hideGap = data.endTime - data.startTime;
+            if(hideGap){
+                deleteTimer = setTimeout(function(){
+                    clearCues();
+                }, hideGap * 1000);
             }
         }, template);
     };

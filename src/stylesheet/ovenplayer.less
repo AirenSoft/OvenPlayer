@@ -189,14 +189,6 @@
     .op-controls .op-button {
       cursor: none;
     }
-
-    .op-caption-text-container {
-      bottom: 25px;
-    }
-
-    .op-caption-cue:not(.op-caption-cue-positioned) {
-      bottom: 25px;
-    }
   }
 
   &.op-no-controls {
@@ -1590,31 +1582,55 @@ i.op-con {
 
 .op-caption-viewer {
 
+  /* The container is the caption safe area rather than the whole player: it is
+     inset on every side, and cue boxes fill it exactly, so a cue can never end
+     up flush against a player edge no matter how it is positioned. Percentages
+     in cue settings (line, position, size) resolve against this area. */
   .op-caption-text-container {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    top: 2%;
+    right: 2%;
+    bottom: 2%;
+    left: 2%;
     overflow: visible;
     pointer-events: none;
 
     .op-caption-cue {
       position: absolute;
-      bottom: 60px;
+      top: 0;
+      bottom: 0;
       width: 100%;
       left: 50%;
       transform: translateX(-50%);
       text-align: center;
-      padding: 0 8%;
-      -moz-transition: bottom .25s cubic-bezier(0.0, 0.0, 0.2, 1);
-      -webkit-transition: bottom .25s cubic-bezier(0.0, 0.0, 0.2, 1);
-      transition: bottom .25s cubic-bezier(0.0, 0.0, 0.2, 1);
+      align-items: center;
 
-      &.op-caption-cue-positioned {
-        bottom: auto;
-        padding: 0;
-        transition: none;
+      /* Simultaneous cues that share a box are stacked in cue order. */
+      display: flex;
+      flex-direction: column;
+
+      .op-caption-text {
+        flex: 0 0 auto;
+        max-width: 100%;
+      }
+
+      /* The box spans the whole safe area and these spacers place the text at
+         the cue's line offset. The top spacer may shrink, so a cue whose text
+         wraps onto more lines than fit below the offset is pushed back inside
+         the safe area instead of being clipped. */
+      &::before {
+        content: '';
+        display: block;
+        flex: 0 1 auto;
+        min-height: 0;
+        height: var(--op-cue-space-top, 100%);
+      }
+
+      &::after {
+        content: '';
+        display: block;
+        flex: 0 0 auto;
+        height: var(--op-cue-space-bottom, 0);
       }
     }
 
@@ -1638,6 +1654,24 @@ i.op-con {
         background: none;
         padding: 0;
       }
+
+      /* WebVTT cue text classes: <c.yellow>, <c.bg_blue>, ... */
+      .white { color: #fff; }
+      .lime { color: #0f0; }
+      .cyan { color: #0ff; }
+      .red { color: #f00; }
+      .yellow { color: #ff0; }
+      .magenta { color: #f0f; }
+      .blue { color: #00f; }
+      .black { color: #000; }
+      .bg_white { background-color: #fff; }
+      .bg_lime { background-color: #0f0; }
+      .bg_cyan { background-color: #0ff; }
+      .bg_red { background-color: #f00; }
+      .bg_yellow { background-color: #ff0; }
+      .bg_magenta { background-color: #f0f; }
+      .bg_blue { background-color: #00f; }
+      .bg_black { background-color: #000; }
     }
   }
 }
