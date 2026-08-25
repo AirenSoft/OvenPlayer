@@ -1,0 +1,48 @@
+name: Publish to npm
+
+# Publishes `ovenplayer` through npm trusted publishing (OIDC), so no
+# NPM_TOKEN is stored in this repo. npm trusts this workflow by its
+# filename, so the trusted publisher configured on npmjs.com must name
+# `publish.yml` — renaming this file breaks publishing.
+#
+# Runs on a `v*` tag push, matching the existing release tags.
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: read
+  id-token: write # required for OIDC
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          registry-url: 'https://registry.npmjs.org'
+          cache: 'npm'
+
+      # Node 22 ships npm 10; trusted publishing needs npm 11.5.1+.
+      - name: Upgrade npm
+        run: npm install -g npm@latest
+
+      - name: Check the tag against package.json
+        run: |
+          tag="${GITHUB_REF_NAME#v}"
+          pkg="$(node -p "require('./package.json').version")"
+          if [ "$tag" != "$pkg" ]; then
+            echo "Tag $GITHUB_REF_NAME does not match package.json version $pkg"
+            exit 1
+          fi
+
+      - run: npm ci
+
+      - run: npm run build
+
+      - run: npm publish
