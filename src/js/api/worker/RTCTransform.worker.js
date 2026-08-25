@@ -126,7 +126,274 @@ function getNalus(frameData) {
   return nalus;
 }
 
+// Reads the RBSP bit by bit, so that u(n), ue(v) and se(v) syntax elements can be parsed.
+function BitReader(byteArray) {
+  this.bytes = byteArray;
+  this.position = 0;
+}
+
+BitReader.prototype.hasData = function () {
+  return this.position < this.bytes.length * 8;
+};
+
+BitReader.prototype.readBits = function (count) {
+
+  let value = 0;
+
+  for (let i = 0; i < count && this.hasData(); i++) {
+
+    const byte = this.bytes[this.position >> 3];
+    const bit = (byte >> (7 - (this.position & 7))) & 1;
+
+    // Multiplying instead of shifting keeps 32 bit values positive.
+    value = (value * 2) + bit;
+    this.position++;
+  }
+
+  return value;
+};
+
+BitReader.prototype.readUnsignedExpGolomb = function () {
+
+  let leadingZeroBits = 0;
+
+  while (this.hasData() && this.readBits(1) === 0) {
+
+    leadingZeroBits++;
+
+    if (leadingZeroBits > 31) {
+      return 0;
+    }
+  }
+
+  if (leadingZeroBits === 0) {
+    return 0;
+  }
+
+  return Math.pow(2, leadingZeroBits) - 1 + this.readBits(leadingZeroBits);
+};
+
+BitReader.prototype.readSignedExpGolomb = function () {
+
+  const value = this.readUnsignedExpGolomb();
+
+  return (value % 2) === 0 ? -(value / 2) : (value + 1) / 2;
+};
+
+// The profiles that carry the chroma format and the scaling matrices in the SPS.
+const HIGH_PROFILE_IDCS = [100, 110, 122, 244, 44, 83, 86, 118, 128, 138, 139, 134, 135];
+
+function skipScalingList(reader, size) {
+
+  let lastScale = 8;
+  let nextScale = 8;
+
+  for (let i = 0; i < size; i++) {
+
+    if (nextScale !== 0) {
+      nextScale = (lastScale + reader.readSignedExpGolomb() + 256) % 256;
+    }
+
+    if (nextScale !== 0) {
+      lastScale = nextScale;
+    }
+  }
+}
+
+function parseHrdParameters(reader) {
+
+  const cpbCntMinus1 = reader.readUnsignedExpGolomb();
+
+  reader.readBits(4); // bit_rate_scale
+  reader.readBits(4); // cpb_size_scale
+
+  for (let i = 0; i <= cpbCntMinus1; i++) {
+
+    reader.readUnsignedExpGolomb(); // bit_rate_value_minus1
+    reader.readUnsignedExpGolomb(); // cpb_size_value_minus1
+    reader.readBits(1); // cbr_flag
+  }
+
+  return {
+    cpb_cnt_minus1: cpbCntMinus1,
+    initial_cpb_removal_delay_length_minus1: reader.readBits(5),
+    cpb_removal_delay_length_minus1: reader.readBits(5),
+    dpb_output_delay_length_minus1: reader.readBits(5),
+    time_offset_length: reader.readBits(5)
+  };
+}
+
+function skipToHrdParameters(reader) {
+
+  if (reader.readBits(1)) { // aspect_ratio_info_present_flag
+
+    if (reader.readBits(8) === 255) { // aspect_ratio_idc EXTENDED_SAR
+
+      reader.readBits(16); // sar_width
+      reader.readBits(16); // sar_height
+    }
+  }
+
+  if (reader.readBits(1)) { // overscan_info_present_flag
+    reader.readBits(1); // overscan_appropriate_flag
+  }
+
+  if (reader.readBits(1)) { // video_signal_type_present_flag
+
+    reader.readBits(3); // video_format
+    reader.readBits(1); // video_full_range_flag
+
+    if (reader.readBits(1)) { // colour_description_present_flag
+      reader.readBits(24); // colour_primaries, transfer_characteristics, matrix_coefficients
+    }
+  }
+
+  if (reader.readBits(1)) { // chroma_loc_info_present_flag
+
+    reader.readUnsignedExpGolomb(); // chroma_sample_loc_type_top_field
+    reader.readUnsignedExpGolomb(); // chroma_sample_loc_type_bottom_field
+  }
+
+  if (reader.readBits(1)) { // timing_info_present_flag
+
+    reader.readBits(32); // num_units_in_tick
+    reader.readBits(32); // time_scale
+    reader.readBits(1); // fixed_frame_rate_flag
+  }
+}
+
+// The pic_timing and buffering_period SEI messages can only be parsed with these
+// VUI/HRD parameters, so the SPS of the stream has to be parsed to get them.
+function parseSPS(rbsp) {
+
+  const reader = new BitReader(rbsp);
+
+  const profileIdc = reader.readBits(8);
+
+  reader.readBits(8); // constraint flags and reserved bits
+  reader.readBits(8); // level_idc
+
+  const sps = {
+    seq_parameter_set_id: reader.readUnsignedExpGolomb(),
+    nal_hrd_parameters_present_flag: 0,
+    vcl_hrd_parameters_present_flag: 0,
+    cpb_dpb_delays_present_flag: 0,
+    pic_struct_present_flag: 0,
+    // The values the standard infers when the HRD parameters are absent.
+    initial_cpb_removal_delay_length_minus1: 23,
+    cpb_removal_delay_length_minus1: 23,
+    dpb_output_delay_length_minus1: 23,
+    time_offset_length: 24
+  };
+
+  if (HIGH_PROFILE_IDCS.indexOf(profileIdc) >= 0) {
+
+    const chromaFormatIdc = reader.readUnsignedExpGolomb();
+
+    if (chromaFormatIdc === 3) {
+      reader.readBits(1); // separate_colour_plane_flag
+    }
+
+    reader.readUnsignedExpGolomb(); // bit_depth_luma_minus8
+    reader.readUnsignedExpGolomb(); // bit_depth_chroma_minus8
+    reader.readBits(1); // qpprime_y_zero_transform_bypass_flag
+
+    if (reader.readBits(1)) { // seq_scaling_matrix_present_flag
+
+      const listCount = chromaFormatIdc !== 3 ? 8 : 12;
+
+      for (let i = 0; i < listCount; i++) {
+
+        if (reader.readBits(1)) { // seq_scaling_list_present_flag
+          skipScalingList(reader, i < 6 ? 16 : 64);
+        }
+      }
+    }
+  }
+
+  reader.readUnsignedExpGolomb(); // log2_max_frame_num_minus4
+
+  const picOrderCntType = reader.readUnsignedExpGolomb();
+
+  if (picOrderCntType === 0) {
+
+    reader.readUnsignedExpGolomb(); // log2_max_pic_order_cnt_lsb_minus4
+  } else if (picOrderCntType === 1) {
+
+    reader.readBits(1); // delta_pic_order_always_zero_flag
+    reader.readSignedExpGolomb(); // offset_for_non_ref_pic
+    reader.readSignedExpGolomb(); // offset_for_top_to_bottom_field
+
+    const refFrameCount = reader.readUnsignedExpGolomb();
+
+    for (let i = 0; i < refFrameCount; i++) {
+      reader.readSignedExpGolomb(); // offset_for_ref_frame
+    }
+  }
+
+  reader.readUnsignedExpGolomb(); // max_num_ref_frames
+  reader.readBits(1); // gaps_in_frame_num_value_allowed_flag
+  reader.readUnsignedExpGolomb(); // pic_width_in_mbs_minus1
+  reader.readUnsignedExpGolomb(); // pic_height_in_map_units_minus1
+
+  if (!reader.readBits(1)) { // frame_mbs_only_flag
+    reader.readBits(1); // mb_adaptive_frame_field_flag
+  }
+
+  reader.readBits(1); // direct_8x8_inference_flag
+
+  if (reader.readBits(1)) { // frame_cropping_flag
+
+    reader.readUnsignedExpGolomb(); // frame_crop_left_offset
+    reader.readUnsignedExpGolomb(); // frame_crop_right_offset
+    reader.readUnsignedExpGolomb(); // frame_crop_top_offset
+    reader.readUnsignedExpGolomb(); // frame_crop_bottom_offset
+  }
+
+  if (!reader.readBits(1)) { // vui_parameters_present_flag
+    return sps;
+  }
+
+  skipToHrdParameters(reader);
+
+  sps.nal_hrd_parameters_present_flag = reader.readBits(1);
+
+  const nalHrd = sps.nal_hrd_parameters_present_flag ? parseHrdParameters(reader) : null;
+
+  sps.vcl_hrd_parameters_present_flag = reader.readBits(1);
+
+  const vclHrd = sps.vcl_hrd_parameters_present_flag ? parseHrdParameters(reader) : null;
+
+  const hrd = nalHrd || vclHrd;
+
+  if (hrd) {
+
+    reader.readBits(1); // low_delay_hrd_flag
+
+    sps.cpb_dpb_delays_present_flag = 1;
+    sps.initial_cpb_removal_delay_length_minus1 = hrd.initial_cpb_removal_delay_length_minus1;
+    sps.cpb_removal_delay_length_minus1 = hrd.cpb_removal_delay_length_minus1;
+    sps.dpb_output_delay_length_minus1 = hrd.dpb_output_delay_length_minus1;
+    sps.time_offset_length = hrd.time_offset_length;
+  }
+
+  if (nalHrd) {
+    sps.nal_hrd_cpb_cnt_minus1 = nalHrd.cpb_cnt_minus1;
+  }
+
+  if (vclHrd) {
+    sps.vcl_hrd_cpb_cnt_minus1 = vclHrd.cpb_cnt_minus1;
+  }
+
+  sps.pic_struct_present_flag = reader.readBits(1);
+
+  return sps;
+}
+
 function createReceiverTransform() {
+
+  let sps = null;
+
   return new TransformStream({
     start() { },
     flush() { },
@@ -141,6 +408,12 @@ function createReceiverTransform() {
         const nalHeader = nalu[startCodeLength];
         const nalType = nalHeader & 0x1F;
 
+        // NAL Type SPS
+        if (nalType === 7) {
+
+          sps = parseSPS(removeEmulationPreventionBytes(nalu.subarray(startCodeLength + headerCodeLength)));
+        }
+
         // NAL Type SEI
         if (nalType === 6) {
 
@@ -150,7 +423,8 @@ function createReceiverTransform() {
 
           const eventData = {
             nalu: nalu,
-            sei: parsedSei
+            sei: parsedSei,
+            sps: sps
           };
 
           const uuid = toHexString(parsedSei.payload.subarray(0, 16));
