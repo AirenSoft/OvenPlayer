@@ -50,6 +50,90 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
     let lastCueTime = -1;
     const SUBTITLE_CUES_MAX = 200; // sliding window limit per track (live stream guard)
 
+    /* --- hls.js subtitle stall workaround -----------------------------------------
+     * hls.js can leave its subtitle stream controller in FRAG_LOADING after a
+     * fragment has finished downloading: the load succeeds, but the state machine
+     * never advances, so no further subtitle fragment is ever requested. Nothing in
+     * hls.js recovers from it. Its load policies only fire on slow or failed loads
+     * and this load succeeded well inside them, GapController watches the media
+     * buffer rather than text tracks, and the controller only leaves FRAG_LOADING via
+     * a completed load, a subtitle fragment error, or startLoad(). So subtitles stay
+     * dead for the rest of the session while the subtitle playlist keeps reloading,
+     * which makes the stream look healthy.
+     *
+     * This reaches into hls.js internals, including hls.js's own misspelling of the
+     * controller field, so every access is guarded and the watchdog simply stays idle
+     * if that shape changes. Delete this whole block once hls.js recovers on its own.
+     */
+    let subtitleWatchdogTimer = 0;
+    let subtitleStalledAt = 0;
+    let subtitleRecoveredAt = 0;
+    const SUBTITLE_WATCHDOG_INTERVAL = 1000;
+    const SUBTITLE_STALL_TIMEOUT = 10000;      // how long the signature must hold
+    const SUBTITLE_RECOVERY_COOLDOWN = 30000;  // minimum gap between recovery attempts
+
+    // The stuck fragment when the subtitle controller sits in FRAG_LOADING with its
+    // current fragment already fully loaded, otherwise null. Requiring the load to
+    // have finished is what separates this from a merely slow load: hls.js allows a
+    // fragment up to two minutes, so elapsed time alone would flag healthy loads.
+    function stalledSubtitleFragment() {
+        if (!hls || hls.subtitleTrack < 0) {
+            return null;
+        }
+
+        const controller = hls.subtititleStreamController;
+        if (!controller || controller.state !== 'FRAG_LOADING') {
+            return null;
+        }
+
+        const frag = controller.fragCurrent;
+        const loading = frag && frag.stats && frag.stats.loading;
+
+        return loading && loading.end ? frag : null;
+    }
+
+    function checkSubtitleStall() {
+        let frag = null;
+
+        try {
+            frag = stalledSubtitleFragment();
+        } catch (error) {
+            return; // internals are not shaped as expected, stay out of the way
+        }
+
+        if (!frag) {
+            subtitleStalledAt = 0;
+            return;
+        }
+
+        const now = Date.now();
+
+        if (!subtitleStalledAt) {
+            subtitleStalledAt = now;
+            return;
+        }
+        if (now - subtitleStalledAt < SUBTITLE_STALL_TIMEOUT) {
+            return;
+        }
+        if (subtitleRecoveredAt && now - subtitleRecoveredAt < SUBTITLE_RECOVERY_COOLDOWN) {
+            return;
+        }
+
+        subtitleStalledAt = 0;
+        subtitleRecoveredAt = now;
+        OvenPlayerConsole.log("HLS : subtitle loading stalled on fragment " + frag.sn +
+            ", restarting subtitle loading at " + element.currentTime);
+
+        try {
+            hls.subtititleStreamController.startLoad(element.currentTime);
+        } catch (error) {
+            OvenPlayerConsole.log("HLS : subtitle stall recovery failed.", error);
+        }
+    }
+
+    subtitleWatchdogTimer = setInterval(checkSubtitleStall, SUBTITLE_WATCHDOG_INTERVAL);
+    /* --- end hls.js subtitle stall workaround ----------------------------------- */
+
     try {
 
         let hlsConfig = {
@@ -518,6 +602,12 @@ const HlsProvider = function (element, playerConfig, adTagUrl) {
 
                 cancelAnimationFrame(cueFrameId);
                 cueFrameId = 0;
+            }
+
+            if (subtitleWatchdogTimer) {
+
+                clearInterval(subtitleWatchdogTimer);
+                subtitleWatchdogTimer = 0;
             }
 
             if (hls) {
