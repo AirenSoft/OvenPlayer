@@ -161,10 +161,44 @@
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
 
   <!-- hls.js -->
-  <script src="https://cdn.jsdelivr.net/npm/hls.js@1.7.0/dist/hls.min.js"></script>
+  <script>
+    // The list is only a shortcut; any published version can be typed into the demo input.
+    var HLS_VERSIONS = ['1.7.1', '1.7.0', '1.6.19', '1.6.17', '1.5.20', '1.4.14'];
+    var DEFAULT_HLS_VERSION = '1.7.1';
+
+    var urlOption = null;
+
+    if (location.hash) {
+
+      try {
+        urlOption = JSON.parse(decodeURIComponent(location.hash.replace('#', '')));
+      } catch (error) {
+        urlOption = null;
+      }
+    }
+
+    // The tag is added here rather than written into the markup, so the version can come
+    // from the permanent link. Picking another version reloads the page.
+    // (document.write would do the same but Chrome warns about parser-blocking cross site
+    // scripts, so the demo waits for this promise before it creates the player instead.)
+    var hlsCdnVersion = (urlOption && urlOption.demoOption && urlOption.demoOption.hlsVersion)
+      || DEFAULT_HLS_VERSION;
+
+    var hlsScriptReady = new Promise(function (resolve) {
+
+      var script = document.createElement('script');
+
+      script.src = 'https://cdn.jsdelivr.net/npm/hls.js@' + hlsCdnVersion + '/dist/hls.min.js';
+      // A failed load is reported by the demo once it starts, so both paths resolve.
+      script.onload = resolve;
+      script.onerror = resolve;
+
+      document.head.appendChild(script);
+    });
+  </script>
 
   <!-- OvenPlayer -->
-  <script src="https://cdn.jsdelivr.net/npm/ovenplayer@0.10.53/dist/ovenplayer.min.js?20270730"></script>
+  <script src="https://cdn.jsdelivr.net/npm/ovenplayer@0.10.54/dist/ovenplayer.min.js"></script>
   <!-- <script src="../dev/ovenplayer.js"></script> -->
 </head>
 
@@ -467,6 +501,59 @@
                       </a>
                     </div>
                   </fieldset>
+                  <!--SEI Metadata Config -->
+                  <h6 class="mt-3">SEI Metadata</h6>
+                  <fieldset>
+                    <div class="form-check mb-2">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        value=""
+                        id="parseStreamCheck"
+                        v-model="parseStreamCheck"
+                      />
+                      <label
+                        class="form-check-label"
+                        for="parseStreamCheck"
+                      >
+                        Parse SEI metadata
+                      </label>
+                    </div>
+                    <div class="form-check ms-4 mb-2">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        value=""
+                        :disabled="!parseStreamCheck"
+                        id="seiConsoleLog"
+                        v-model="demoOption.seiConsoleLog"
+                        @change="makePermanentLink"
+                      />
+                      <label
+                        class="form-check-label"
+                        for="seiConsoleLog"
+                      >
+                        Payload types log to console
+                      </label>
+                    </div>
+                    <div class="form-outline ms-4">
+                      <input
+                        :disabled="!parseStreamCheck || !demoOption.seiConsoleLog"
+                        type="text"
+                        id="seiPayloadTypes"
+                        class="form-control"
+                        :class="demoOption.seiPayloadTypes ? 'active' : ''"
+                        v-model="demoOption.seiPayloadTypes"
+                        @change="makePermanentLink"
+                      >
+                      <label
+                        class="form-label"
+                        for="seiPayloadTypes"
+                      >
+                        Payload types (e.g. 5, 6 / empty: all)
+                      </label>
+                    </div>
+                  </fieldset>
                 </div>
                 <div class="col-lg-4 border-start border-2 mb-3 mb-lg-0">
                   <!--WebRTC Config -->
@@ -563,6 +650,45 @@
                 <div class="col-lg-4 border-start border-2 mb-3 mb-lg-0">
                   <!--HLS Config -->
                   <h6>HLS Options</h6>
+                  <fieldset class="mb-3">
+                    <label
+                      class="form-label d-block mb-2"
+                      for="hlsVersionSelect"
+                    >hls.js Version (CDN)</label>
+                    <select
+                      id="hlsVersionSelect"
+                      class="form-select active"
+                      v-model="hlsVersionSelect"
+                      @change="changeHlsVersionSelect"
+                    >
+                      <option
+                        v-for="version in hlsVersions"
+                        :value="version"
+                      >{{version}}</option>
+                      <option value="custom">Custom...</option>
+                    </select>
+                    <div
+                      class="form-outline ms-4 mt-3"
+                      v-if="hlsVersionSelect === 'custom'"
+                    >
+                      <input
+                        type="text"
+                        id="hlsVersionInput"
+                        class="form-control active"
+                        v-model="hlsVersionInput"
+                        @change="changeHlsVersion"
+                      >
+                      <label
+                        class="form-label"
+                        for="hlsVersionInput"
+                      >Version (e.g. 1.6.17)</label>
+                    </div>
+                    <div
+                      class="form-text"
+                      :class="{'text-danger': hlsVersionError}"
+                      v-if="hlsVersionMessage"
+                    >{{hlsVersionMessage}}</div>
+                  </fieldset>
                   <fieldset class="mb-3">
                     <div class="form-check">
                       <input
@@ -702,178 +828,191 @@
                     </div>
                   </fieldset>
                   <fieldset>
-                    <div class="form-check mb-2">
-                      <input
-                        class="form-check-input"
-                        type="checkbox"
-                        id="enableFairPlayCheck"
-                        v-model="hlsEnableFairPlayCheck"
-                      />
-                      <label
-                        class="form-check-label"
-                        for="enableFairPlayCheck"
-                      >
-                        Enable FairPlay
-                      </label>
+                    <div
+                      class="d-flex align-items-center mb-2"
+                      role="button"
+                      @click="drmOptionsOpen = !drmOptionsOpen"
+                    >
+                      <i
+                        class="fas fa-fw fa-xs me-1"
+                        :class="drmOptionsOpen ? 'fa-chevron-down' : 'fa-chevron-right'"
+                      ></i>
+                      <span class="fw-bold">DRM</span>
                     </div>
-                    <div class="form-outline ms-4 mb-3">
-                      <input
-                        :disabled="!hlsEnableFairPlayCheck"
-                        type="text"
-                        id="hlsFairPlayLicenseUrlInput"
-                        class="form-control active"
-                        v-model="hlsFairPlayLicenseUrl"
-                      >
-                      <label
-                        class="form-label"
-                        for="hlsFairPlayLicenseUrlInput"
-                      >License URL</label>
-                    </div>
-                    <div class="form-outline ms-4 mb-3">
-                      <input
-                        :disabled="!hlsEnableFairPlayCheck"
-                        type="text"
-                        id="hlsFairPlayServerCertificateUrlInput"
-                        class="form-control active"
-                        v-model="hlsFairPlayServerCertificateUrl"
-                      >
-                      <label
-                        class="form-label"
-                        for="hlsFairPlayServerCertificateUrlInput"
-                      >Server Certificate
-                        URL</label>
-                    </div>
-                    <div class="form-outline ms-4 mb-3">
-                      <input
-                        :disabled="!hlsEnableFairPlayCheck"
-                        type="text"
-                        id="hlsFairPlayCustomHeaderKeyInput"
-                        class="form-control active"
-                        v-model="hlsFairPlayCustomHeaderKey"
-                      >
-                      <label
-                        class="form-label"
-                        for="hlsFairPlayCustomHeaderKeyInput"
-                      >Custom Header Key</label>
-                    </div>
-                    <div class="form-outline ms-4 mb-3">
-                      <input
-                        :disabled="!hlsEnableFairPlayCheck"
-                        type="text"
-                        id="hlsFairPlayCustomHeaderValueInput"
-                        class="form-control active"
-                        v-model="hlsFairPlayCustomHeaderValue"
-                      >
-                      <label
-                        class="form-label"
-                        for="hlsFairPlayCustomHeaderValueInput"
-                      >Custom Header Value</label>
-                    </div>
-                    <div class="form-check mb-2 mt-3">
-                      <input
-                        class="form-check-input"
-                        type="checkbox"
-                        id="enableWidevineCheck"
-                        v-model="hlsEnableWidevineCheck"
-                      />
-                      <label
-                        class="form-check-label"
-                        for="enableWidevineCheck"
-                      >
-                        Enable Widevine
-                      </label>
-                    </div>
-                    <div class="form-outline ms-4 mb-3">
-                      <input
-                        :disabled="!hlsEnableWidevineCheck"
-                        type="text"
-                        id="hlsWidevineLicenseUrlInput"
-                        class="form-control active"
-                        v-model="hlsWidevineLicenseUrl"
-                      >
-                      <label
-                        class="form-label"
-                        for="hlsWidevineLicenseUrlInput"
-                      >License URL</label>
-                    </div>
-                    <div class="form-outline ms-4 mb-3">
-                      <input
-                        :disabled="!hlsEnableWidevineCheck"
-                        type="text"
-                        id="hlsWidevineCustomHeaderKeyInput"
-                        class="form-control active"
-                        v-model="hlsWidevineCustomHeaderKey"
-                      >
-                      <label
-                        class="form-label"
-                        for="hlsWidevineCustomHeaderKeyInput"
-                      >Custom Header Key</label>
-                    </div>
-                    <div class="form-outline ms-4 mb-3">
-                      <input
-                        :disabled="!hlsEnableWidevineCheck"
-                        type="text"
-                        id="hlsWidevineCustomHeaderValueInput"
-                        class="form-control active"
-                        v-model="hlsWidevineCustomHeaderValue"
-                      >
-                      <label
-                        class="form-label"
-                        for="hlsWidevineCustomHeaderValueInput"
-                      >Custom Header Value</label>
-                    </div>
-                    <div class="form-check mb-2 mt-3">
-                      <input
-                        class="form-check-input"
-                        type="checkbox"
-                        id="enablePlayReadyCheck"
-                        v-model="hlsEnablePlayReadyCheck"
-                      />
-                      <label
-                        class="form-check-label"
-                        for="enablePlayReadyCheck"
-                      >
-                        Enable PlayReady
-                      </label>
-                    </div>
-                    <div class="form-outline ms-4 mb-3">
-                      <input
-                        :disabled="!hlsEnablePlayReadyCheck"
-                        type="text"
-                        id="hlsPlayReadyLicenseUrlInput"
-                        class="form-control active"
-                        v-model="hlsPlayReadyLicenseUrl"
-                      >
-                      <label
-                        class="form-label"
-                        for="hlsPlayReadyLicenseUrlInput"
-                      >License URL</label>
-                    </div>
-                    <div class="form-outline ms-4 mb-3">
-                      <input
-                        :disabled="!hlsEnablePlayReadyCheck"
-                        type="text"
-                        id="hlsPlayReadyCustomHeaderKeyInput"
-                        class="form-control active"
-                        v-model="hlsPlayReadyCustomHeaderKey"
-                      >
-                      <label
-                        class="form-label"
-                        for="hlsPlayReadyCustomHeaderKeyInput"
-                      >Custom Header Key</label>
-                    </div>
-                    <div class="form-outline ms-4 mb-3">
-                      <input
-                        :disabled="!hlsEnablePlayReadyCheck"
-                        type="text"
-                        id="hlsPlayReadyCustomHeaderValueInput"
-                        class="form-control active"
-                        v-model="hlsPlayReadyCustomHeaderValue"
-                      >
-                      <label
-                        class="form-label"
-                        for="hlsPlayReadyCustomHeaderValueInput"
-                      >Custom Header Value</label>
+                    <div v-show="drmOptionsOpen">
+                      <div class="form-check mb-2">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          id="enableFairPlayCheck"
+                          v-model="hlsEnableFairPlayCheck"
+                        />
+                        <label
+                          class="form-check-label"
+                          for="enableFairPlayCheck"
+                        >
+                          Enable FairPlay
+                        </label>
+                      </div>
+                      <div class="form-outline ms-4 mb-3">
+                        <input
+                          :disabled="!hlsEnableFairPlayCheck"
+                          type="text"
+                          id="hlsFairPlayLicenseUrlInput"
+                          class="form-control active"
+                          v-model="hlsFairPlayLicenseUrl"
+                        >
+                        <label
+                          class="form-label"
+                          for="hlsFairPlayLicenseUrlInput"
+                        >License URL</label>
+                      </div>
+                      <div class="form-outline ms-4 mb-3">
+                        <input
+                          :disabled="!hlsEnableFairPlayCheck"
+                          type="text"
+                          id="hlsFairPlayServerCertificateUrlInput"
+                          class="form-control active"
+                          v-model="hlsFairPlayServerCertificateUrl"
+                        >
+                        <label
+                          class="form-label"
+                          for="hlsFairPlayServerCertificateUrlInput"
+                        >Server Certificate
+                          URL</label>
+                      </div>
+                      <div class="form-outline ms-4 mb-3">
+                        <input
+                          :disabled="!hlsEnableFairPlayCheck"
+                          type="text"
+                          id="hlsFairPlayCustomHeaderKeyInput"
+                          class="form-control active"
+                          v-model="hlsFairPlayCustomHeaderKey"
+                        >
+                        <label
+                          class="form-label"
+                          for="hlsFairPlayCustomHeaderKeyInput"
+                        >Custom Header Key</label>
+                      </div>
+                      <div class="form-outline ms-4 mb-3">
+                        <input
+                          :disabled="!hlsEnableFairPlayCheck"
+                          type="text"
+                          id="hlsFairPlayCustomHeaderValueInput"
+                          class="form-control active"
+                          v-model="hlsFairPlayCustomHeaderValue"
+                        >
+                        <label
+                          class="form-label"
+                          for="hlsFairPlayCustomHeaderValueInput"
+                        >Custom Header Value</label>
+                      </div>
+                      <div class="form-check mb-2 mt-3">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          id="enableWidevineCheck"
+                          v-model="hlsEnableWidevineCheck"
+                        />
+                        <label
+                          class="form-check-label"
+                          for="enableWidevineCheck"
+                        >
+                          Enable Widevine
+                        </label>
+                      </div>
+                      <div class="form-outline ms-4 mb-3">
+                        <input
+                          :disabled="!hlsEnableWidevineCheck"
+                          type="text"
+                          id="hlsWidevineLicenseUrlInput"
+                          class="form-control active"
+                          v-model="hlsWidevineLicenseUrl"
+                        >
+                        <label
+                          class="form-label"
+                          for="hlsWidevineLicenseUrlInput"
+                        >License URL</label>
+                      </div>
+                      <div class="form-outline ms-4 mb-3">
+                        <input
+                          :disabled="!hlsEnableWidevineCheck"
+                          type="text"
+                          id="hlsWidevineCustomHeaderKeyInput"
+                          class="form-control active"
+                          v-model="hlsWidevineCustomHeaderKey"
+                        >
+                        <label
+                          class="form-label"
+                          for="hlsWidevineCustomHeaderKeyInput"
+                        >Custom Header Key</label>
+                      </div>
+                      <div class="form-outline ms-4 mb-3">
+                        <input
+                          :disabled="!hlsEnableWidevineCheck"
+                          type="text"
+                          id="hlsWidevineCustomHeaderValueInput"
+                          class="form-control active"
+                          v-model="hlsWidevineCustomHeaderValue"
+                        >
+                        <label
+                          class="form-label"
+                          for="hlsWidevineCustomHeaderValueInput"
+                        >Custom Header Value</label>
+                      </div>
+                      <div class="form-check mb-2 mt-3">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          id="enablePlayReadyCheck"
+                          v-model="hlsEnablePlayReadyCheck"
+                        />
+                        <label
+                          class="form-check-label"
+                          for="enablePlayReadyCheck"
+                        >
+                          Enable PlayReady
+                        </label>
+                      </div>
+                      <div class="form-outline ms-4 mb-3">
+                        <input
+                          :disabled="!hlsEnablePlayReadyCheck"
+                          type="text"
+                          id="hlsPlayReadyLicenseUrlInput"
+                          class="form-control active"
+                          v-model="hlsPlayReadyLicenseUrl"
+                        >
+                        <label
+                          class="form-label"
+                          for="hlsPlayReadyLicenseUrlInput"
+                        >License URL</label>
+                      </div>
+                      <div class="form-outline ms-4 mb-3">
+                        <input
+                          :disabled="!hlsEnablePlayReadyCheck"
+                          type="text"
+                          id="hlsPlayReadyCustomHeaderKeyInput"
+                          class="form-control active"
+                          v-model="hlsPlayReadyCustomHeaderKey"
+                        >
+                        <label
+                          class="form-label"
+                          for="hlsPlayReadyCustomHeaderKeyInput"
+                        >Custom Header Key</label>
+                      </div>
+                      <div class="form-outline ms-4 mb-3">
+                        <input
+                          :disabled="!hlsEnablePlayReadyCheck"
+                          type="text"
+                          id="hlsPlayReadyCustomHeaderValueInput"
+                          class="form-control active"
+                          v-model="hlsPlayReadyCustomHeaderValue"
+                        >
+                        <label
+                          class="form-label"
+                          for="hlsPlayReadyCustomHeaderValueInput"
+                        >Custom Header Value</label>
+                      </div>
                     </div>
                   </fieldset>
                 </div>
@@ -991,7 +1130,7 @@
         <span
           id="ovenLiveKitVersion"
           class="badge badge-info align-middle ms-1"
-        >2026-08-18-1</span>
+        >2026-08-25-1</span>
       </small>
     </div>
 
@@ -1134,12 +1273,507 @@
       return String.fromCharCode.apply(null, byteArray);
     }
 
-    const hash = location.hash;
+    function toHexString(byteArray, delimiter) {
+      return Array.from(byteArray, function (byte) {
+        return ('0' + (byte & 0xFF).toString(16)).slice(-2);
+      }).join(delimiter || '');
+    }
 
-    let urlOption = null;
+    function toUuidString(byteArray) {
+      const hexString = toHexString(byteArray);
+      return [
+        hexString.slice(0, 8),
+        hexString.slice(8, 12),
+        hexString.slice(12, 16),
+        hexString.slice(16, 20),
+        hexString.slice(20, 32)
+      ].join('-');
+    }
 
-    if (hash) {
-      urlOption = JSON.parse(decodeURIComponent(hash.replace('#', '')));
+    function decodeBase64(text) {
+      try {
+        return atob(text);
+      } catch (error) {
+        return text;
+      }
+    }
+
+    // Reads the SEI payload bit by bit, so that u(n) and ue(v) syntax elements can be parsed.
+    function BitReader(byteArray) {
+      this.bytes = byteArray;
+      this.position = 0;
+    }
+
+    BitReader.prototype.hasData = function () {
+      return this.position < this.bytes.length * 8;
+    };
+
+    BitReader.prototype.readBits = function (count) {
+      let value = 0;
+
+      for (let i = 0; i < count && this.hasData(); i++) {
+
+        const byte = this.bytes[this.position >> 3];
+        const bit = (byte >> (7 - (this.position & 7))) & 1;
+
+        // Multiplying instead of shifting keeps 32 bit values positive.
+        value = (value * 2) + bit;
+        this.position++;
+      }
+
+      return value;
+    };
+
+    BitReader.prototype.readSignedBits = function (count) {
+      const value = this.readBits(count);
+      const signBit = Math.pow(2, count - 1);
+
+      return value >= signBit ? value - (signBit * 2) : value;
+    };
+
+    BitReader.prototype.readUnsignedExpGolomb = function () {
+      let leadingZeroBits = 0;
+
+      while (this.hasData() && this.readBits(1) === 0) {
+
+        leadingZeroBits++;
+
+        if (leadingZeroBits > 31) {
+          return 0;
+        }
+      }
+
+      if (leadingZeroBits === 0) {
+        return 0;
+      }
+
+      return Math.pow(2, leadingZeroBits) - 1 + this.readBits(leadingZeroBits);
+    };
+
+    const SEI_PAYLOAD_TYPE_NAMES = {
+      0: 'buffering_period',
+      1: 'pic_timing',
+      4: 'user_data_registered_itu_t_t35',
+      5: 'user_data_unregistered',
+      6: 'recovery_point',
+      45: 'frame_packing_arrangement',
+      137: 'mastering_display_colour_volume',
+      144: 'content_light_level_info'
+    };
+
+    const FRAME_PACKING_ARRANGEMENT_TYPES = {
+      0: 'checkerboard',
+      1: 'column_interleaving',
+      2: 'row_interleaving',
+      3: 'side_by_side',
+      4: 'top_bottom',
+      5: 'temporal_interleaving',
+      6: '2d'
+    };
+
+    const ITU_T_T35_PROVIDERS = {
+      0x0031: 'ATSC (A/53)',
+      0x003C: 'SMPTE (ST 2094-40, HDR10+)'
+    };
+
+    const PIC_STRUCT_NAMES = {
+      0: 'frame',
+      1: 'top_field',
+      2: 'bottom_field',
+      3: 'top_bottom',
+      4: 'bottom_top',
+      5: 'top_bottom_top',
+      6: 'bottom_top_bottom',
+      7: 'frame_doubling',
+      8: 'frame_tripling'
+    };
+
+    // NumClockTS of the pic_struct, see the H.264 table D-1.
+    const PIC_STRUCT_CLOCK_TIMESTAMPS = {
+      0: 1, 1: 1, 2: 1, 3: 2, 4: 2, 5: 3, 6: 3, 7: 2, 8: 3
+    };
+
+    const SPS_REQUIRED_NOTE = 'No SPS has been parsed yet. '
+      + 'The SEI needs the VUI/HRD parameters of the SPS to be parsed.';
+
+    function toTimecodeString(clockTimestamp) {
+
+      if (clockTimestamp.hours_value === undefined
+        || clockTimestamp.minutes_value === undefined
+        || clockTimestamp.seconds_value === undefined) {
+        return undefined;
+      }
+
+      return [
+        clockTimestamp.hours_value,
+        clockTimestamp.minutes_value,
+        clockTimestamp.seconds_value,
+        clockTimestamp.n_frames
+      ].map(function (value) {
+        return ('0' + value).slice(-2);
+      }).join(':');
+    }
+
+    function parseClockTimestamp(reader, sps) {
+
+      const clockTimestamp = {
+        ct_type: reader.readBits(2),
+        nuit_field_based_flag: reader.readBits(1),
+        counting_type: reader.readBits(5),
+        full_timestamp_flag: reader.readBits(1),
+        discontinuity_flag: reader.readBits(1),
+        cnt_dropped_flag: reader.readBits(1),
+        n_frames: reader.readBits(8)
+      };
+
+      if (clockTimestamp.full_timestamp_flag) {
+
+        clockTimestamp.seconds_value = reader.readBits(6);
+        clockTimestamp.minutes_value = reader.readBits(6);
+        clockTimestamp.hours_value = reader.readBits(5);
+      } else if (reader.readBits(1)) { // seconds_flag
+
+        clockTimestamp.seconds_value = reader.readBits(6);
+
+        if (reader.readBits(1)) { // minutes_flag
+
+          clockTimestamp.minutes_value = reader.readBits(6);
+
+          if (reader.readBits(1)) { // hours_flag
+            clockTimestamp.hours_value = reader.readBits(5);
+          }
+        }
+      }
+
+      if (sps.time_offset_length > 0) {
+        clockTimestamp.time_offset = reader.readSignedBits(sps.time_offset_length);
+      }
+
+      clockTimestamp.timecode = toTimecodeString(clockTimestamp);
+
+      return clockTimestamp;
+    }
+
+    function parsePicTiming(payload, sps) {
+
+      if (!sps) {
+        return { note: SPS_REQUIRED_NOTE };
+      }
+
+      const reader = new BitReader(payload);
+      const parsed = {};
+
+      if (sps.cpb_dpb_delays_present_flag) {
+
+        parsed.cpb_removal_delay = reader.readBits(sps.cpb_removal_delay_length_minus1 + 1);
+        parsed.dpb_output_delay = reader.readBits(sps.dpb_output_delay_length_minus1 + 1);
+      }
+
+      if (!sps.pic_struct_present_flag) {
+        return parsed;
+      }
+
+      parsed.pic_struct = reader.readBits(4);
+      parsed.pic_struct_name = PIC_STRUCT_NAMES[parsed.pic_struct] || 'reserved';
+      parsed.clock_timestamps = [];
+
+      const clockTimestampCount = PIC_STRUCT_CLOCK_TIMESTAMPS[parsed.pic_struct] || 0;
+
+      for (let i = 0; i < clockTimestampCount; i++) {
+
+        if (reader.readBits(1)) { // clock_timestamp_flag
+
+          parsed.clock_timestamps.push(parseClockTimestamp(reader, sps));
+        } else {
+
+          parsed.clock_timestamps.push({ clock_timestamp_flag: 0 });
+        }
+      }
+
+      return parsed;
+    }
+
+    function parseInitialCpbRemovalDelays(reader, cpbCount, delayLength) {
+
+      const delays = [];
+
+      for (let i = 0; i < cpbCount; i++) {
+
+        delays.push({
+          initial_cpb_removal_delay: reader.readBits(delayLength),
+          initial_cpb_removal_delay_offset: reader.readBits(delayLength)
+        });
+      }
+
+      return delays;
+    }
+
+    function parseBufferingPeriod(payload, sps) {
+
+      const reader = new BitReader(payload);
+
+      const parsed = {
+        seq_parameter_set_id: reader.readUnsignedExpGolomb()
+      };
+
+      if (!sps) {
+
+        parsed.note = SPS_REQUIRED_NOTE;
+        return parsed;
+      }
+
+      const delayLength = sps.initial_cpb_removal_delay_length_minus1 + 1;
+
+      if (sps.nal_hrd_parameters_present_flag) {
+
+        parsed.nal_hrd = parseInitialCpbRemovalDelays(reader,
+          sps.nal_hrd_cpb_cnt_minus1 + 1, delayLength);
+      }
+
+      if (sps.vcl_hrd_parameters_present_flag) {
+
+        parsed.vcl_hrd = parseInitialCpbRemovalDelays(reader,
+          sps.vcl_hrd_cpb_cnt_minus1 + 1, delayLength);
+      }
+
+      return parsed;
+    }
+
+    function parseRecoveryPoint(payload) {
+
+      const reader = new BitReader(payload);
+
+      return {
+        recovery_frame_cnt: reader.readUnsignedExpGolomb(),
+        exact_match_flag: reader.readBits(1),
+        broken_link_flag: reader.readBits(1),
+        changing_slice_group_idc: reader.readBits(2)
+      };
+    }
+
+    function parseFramePackingArrangement(payload) {
+
+      const reader = new BitReader(payload);
+
+      const parsed = {
+        frame_packing_arrangement_id: reader.readUnsignedExpGolomb(),
+        frame_packing_arrangement_cancel_flag: reader.readBits(1)
+      };
+
+      if (parsed.frame_packing_arrangement_cancel_flag) {
+        return parsed;
+      }
+
+      parsed.frame_packing_arrangement_type = reader.readBits(7);
+      parsed.frame_packing_arrangement_type_name =
+        FRAME_PACKING_ARRANGEMENT_TYPES[parsed.frame_packing_arrangement_type] || 'reserved';
+      parsed.quincunx_sampling_flag = reader.readBits(1);
+      parsed.content_interpretation_type = reader.readBits(6);
+      parsed.spatial_flipping_flag = reader.readBits(1);
+      parsed.frame0_flipped_flag = reader.readBits(1);
+      parsed.field_views_flag = reader.readBits(1);
+      parsed.current_frame_is_frame0_flag = reader.readBits(1);
+      parsed.frame0_self_contained_flag = reader.readBits(1);
+      parsed.frame1_self_contained_flag = reader.readBits(1);
+
+      if (!parsed.quincunx_sampling_flag && parsed.frame_packing_arrangement_type !== 6) {
+
+        parsed.frame0_grid_position_x = reader.readBits(4);
+        parsed.frame0_grid_position_y = reader.readBits(4);
+        parsed.frame1_grid_position_x = reader.readBits(4);
+        parsed.frame1_grid_position_y = reader.readBits(4);
+      }
+
+      reader.readBits(8); // frame_packing_arrangement_reserved_byte
+      parsed.frame_packing_arrangement_repetition_period = reader.readUnsignedExpGolomb();
+
+      return parsed;
+    }
+
+    function parseMasteringDisplayColourVolume(payload) {
+
+      if (payload.length < 24) {
+        return null;
+      }
+
+      const reader = new BitReader(payload);
+      const displayPrimaries = [];
+
+      for (let i = 0; i < 3; i++) {
+
+        displayPrimaries.push({
+          x: reader.readBits(16),
+          y: reader.readBits(16)
+        });
+      }
+
+      // Chromaticity is in units of 0.00002, luminance in units of 0.0001 cd/m2.
+      const parsed = {
+        display_primaries: displayPrimaries,
+        white_point: {
+          x: reader.readBits(16),
+          y: reader.readBits(16)
+        },
+        max_display_mastering_luminance: reader.readBits(32),
+        min_display_mastering_luminance: reader.readBits(32)
+      };
+
+      parsed.max_display_mastering_luminance_nits = parsed.max_display_mastering_luminance / 10000;
+      parsed.min_display_mastering_luminance_nits = parsed.min_display_mastering_luminance / 10000;
+
+      return parsed;
+    }
+
+    function parseContentLightLevelInfo(payload) {
+
+      if (payload.length < 4) {
+        return null;
+      }
+
+      const reader = new BitReader(payload);
+
+      return {
+        max_content_light_level: reader.readBits(16),
+        max_pic_average_light_level: reader.readBits(16)
+      };
+    }
+
+    // ATSC A/53 carries CEA-608/708 captions in the user data of a T.35 message.
+    function parseAtscUserData(payload) {
+
+      if (payload.length < 5) {
+        return null;
+      }
+
+      const parsed = {
+        user_identifier: toAsciiString(payload.subarray(0, 4)),
+        user_data_type_code: payload[4]
+      };
+
+      // user_data_type_code 0x03 is cc_data, which holds the caption byte triples.
+      if (parsed.user_identifier !== 'GA94' || parsed.user_data_type_code !== 0x03) {
+        return parsed;
+      }
+
+      const reader = new BitReader(payload.subarray(5));
+
+      parsed.process_em_data_flag = reader.readBits(1);
+      parsed.process_cc_data_flag = reader.readBits(1);
+      parsed.additional_data_flag = reader.readBits(1);
+
+      const ccCount = reader.readBits(5);
+
+      reader.readBits(8); // em_data
+
+      parsed.cc_count = ccCount;
+      parsed.cc_data = [];
+
+      for (let i = 0; i < ccCount && reader.hasData(); i++) {
+
+        reader.readBits(5); // marker_bits
+
+        parsed.cc_data.push({
+          cc_valid: reader.readBits(1),
+          cc_type: reader.readBits(2),
+          cc_data_1: reader.readBits(8),
+          cc_data_2: reader.readBits(8)
+        });
+      }
+
+      return parsed;
+    }
+
+    function parseUserDataRegisteredItuTT35(payload) {
+
+      if (payload.length < 3) {
+        return null;
+      }
+
+      let offset = 0;
+      const countryCode = payload[offset++];
+
+      const parsed = {
+        itu_t_t35_country_code: countryCode
+      };
+
+      if (countryCode === 0xFF) {
+        parsed.itu_t_t35_country_code_extension_byte = payload[offset++];
+      }
+
+      if (payload.length < offset + 2) {
+        return parsed;
+      }
+
+      const providerCode = (payload[offset] << 8) | payload[offset + 1];
+      offset += 2;
+
+      parsed.itu_t_t35_provider_code = providerCode;
+      parsed.provider = ITU_T_T35_PROVIDERS[providerCode] || 'unknown';
+
+      const userData = payload.subarray(offset);
+
+      if (providerCode === 0x0031) {
+
+        parsed.user_data = parseAtscUserData(userData);
+      } else {
+
+        parsed.note = 'The user data needs a parser of the identified provider.';
+        parsed.user_data = toHexString(userData, ' ');
+      }
+
+      return parsed;
+    }
+
+    function parseUserDataUnregistered(metadata) {
+
+      const payload = metadata.sei.payload;
+
+      if (payload.length < 16) {
+        return null;
+      }
+
+      const parsed = {
+        uuid_iso_iec_11578: toUuidString(payload.subarray(0, 16))
+      };
+
+      if (metadata.registered) {
+
+        parsed.provider = 'OvenMediaEngine';
+        parsed.timecode = metadata.timecode;
+        parsed.userdata = decodeBase64(toAsciiString(metadata.userdata));
+      } else {
+
+        parsed.note = 'The payload after the UUID needs a parser of the creator.';
+        parsed.userdata = toHexString(payload.subarray(16), ' ');
+      }
+
+      return parsed;
+    }
+
+    function parseSeiPayload(metadata) {
+
+      const payload = metadata.sei.payload;
+
+      switch (metadata.sei.type) {
+        case 0:
+          return parseBufferingPeriod(payload, metadata.sps);
+        case 1:
+          return parsePicTiming(payload, metadata.sps);
+        case 4:
+          return parseUserDataRegisteredItuTT35(payload);
+        case 5:
+          return parseUserDataUnregistered(metadata);
+        case 6:
+          return parseRecoveryPoint(payload);
+        case 45:
+          return parseFramePackingArrangement(payload);
+        case 137:
+          return parseMasteringDisplayColourVolume(payload);
+        case 144:
+          return parseContentLightLevelInfo(payload);
+        default:
+          return null;
+      }
     }
 
     let playerOption = {
@@ -1148,9 +1782,6 @@
       mute: false,
       sources: [],
       doubleTapToSeek: false,
-      parseStream: {
-        enabled: true
-      },
     };
 
     if (urlOption && urlOption.playerOption) {
@@ -1160,13 +1791,21 @@
 
     let demoOption = {
       autoReload: true,
-      autoReloadInterval: 2000
+      autoReloadInterval: 2000,
+      seiConsoleLog: false,
+      seiPayloadTypes: '5',
+      hlsVersion: DEFAULT_HLS_VERSION
     };
 
     if (urlOption && urlOption.demoOption) {
 
       demoOption = _.extend(demoOption, urlOption.demoOption);
     }
+
+    // DRM options start expanded only when the incoming option already carries them.
+    const hasDrmOption = !!(playerOption.hlsConfig
+      && playerOption.hlsConfig.drmSystems
+      && !_.isEmpty(playerOption.hlsConfig.drmSystems));
 
     function makeCopyButton(element) {
 
@@ -1207,11 +1846,17 @@
           playerMessage: null,
           playerOption: playerOption,
           demoOption: demoOption,
+          drmOptionsOpen: hasDrmOption,
           permanentLink: location.href,
           createScript: null,
           createScriptHTML: null,
           playerVersion: null,
-          hlsVersion: null
+          hlsVersion: null,
+          hlsVersions: HLS_VERSIONS,
+          hlsVersionSelect: HLS_VERSIONS.indexOf(demoOption.hlsVersion) < 0 ? 'custom' : demoOption.hlsVersion,
+          hlsVersionInput: demoOption.hlsVersion,
+          hlsVersionMessage: null,
+          hlsVersionError: false
         }
       },
       methods: {
@@ -1289,7 +1934,7 @@
           this.player = OvenPlayer.create('player', playerOption);
 
           this.playerVersion = this.player.getVersion();
-          this.hlsVersion = Hls.version;
+          this.hlsVersion = window.Hls ? Hls.version : null;
 
           this.player.on('ready', function () {
             vm.loadButtonMsg = 'UNLOAD PLAYER';
@@ -1313,14 +1958,34 @@
 
           this.player.on('metaData', function (metadata) {
 
-            // console.log('MetaData', metadata);
-
-            if (metadata.type === 'sei' && metadata.registered) {
-              console.log('MetaData', metadata);
-              // Parse BASE64 encoded JSON data
-              const base64String = toAsciiString(metadata.userdata);
-              console.log(base64String);
+            if (metadata.type !== 'sei' || !vm.demoOption.seiConsoleLog) {
+              return;
             }
+
+            const payloadTypes = String(vm.demoOption.seiPayloadTypes || '')
+              .split(',')
+              .map(function (payloadType) {
+                return payloadType.trim();
+              })
+              .filter(function (payloadType) {
+                return payloadType !== '' && !isNaN(Number(payloadType));
+              })
+              .map(Number);
+
+            // An empty payload type logs every SEI message.
+            if (payloadTypes.length > 0 && payloadTypes.indexOf(metadata.sei.type) < 0) {
+              return;
+            }
+
+            const sei = metadata.sei;
+            const payloadTypeName = SEI_PAYLOAD_TYPE_NAMES[sei.type] || 'reserved_sei_message';
+
+            console.log('SEI MetaData (payload type: ' + sei.type + ', ' + payloadTypeName
+              + ', ' + sei.size + ' bytes)', {
+              payload: toHexString(sei.payload, ' '),
+              parsed: parseSeiPayload(metadata),
+              metadata: metadata
+            });
           });
 
           if (this.statTimer) {
@@ -1431,9 +2096,56 @@
 
           this.unLoadPlayer(true);
           this.makePermanentLink();
+        },
+        changeHlsVersionSelect: function () {
+
+          if (this.hlsVersionSelect === 'custom') {
+            return;
+          }
+
+          this.applyHlsVersion(this.hlsVersionSelect);
+        },
+        changeHlsVersion: function () {
+
+          this.applyHlsVersion((this.hlsVersionInput || '').trim() || DEFAULT_HLS_VERSION);
+        },
+        applyHlsVersion: function (version) {
+
+          if (version === this.demoOption.hlsVersion) {
+
+            this.hlsVersionInput = version;
+            return;
+          }
+
+          // The tag in <head> reads the version from the permanent link, so the new
+          // build is picked up by reloading the page.
+          this.demoOption.hlsVersion = version;
+          this.makePermanentLink();
+          location.reload();
         }
       },
       computed: {
+        parseStreamCheck: {
+          get: function () {
+
+            return !!(this.playerOption.parseStream && this.playerOption.parseStream.enabled);
+          },
+          set: function (value) {
+
+            if (value) {
+
+              this.playerOption.parseStream = {
+                enabled: true
+              };
+            } else {
+
+              delete this.playerOption.parseStream;
+            }
+
+            this.unLoadPlayer(true);
+            this.makePermanentLink();
+          }
+        },
         playoutDelayHintCheck: {
           get: function () {
 
@@ -2560,11 +3272,25 @@
       },
       mounted: function () {
 
-        this.loadPlayer();
+        const view = this;
 
-        if (urlOption) {
-          this.makePermanentLink();
-        }
+        hlsScriptReady.then(function () {
+
+          if (window.Hls) {
+
+            view.hlsVersion = Hls.version;
+          } else {
+
+            view.hlsVersionError = true;
+            view.hlsVersionMessage = 'Failed to load hls.js ' + view.demoOption.hlsVersion;
+          }
+
+          view.loadPlayer();
+
+          if (urlOption) {
+            view.makePermanentLink();
+          }
+        });
 
         makeCopyButton(this.$refs.copyCodeButton);
         makeCopyButton(this.$refs.exportButton);
