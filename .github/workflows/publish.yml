@@ -1,16 +1,19 @@
 name: Publish to npm
 
 # Publishes `ovenplayer` through npm trusted publishing (OIDC), so no
-# NPM_TOKEN is stored in this repo. npm trusts this workflow by its
-# filename, so the trusted publisher configured on npmjs.com must name
-# `publish.yml` — renaming this file breaks publishing.
+# NPM_TOKEN is stored in this repo. npm identifies the trusted publisher by
+# workflow filename, so `publish.yml` has to keep its name to match what is
+# configured on npmjs.com.
 #
-# Runs on a `v*` tag push, matching the existing release tags.
+# Runs when a GitHub Release is published, which is the deliberate step that
+# releases a version. The release tag is checked against package.json before
+# anything is published, so a tag pushed without the version bump fails the
+# job instead of publishing the wrong version. npm 10 ships with Node 22 and
+# trusted publishing needs 11.5.1 or newer, hence the upgrade step.
 
 on:
-  push:
-    tags:
-      - 'v*'
+  release:
+    types: [published]
 
 permissions:
   contents: read
@@ -21,6 +24,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.release.tag_name }}
 
       - uses: actions/setup-node@v4
         with:
@@ -28,16 +33,16 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
           cache: 'npm'
 
-      # Node 22 ships npm 10; trusted publishing needs npm 11.5.1+.
       - name: Upgrade npm
         run: npm install -g npm@latest
 
-      - name: Check the tag against package.json
+      - name: Check the release tag against package.json
+        env:
+          TAG: ${{ github.event.release.tag_name }}
         run: |
-          tag="${GITHUB_REF_NAME#v}"
           pkg="$(node -p "require('./package.json').version")"
-          if [ "$tag" != "$pkg" ]; then
-            echo "Tag $GITHUB_REF_NAME does not match package.json version $pkg"
+          if [ "${TAG#v}" != "$pkg" ]; then
+            echo "Release tag $TAG does not match package.json version $pkg"
             exit 1
           fi
 
