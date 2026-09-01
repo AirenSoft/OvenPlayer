@@ -1,15 +1,15 @@
 ---
 name: release
-description: Release ovenplayer to npm — confirm the version, verify the committed dist/ bundle is current, write the release notes, and create the GitHub Release that triggers the npm publish.
+description: Release ovenplayer to npm — confirm the version, verify the committed dist/ bundle is current, write the release notes, and open a draft GitHub Release for the user to publish.
 ---
 
 Release `ovenplayer` to npm.
 
-The publish itself runs in CI: creating the GitHub Release fires
+The publish itself runs in CI: publishing the GitHub Release fires
 [.github/workflows/publish.yml](.github/workflows/publish.yml), which builds and
-publishes through npm trusted publishing (OIDC). This skill covers everything up
-to that point. Nothing reaches npm until the release is created, so the release
-creation is the point of no return — get explicit confirmation there.
+publishes through npm trusted publishing (OIDC). This skill stops at a draft
+release. Nothing reaches npm until that draft is published, and publishing it is
+the user's call — see step 6.
 
 ## 1. Preflight
 
@@ -59,14 +59,40 @@ in `git log`. Push before tagging.
 - Draft from the actual diff since the last release, not from commit subjects
   alone. Show the draft and get the user's approval on it.
 
-## 6. Create the release
+## 6. Create the release as a draft
 
-- State plainly that this publishes to npm and that a published version cannot
-  be unpublished or replaced. Get an explicit yes.
-- `gh release create v<version> --target master --title "v<version>" --notes-file <file>`
+Always create it as a draft, even when the user is ready to release. `publish.yml`
+fires on `release: published`, so a draft publishes nothing — it is a free
+checkpoint for reading the notes as GitHub renders them.
+
+- `gh release create v<version> --draft --target master --title "v<version>" --notes-file <file>`
   (the tag must be `v<version>` — CI checks it against `package.json`).
-- Watch the result: `gh run list --workflow=publish.yml --limit 1`, then
-  `gh run watch <id>`, and confirm with `npm view ovenplayer version`.
-- If the run fails before the publish step, fix the cause and re-run the
-  workflow. If the version already landed on npm, do not attempt to republish
-  it — the next release needs a new version.
+- Give the user the draft URL and let them read it. Editing a draft triggers
+  nothing, so iterate freely: `gh release edit v<version> --notes-file <file>`
+  resolves by tag name even before the tag exists. The `untagged-...` URL changes
+  on every edit while the release id stays the same, so hand over the new link.
+- Do not publish the draft yourself unless the user explicitly asks. Publishing is
+  the point of no return: say plainly that it publishes to npm and that a
+  published version cannot be unpublished or replaced. Normally the user presses
+  **Publish release** in the GitHub UI; on request it is
+  `gh release edit v<version> --draft=false --latest`.
+- The tag is created at publish time, pointing at `master` HEAD *then* — not at
+  the commit that was HEAD when the draft was made. If master moved in between,
+  re-check the version and `dist/`.
+
+## 7. Watch the publish
+
+- `gh run list --workflow=publish.yml --limit 1`, then `gh run watch <id>`, and
+  confirm with `npm view ovenplayer version`.
+- `404 Not Found - PUT` is an authentication failure, not a missing package.
+  Check the trusted publisher config on npmjs.com first — package → Settings →
+  Trusted Publisher, with repo `OvenMediaLabs/OvenPlayer`, workflow
+  `publish.yml`, environment blank — before touching `publish.yml`. npm does not
+  validate that config when it is saved, so a typo only surfaces here.
+- Retry with `gh run rerun <id>`. The `published` event cannot be re-fired, and a
+  re-run replays it with fresh OIDC tokens, so the release and tag can stay as
+  they are. This only works when the fix is outside the repo: a re-run uses the
+  workflow file from the tagged commit, so a change to `publish.yml` itself is
+  not picked up.
+- If the version already landed on npm, do not attempt to republish it — the next
+  release needs a new version.
